@@ -1,7 +1,7 @@
 package com.moneymong.moneymong.data.datasource.user
 
 import com.moneymong.moneymong.network.api.UserApi
-import com.moneymong.moneymong.network.response.user.UserResponse
+import com.moneymong.moneymong.model.user.UserResponse
 import javax.inject.Inject
 
 class UserRemoteDataSourceImpl @Inject constructor(
