@@ -1,9 +1,5 @@
 package com.moneymong.moneymong.network.api
 
-import com.moneymong.moneymong.network.request.agency.AgencyJoinRequest
-import com.moneymong.moneymong.network.request.agency.AgencyRegisterRequest
-import com.moneymong.moneymong.network.response.agency.AgenciesGetResponse
-import com.moneymong.moneymong.network.response.agency.AgencyJoinResponse
 import com.moneymong.moneymong.network.response.ocr.FileUploadResponse
 import okhttp3.MultipartBody
 import retrofit2.http.Multipart
