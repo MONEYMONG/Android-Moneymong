@@ -1,6 +1,6 @@
 package com.moneymong.moneymong.data.datasource.user
 
-import com.moneymong.moneymong.network.response.user.UserResponse
+import com.moneymong.moneymong.model.user.UserResponse
 
 interface UserRemoteDataSource {
 

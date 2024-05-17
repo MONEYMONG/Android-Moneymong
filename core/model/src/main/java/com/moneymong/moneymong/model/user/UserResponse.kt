@@ -1,4 +1,4 @@
-package com.moneymong.moneymong.network.response.user
+package com.moneymong.moneymong.model.user
 
 import com.google.gson.annotations.SerializedName
 
