@@ -1,4 +1,4 @@
-package com.moneymong.moneymong.network.response.ocr
+package com.moneymong.moneymong.model.ocr
 
 data class FileUploadResponse(
     val key: String,
