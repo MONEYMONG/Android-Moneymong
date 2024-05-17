@@ -6,7 +6,7 @@ import com.moneymong.moneymong.model.agency.AgenciesGetResponse
 import com.moneymong.moneymong.model.agency.AgencyJoinResponse
 import com.moneymong.moneymong.model.agency.MyAgencyResponse
 import com.moneymong.moneymong.model.agency.RegisterAgencyResponse
-import com.moneymong.moneymong.network.response.member.InvitationCodeResponse
+import com.moneymong.moneymong.model.member.InvitationCodeResponse
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header

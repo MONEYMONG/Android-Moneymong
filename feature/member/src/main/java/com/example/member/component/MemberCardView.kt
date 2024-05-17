@@ -32,15 +32,15 @@ import com.moneymong.moneymong.design_system.theme.Gray02
 import com.moneymong.moneymong.design_system.theme.Gray10
 import com.moneymong.moneymong.design_system.theme.Mint03
 import com.moneymong.moneymong.design_system.theme.White
-import com.moneymong.moneymong.domain.entity.member.AgencyUserEntity
+import com.moneymong.moneymong.model.member.AgencyUser
 
 @Composable
 fun MemberCardView(
     modifier: Modifier = Modifier,
     agencyId: Int,
-    memberList: List<AgencyUserEntity>,
+    memberList: List<AgencyUser>,
     memberMyInfoId: Long,
-    memberMyInfo: AgencyUserEntity,
+    memberMyInfo: AgencyUser,
     memberMyInfoChanged: (Long, Long, String, String) -> Unit,
     invitationCode: String,
     isReInvitationCode: (Long) -> Unit,
