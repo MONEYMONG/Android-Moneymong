@@ -1,9 +1,8 @@
-package com.moneymong.moneymong.domain.param.ledger
+package com.moneymong.moneymong.model.ledger
 
-data class LedgerTransactionParam(
-    val id: Int,
+data class LedgerTransactionRequest(
     val storeInfo: String,
-    val fundType: FundType,
+    val fundType: String,
     val amount: Int,
     val description: String,
     val paymentDate: String,

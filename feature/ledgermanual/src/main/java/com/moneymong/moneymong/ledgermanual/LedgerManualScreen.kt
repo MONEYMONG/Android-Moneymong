@@ -77,8 +77,8 @@ import com.moneymong.moneymong.design_system.theme.Gray10
 import com.moneymong.moneymong.design_system.theme.MMHorizontalSpacing
 import com.moneymong.moneymong.design_system.theme.Red03
 import com.moneymong.moneymong.design_system.theme.White
-import com.moneymong.moneymong.domain.param.ledger.FundType
 import com.moneymong.moneymong.ledgermanual.view.LedgerManualTopbarView
+import com.moneymong.moneymong.model.ledger.FundType
 import org.orbitmvi.orbit.compose.collectAsState
 import org.orbitmvi.orbit.compose.collectSideEffect
 

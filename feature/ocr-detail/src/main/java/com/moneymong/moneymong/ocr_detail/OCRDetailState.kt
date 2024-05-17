@@ -5,7 +5,7 @@ import com.moneymong.moneymong.common.base.State
 import com.moneymong.moneymong.design_system.component.textfield.util.PriceType
 import com.moneymong.moneymong.domain.entity.ocr.DocumentEntity
 import com.moneymong.moneymong.domain.entity.ocr.DocumentResultEntity
-import com.moneymong.moneymong.domain.param.ledger.FundType
+import com.moneymong.moneymong.model.ledger.FundType
 import java.io.File
 import java.time.LocalDateTime
 import java.time.OffsetDateTime

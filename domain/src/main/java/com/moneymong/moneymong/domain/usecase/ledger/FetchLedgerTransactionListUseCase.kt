@@ -1,14 +1,12 @@
 package com.moneymong.moneymong.domain.usecase.ledger
 
-import com.moneymong.moneymong.domain.base.BaseUseCase
-import com.moneymong.moneymong.domain.entity.ledger.LedgerTransactionListEntity
-import com.moneymong.moneymong.domain.param.ledger.LedgerTransactionListParam
 import com.moneymong.moneymong.domain.repository.ledger.LedgerRepository
+import com.moneymong.moneymong.model.ledger.LedgerTransactionListResponse
 import javax.inject.Inject
 
 class FetchLedgerTransactionListUseCase @Inject constructor(
     private val ledgerRepository: LedgerRepository
-) : BaseUseCase<LedgerTransactionListParam, Result<LedgerTransactionListEntity>>() {
-    override suspend fun invoke(data: LedgerTransactionListParam): Result<LedgerTransactionListEntity> =
-        ledgerRepository.fetchLedgerTransactionList(data)
+) {
+    suspend operator fun invoke(id: Int, year: Int, month: Int, page: Int, limit: Int): Result<LedgerTransactionListResponse> =
+        ledgerRepository.fetchLedgerTransactionList(id, year, month, page, limit)
 }
