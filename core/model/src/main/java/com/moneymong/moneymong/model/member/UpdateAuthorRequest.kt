@@ -1,4 +1,4 @@
-package com.moneymong.moneymong.network.request.member
+package com.moneymong.moneymong.model.member
 
 data class UpdateAuthorRequest(
     val role: String,

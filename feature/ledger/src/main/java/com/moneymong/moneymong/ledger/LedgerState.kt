@@ -1,11 +1,11 @@
 package com.moneymong.moneymong.ledger
 
 import com.moneymong.moneymong.common.base.State
-import com.moneymong.moneymong.domain.entity.member.AgencyUserEntity
 import com.moneymong.moneymong.ledger.view.LedgerTransactionType
 import com.moneymong.moneymong.model.agency.MyAgencyResponse
 import com.moneymong.moneymong.model.ledger.LedgerDetail
 import com.moneymong.moneymong.model.ledger.LedgerTransactionListResponse
+import com.moneymong.moneymong.model.member.AgencyUser
 import java.time.LocalDate
 
 data class LedgerState(
@@ -23,7 +23,7 @@ data class LedgerState(
     val visibleError: Boolean = false,
     val visibleSnackbar: Boolean = false,
     val agencyList: List<MyAgencyResponse> = emptyList(),
-    val memberList: List<AgencyUserEntity> = emptyList(),
+    val memberList: List<AgencyUser> = emptyList(),
     val errorMessage: String = ""
 ) : State {
 
