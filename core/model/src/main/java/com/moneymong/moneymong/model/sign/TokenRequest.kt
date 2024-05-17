@@ -1,4 +1,4 @@
-package com.moneymong.moneymong.network.request.login
+package com.moneymong.moneymong.model.sign
 
 data class TokenRequest (
     val provider : String,
