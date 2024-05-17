@@ -5,10 +5,10 @@ import androidx.lifecycle.SavedStateHandle
 import com.moneymong.moneymong.common.base.BaseViewModel
 import com.moneymong.moneymong.common.error.MoneyMongError
 import com.moneymong.moneymong.common.ext.toDateFormat
+import com.moneymong.moneymong.common.ext.toMultipart
 import com.moneymong.moneymong.common.ui.isValidPaymentDate
 import com.moneymong.moneymong.common.ui.isValidPaymentTime
 import com.moneymong.moneymong.common.ui.validateValue
-import com.moneymong.moneymong.domain.param.ocr.FileUploadParam
 import com.moneymong.moneymong.domain.usecase.ledgerdetail.FetchLedgerTransactionDetailUseCase
 import com.moneymong.moneymong.domain.usecase.ledgerdetail.DeleteLedgerDetailUseCase
 import com.moneymong.moneymong.domain.usecase.ledgerdetail.DeleteLedgerDocumentTransactionUseCase
@@ -22,6 +22,7 @@ import com.moneymong.moneymong.model.ledgerdetail.LedgerDocumentRequest
 import com.moneymong.moneymong.model.ledgerdetail.LedgerReceiptRequest
 import com.moneymong.moneymong.model.ledgerdetail.LedgerTransactionDetailRequest
 import com.moneymong.moneymong.model.ledgerdetail.LedgerTransactionDetailResponse
+import com.moneymong.moneymong.model.ocr.FileUploadRequest
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import org.orbitmvi.orbit.annotation.OrbitExperimental
@@ -157,7 +158,7 @@ class LedgerDetailViewModel @Inject constructor(
         imageFile?.let {
             if (!state.isLoading) {
                 reduce { state.copy(isLoading = true) }
-                val file = FileUploadParam(it, "ledgerDetail")
+                val file = FileUploadRequest(it.toMultipart(), "ledgerDetail")
                 postFileUploadUseCase(file)
                     .onSuccess { response ->
                         state.isReceipt?.let { isReceipt ->

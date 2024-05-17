@@ -72,8 +72,8 @@ import com.moneymong.moneymong.design_system.theme.Gray03
 import com.moneymong.moneymong.design_system.theme.Gray06
 import com.moneymong.moneymong.design_system.theme.Gray10
 import com.moneymong.moneymong.design_system.theme.White
-import com.moneymong.moneymong.domain.entity.ocr.DocumentEntity
 import com.moneymong.moneymong.model.ledger.FundType
+import com.moneymong.moneymong.model.ocr.DocumentResponse
 import com.moneymong.moneymong.ocr_detail.view.OCRDetailTopbarView
 import org.orbitmvi.orbit.compose.collectAsState
 import org.orbitmvi.orbit.compose.collectSideEffect
@@ -83,7 +83,7 @@ import org.orbitmvi.orbit.compose.collectSideEffect
 fun OCRDetailScreen(
     modifier: Modifier = Modifier,
     viewModel: OCRDetailViewModel = hiltViewModel(),
-    document: DocumentEntity?,
+    document: DocumentResponse?,
     navigateToLedger: (ledgerPostSuccess: Boolean) -> Unit,
     popBackStack: () -> Unit
 ) {
