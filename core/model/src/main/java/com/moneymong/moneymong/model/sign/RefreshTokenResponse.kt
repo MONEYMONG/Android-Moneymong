@@ -1,4 +1,4 @@
-package com.moneymong.moneymong.network.response.login
+package com.moneymong.moneymong.model.sign
 
 data class RefreshTokenResponse(
     val accessToken: String,

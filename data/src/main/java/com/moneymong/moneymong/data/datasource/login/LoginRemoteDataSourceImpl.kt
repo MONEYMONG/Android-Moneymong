@@ -10,7 +10,7 @@ import com.moneymong.moneymong.data.util.LoginType
 import com.moneymong.moneymong.domain.util.LoginCallback
 import com.moneymong.moneymong.network.api.AccessTokenApi
 import com.moneymong.moneymong.network.api.UserApi
-import com.moneymong.moneymong.network.request.login.TokenRequest
+import com.moneymong.moneymong.model.sign.TokenRequest
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

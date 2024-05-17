@@ -1,18 +1,16 @@
 package com.moneymong.moneymong.feature.sign.viewmodel
 
-import android.util.Log
 import androidx.compose.ui.text.input.TextFieldValue
 import com.moneymong.moneymong.common.base.BaseViewModel
-import com.moneymong.moneymong.domain.param.signup.UnivParam
 import com.moneymong.moneymong.domain.usecase.signup.SchoolInfoUseCase
 import com.moneymong.moneymong.domain.usecase.signup.UnivUseCase
 import com.moneymong.moneymong.feature.sign.sideeffect.SignUpSideEffect
 import com.moneymong.moneymong.feature.sign.state.SignUpState
 import com.moneymong.moneymong.feature.sign.util.Grade
+import com.moneymong.moneymong.model.sign.UnivRequest
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.annotation.OrbitExperimental
 import org.orbitmvi.orbit.syntax.simple.blockingIntent
@@ -26,7 +24,7 @@ class SignUpViewModel @Inject constructor(
     private val schoolInfoUseCase : SchoolInfoUseCase,
 ) : BaseViewModel<SignUpState, SignUpSideEffect>(SignUpState()) {
     fun createUniv(universityName: String, grade: Int) = intent {
-        val body = UnivParam(universityName, grade)
+        val body = UnivRequest(universityName, grade)
         univUseCase.createUniv(body)
             .onSuccess {
                 reduce {

@@ -2,8 +2,8 @@ package com.moneymong.moneymong.feature.sign.state
 
 import androidx.compose.ui.text.input.TextFieldValue
 import com.moneymong.moneymong.common.base.State
-import com.moneymong.moneymong.domain.entity.signup.UniversitiesEntity
 import com.moneymong.moneymong.feature.sign.util.Grade
+import com.moneymong.moneymong.model.sign.UniversitiesResponse
 
 data class SignUpState(
     //screen
@@ -16,7 +16,7 @@ data class SignUpState(
     //view
     val isListVisible: Boolean = false,
     val isFilled: Boolean = false,
-    val universityResponse: UniversitiesEntity? = null,
+    val universityResponse: UniversitiesResponse? = null,
     val isUnivCreated : Boolean = false,
     //item
     val isItemSelected : Boolean = false,
