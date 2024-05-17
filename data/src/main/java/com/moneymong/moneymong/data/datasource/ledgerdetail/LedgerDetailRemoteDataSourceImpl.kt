@@ -1,10 +1,10 @@
 package com.moneymong.moneymong.data.datasource.ledgerdetail
 
 import com.moneymong.moneymong.network.api.LedgerDetailApi
-import com.moneymong.moneymong.network.request.ledgerdetail.LedgerDocumentRequest
-import com.moneymong.moneymong.network.request.ledgerdetail.LedgerReceiptRequest
-import com.moneymong.moneymong.network.request.ledgerdetail.LedgerTransactionDetailRequest
-import com.moneymong.moneymong.network.response.ledgerdetail.LedgerTransactionDetailResponse
+import com.moneymong.moneymong.model.ledgerdetail.LedgerDocumentRequest
+import com.moneymong.moneymong.model.ledgerdetail.LedgerReceiptRequest
+import com.moneymong.moneymong.model.ledgerdetail.LedgerTransactionDetailRequest
+import com.moneymong.moneymong.model.ledgerdetail.LedgerTransactionDetailResponse
 import javax.inject.Inject
 
 class LedgerDetailRemoteDataSourceImpl @Inject constructor(

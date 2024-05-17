@@ -1,4 +1,4 @@
-package com.moneymong.moneymong.network.response.ledgerdetail
+package com.moneymong.moneymong.model.ledgerdetail
 
 import com.moneymong.moneymong.model.ledger.DocumentImageURL
 import com.moneymong.moneymong.model.ledger.ReceiptImageURL

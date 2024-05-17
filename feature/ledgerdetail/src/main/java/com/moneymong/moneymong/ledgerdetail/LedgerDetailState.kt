@@ -5,8 +5,8 @@ import com.moneymong.moneymong.common.base.State
 import com.moneymong.moneymong.common.ext.toDateFormat
 import com.moneymong.moneymong.common.ui.toWonFormat
 import com.moneymong.moneymong.design_system.component.textfield.util.PriceType
-import com.moneymong.moneymong.domain.entity.ledgerdetail.LedgerTransactionDetailEntity
 import com.moneymong.moneymong.model.ledger.FundType
+import com.moneymong.moneymong.model.ledgerdetail.LedgerTransactionDetailResponse
 import java.time.LocalDateTime
 import java.time.OffsetDateTime
 import java.time.ZoneOffset
@@ -26,7 +26,7 @@ data class LedgerDetailState(
     val isPaymentDateError: Boolean = false,
     val isPaymentTimeError: Boolean = false,
     val isMemoError: Boolean = false,
-    val ledgerTransactionDetail: LedgerTransactionDetailEntity? = null,
+    val ledgerTransactionDetail: LedgerTransactionDetailResponse? = null,
     val receiptList: List<String> = emptyList(),
     val documentList: List<String> = emptyList(),
     val isReceipt: Boolean? = null,

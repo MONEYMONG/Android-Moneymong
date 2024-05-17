@@ -1,13 +1,12 @@
 package com.moneymong.moneymong.network.api
 
-import com.moneymong.moneymong.network.request.ledgerdetail.LedgerDocumentRequest
-import com.moneymong.moneymong.network.request.ledgerdetail.LedgerReceiptRequest
-import com.moneymong.moneymong.network.request.ledgerdetail.LedgerTransactionDetailRequest
-import com.moneymong.moneymong.network.response.ledgerdetail.LedgerTransactionDetailResponse
+import com.moneymong.moneymong.model.ledgerdetail.LedgerDocumentRequest
+import com.moneymong.moneymong.model.ledgerdetail.LedgerReceiptRequest
+import com.moneymong.moneymong.model.ledgerdetail.LedgerTransactionDetailRequest
+import com.moneymong.moneymong.model.ledgerdetail.LedgerTransactionDetailResponse
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
-import retrofit2.http.Header
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
