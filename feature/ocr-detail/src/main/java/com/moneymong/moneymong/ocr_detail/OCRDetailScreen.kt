@@ -59,10 +59,8 @@ import com.moneymong.moneymong.common.ui.noRippleClickable
 import com.moneymong.moneymong.design_system.R
 import com.moneymong.moneymong.design_system.component.button.MDSButton
 import com.moneymong.moneymong.design_system.component.selection.MDSSelection
-import com.moneymong.moneymong.design_system.component.textfield.MDSNumberTextField
 import com.moneymong.moneymong.design_system.component.textfield.MDSTextField
 import com.moneymong.moneymong.design_system.component.textfield.util.MDSTextFieldIcons
-import com.moneymong.moneymong.design_system.component.textfield.util.PriceType
 import com.moneymong.moneymong.design_system.component.textfield.visualtransformation.DateVisualTransformation
 import com.moneymong.moneymong.design_system.component.textfield.visualtransformation.PriceVisualTransformation
 import com.moneymong.moneymong.design_system.component.textfield.visualtransformation.TimeVisualTransformation
@@ -75,7 +73,7 @@ import com.moneymong.moneymong.design_system.theme.Gray06
 import com.moneymong.moneymong.design_system.theme.Gray10
 import com.moneymong.moneymong.design_system.theme.White
 import com.moneymong.moneymong.domain.entity.ocr.DocumentEntity
-import com.moneymong.moneymong.domain.param.ledger.FundType
+import com.moneymong.moneymong.model.ledger.FundType
 import com.moneymong.moneymong.ocr_detail.view.OCRDetailTopbarView
 import org.orbitmvi.orbit.compose.collectAsState
 import org.orbitmvi.orbit.compose.collectSideEffect

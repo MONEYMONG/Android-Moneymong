@@ -1,12 +1,12 @@
-package com.moneymong.moneymong.domain.entity.ledger
+package com.moneymong.moneymong.model.ledger
 
-data class LedgerTransactionListEntity(
+data class LedgerTransactionListResponse(
     val id: Int,
     val totalBalance: Int,
-    val ledgerInfoViewDetails: List<LedgerDetailEntity>
+    val ledgerInfoViewDetails: List<LedgerDetail>
 )
 
-data class LedgerDetailEntity(
+data class LedgerDetail(
     val id: Int,
     val storeInfo: String,
     val fundType: String,

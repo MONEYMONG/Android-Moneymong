@@ -6,7 +6,7 @@ import com.moneymong.moneymong.common.ext.toDateFormat
 import com.moneymong.moneymong.common.ui.toWonFormat
 import com.moneymong.moneymong.design_system.component.textfield.util.PriceType
 import com.moneymong.moneymong.domain.entity.ledgerdetail.LedgerTransactionDetailEntity
-import com.moneymong.moneymong.domain.param.ledger.FundType
+import com.moneymong.moneymong.model.ledger.FundType
 import java.time.LocalDateTime
 import java.time.OffsetDateTime
 import java.time.ZoneOffset
