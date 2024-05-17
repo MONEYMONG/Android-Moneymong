@@ -3,10 +3,10 @@ package com.moneymong.moneymong.feature.agency.register
 import androidx.compose.ui.text.input.TextFieldValue
 import com.moneymong.moneymong.common.base.BaseViewModel
 import com.moneymong.moneymong.common.error.MoneyMongError
-import com.moneymong.moneymong.domain.param.agency.AgencyRegisterParam
 import com.moneymong.moneymong.domain.usecase.agency.RegisterAgencyUseCase
 import com.moneymong.moneymong.domain.usecase.agency.SaveAgencyIdUseCase
 import com.moneymong.moneymong.feature.agency.search.AgencyType
+import com.moneymong.moneymong.model.agency.AgencyRegisterRequest
 import dagger.hilt.android.lifecycle.HiltViewModel
 import org.orbitmvi.orbit.annotation.OrbitExperimental
 import org.orbitmvi.orbit.syntax.simple.blockingIntent
@@ -25,9 +25,9 @@ class AgencyRegisterViewModel @Inject constructor(
 
     fun registerAgency() = intent {
         registerAgencyUseCase(
-            data = AgencyRegisterParam(
+            data = AgencyRegisterRequest(
                 name = state.agencyName.text,
-                type = state.agencyType.toParam()
+                type = state.agencyType.agencyRegisterTypeToString()
             )
         ).onSuccess {
             saveAgencyIdUseCase(it.id)

@@ -6,6 +6,7 @@ import com.moneymong.moneymong.domain.entity.ledger.LedgerDetailEntity
 import com.moneymong.moneymong.domain.entity.ledger.LedgerTransactionListEntity
 import com.moneymong.moneymong.domain.entity.member.AgencyUserEntity
 import com.moneymong.moneymong.ledger.view.LedgerTransactionType
+import com.moneymong.moneymong.model.agency.MyAgencyResponse
 import java.time.LocalDate
 
 data class LedgerState(
@@ -22,7 +23,7 @@ data class LedgerState(
     val currentDate: LocalDate = LocalDate.now(),
     val visibleError: Boolean = false,
     val visibleSnackbar: Boolean = false,
-    val agencyList: List<MyAgencyEntity> = emptyList(),
+    val agencyList: List<MyAgencyResponse> = emptyList(),
     val memberList: List<AgencyUserEntity> = emptyList(),
     val errorMessage: String = ""
 ) : State {
@@ -40,7 +41,7 @@ data class LedgerState(
     val existAgency: Boolean
         get() = agencyList.isNotEmpty()
 
-    val currentAgency: MyAgencyEntity?
+    val currentAgency: MyAgencyResponse?
         get() = agencyList.find { it.id == agencyId }
 
     val isStaff: Boolean
