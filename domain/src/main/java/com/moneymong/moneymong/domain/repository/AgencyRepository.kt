@@ -1,19 +1,19 @@
 package com.moneymong.moneymong.domain.repository
 
 import androidx.paging.PagingData
-import com.moneymong.moneymong.domain.entity.agency.AgencyGetEntity
-import com.moneymong.moneymong.domain.entity.agency.AgencyJoinEntity
-import com.moneymong.moneymong.domain.entity.agency.MyAgencyEntity
-import com.moneymong.moneymong.domain.entity.agency.AgencyRegisterEntity
-import com.moneymong.moneymong.domain.param.agency.AgencyJoinParam
-import com.moneymong.moneymong.domain.param.agency.AgencyRegisterParam
+import com.moneymong.moneymong.model.agency.AgencyGetResponse
+import com.moneymong.moneymong.model.agency.AgencyJoinRequest
+import com.moneymong.moneymong.model.agency.AgencyJoinResponse
+import com.moneymong.moneymong.model.agency.AgencyRegisterRequest
+import com.moneymong.moneymong.model.agency.MyAgencyResponse
+import com.moneymong.moneymong.model.agency.RegisterAgencyResponse
 import kotlinx.coroutines.flow.Flow
 
 interface AgencyRepository {
-    suspend fun registerAgency(param: AgencyRegisterParam): Result<AgencyRegisterEntity>
-    fun getAgencies(): Flow<PagingData<AgencyGetEntity>>
-    suspend fun fetchMyAgencyList(): Result<List<MyAgencyEntity>>
-    suspend fun agencyCodeNumbers(agencyId: Long, data: AgencyJoinParam): Result<AgencyJoinEntity>
+    suspend fun registerAgency(request: AgencyRegisterRequest): Result<RegisterAgencyResponse>
+    fun getAgencies(): Flow<PagingData<AgencyGetResponse>>
+    suspend fun fetchMyAgencyList(): Result<List<MyAgencyResponse>>
+    suspend fun agencyCodeNumbers(agencyId: Long, data: AgencyJoinRequest): Result<AgencyJoinResponse>
 
     suspend fun saveAgencyId(agencyId: Int)
     suspend fun fetchAgencyId(): Int
