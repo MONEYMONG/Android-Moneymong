@@ -1,4 +1,4 @@
-package com.moneymong.moneymong.network.request.ocr
+package com.moneymong.moneymong.model.ocr
 
 import okhttp3.MultipartBody
 import retrofit2.http.Part
