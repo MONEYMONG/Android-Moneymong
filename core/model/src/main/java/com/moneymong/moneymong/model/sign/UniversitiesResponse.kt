@@ -1,4 +1,4 @@
-package com.moneymong.moneymong.network.response.signup
+package com.moneymong.moneymong.model.sign
 
 data class UniversitiesResponse(
     val universities: List<University>
