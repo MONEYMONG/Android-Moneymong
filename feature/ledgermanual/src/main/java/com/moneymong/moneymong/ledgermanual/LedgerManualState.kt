@@ -4,7 +4,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import com.moneymong.moneymong.common.base.State
 import com.moneymong.moneymong.common.ext.toZonedDateTime
 import com.moneymong.moneymong.design_system.component.textfield.util.PriceType
-import com.moneymong.moneymong.domain.param.ledger.FundType
+import com.moneymong.moneymong.model.ledger.FundType
 import java.text.SimpleDateFormat
 
 data class LedgerManualState(

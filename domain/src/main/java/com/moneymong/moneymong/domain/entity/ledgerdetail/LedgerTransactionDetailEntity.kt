@@ -1,7 +1,7 @@
 package com.moneymong.moneymong.domain.entity.ledgerdetail
 
-import com.moneymong.moneymong.domain.entity.ledger.DocumentImageURLEntity
-import com.moneymong.moneymong.domain.entity.ledger.ReceiptImageURLEntity
+import com.moneymong.moneymong.model.ledger.DocumentImageURL
+import com.moneymong.moneymong.model.ledger.ReceiptImageURL
 
 data class LedgerTransactionDetailEntity(
     val id: Int,
@@ -10,7 +10,7 @@ data class LedgerTransactionDetailEntity(
     val fundType: String,
     val description: String,
     val paymentDate: String,
-    val receiptImageUrls: List<ReceiptImageURLEntity>,
-    val documentImageUrls: List<DocumentImageURLEntity>,
+    val receiptImageUrls: List<ReceiptImageURL>,
+    val documentImageUrls: List<DocumentImageURL>,
     val authorName: String
 )

@@ -7,13 +7,13 @@ import com.moneymong.moneymong.common.ui.isValidPaymentDate
 import com.moneymong.moneymong.common.ui.isValidPaymentTime
 import com.moneymong.moneymong.common.ui.validateValue
 import com.moneymong.moneymong.domain.entity.ocr.DocumentEntity
-import com.moneymong.moneymong.domain.param.ledger.FundType
-import com.moneymong.moneymong.domain.param.ledger.LedgerTransactionParam
 import com.moneymong.moneymong.domain.param.ocr.FileUploadParam
 import com.moneymong.moneymong.domain.usecase.agency.FetchAgencyIdUseCase
 import com.moneymong.moneymong.domain.usecase.ledger.PostLedgerTransactionUseCase
 import com.moneymong.moneymong.domain.usecase.ocr.PostFileUploadUseCase
 import com.moneymong.moneymong.domain.usecase.user.FetchUserNicknameUseCase
+import com.moneymong.moneymong.model.ledger.FundType
+import com.moneymong.moneymong.model.ledger.LedgerTransactionRequest
 import dagger.hilt.android.lifecycle.HiltViewModel
 import org.orbitmvi.orbit.annotation.OrbitExperimental
 import org.orbitmvi.orbit.syntax.simple.blockingIntent
@@ -90,10 +90,9 @@ class OCRDetailViewModel @Inject constructor(
             reduce { state.copy(isLoading = true) }
             // empty string을 제거하고 요청을 보내기 위함
             val documentImageUrls = state.documentImageUrls - ""
-            val ledgerTransactionParam = LedgerTransactionParam(
-                id = state.agencyId,
+            val ledgerTransactionRequest = LedgerTransactionRequest(
                 storeInfo = state.storeNameValue.text,
-                fundType = state.fundType,
+                fundType = state.fundType.name,
                 amount = state.totalPriceValue.text.replace(".", "").toInt(),
                 description = state.memoValue.text,
                 paymentDate = state.postPaymentDate,
@@ -102,7 +101,7 @@ class OCRDetailViewModel @Inject constructor(
                     emptyList()
                 }
             )
-            postLedgerTransactionUseCase(ledgerTransactionParam)
+            postLedgerTransactionUseCase(state.agencyId, ledgerTransactionRequest)
                 .onSuccess {
                     postSideEffect(OCRDetailSideEffect.OCRDetailNavigateToLedger)
                 }.onFailure {

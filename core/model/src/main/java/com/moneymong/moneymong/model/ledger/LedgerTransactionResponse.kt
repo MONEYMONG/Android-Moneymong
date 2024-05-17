@@ -1,4 +1,4 @@
-package com.moneymong.moneymong.network.response.ledger
+package com.moneymong.moneymong.model.ledger
 
 data class LedgerTransactionResponse(
     val id: Int,

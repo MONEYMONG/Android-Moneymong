@@ -1,4 +1,4 @@
-package com.moneymong.moneymong.domain.param.ledger
+package com.moneymong.moneymong.model.ledger
 
 enum class FundType(val sign: String) {
     NONE(""),
