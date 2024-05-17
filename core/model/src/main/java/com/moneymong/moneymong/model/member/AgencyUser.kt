@@ -1,6 +1,6 @@
-package com.moneymong.moneymong.domain.entity.member
+package com.moneymong.moneymong.model.member
 
-data class AgencyUserEntity(
+data class AgencyUser(
     val id: Long,
     val userId: Long,
     val nickname: String,

@@ -1,4 +1,4 @@
-package com.moneymong.moneymong.network.response.member
+package com.moneymong.moneymong.model.member
 
 data class InvitationCodeResponse(
     val code : String
