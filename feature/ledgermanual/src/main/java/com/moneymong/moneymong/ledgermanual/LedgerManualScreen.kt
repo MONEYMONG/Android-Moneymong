@@ -57,7 +57,7 @@ import com.bumptech.glide.integration.compose.GlideImage
 import com.moneymong.moneymong.common.ext.base64ToFile
 import com.moneymong.moneymong.common.ext.encodingBase64
 import com.moneymong.moneymong.common.ui.noRippleClickable
-import com.moneymong.moneymong.design_system.R.*
+import com.moneymong.moneymong.design_system.R.drawable
 import com.moneymong.moneymong.design_system.component.button.MDSButton
 import com.moneymong.moneymong.design_system.component.button.MDSButtonSize
 import com.moneymong.moneymong.design_system.component.button.MDSButtonType
@@ -65,6 +65,7 @@ import com.moneymong.moneymong.design_system.component.modal.MDSModal
 import com.moneymong.moneymong.design_system.component.selection.MDSSelection
 import com.moneymong.moneymong.design_system.component.textfield.MDSTextField
 import com.moneymong.moneymong.design_system.component.textfield.util.MDSTextFieldIcons
+import com.moneymong.moneymong.design_system.component.textfield.util.withRequiredMark
 import com.moneymong.moneymong.design_system.component.textfield.visualtransformation.DateVisualTransformation
 import com.moneymong.moneymong.design_system.component.textfield.visualtransformation.PriceVisualTransformation
 import com.moneymong.moneymong.design_system.component.textfield.visualtransformation.TimeVisualTransformation
@@ -75,7 +76,6 @@ import com.moneymong.moneymong.design_system.theme.Body3
 import com.moneymong.moneymong.design_system.theme.Gray06
 import com.moneymong.moneymong.design_system.theme.Gray10
 import com.moneymong.moneymong.design_system.theme.MMHorizontalSpacing
-import com.moneymong.moneymong.design_system.theme.Red03
 import com.moneymong.moneymong.design_system.theme.White
 import com.moneymong.moneymong.domain.param.ledger.FundType
 import com.moneymong.moneymong.ledgermanual.view.LedgerManualTopbarView
@@ -190,12 +190,7 @@ fun LedgerManualScreen(
                         .onFocusChanged { isStoreNameFilled = !it.isFocused },
                     value = state.storeNameValue,
                     onValueChange = viewModel::onChangeStoreNameValue,
-                    title = buildAnnotatedString {
-                        append("수입·지출 출처")
-                        withStyle(SpanStyle(color = Red03)) {
-                            append("*")
-                        }
-                    },
+                    title = withRequiredMark("수입·지출 출처"),
                     placeholder = "점포명을 입력해주세요",
                     helperText = "20자 이하로 입력해주세요",
                     maxCount = 20,
@@ -214,12 +209,7 @@ fun LedgerManualScreen(
                         .onFocusChanged { isTotalPriceFilled = !it.isFocused },
                     value = state.totalPriceValue,
                     onValueChange = viewModel::onChangeTotalPriceValue,
-                    title = buildAnnotatedString {
-                        append("금액")
-                        withStyle(SpanStyle(color = Red03)) {
-                            append("*")
-                        }
-                    },
+                    title = withRequiredMark("금액"),
                     placeholder = "거래 금액을 입력해주세요",
                     helperText = "999,999,999,999원 이하로 입력해주세요",
                     isFilled = isTotalPriceFilled,
@@ -268,12 +258,7 @@ fun LedgerManualScreen(
                         .onFocusChanged { isPaymentDateFilled = !it.isFocused },
                     value = state.paymentDateValue,
                     onValueChange = viewModel::onChangePaymentDateValue,
-                    title = buildAnnotatedString {
-                        append("날짜")
-                        withStyle(SpanStyle(color = Red03)) {
-                            append("*")
-                        }
-                    },
+                    title = withRequiredMark("날짜"),
                     placeholder = "YYYY/MM/DD",
                     helperText = "올바른 날짜를 입력해주세요",
                     isFilled = isPaymentDateFilled,
@@ -293,12 +278,7 @@ fun LedgerManualScreen(
                         .onFocusChanged { isPaymentTimeFilled = !it.isFocused },
                     value = state.paymentTimeValue,
                     onValueChange = viewModel::onChangePaymentTimeValue,
-                    title = buildAnnotatedString {
-                        append("시간")
-                        withStyle(SpanStyle(color = Red03)) {
-                            append("*")
-                        }
-                    },
+                    title = withRequiredMark("시간"),
                     placeholder = "00:00:00 (24시 단위)",
                     helperText = "올바른 시간을 입력해주세요",
                     isFilled = isPaymentTimeFilled,

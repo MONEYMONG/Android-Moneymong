@@ -13,14 +13,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import com.moneymong.moneymong.design_system.component.textfield.util.MDSTextFieldIcons
-import com.moneymong.moneymong.design_system.theme.Red03
+import com.moneymong.moneymong.design_system.component.textfield.util.withRequiredMark
 
 
 @Composable
@@ -123,12 +120,7 @@ fun MDSTextFieldPreview() {
             .onFocusChanged { isFilled = !it.isFocused },
         value = userInput,
         onValueChange = { userInput = it },
-        title = buildAnnotatedString {
-            append("title")
-            withStyle(style = SpanStyle(color = Red03)) {
-                append("*")
-            }
-        },
+        title = withRequiredMark("title"),
         placeholder = "placeholder",
         isFilled = isFilled,
         isError = isError,
