@@ -1,9 +1,9 @@
 package com.moneymong.moneymong.data.datasource.signup
 
 import com.moneymong.moneymong.network.api.UniversityApi
-import com.moneymong.moneymong.network.request.signup.SearchQueryRequest
-import com.moneymong.moneymong.network.request.signup.UnivRequest
-import com.moneymong.moneymong.network.response.signup.UniversitiesResponse
+import com.moneymong.moneymong.model.sign.SearchQueryRequest
+import com.moneymong.moneymong.model.sign.UnivRequest
+import com.moneymong.moneymong.model.sign.UniversitiesResponse
 import javax.inject.Inject
 
 class UnivRemoteDataSourceImpl @Inject constructor(private val universityApi: UniversityApi) : UnivRemoteDataSource {

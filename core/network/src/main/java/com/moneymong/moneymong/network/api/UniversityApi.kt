@@ -1,7 +1,7 @@
 package com.moneymong.moneymong.network.api
 
-import com.moneymong.moneymong.network.request.signup.UnivRequest
-import com.moneymong.moneymong.network.response.signup.UniversitiesResponse
+import com.moneymong.moneymong.model.sign.UnivRequest
+import com.moneymong.moneymong.model.sign.UniversitiesResponse
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST

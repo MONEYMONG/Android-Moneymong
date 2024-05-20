@@ -6,8 +6,8 @@ import com.moneymong.moneymong.common.ui.isValidPaymentDate
 import com.moneymong.moneymong.common.ui.isValidPaymentTime
 import com.moneymong.moneymong.common.ui.toWonFormat
 import com.moneymong.moneymong.common.ui.validateValue
-import com.moneymong.moneymong.domain.entity.ocr.DocumentEntity
-import com.moneymong.moneymong.domain.entity.ocr.DocumentResultEntity
+import com.moneymong.moneymong.model.ocr.DocumentResponse
+import com.moneymong.moneymong.model.ocr.DocumentResult
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -17,12 +17,12 @@ data class OCRResultState(
     val isLoading: Boolean = false,
     val receiptImage: String = "",
     val receiptFile: File? = null,
-    val document: DocumentEntity? = null,
+    val document: DocumentResponse? = null,
     val memo: String = "내용 없음",
     val agencyId: Int = 0
 ) : State {
 
-    val receipt: DocumentResultEntity?
+    val receipt: DocumentResult?
         get() = document?.images?.first()?.receipt?.result
 
     val visibleSnackbar: Boolean

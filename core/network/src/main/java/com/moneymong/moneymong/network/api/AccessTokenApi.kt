@@ -1,9 +1,9 @@
 package com.moneymong.moneymong.network.api
 
-import com.moneymong.moneymong.network.request.login.RefreshTokenRequest
-import com.moneymong.moneymong.network.request.login.TokenRequest
-import com.moneymong.moneymong.network.response.login.RefreshTokenResponse
-import com.moneymong.moneymong.network.response.login.TokenResponse
+import com.moneymong.moneymong.model.sign.RefreshTokenRequest
+import com.moneymong.moneymong.model.sign.TokenRequest
+import com.moneymong.moneymong.model.sign.RefreshTokenResponse
+import com.moneymong.moneymong.model.sign.TokenResponse
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.POST
