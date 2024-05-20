@@ -1,7 +1,7 @@
 package com.moneymong.moneymong.domain.usecase.login
 
-import com.moneymong.moneymong.domain.entity.login.UserDataStoreInfoEntity
 import com.moneymong.moneymong.domain.repository.TokenRepository
+import com.moneymong.moneymong.model.sign.UserDataStoreInfoResponse
 import javax.inject.Inject
 
 class TokenUseCase @Inject constructor(
@@ -11,7 +11,7 @@ class TokenUseCase @Inject constructor(
         return tokenRepository.getAccessToken()
     }
 
-    suspend fun getDataStoreInfo(): Result<UserDataStoreInfoEntity> {
+    suspend fun getDataStoreInfo(): Result<UserDataStoreInfoResponse> {
         return tokenRepository.getDataStoreInfo()
     }
 

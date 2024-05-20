@@ -13,10 +13,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.KeyboardType
@@ -27,9 +25,9 @@ import com.moneymong.moneymong.design_system.component.textfield.util.MDSTextFie
 import com.moneymong.moneymong.design_system.theme.Body4
 import com.moneymong.moneymong.design_system.theme.Gray05
 import com.moneymong.moneymong.design_system.theme.White
-import com.moneymong.moneymong.domain.entity.signup.UniversitiesEntity
-import com.moneymong.moneymong.domain.entity.signup.University
+import com.moneymong.moneymong.model.sign.University
 import com.moneymong.moneymong.feature.sign.item.UnivItem
+import com.moneymong.moneymong.model.sign.UniversitiesResponse
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.debounce
@@ -48,7 +46,7 @@ fun SearchUnivView(
     onSearchIconClicked: (String) -> Unit,
     isItemSelected: Boolean,
     textValue: TextFieldValue,
-    universityResponse: UniversitiesEntity?,
+    universityResponse: UniversitiesResponse?,
     value: TextFieldValue,
     isButtonVisibleChanged: (Boolean) -> Unit,
 ) {

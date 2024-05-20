@@ -49,7 +49,7 @@ class AgencySearchViewModel @Inject constructor(
             .onSuccess {
                 reduce {
                     state.copy(
-                        joinedAgencies = it.map { myAgencyEntity -> myAgencyEntity.toAgency() }
+                        joinedAgencies = it.map { myAgencyResponse -> myAgencyResponse.toAgency() }
                     )
                 }
             }.onFailure {

@@ -32,13 +32,13 @@ import com.moneymong.moneymong.design_system.theme.Gray04
 import com.moneymong.moneymong.design_system.theme.Gray06
 import com.moneymong.moneymong.design_system.theme.Gray10
 import com.moneymong.moneymong.design_system.theme.Red03
-import com.moneymong.moneymong.domain.entity.ledger.LedgerDetailEntity
-import com.moneymong.moneymong.domain.param.ledger.FundType
+import com.moneymong.moneymong.model.ledger.FundType
+import com.moneymong.moneymong.model.ledger.LedgerDetail
 
 @Composable
 fun LedgerTransactionItem(
     modifier: Modifier = Modifier,
-    ledgerDetail: LedgerDetailEntity,
+    ledgerDetail: LedgerDetail,
     onClickTransactionItem: (Int) -> Unit
 ) {
     Row(

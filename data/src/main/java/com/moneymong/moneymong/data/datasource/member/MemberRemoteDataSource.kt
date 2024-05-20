@@ -1,10 +1,9 @@
 package com.moneymong.moneymong.data.datasource.member
 
-import com.moneymong.moneymong.domain.param.member.UpdateAuthorParam
-import com.moneymong.moneymong.network.request.member.MemberBlockRequest
-import com.moneymong.moneymong.network.request.member.UpdateAuthorRequest
-import com.moneymong.moneymong.network.response.member.InvitationCodeResponse
-import com.moneymong.moneymong.network.response.member.MemberListResponse
+import com.moneymong.moneymong.model.member.MemberBlockRequest
+import com.moneymong.moneymong.model.member.UpdateAuthorRequest
+import com.moneymong.moneymong.model.member.InvitationCodeResponse
+import com.moneymong.moneymong.model.member.MemberListResponse
 
 interface MemberRemoteDataSource {
     suspend fun getInvitationCode(agencyId: Long): Result<InvitationCodeResponse>

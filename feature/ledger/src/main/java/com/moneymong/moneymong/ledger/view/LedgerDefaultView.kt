@@ -44,8 +44,8 @@ import com.moneymong.moneymong.design_system.theme.Gray07
 import com.moneymong.moneymong.design_system.theme.Gray10
 import com.moneymong.moneymong.design_system.theme.Heading5
 import com.moneymong.moneymong.design_system.theme.White
-import com.moneymong.moneymong.domain.entity.ledger.LedgerDetailEntity
 import com.moneymong.moneymong.ledger.view.item.LedgerTransactionItem
+import com.moneymong.moneymong.model.ledger.LedgerDetail
 import java.time.LocalDate
 
 enum class LedgerTransactionType(
@@ -74,7 +74,7 @@ enum class LedgerTransactionType(
 fun LedgerDefaultView(
     modifier: Modifier = Modifier,
     totalBalance: Int,
-    ledgerDetails: List<LedgerDetailEntity>,
+    ledgerDetails: List<LedgerDetail>,
     transactionType: LedgerTransactionType,
     currentDate: LocalDate,
     hasTransaction: Boolean,

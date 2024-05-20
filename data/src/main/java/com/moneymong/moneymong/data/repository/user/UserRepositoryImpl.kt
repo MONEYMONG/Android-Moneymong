@@ -3,9 +3,8 @@ package com.moneymong.moneymong.data.repository.user
 import com.moneymong.moneymong.data.datasource.login.LoginLocalDataSource
 import com.moneymong.moneymong.data.datasource.user.UserLocalDataSource
 import com.moneymong.moneymong.data.datasource.user.UserRemoteDataSource
-import com.moneymong.moneymong.data.mapper.user.toEntity
-import com.moneymong.moneymong.domain.entity.user.UserEntity
 import com.moneymong.moneymong.domain.repository.user.UserRepository
+import com.moneymong.moneymong.model.user.UserResponse
 import javax.inject.Inject
 
 class UserRepositoryImpl @Inject constructor(
@@ -14,8 +13,8 @@ class UserRepositoryImpl @Inject constructor(
     private val loginLocalDataSource: LoginLocalDataSource
 ) : UserRepository {
 
-    override suspend fun getMyInfo(): Result<UserEntity> {
-        return userRemoteDataSource.getMyInfo().map { it.toEntity() }
+    override suspend fun getMyInfo(): Result<UserResponse> {
+        return userRemoteDataSource.getMyInfo()
     }
 
     override suspend fun withdrawal(): Result<Unit> {
