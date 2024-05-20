@@ -3,7 +3,6 @@ package com.moneymong.moneymong.ledger
 import androidx.lifecycle.SavedStateHandle
 import com.moneymong.moneymong.common.base.BaseViewModel
 import com.moneymong.moneymong.common.error.MoneyMongError
-import com.moneymong.moneymong.domain.param.ledger.LedgerTransactionListParam
 import com.moneymong.moneymong.domain.usecase.agency.FetchAgencyIdUseCase
 import com.moneymong.moneymong.domain.usecase.agency.FetchMyAgencyListUseCase
 import com.moneymong.moneymong.domain.usecase.agency.SaveAgencyIdUseCase
@@ -74,15 +73,13 @@ class LedgerViewModel @Inject constructor(
     fun fetchLedgerTransactionList() = intent {
         if (state.existAgency) {
             reduce { state.copy(isLedgerTransactionLoading = true) }
-            val param = LedgerTransactionListParam(
+            fetchLedgerTransactionListUseCase(
                 id = state.agencyId,
                 year = state.currentDate.year,
                 month = state.currentDate.monthValue,
                 page = 0,
                 limit = 1000
-            )
-            fetchLedgerTransactionListUseCase(param)
-                .onSuccess {
+            ).onSuccess {
                     reduce {
                         state.copy(
                             ledgerTransaction = it,

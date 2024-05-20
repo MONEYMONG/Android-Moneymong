@@ -2,9 +2,6 @@ package com.example.member
 
 import android.util.Log
 import com.moneymong.moneymong.common.base.BaseViewModel
-import com.moneymong.moneymong.domain.entity.member.AgencyUserEntity
-import com.moneymong.moneymong.domain.param.member.MemberBlockParam
-import com.moneymong.moneymong.domain.param.member.UpdateAuthorParam
 import com.moneymong.moneymong.domain.usecase.agency.FetchAgencyIdUseCase
 import com.moneymong.moneymong.domain.usecase.member.MemberBlockUseCase
 import com.moneymong.moneymong.domain.usecase.member.MemberInvitationCodeUseCase
@@ -12,6 +9,9 @@ import com.moneymong.moneymong.domain.usecase.member.MemberListUseCase
 import com.moneymong.moneymong.domain.usecase.member.MemberReInvitationCodeUseCase
 import com.moneymong.moneymong.domain.usecase.member.UpdateMemberAuthorUseCase
 import com.moneymong.moneymong.domain.usecase.user.GetMyInfoUseCase
+import com.moneymong.moneymong.model.member.AgencyUser
+import com.moneymong.moneymong.model.member.MemberBlockRequest
+import com.moneymong.moneymong.model.member.UpdateAuthorRequest
 import dagger.hilt.android.lifecycle.HiltViewModel
 import org.orbitmvi.orbit.annotation.OrbitExperimental
 import org.orbitmvi.orbit.syntax.simple.blockingIntent
@@ -112,7 +112,7 @@ class MemberViewModel @Inject constructor(
         intent {
             reduce {
                 state.copy(
-                    memberMyInfo = AgencyUserEntity(id, userId, nickname, agencyUserRole)
+                    memberMyInfo = AgencyUser(id, userId, nickname, agencyUserRole)
                 )
             }
         }
@@ -241,7 +241,7 @@ class MemberViewModel @Inject constructor(
     }
 
     fun updateMemberAuthor(agencyId: Long, role: String, userId: Long) = intent {
-        updateMemberAuthorUseCase.invoke(agencyId, UpdateAuthorParam(role, userId))
+        updateMemberAuthorUseCase(agencyId, UpdateAuthorRequest(role, userId))
             .onSuccess {
                 updateFilteredMemberList(userId, role)
                 updateMemberList(userId, role)
@@ -257,7 +257,7 @@ class MemberViewModel @Inject constructor(
     }
 
     fun blockMemberAuthor(agencyId: Long, userId: Long) = intent {
-        memberBlockUseCase.invoke(MemberBlockParam(agencyId, userId))
+        memberBlockUseCase(agencyId, MemberBlockRequest(userId))
             .onSuccess {
                 updateFilteredMemberListByBlock(userId)
                 updateMemberListByBlock(userId)

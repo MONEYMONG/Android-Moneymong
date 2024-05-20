@@ -1,11 +1,11 @@
 package com.moneymong.moneymong.ledger
 
 import com.moneymong.moneymong.common.base.State
-import com.moneymong.moneymong.domain.entity.agency.MyAgencyEntity
-import com.moneymong.moneymong.domain.entity.ledger.LedgerDetailEntity
-import com.moneymong.moneymong.domain.entity.ledger.LedgerTransactionListEntity
-import com.moneymong.moneymong.domain.entity.member.AgencyUserEntity
 import com.moneymong.moneymong.ledger.view.LedgerTransactionType
+import com.moneymong.moneymong.model.agency.MyAgencyResponse
+import com.moneymong.moneymong.model.ledger.LedgerDetail
+import com.moneymong.moneymong.model.ledger.LedgerTransactionListResponse
+import com.moneymong.moneymong.model.member.AgencyUser
 import java.time.LocalDate
 
 data class LedgerState(
@@ -17,17 +17,17 @@ data class LedgerState(
     val userId: Int = 0,
     val isExistLedger: Boolean = false,
     val showBottomSheet: Boolean = false,
-    val ledgerTransaction: LedgerTransactionListEntity? = null,
+    val ledgerTransaction: LedgerTransactionListResponse? = null,
     val transactionType: LedgerTransactionType = LedgerTransactionType.전체,
     val currentDate: LocalDate = LocalDate.now(),
     val visibleError: Boolean = false,
     val visibleSnackbar: Boolean = false,
-    val agencyList: List<MyAgencyEntity> = emptyList(),
-    val memberList: List<AgencyUserEntity> = emptyList(),
+    val agencyList: List<MyAgencyResponse> = emptyList(),
+    val memberList: List<AgencyUser> = emptyList(),
     val errorMessage: String = ""
 ) : State {
 
-    val filterTransactionList: List<LedgerDetailEntity>
+    val filterTransactionList: List<LedgerDetail>
         get() = if (transactionType == LedgerTransactionType.전체) {
             ledgerTransaction?.ledgerInfoViewDetails.orEmpty()
         } else {
@@ -40,7 +40,7 @@ data class LedgerState(
     val existAgency: Boolean
         get() = agencyList.isNotEmpty()
 
-    val currentAgency: MyAgencyEntity?
+    val currentAgency: MyAgencyResponse?
         get() = agencyList.find { it.id == agencyId }
 
     val isStaff: Boolean
