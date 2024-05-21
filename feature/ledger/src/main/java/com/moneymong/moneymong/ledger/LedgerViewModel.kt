@@ -42,8 +42,8 @@ class LedgerViewModel @Inject constructor(
     }
 
     fun fetchDefaultInfo() = blockingIntent {
-        val agencyId = fetchAgencyIdUseCase(Unit)
-        val userId = fetchUserIdUseCase(Unit)
+        val agencyId = fetchAgencyIdUseCase()
+        val userId = fetchUserIdUseCase()
         reduce {
             state.copy(
                 agencyId = agencyId,
@@ -99,7 +99,7 @@ class LedgerViewModel @Inject constructor(
 
     fun fetchMyAgencyList() = blockingIntent {
         reduce { state.copy(isMyAgencyLoading = true) }
-        fetchMyAgencyListUseCase(Unit)
+        fetchMyAgencyListUseCase()
             .onSuccess {
                 reduce {
                     state.copy(

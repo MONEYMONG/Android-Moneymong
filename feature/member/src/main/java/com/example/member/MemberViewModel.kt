@@ -36,7 +36,7 @@ class MemberViewModel @Inject constructor(
 
     @OptIn(OrbitExperimental::class)
     fun fetchAgencyId() = blockingIntent {
-        val agencyId = fetchAgencyIdUseCase(Unit)
+        val agencyId = fetchAgencyIdUseCase()
         reduce { state.copy(agencyId = agencyId) }
     }
 
@@ -220,8 +220,8 @@ class MemberViewModel @Inject constructor(
             }
     }
 
-    fun getMyInfo(data: Unit) = intent {
-        getMyInfoUseCase.invoke(Unit)
+    fun getMyInfo() = intent {
+        getMyInfoUseCase.invoke()
             .onSuccess {
                 reduce {
                     state.copy(
