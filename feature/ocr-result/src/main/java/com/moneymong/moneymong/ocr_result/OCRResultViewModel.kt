@@ -34,7 +34,7 @@ class OCRResultViewModel @Inject constructor(
 
     @OptIn(OrbitExperimental::class)
     fun fetchAgencyId() = blockingIntent {
-        val agencyId = fetchAgencyIdUseCase(Unit)
+        val agencyId = fetchAgencyIdUseCase()
         reduce { state.copy(agencyId = agencyId) }
     }
 
