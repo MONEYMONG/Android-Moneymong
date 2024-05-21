@@ -42,7 +42,7 @@ class AgencySearchViewModel @Inject constructor(
                 isError = false
             )
         }
-        fetchMyAgencyListUseCase(Unit)
+        fetchMyAgencyListUseCase()
             .also {
                 reduce { state.copy(isLoading = false) }
             }

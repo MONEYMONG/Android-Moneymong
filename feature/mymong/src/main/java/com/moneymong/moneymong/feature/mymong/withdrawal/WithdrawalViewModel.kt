@@ -21,7 +21,7 @@ class WithdrawalViewModel @Inject constructor(
 ) : BaseViewModel<WithdrawalState, WithdrawalSideEffect>(WithdrawalState()) {
 
     fun withdrawal() = intent {
-        withdrawalUseCase(data = Unit)
+        withdrawalUseCase()
             .onSuccess {
                 clearLocalData()
                 postSideEffect(WithdrawalSideEffect.NavigateToLogin)

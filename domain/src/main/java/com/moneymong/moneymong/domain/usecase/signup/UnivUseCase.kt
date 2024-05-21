@@ -8,7 +8,7 @@ import javax.inject.Inject
 
 class UnivUseCase @Inject constructor(
     private val univRepository: UnivRepository
-){
+) {
     suspend fun createUniv(body : UnivRequest) : Result<Unit>{
         return univRepository.createUniv(body)
     }
