@@ -76,8 +76,8 @@ class OCRDetailViewModel @Inject constructor(
 
     @OptIn(OrbitExperimental::class)
     fun fetchUserInfo() = blockingIntent {
-        val agencyId = fetchAgencyIdUseCase(Unit)
-        val userNickname = fetchUserNicknameUseCase(Unit)
+        val agencyId = fetchAgencyIdUseCase()
+        val userNickname = fetchUserNicknameUseCase()
         reduce {
             state.copy(
                 agencyId = agencyId,
