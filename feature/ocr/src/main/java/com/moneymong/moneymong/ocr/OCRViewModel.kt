@@ -69,7 +69,7 @@ class OCRViewModel @Inject constructor(
 
     @OptIn(OrbitExperimental::class)
     fun fetchDeniedCameraPermission() = blockingIntent {
-        val isDeniedCamera = fetchDeniedCameraPermissionUseCase(Unit)
+        val isDeniedCamera = fetchDeniedCameraPermissionUseCase()
         reduce { state.copy(isDeniedCamera = isDeniedCamera) }
     }
 
