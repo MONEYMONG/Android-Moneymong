@@ -55,17 +55,17 @@ enum class LedgerTransactionType(
 ) {
     전체(
         type = "ALL",
-        description = "기록된 장부가 없습니다",
-        imgRes = drawable.img_transaction_empty
+        description = "장부 기록이 없어요",
+        imgRes = drawable.img_expenditure_empty
     ),
     지출(
         type = "EXPENSE",
-        description = "지출기록이 없습니다",
+        description = "지출 기록이 없어요",
         imgRes = drawable.img_expenditure_empty
     ),
     수입(
         type = "INCOME",
-        description = "수입기록이 없습니다",
+        description = "수입 기록이 없어요",
         imgRes = drawable.img_expenditure_empty
     )
 }
@@ -79,6 +79,8 @@ fun LedgerDefaultView(
     currentDate: LocalDate,
     hasTransaction: Boolean,
     isLoading: Boolean,
+    isExistLedger: Boolean,
+    isStaff: Boolean,
     onChangeTransactionType: (LedgerTransactionType) -> Unit,
     onAddMonthFromCurrentDate: (Long) -> Unit,
     onClickTransactionItem: (Int) -> Unit
@@ -188,23 +190,28 @@ fun LedgerDefaultView(
                 LoadingScreen(modifier = Modifier.fillMaxSize())
             }
         } else {
-            if (hasTransaction) {
-                itemsIndexed(ledgerDetails) { index, item ->
-                    LedgerTransactionItem(
-                        modifier = Modifier.padding(horizontal = 20.dp),
-                        ledgerDetail = item,
-                        onClickTransactionItem = onClickTransactionItem
-                    )
+            if (!isExistLedger && isStaff) {
+                item {
+                    Spacer(modifier = Modifier.height(75.dp))
+                    LedgerStaffEmptyView()
                 }
             } else {
-                val descriptionDate =
-                    if (transactionType == LedgerTransactionType.전체) "${currentDate.monthValue}월에 " else ""
-                item {
-                    Spacer(modifier = Modifier.height(121.dp))
-                    LedgerTransactionEmptyView(
-                        text = descriptionDate + transactionType.description,
-                        image = transactionType.imgRes
-                    )
+                if (hasTransaction) {
+                    itemsIndexed(ledgerDetails) { index, item ->
+                        LedgerTransactionItem(
+                            modifier = Modifier.padding(horizontal = 20.dp),
+                            ledgerDetail = item,
+                            onClickTransactionItem = onClickTransactionItem
+                        )
+                    }
+                } else {
+                    item {
+                        Spacer(modifier = Modifier.height(121.dp))
+                        LedgerTransactionEmptyView(
+                            text = transactionType.description,
+                            image = transactionType.imgRes
+                        )
+                    }
                 }
             }
         }
@@ -221,6 +228,8 @@ fun LedgerDefaultPreview() {
         currentDate = LocalDate.now(),
         hasTransaction = false,
         isLoading = false,
+        isExistLedger = false,
+        isStaff = false,
         onChangeTransactionType = {},
         onAddMonthFromCurrentDate = {},
         onClickTransactionItem = {}

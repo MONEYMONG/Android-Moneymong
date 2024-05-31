@@ -43,19 +43,13 @@ import com.moneymong.moneymong.design_system.component.bottomSheet.MDSBottomShee
 import com.moneymong.moneymong.design_system.component.button.FABIconSize
 import com.moneymong.moneymong.design_system.component.button.MDSFloatingActionButton
 import com.moneymong.moneymong.design_system.component.snackbar.MDSSnackbarHost
-import com.moneymong.moneymong.design_system.component.tooltip.MDSToolTip
-import com.moneymong.moneymong.design_system.component.tooltip.MDSToolTipPosition
 import com.moneymong.moneymong.design_system.error.ErrorDialog
-import com.moneymong.moneymong.design_system.error.ErrorScreen
-import com.moneymong.moneymong.design_system.loading.LoadingScreen
 import com.moneymong.moneymong.design_system.theme.Mint02
 import com.moneymong.moneymong.design_system.theme.Mint03
 import com.moneymong.moneymong.design_system.theme.White
 import com.moneymong.moneymong.ledger.view.LedgerAgencyEmptyView
 import com.moneymong.moneymong.ledger.view.LedgerAgencySelectBottomSheet
 import com.moneymong.moneymong.ledger.view.LedgerDefaultView
-import com.moneymong.moneymong.ledger.view.LedgerMemberEmptyView
-import com.moneymong.moneymong.ledger.view.LedgerStaffEmptyView
 import com.moneymong.moneymong.ledger.view.LedgerTab
 import com.moneymong.moneymong.ledger.view.LedgerTabRowView
 import com.moneymong.moneymong.ledger.view.LedgerTopbarView
@@ -213,36 +207,26 @@ fun LedgerScreen(
                 HorizontalPager(state = pagerState) { index ->
                     if (tabs[index] == LedgerTab.Ledger) {
                         Box(modifier = modifier.fillMaxSize()) {
-                            if (state.isExistLedger) { // 소속에 장부가 존재한다면
-                                LedgerDefaultView(
-                                    totalBalance = state.ledgerTransaction?.totalBalance
-                                        ?: 0,
-                                    ledgerDetails = state.filterTransactionList,
-                                    transactionType = state.transactionType,
-                                    currentDate = state.currentDate,
-                                    hasTransaction = state.hasTransaction,
-                                    isLoading = state.isLoading,
-                                    onChangeTransactionType = viewModel::onChangeTransactionType,
-                                    onAddMonthFromCurrentDate = viewModel::onAddMonthFromCurrentDate,
-                                    onClickTransactionItem = {
-                                        viewModel.eventEmit(
-                                            LedgerSideEffect.LedgerNavigateToLedgerDetail(
-                                                it
-                                            )
+                            LedgerDefaultView(
+                                totalBalance = state.ledgerTransaction?.totalBalance
+                                    ?: 0,
+                                ledgerDetails = state.filterTransactionList,
+                                transactionType = state.transactionType,
+                                currentDate = state.currentDate,
+                                hasTransaction = state.hasTransaction,
+                                isLoading = state.isLoading,
+                                isExistLedger = state.isExistLedger,
+                                isStaff = state.isStaff,
+                                onChangeTransactionType = viewModel::onChangeTransactionType,
+                                onAddMonthFromCurrentDate = viewModel::onAddMonthFromCurrentDate,
+                                onClickTransactionItem = {
+                                    viewModel.eventEmit(
+                                        LedgerSideEffect.LedgerNavigateToLedgerDetail(
+                                            it
                                         )
-                                    }
-                                )
-                            } else {
-                                if (state.isLoading) {
-                                    LoadingScreen(modifier = Modifier.fillMaxSize())
-                                } else {
-                                    if (state.isStaff) {
-                                        LedgerStaffEmptyView()
-                                    } else {
-                                        LedgerMemberEmptyView()
-                                    }
+                                    )
                                 }
-                            }
+                            )
                             if (state.isStaff) {
                                 Column(
                                     modifier = Modifier
@@ -250,13 +234,6 @@ fun LedgerScreen(
                                         .padding(end = 20.dp, bottom = 20.dp),
                                     horizontalAlignment = Alignment.End
                                 ) {
-                                    if (!state.isExistLedger && !expandableFab) {
-                                        MDSToolTip(
-                                            text = "해당 기능을 사용해보세요",
-                                            position = MDSToolTipPosition.Right
-                                        )
-                                        Spacer(modifier = Modifier.height(8.dp))
-                                    }
                                     AnimatedVisibility(
                                         visible = expandableFab,
                                         enter = slideInVertically(
