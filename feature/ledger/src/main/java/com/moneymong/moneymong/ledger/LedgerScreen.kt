@@ -99,9 +99,9 @@ fun LedgerScreen(
         viewModel.fetchAgencyExistLedger()
     }
 
-    LaunchedEffect(state.currentDate) {
-        viewModel.fetchLedgerTransactionList()
-    }
+//    LaunchedEffect(state.currentDate) {
+//        viewModel.fetchLedgerTransactionList()
+//    }
 
     viewModel.collectSideEffect {
         when (it) {
@@ -212,13 +212,13 @@ fun LedgerScreen(
                                     ?: 0,
                                 ledgerDetails = state.filterTransactionList,
                                 transactionType = state.transactionType,
-                                currentDate = state.currentDate,
+                                currentDate = state.endDate,
                                 hasTransaction = state.hasTransaction,
                                 isLoading = state.isLoading,
                                 isExistLedger = state.isExistLedger,
                                 isStaff = state.isStaff,
                                 onChangeTransactionType = viewModel::onChangeTransactionType,
-                                onAddMonthFromCurrentDate = viewModel::onAddMonthFromCurrentDate,
+                                onAddMonthFromCurrentDate = {},
                                 onClickTransactionItem = {
                                     viewModel.eventEmit(
                                         LedgerSideEffect.LedgerNavigateToLedgerDetail(

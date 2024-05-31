@@ -7,6 +7,22 @@ import javax.inject.Inject
 class FetchLedgerTransactionListUseCase @Inject constructor(
     private val ledgerRepository: LedgerRepository
 ) {
-    suspend operator fun invoke(id: Int, year: Int, month: Int, page: Int, limit: Int): Result<LedgerTransactionListResponse> =
-        ledgerRepository.fetchLedgerTransactionList(id, year, month, page, limit)
+    suspend operator fun invoke(
+        id: Int,
+        startYear: Int,
+        startMonth: Int,
+        endYear: Int,
+        endMonth: Int,
+        page: Int,
+        limit: Int
+    ): Result<LedgerTransactionListResponse> =
+        ledgerRepository.fetchLedgerTransactionList(
+            id,
+            startYear,
+            startMonth,
+            endYear = endYear,
+            endMonth = endMonth,
+            page,
+            limit
+        )
 }

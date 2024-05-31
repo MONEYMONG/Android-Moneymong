@@ -75,25 +75,27 @@ class LedgerViewModel @Inject constructor(
             reduce { state.copy(isLedgerTransactionLoading = true) }
             fetchLedgerTransactionListUseCase(
                 id = state.agencyId,
-                year = state.currentDate.year,
-                month = state.currentDate.monthValue,
+                startYear = state.startDate.year,
+                startMonth = state.startDate.monthValue,
+                endYear = state.endDate.year,
+                endMonth = state.endDate.monthValue,
                 page = 0,
-                limit = 1000
+                limit = 100
             ).onSuccess {
-                    reduce {
-                        state.copy(
-                            ledgerTransaction = it,
-                            visibleError = false
-                        )
-                    }
-                }.onFailure {
-                    reduce {
-                        state.copy(
-                            visibleError = true,
-                            errorMessage = it.message ?: MoneyMongError.UnExpectedError.message
-                        )
-                    }
-                }.also { reduce { state.copy(isLedgerTransactionLoading = false) } }
+                reduce {
+                    state.copy(
+                        ledgerTransaction = it,
+                        visibleError = false
+                    )
+                }
+            }.onFailure {
+                reduce {
+                    state.copy(
+                        visibleError = true,
+                        errorMessage = it.message ?: MoneyMongError.UnExpectedError.message
+                    )
+                }
+            }.also { reduce { state.copy(isLedgerTransactionLoading = false) } }
         }
     }
 
@@ -153,10 +155,10 @@ class LedgerViewModel @Inject constructor(
         reduce { state.copy(transactionType = transactionType) }
     }
 
-    fun onAddMonthFromCurrentDate(addMonth: Long) = intent {
-        val nextDate = state.currentDate.plusMonths(addMonth)
-        reduce { state.copy(currentDate = nextDate) }
-    }
+//    fun onAddMonthFromCurrentDate(addMonth: Long) = intent {
+//        val nextDate = state.currentDate.plusMonths(addMonth)
+//        reduce { state.copy(currentDate = nextDate) }
+//    }
 
     fun onChangeSheetState(visible: Boolean) = intent {
         reduce { state.copy(showBottomSheet = visible) }
