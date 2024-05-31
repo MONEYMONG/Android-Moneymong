@@ -2,16 +2,17 @@ package com.moneymong.moneymong.ledgermanual
 
 import androidx.compose.ui.text.input.TextFieldValue
 import com.moneymong.moneymong.common.base.BaseViewModel
+import com.moneymong.moneymong.common.ext.toMultipart
 import com.moneymong.moneymong.common.ui.isValidPaymentDate
 import com.moneymong.moneymong.common.ui.isValidPaymentTime
 import com.moneymong.moneymong.common.ui.validateValue
-import com.moneymong.moneymong.domain.param.ledger.FundType
-import com.moneymong.moneymong.domain.param.ledger.LedgerTransactionParam
-import com.moneymong.moneymong.domain.param.ocr.FileUploadParam
 import com.moneymong.moneymong.domain.usecase.agency.FetchAgencyIdUseCase
 import com.moneymong.moneymong.domain.usecase.ledger.PostLedgerTransactionUseCase
 import com.moneymong.moneymong.domain.usecase.ocr.PostFileUploadUseCase
 import com.moneymong.moneymong.domain.usecase.user.FetchUserNicknameUseCase
+import com.moneymong.moneymong.model.ledger.FundType
+import com.moneymong.moneymong.model.ledger.LedgerTransactionRequest
+import com.moneymong.moneymong.model.ocr.FileUploadRequest
 import dagger.hilt.android.lifecycle.HiltViewModel
 import org.orbitmvi.orbit.annotation.OrbitExperimental
 import org.orbitmvi.orbit.syntax.simple.blockingIntent
@@ -35,8 +36,8 @@ class LedgerManualViewModel @Inject constructor(
 
     @OptIn(OrbitExperimental::class)
     fun fetchUserInfo() = blockingIntent {
-        val agencyId = fetchAgencyIdUseCase(Unit)
-        val userNickname = fetchUserNicknameUseCase(Unit)
+        val agencyId = fetchAgencyIdUseCase()
+        val userNickname = fetchUserNicknameUseCase()
         reduce {
             state.copy(
                 agencyId = agencyId,
@@ -48,17 +49,16 @@ class LedgerManualViewModel @Inject constructor(
     fun postLedgerTransaction() = intent {
         if (!state.isLoading) {
             reduce { state.copy(isLoading = true) }
-            val ledgerTransactionParam = LedgerTransactionParam(
-                id = state.agencyId,
+            val ledgerTransactionRequest = LedgerTransactionRequest(
                 storeInfo = state.storeNameValue.text,
-                fundType = state.fundType,
+                fundType = state.fundType.name,
                 amount = state.totalPriceValue.text.toInt(),
                 description = state.memoValue.text.ifEmpty { "내용 없음" },
                 paymentDate = state.postPaymentDate,
                 receiptImageUrls = state.receiptList,
                 documentImageUrls = state.documentList
             )
-            postLedgerTransactionUseCase(ledgerTransactionParam)
+            postLedgerTransactionUseCase(state.agencyId, ledgerTransactionRequest)
                 .onSuccess {
                     postSideEffect(LedgerManualSideEffect.LedgerManualNavigateToLedger)
                 }.onFailure {
@@ -71,7 +71,7 @@ class LedgerManualViewModel @Inject constructor(
         imageFile?.let {
             if (!state.isLoading) {
                 reduce { state.copy(isLoading = true) }
-                val file = FileUploadParam(it, "ledgerManual")
+                val file = FileUploadRequest(it.toMultipart(), "ledgerManual")
                 postFileUploadUseCase(file)
                     .onSuccess { response ->
                         state.isReceipt?.let { isReceipt ->

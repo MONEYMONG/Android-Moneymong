@@ -2,10 +2,10 @@ package com.moneymong.moneymong.data.datasource.ocr
 
 import com.moneymong.moneymong.network.api.ClovaApi
 import com.moneymong.moneymong.network.api.MoneyMongApi
-import com.moneymong.moneymong.network.request.ocr.DocumentRequest
-import com.moneymong.moneymong.network.request.ocr.FileUploadRequest
-import com.moneymong.moneymong.network.response.ocr.DocumentResponse
-import com.moneymong.moneymong.network.response.ocr.FileUploadResponse
+import com.moneymong.moneymong.model.ocr.DocumentRequest
+import com.moneymong.moneymong.model.ocr.FileUploadRequest
+import com.moneymong.moneymong.model.ocr.DocumentResponse
+import com.moneymong.moneymong.model.ocr.FileUploadResponse
 import javax.inject.Inject
 
 class OCRRemoteDataSourceImpl @Inject constructor(

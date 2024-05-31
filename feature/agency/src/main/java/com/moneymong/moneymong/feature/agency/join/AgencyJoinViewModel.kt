@@ -1,11 +1,10 @@
 package com.moneymong.moneymong.feature.agency.join
 
-import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.moneymong.moneymong.common.base.BaseViewModel
 import com.moneymong.moneymong.domain.usecase.agency.AgencyJoinUseCase
-import com.moneymong.moneymong.domain.param.agency.AgencyJoinParam
 import com.moneymong.moneymong.domain.usecase.agency.SaveAgencyIdUseCase
+import com.moneymong.moneymong.model.agency.AgencyJoinRequest
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.syntax.simple.intent
@@ -21,7 +20,7 @@ class AgencyJoinViewModel @Inject constructor(
     fun agencyCodeNumbers(agencyId: Long) = intent {
         val codeNumbers = state.numbers.joinToString(separator = "")
         viewModelScope.launch {
-            useCase.invoke(agencyId, AgencyJoinParam(codeNumbers))
+            useCase.invoke(agencyId, AgencyJoinRequest(codeNumbers))
                 .onSuccess {
                     if (it.certified) {
                         saveAgencyIdUseCase(agencyId.toInt())

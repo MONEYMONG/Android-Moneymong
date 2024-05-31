@@ -1,23 +1,20 @@
 package com.moneymong.moneymong.data.repository.signup
 
 import com.moneymong.moneymong.data.datasource.signup.UnivRemoteDataSource
-import com.moneymong.moneymong.data.mapper.signup.toEntity
-import com.moneymong.moneymong.data.mapper.signup.toRequest
-import com.moneymong.moneymong.domain.entity.signup.UnivEntity
-import com.moneymong.moneymong.domain.entity.signup.UniversitiesEntity
-import com.moneymong.moneymong.domain.param.signup.SearchQueryParam
-import com.moneymong.moneymong.domain.param.signup.UnivParam
 import com.moneymong.moneymong.domain.repository.UnivRepository
+import com.moneymong.moneymong.model.sign.SearchQueryRequest
+import com.moneymong.moneymong.model.sign.UnivRequest
+import com.moneymong.moneymong.model.sign.UniversitiesResponse
 import javax.inject.Inject
 
 class UnivRepositoryImpl @Inject constructor(
     private val univRemoteDataSource: UnivRemoteDataSource
 ) : UnivRepository {
-    override suspend fun createUniv(body: UnivParam): Result<Unit> {
-        return univRemoteDataSource.createUniv(body.toRequest())
+    override suspend fun createUniv(body: UnivRequest): Result<Unit> {
+        return univRemoteDataSource.createUniv(body)
     }
 
-    override suspend fun searchUniv(searchQuery: SearchQueryParam): Result<UniversitiesEntity> {
-        return univRemoteDataSource.searchUniv(searchQuery.toRequest()).map { it.toEntity() }
+    override suspend fun searchUniv(searchQuery: SearchQueryRequest): Result<UniversitiesResponse> {
+        return univRemoteDataSource.searchUniv(searchQuery)
     }
 }
