@@ -1,11 +1,10 @@
 package com.moneymong.moneymong.network.api
 
-import com.moneymong.moneymong.network.request.ledger.LedgerTransactionRequest
-import com.moneymong.moneymong.network.response.ledger.LedgerTransactionListResponse
-import com.moneymong.moneymong.network.response.ledger.LedgerTransactionResponse
+import com.moneymong.moneymong.model.ledger.LedgerTransactionRequest
+import com.moneymong.moneymong.model.ledger.LedgerTransactionListResponse
+import com.moneymong.moneymong.model.ledger.LedgerTransactionResponse
 import retrofit2.http.Body
 import retrofit2.http.GET
-import retrofit2.http.Header
 import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.Query

@@ -2,13 +2,14 @@ package com.moneymong.moneymong.ocr_result
 
 import android.content.SharedPreferences
 import com.moneymong.moneymong.common.base.BaseViewModel
-import com.moneymong.moneymong.domain.entity.ocr.DocumentEntity
-import com.moneymong.moneymong.domain.param.ledger.FundType
-import com.moneymong.moneymong.domain.param.ledger.LedgerTransactionParam
-import com.moneymong.moneymong.domain.param.ocr.FileUploadParam
+import com.moneymong.moneymong.common.ext.toMultipart
 import com.moneymong.moneymong.domain.usecase.agency.FetchAgencyIdUseCase
 import com.moneymong.moneymong.domain.usecase.ledger.PostLedgerTransactionUseCase
 import com.moneymong.moneymong.domain.usecase.ocr.PostFileUploadUseCase
+import com.moneymong.moneymong.model.ledger.FundType
+import com.moneymong.moneymong.model.ledger.LedgerTransactionRequest
+import com.moneymong.moneymong.model.ocr.DocumentResponse
+import com.moneymong.moneymong.model.ocr.FileUploadRequest
 import dagger.hilt.android.lifecycle.HiltViewModel
 import org.orbitmvi.orbit.annotation.OrbitExperimental
 import org.orbitmvi.orbit.syntax.simple.blockingIntent
@@ -33,23 +34,22 @@ class OCRResultViewModel @Inject constructor(
 
     @OptIn(OrbitExperimental::class)
     fun fetchAgencyId() = blockingIntent {
-        val agencyId = fetchAgencyIdUseCase(Unit)
+        val agencyId = fetchAgencyIdUseCase()
         reduce { state.copy(agencyId = agencyId) }
     }
 
     fun postLedgerTransaction(s3Url: String) = intent {
         if (!state.isLoading) {
             reduce { state.copy(isLoading = true) }
-            val ledgerTransactionParam = LedgerTransactionParam(
-                id = state.agencyId,
+            val ledgerTransactionRequest = LedgerTransactionRequest(
                 storeInfo = state.receipt?.storeInfo?.name?.text.orEmpty(),
-                fundType = FundType.EXPENSE,
+                fundType = FundType.EXPENSE.name,
                 amount = state.receipt?.totalPrice?.price?.formatted?.value.orEmpty().toInt(),
                 description = state.memo,
                 paymentDate = state.postPaymentDate,
                 receiptImageUrls = listOf(s3Url)
             )
-            postLedgerTransactionUseCase(ledgerTransactionParam)
+            postLedgerTransactionUseCase(state.agencyId, ledgerTransactionRequest)
                 .onSuccess {
                     postSideEffect(OCRResultSideEffect.OCRResultNavigateToLedger)
                 }.onFailure {
@@ -62,7 +62,7 @@ class OCRResultViewModel @Inject constructor(
         state.receiptFile?.let {
             if (!state.isLoading) {
                 reduce { state.copy(isLoading = true) }
-                val file = FileUploadParam(it, "ocr")
+                val file = FileUploadRequest(it.toMultipart(), "ocr")
                 postFileUploadUseCase(file)
                     .onSuccess {
                         postLedgerTransaction(it.path)
@@ -73,7 +73,7 @@ class OCRResultViewModel @Inject constructor(
         }
     }
 
-    fun updateDocument(document: DocumentEntity?) = intent {
+    fun updateDocument(document: DocumentResponse?) = intent {
         reduce { state.copy(document = document) }
 
         if (state.visibleSnackbar) {

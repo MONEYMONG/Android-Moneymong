@@ -3,7 +3,7 @@ package com.moneymong.moneymong.data.pagingsource
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.moneymong.moneymong.data.datasource.agency.AgencyRemoteDataSource
-import com.moneymong.moneymong.network.response.agency.AgencyGetResponse
+import com.moneymong.moneymong.model.agency.AgencyGetResponse
 
 class AgencyPagingSource(
     private val dataSource: AgencyRemoteDataSource,

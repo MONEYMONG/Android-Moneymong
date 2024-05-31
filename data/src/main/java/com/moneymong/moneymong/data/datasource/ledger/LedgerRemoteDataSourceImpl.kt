@@ -1,9 +1,8 @@
 package com.moneymong.moneymong.data.datasource.ledger
 
 import com.moneymong.moneymong.network.api.LedgerApi
-import com.moneymong.moneymong.network.api.MoneyMongApi
-import com.moneymong.moneymong.network.request.ledger.LedgerTransactionRequest
-import com.moneymong.moneymong.network.response.ledger.LedgerTransactionListResponse
+import com.moneymong.moneymong.model.ledger.LedgerTransactionRequest
+import com.moneymong.moneymong.model.ledger.LedgerTransactionListResponse
 import javax.inject.Inject
 
 class LedgerRemoteDataSourceImpl @Inject constructor(

@@ -34,12 +34,12 @@ import com.moneymong.moneymong.design_system.theme.Gray05
 import com.moneymong.moneymong.design_system.theme.Gray09
 import com.moneymong.moneymong.design_system.theme.SkyBlue01
 import com.moneymong.moneymong.design_system.theme.White
-import com.moneymong.moneymong.domain.entity.agency.MyAgencyEntity
+import com.moneymong.moneymong.model.agency.MyAgencyResponse
 
 @Composable
 fun LedgerAgencySelectItem(
     modifier: Modifier = Modifier,
-    agencyEntity: MyAgencyEntity,
+    agencyResponse: MyAgencyResponse,
     currentAgency: Boolean,
     onClick: (agencyId: Int) -> Unit
 ) {
@@ -52,7 +52,7 @@ fun LedgerAgencySelectItem(
         modifier = modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(16.dp))
-            .clickable { onClick(agencyEntity.id) }
+            .clickable { onClick(agencyResponse.id) }
             .border(width = 1.dp, color = borderColor, shape = RoundedCornerShape(16.dp)) // TODO
             .background(color = backgroundColor)
             .padding(16.dp),
@@ -74,7 +74,7 @@ fun LedgerAgencySelectItem(
         Spacer(modifier = Modifier.width(12.dp))
         Column(modifier = Modifier.weight(1f)) {
             Text(
-                text = agencyEntity.name,
+                text = agencyResponse.name,
                 style = Body3,
                 color = textColor,
                 overflow = TextOverflow.Ellipsis,
@@ -82,7 +82,7 @@ fun LedgerAgencySelectItem(
             )
             Spacer(modifier = Modifier.width(4.dp))
             Text(
-                text = "멤버수 ${agencyEntity.headCount}",
+                text = "멤버수 ${agencyResponse.headCount}",
                 style = Body2,
                 color = Gray05
             )
@@ -101,7 +101,7 @@ fun LedgerAgencySelectItem(
 fun LedgerStaffSelectItemPreview() {
     LedgerAgencySelectItem(
         currentAgency = false,
-        agencyEntity = MyAgencyEntity(
+        agencyResponse = MyAgencyResponse(
             0,
             "dasfakjdsfhasdlkjfhsadlkfsahdlfkashflkjadsfkjfsdsfgs",
             0,
