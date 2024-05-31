@@ -1,7 +1,6 @@
 package com.example.member.item
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -24,14 +23,14 @@ import com.moneymong.moneymong.design_system.theme.Gray05
 import com.moneymong.moneymong.design_system.theme.Gray10
 import com.moneymong.moneymong.design_system.theme.Mint03
 import com.moneymong.moneymong.design_system.theme.White
-import com.moneymong.moneymong.domain.entity.member.AgencyUserEntity
+import com.moneymong.moneymong.model.member.AgencyUser
 
 @Composable
 fun MemberListItem(
-    agencyUser: AgencyUserEntity,
+    agencyUser: AgencyUser,
     userId : Long,
     onIconClick: () -> Unit,
-    memberMyInfo: AgencyUserEntity,
+    memberMyInfo: AgencyUser,
     vertClickedUserIdChanged: (Long) -> Unit,
 ) {
     Row(

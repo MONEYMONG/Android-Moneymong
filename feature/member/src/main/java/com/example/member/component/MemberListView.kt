@@ -1,6 +1,5 @@
 package com.example.member.component
 
-import android.util.Log
 import com.moneymong.moneymong.design_system.R
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -22,13 +21,13 @@ import com.moneymong.moneymong.design_system.theme.Body3
 import com.moneymong.moneymong.design_system.theme.Gray06
 import com.moneymong.moneymong.design_system.theme.Gray07
 import com.moneymong.moneymong.design_system.theme.White
-import com.moneymong.moneymong.domain.entity.member.AgencyUserEntity
+import com.moneymong.moneymong.model.member.AgencyUser
 
 @Composable
 fun MemberListView(
     modifier: Modifier = Modifier,
-    memberMyInfo: AgencyUserEntity,
-    filteredMemberList: List<AgencyUserEntity>,
+    memberMyInfo: AgencyUser,
+    filteredMemberList: List<AgencyUser>,
     onIconClick: (Boolean) -> Unit,
     updateFilteredMemberList: (Long) -> Unit,
     vertClickedUserIdChanged: (Long) -> Unit,

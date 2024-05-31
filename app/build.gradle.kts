@@ -64,6 +64,7 @@ dependencies {
     implementation(projects.core.ui)
     implementation(projects.core.designSystem)
     implementation(projects.core.common)
+    implementation(projects.core.model)
     implementation(projects.core.network)
 
     implementation(projects.data)

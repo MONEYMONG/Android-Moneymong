@@ -5,16 +5,10 @@ import androidx.lifecycle.SavedStateHandle
 import com.moneymong.moneymong.common.base.BaseViewModel
 import com.moneymong.moneymong.common.error.MoneyMongError
 import com.moneymong.moneymong.common.ext.toDateFormat
+import com.moneymong.moneymong.common.ext.toMultipart
 import com.moneymong.moneymong.common.ui.isValidPaymentDate
 import com.moneymong.moneymong.common.ui.isValidPaymentTime
 import com.moneymong.moneymong.common.ui.validateValue
-import com.moneymong.moneymong.domain.entity.ledgerdetail.LedgerTransactionDetailEntity
-import com.moneymong.moneymong.domain.param.ledgerdetail.DeleteLedgerDocumentParam
-import com.moneymong.moneymong.domain.param.ledgerdetail.DeleteLedgerReceiptParam
-import com.moneymong.moneymong.domain.param.ledgerdetail.LedgerDocumentParam
-import com.moneymong.moneymong.domain.param.ledgerdetail.LedgerReceiptParam
-import com.moneymong.moneymong.domain.param.ledgerdetail.LedgerTransactionDetailParam
-import com.moneymong.moneymong.domain.param.ocr.FileUploadParam
 import com.moneymong.moneymong.domain.usecase.ledgerdetail.FetchLedgerTransactionDetailUseCase
 import com.moneymong.moneymong.domain.usecase.ledgerdetail.DeleteLedgerDetailUseCase
 import com.moneymong.moneymong.domain.usecase.ledgerdetail.DeleteLedgerDocumentTransactionUseCase
@@ -24,6 +18,11 @@ import com.moneymong.moneymong.domain.usecase.ledgerdetail.PostLedgerReceiptTran
 import com.moneymong.moneymong.domain.usecase.ledgerdetail.UpdateLedgerTransactionDetailUseCase
 import com.moneymong.moneymong.domain.usecase.ocr.PostFileUploadUseCase
 import com.moneymong.moneymong.ledgerdetail.navigation.LedgerDetailArgs
+import com.moneymong.moneymong.model.ledgerdetail.LedgerDocumentRequest
+import com.moneymong.moneymong.model.ledgerdetail.LedgerReceiptRequest
+import com.moneymong.moneymong.model.ledgerdetail.LedgerTransactionDetailRequest
+import com.moneymong.moneymong.model.ledgerdetail.LedgerTransactionDetailResponse
+import com.moneymong.moneymong.model.ocr.FileUploadRequest
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import org.orbitmvi.orbit.annotation.OrbitExperimental
@@ -74,14 +73,13 @@ class LedgerDetailViewModel @Inject constructor(
     fun updateLedgerTransactionDetail(detailId: Int) = intent {
         reduce { state.copy(isLoading = true) }
         delay(1000) // 사진 수정 내용이 DB 반영되기 까지 걸리는 시간을 대응하기 위해 delay 설정
-        val param = LedgerTransactionDetailParam(
-            detailId = detailId,
+        val request = LedgerTransactionDetailRequest(
             storeInfo = state.storeNameValue.text,
             amount = state.totalPriceValue.text.toInt(),
             description = state.memoValue.text,
             paymentDate = state.formattedPaymentDate
         )
-        updateLedgerTransactionDetailUseCase(param)
+        updateLedgerTransactionDetailUseCase(detailId, request)
             .onSuccess {
                 reduce { state.copy(ledgerTransactionDetail = it) }
                 initTextValue(it)
@@ -96,11 +94,10 @@ class LedgerDetailViewModel @Inject constructor(
             val mapToOriginalUrl =
                 state.ledgerTransactionDetail?.receiptImageUrls?.map { it.receiptImageUrl }
                     .orEmpty()
-            val param = LedgerReceiptParam(
-                detailId = detailId,
+            val request = LedgerReceiptRequest(
                 receiptImageUrls = state.receiptList - mapToOriginalUrl.toSet()
             )
-            postLedgerReceiptTransactionUseCase(param)
+            postLedgerReceiptTransactionUseCase(detailId, request)
                 .onFailure {
                     showErrorDialog(it.message)
                 }.also { reduce { state.copy(isLoading = false) } }
@@ -113,11 +110,10 @@ class LedgerDetailViewModel @Inject constructor(
             val mapToOriginalUrl =
                 state.ledgerTransactionDetail?.documentImageUrls?.map { it.documentImageUrl }
                     .orEmpty()
-            val param = LedgerDocumentParam(
-                detailId = detailId,
+            val request = LedgerDocumentRequest(
                 documentImageUrls = state.documentList - mapToOriginalUrl.toSet()
             )
-            postLedgerDocumentTransactionUseCase(param)
+            postLedgerDocumentTransactionUseCase(detailId, request)
                 .onFailure {
                     showErrorDialog(it.message)
                 }.also { reduce { state.copy(isLoading = false) } }
@@ -128,8 +124,7 @@ class LedgerDetailViewModel @Inject constructor(
         if (state.receiptIdList.isNotEmpty()) {
             reduce { state.copy(isLoading = true) }
             state.receiptIdList.forEach { receiptId ->
-                val param = DeleteLedgerReceiptParam(detailId = detailId, receiptId = receiptId)
-                deleteLedgerReceiptTransactionUseCase(param)
+                deleteLedgerReceiptTransactionUseCase(detailId, receiptId)
                     .onFailure {
                         showErrorDialog(it.message)
                     }.also { reduce { state.copy(isLoading = false) } }
@@ -141,8 +136,7 @@ class LedgerDetailViewModel @Inject constructor(
         if (state.documentIdList.isNotEmpty()) {
             reduce { state.copy(isLoading = true) }
             state.documentIdList.forEach { documentId ->
-                val param = DeleteLedgerDocumentParam(detailId = detailId, documentId = documentId)
-                deleteLedgerDocumentTransactionUseCase(param)
+                deleteLedgerDocumentTransactionUseCase(detailId, documentId)
                     .onFailure {
                         showErrorDialog(it.message)
                     }.also { reduce { state.copy(isLoading = false) } }
@@ -164,7 +158,7 @@ class LedgerDetailViewModel @Inject constructor(
         imageFile?.let {
             if (!state.isLoading) {
                 reduce { state.copy(isLoading = true) }
-                val file = FileUploadParam(it, "ledgerDetail")
+                val file = FileUploadRequest(it.toMultipart(), "ledgerDetail")
                 postFileUploadUseCase(file)
                     .onSuccess { response ->
                         state.isReceipt?.let { isReceipt ->
@@ -233,7 +227,7 @@ class LedgerDetailViewModel @Inject constructor(
         }
     }
 
-    private fun initTextValue(ledgerTransactionDetail: LedgerTransactionDetailEntity) = intent {
+    private fun initTextValue(ledgerTransactionDetail: LedgerTransactionDetailResponse) = intent {
         reduce {
             state.copy(
                 storeNameValue = state.storeNameValue.copy(text = ledgerTransactionDetail.storeInfo),
