@@ -10,11 +10,21 @@ import javax.inject.Inject
 class LedgerRepositoryImpl @Inject constructor(
     private val ledgerRemoteDataSource: LedgerRemoteDataSource
 ) : LedgerRepository {
-    override suspend fun fetchLedgerTransactionList(id: Int, year: Int, month: Int, page: Int, limit: Int): Result<LedgerTransactionListResponse> =
+    override suspend fun fetchLedgerTransactionList(
+        id: Int,
+        startYear: Int,
+        startMonth: Int,
+        endYear: Int,
+        endMonth: Int,
+        page: Int,
+        limit: Int
+    ): Result<LedgerTransactionListResponse> =
         ledgerRemoteDataSource.fetchLedgerTransactionList(
             id = id,
-            year = year,
-            month = month,
+            startYear = startYear,
+            startMonth = startMonth,
+            endYear = endYear,
+            endMonth = endMonth,
             page = page,
             limit = limit
         )
