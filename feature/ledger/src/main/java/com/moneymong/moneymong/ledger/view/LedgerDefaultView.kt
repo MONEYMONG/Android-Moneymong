@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -22,29 +21,33 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.moneymong.moneymong.common.ui.noRippleClickable
 import com.moneymong.moneymong.common.ui.toWonFormat
-import com.moneymong.moneymong.design_system.R.*
+import com.moneymong.moneymong.design_system.R.drawable
 import com.moneymong.moneymong.design_system.component.chip.MDSChip
 import com.moneymong.moneymong.design_system.loading.LoadingScreen
 import com.moneymong.moneymong.design_system.theme.Body2
 import com.moneymong.moneymong.design_system.theme.Body3
 import com.moneymong.moneymong.design_system.theme.Gray01
-import com.moneymong.moneymong.design_system.theme.Gray03
 import com.moneymong.moneymong.design_system.theme.Gray06
 import com.moneymong.moneymong.design_system.theme.Gray07
 import com.moneymong.moneymong.design_system.theme.Gray10
 import com.moneymong.moneymong.design_system.theme.Heading5
 import com.moneymong.moneymong.design_system.theme.White
 import com.moneymong.moneymong.ledger.view.item.LedgerTransactionItem
+import com.moneymong.moneymong.ledger.view.onboarding.LedgerOnboarding
+import com.moneymong.moneymong.ledger.view.onboarding.OnboardingComponentState
 import com.moneymong.moneymong.model.ledger.LedgerDetail
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -95,6 +98,8 @@ fun LedgerDefaultView(
         LedgerTransactionType.수입
     )
 
+    var dateRowState by remember { mutableStateOf(OnboardingComponentState()) }
+
     LazyColumn(
         modifier = modifier
             .fillMaxSize()
@@ -128,35 +133,17 @@ fun LedgerDefaultView(
                     contentDescription = null
                 )
             }
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 20.dp)
-                    .clip(RoundedCornerShape(8.dp))
-                    .background(Gray01)
-                    .noRippleClickable { onClickPeriod() },
-                contentAlignment = Alignment.Center
-            ) {
-                Row(
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-
-                ) {
-                    Text(
-                        modifier = Modifier.padding(vertical = 8.dp),
-                        text = "${startDate.format(DateTimeFormatter.ofPattern("yyyy년 M월"))} ~ ${endDate.format(
-                            DateTimeFormatter.ofPattern("yyyy년 M월"))}",
-                        style = Body2,
-                        color = Gray06
+            LedgerDefaultDateRow(
+                modifier = Modifier.onGloballyPositioned {
+                    dateRowState = OnboardingComponentState(
+                        offset = it.localToRoot(Offset.Zero),
+                        size = it.size
                     )
-                    Icon(
-                        modifier = Modifier.size(16.dp),
-                        painter = painterResource(id = drawable.ic_chevron_bottom),
-                        contentDescription = null,
-                        tint = Gray06
-                    )
-                }
-            }
+                },
+                startDate = startDate,
+                endDate = endDate,
+                onClickPeriod = onClickPeriod,
+            )
             Spacer(modifier = Modifier.height(20.dp))
             MDSChip(
                 modifier = Modifier.padding(start = 20.dp),
@@ -199,6 +186,56 @@ fun LedgerDefaultView(
                     }
                 }
             }
+        }
+    }
+    LedgerOnboarding(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(color = Gray10.copy(alpha = 0.7f)),
+        isStaff = isStaff,
+        dateComponent = dateRowState,
+        addComponent = OnboardingComponentState(),
+        onDismiss = {}
+    )
+}
+
+@Composable
+internal fun LedgerDefaultDateRow(
+    modifier: Modifier = Modifier,
+    startDate: LocalDate,
+    endDate: LocalDate,
+    onClickPeriod: () -> Unit
+) {
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(horizontal = 20.dp)
+            .clip(RoundedCornerShape(8.dp))
+            .background(Gray01)
+            .noRippleClickable { onClickPeriod() },
+        contentAlignment = Alignment.Center
+    ) {
+        Row(
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+
+        ) {
+            Text(
+                modifier = Modifier.padding(vertical = 8.dp),
+                text = "${startDate.format(DateTimeFormatter.ofPattern("yyyy년 M월"))} ~ ${
+                    endDate.format(
+                        DateTimeFormatter.ofPattern("yyyy년 M월")
+                    )
+                }",
+                style = Body2,
+                color = Gray06
+            )
+            Icon(
+                modifier = Modifier.size(16.dp),
+                painter = painterResource(id = drawable.ic_chevron_bottom),
+                contentDescription = null,
+                tint = Gray06
+            )
         }
     }
 }
