@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -57,6 +58,13 @@ internal fun LedgerOnboarding(
                     horizontalArrowPosition = HorizontalArrowPosition.CENTER
                 )
             }
+            LedgerOnboardingNextButton(
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(20.dp),
+                onClick = { /*TODO*/ },
+                text = "확인"
+            )
         }
     }
 }
