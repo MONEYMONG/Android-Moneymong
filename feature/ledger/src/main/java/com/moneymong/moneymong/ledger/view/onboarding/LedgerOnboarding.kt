@@ -1,21 +1,15 @@
 package com.moneymong.moneymong.ledger.view.onboarding
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntSize
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
-import com.moneymong.moneymong.ledger.view.LedgerDefaultDateRow
+import androidx.compose.ui.window.PopupProperties
 import java.time.LocalDate
 
 
@@ -24,47 +18,50 @@ internal data class OnboardingComponentState(
     val size: IntSize = IntSize.Zero
 )
 
+internal enum class LedgerOnboardingPage {
+    DATE,
+    ADD
+}
+
 @Composable
 internal fun LedgerOnboarding(
     modifier: Modifier = Modifier,
     isStaff: Boolean,
     dateComponent: OnboardingComponentState,
-    addComponent: OnboardingComponentState = OnboardingComponentState()
+    addComponent: OnboardingComponentState = OnboardingComponentState(),
+    onDismiss: () -> Unit
 ) {
-
+    var currentPage by remember { mutableStateOf(LedgerOnboardingPage.DATE) }
     val currentDate = LocalDate.now()
 
-    Popup {
-        Box(modifier = modifier) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .offset {
-                        IntOffset(
-                            x = dateComponent.offset.x.toInt(),
-                            y = dateComponent.offset.y.toInt()
-                        )
-                    },
-            ) {
-                LedgerDefaultDateRow(
+    Popup(
+        properties = PopupProperties(focusable = true),
+        onDismissRequest = { onDismiss() },
+    ) {
+        when (currentPage) {
+            LedgerOnboardingPage.DATE -> {
+                LedgerOnboardingDatePage(
+                    modifier = modifier,
+                    dateComponent = dateComponent,
                     currentDate = currentDate,
-                    onAddMonthFromCurrentDate = {}
-                )
-                Spacer(modifier = Modifier.height(10.dp))
-                LedgerOnboardingToolTip(
-                    modifier = Modifier.align(Alignment.CenterHorizontally),
-                    text = "장부 열람 기간을 설정할 수 있어요!",
-                    verticalArrowPosition = VerticalArrowPosition.TOP,
-                    horizontalArrowPosition = HorizontalArrowPosition.CENTER
+                    onClickNext = {
+                        currentPage = LedgerOnboardingPage.ADD
+                    }
                 )
             }
-            LedgerOnboardingNextButton(
-                modifier = Modifier
-                    .align(Alignment.BottomEnd)
-                    .padding(20.dp),
-                onClick = { /*TODO*/ },
-                text = "확인"
-            )
+
+            LedgerOnboardingPage.ADD -> {
+                LedgerOnboardingAddPage(
+                    modifier = modifier,
+                    addComponent = addComponent,
+                    onClickNext = {
+                        onDismiss()
+                    },
+                    onClickPrevious = {
+                        currentPage = LedgerOnboardingPage.DATE
+                    }
+                )
+            }
         }
     }
 }
