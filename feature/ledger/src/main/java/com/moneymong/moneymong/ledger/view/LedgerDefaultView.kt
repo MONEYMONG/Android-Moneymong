@@ -188,16 +188,25 @@ fun LedgerDefaultView(
             }
         }
     }
-    LedgerOnboarding(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(color = Gray10.copy(alpha = 0.7f)),
-        isStaff = isStaff,
-        dateComponent = dateRowState,
-        addComponent = OnboardingComponentState(),
-        onDismiss = {}
-    )
+
+    // todo: move to vm
+    var visibleOnboarding by remember { mutableStateOf(true) }
+
+    if (visibleOnboarding) {
+        LedgerOnboarding(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(color = Gray10.copy(alpha = 0.7f)),
+            isStaff = isStaff,
+            dateComponent = dateRowState,
+            addComponent = OnboardingComponentState(),
+            onDismiss = {
+                visibleOnboarding = false
+            }
+        )
+    }
 }
+
 
 @Composable
 internal fun LedgerDefaultDateRow(
