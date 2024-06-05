@@ -35,7 +35,7 @@ class LedgerViewModel @Inject constructor(
 ) : BaseViewModel<LedgerState, LedgerSideEffect>(LedgerState()) {
 
     init {
-        onChangeSnackbarState(visible = LedgerArgs(savedStateHandle).ledgerPostSuccess)
+        checkPostSuccess(LedgerArgs(savedStateHandle).ledgerPostSuccess)
         fetchDefaultInfo()
         fetchMyAgencyList()
         fetchAgencyExistLedger()
@@ -153,6 +153,17 @@ class LedgerViewModel @Inject constructor(
         fetchLedgerTransactionList()
     }
 
+    fun confirmValidValue(isValid: Boolean) {
+        if (!isValid) {
+            eventEmit(
+                LedgerSideEffect.LedgerVisibleSnackbar(
+                    message = "올바른 범위로 기간을 설정해주세요!",
+                    withDismissAction = true
+                )
+            )
+        }
+    }
+
     fun onChangeTransactionType(transactionType: LedgerTransactionType) = intent {
         reduce { state.copy(transactionType = transactionType) }
     }
@@ -161,8 +172,15 @@ class LedgerViewModel @Inject constructor(
         reduce { state.copy(showBottomSheet = visible) }
     }
 
-    fun onChangeSnackbarState(visible: Boolean) = intent {
-        reduce { state.copy(visibleSnackbar = visible) }
+    fun checkPostSuccess(success: Boolean) {
+        if (success) {
+            eventEmit(
+                LedgerSideEffect.LedgerVisibleSnackbar(
+                    message = "성공적으로 기록됐습니다",
+                    withDismissAction = true
+                )
+            )
+        }
     }
 
     fun onChangeVisibleErrorDialog(visible: Boolean) = intent {
