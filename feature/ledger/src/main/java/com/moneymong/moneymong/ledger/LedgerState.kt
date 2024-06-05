@@ -27,7 +27,6 @@ data class LedgerState(
     val startDate: LocalDate = LocalDate.now().minusMonths(6),
     val endDate: LocalDate = LocalDate.now(),
     val visibleError: Boolean = false,
-    val visibleSnackbar: Boolean = false,
     val agencyList: List<MyAgencyResponse> = emptyList(),
     val memberList: List<AgencyUser> = emptyList(),
     val errorMessage: String = "",

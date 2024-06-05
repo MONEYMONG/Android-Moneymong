@@ -81,28 +81,11 @@ fun LedgerScreen(
     val pagerState = rememberPagerState(pageCount = { tabs.size })
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
-    LaunchedEffect(state.visibleSnackbar) {
-        if (state.visibleSnackbar) {
-            coroutineScope.launch {
-                snackbarHostState.showSnackbar(
-                    message = "성공적으로 기록됐습니다",
-                    withDismissAction = true,
-                    actionLabel = ""
-                )
-            }
-            viewModel.onChangeSnackbarState(visible = false)
-        }
-    }
-
     LaunchedEffect(Unit) {
         viewModel.fetchMyAgencyList()
         viewModel.fetchAgencyMemberList()
         viewModel.fetchAgencyExistLedger()
     }
-
-//    LaunchedEffect(state.currentDate) {
-//        viewModel.fetchLedgerTransactionList()
-//    }
 
     viewModel.collectSideEffect {
         when (it) {
@@ -138,6 +121,16 @@ fun LedgerScreen(
             is LedgerSideEffect.LedgerSelectedAgencyChange -> {
                 viewModel.reFetchLedgerData(it.agencyId)
                 viewModel.eventEmit(LedgerSideEffect.LedgerCloseSheet)
+            }
+
+            is LedgerSideEffect.LedgerVisibleSnackbar -> {
+                coroutineScope.launch {
+                    snackbarHostState.showSnackbar(
+                        message = it.message,
+                        withDismissAction = it.withDismissAction,
+                        actionLabel = ""
+                    )
+                }
             }
         }
     }
@@ -195,7 +188,7 @@ fun LedgerScreen(
                                 startDate = state.startDate,
                                 endDate = state.endDate,
                                 confirmDateChange = viewModel::onClickDateChange,
-                                confirmValidValue = {  },
+                                confirmValidValue = viewModel::confirmValidValue,
                                 onDismissRequest = { viewModel.eventEmit(LedgerSideEffect.LedgerCloseSheet) }
                             )
                         }
