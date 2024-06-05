@@ -42,6 +42,7 @@ import com.moneymong.moneymong.design_system.R
 import com.moneymong.moneymong.design_system.component.bottomSheet.MDSBottomSheet
 import com.moneymong.moneymong.design_system.component.button.FABIconSize
 import com.moneymong.moneymong.design_system.component.button.MDSFloatingActionButton
+import com.moneymong.moneymong.design_system.component.datepicker.MDSBottomSheetWheelDatePicker
 import com.moneymong.moneymong.design_system.component.snackbar.MDSSnackbarHost
 import com.moneymong.moneymong.design_system.error.ErrorDialog
 import com.moneymong.moneymong.design_system.theme.Mint02
@@ -188,6 +189,9 @@ fun LedgerScreen(
                     )
                 }
             )
+        }
+        MDSBottomSheetWheelDatePicker(confirmDateChange = {_,_ ->}) {
+
         }
         Column(
             modifier = Modifier
