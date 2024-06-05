@@ -16,7 +16,9 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import org.orbitmvi.orbit.annotation.OrbitExperimental
 import org.orbitmvi.orbit.syntax.simple.blockingIntent
 import org.orbitmvi.orbit.syntax.simple.intent
+import org.orbitmvi.orbit.syntax.simple.postSideEffect
 import org.orbitmvi.orbit.syntax.simple.reduce
+import java.time.LocalDate
 import javax.inject.Inject
 
 @OptIn(OrbitExperimental::class)
@@ -155,11 +157,6 @@ class LedgerViewModel @Inject constructor(
         reduce { state.copy(transactionType = transactionType) }
     }
 
-//    fun onAddMonthFromCurrentDate(addMonth: Long) = intent {
-//        val nextDate = state.currentDate.plusMonths(addMonth)
-//        reduce { state.copy(currentDate = nextDate) }
-//    }
-
     fun onChangeSheetState(visible: Boolean) = intent {
         reduce { state.copy(showBottomSheet = visible) }
     }
@@ -170,5 +167,28 @@ class LedgerViewModel @Inject constructor(
 
     fun onChangeVisibleErrorDialog(visible: Boolean) = intent {
         reduce { state.copy(visibleError = visible) }
+    }
+
+    fun onClickAgencyChange() = intent {
+        reduce { state.copy(sheetType = LedgerSheetType.Agency) }
+        postSideEffect(LedgerSideEffect.LedgerOpenSheet)
+    }
+
+    fun onClickPeriod() = intent {
+        reduce { state.copy(sheetType = LedgerSheetType.DatePicker) }
+        postSideEffect(LedgerSideEffect.LedgerOpenSheet)
+    }
+
+    fun onClickDateChange(startDate: LocalDate, endDate: LocalDate) {
+        intent {
+            reduce {
+                state.copy(
+                    startDate = startDate,
+                    endDate = endDate
+                )
+            }
+            postSideEffect(LedgerSideEffect.LedgerCloseSheet)
+        }
+        fetchLedgerTransactionList()
     }
 }

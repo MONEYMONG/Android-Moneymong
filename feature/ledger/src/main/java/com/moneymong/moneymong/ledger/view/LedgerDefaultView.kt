@@ -47,6 +47,7 @@ import com.moneymong.moneymong.design_system.theme.White
 import com.moneymong.moneymong.ledger.view.item.LedgerTransactionItem
 import com.moneymong.moneymong.model.ledger.LedgerDetail
 import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 enum class LedgerTransactionType(
     val type: String,
@@ -76,13 +77,14 @@ fun LedgerDefaultView(
     totalBalance: Int,
     ledgerDetails: List<LedgerDetail>,
     transactionType: LedgerTransactionType,
-    currentDate: LocalDate,
+    startDate: LocalDate,
+    endDate: LocalDate,
     hasTransaction: Boolean,
     isLoading: Boolean,
     isExistLedger: Boolean,
     isStaff: Boolean,
     onChangeTransactionType: (LedgerTransactionType) -> Unit,
-    onAddMonthFromCurrentDate: (Long) -> Unit,
+    onClickPeriod: () -> Unit,
     onClickTransactionItem: (Int) -> Unit
 ) {
     var selectedTabIndex by remember { mutableIntStateOf(0) }
@@ -131,44 +133,27 @@ fun LedgerDefaultView(
                     .fillMaxWidth()
                     .padding(horizontal = 20.dp)
                     .clip(RoundedCornerShape(8.dp))
-                    .background(Gray01),
+                    .background(Gray01)
+                    .noRippleClickable { onClickPeriod() },
                 contentAlignment = Alignment.Center
             ) {
                 Row(
-                    modifier = Modifier.width(127.dp),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
 
                 ) {
-                    Icon(
-                        modifier = Modifier
-                            .size(16.dp)
-                            .noRippleClickable {
-                                onAddMonthFromCurrentDate(-1)
-                            },
-                        painter = painterResource(id = drawable.ic_chevron_left),
-                        contentDescription = null,
-                        tint = Gray06
-                    )
                     Text(
-                        modifier = Modifier.padding(vertical = 10.dp),
-                        text = "${currentDate.year}년 ${currentDate.month.value}월",
+                        modifier = Modifier.padding(vertical = 8.dp),
+                        text = "${startDate.format(DateTimeFormatter.ofPattern("yyyy년 M월"))} ~ ${endDate.format(
+                            DateTimeFormatter.ofPattern("yyyy년 M월"))}",
                         style = Body2,
                         color = Gray06
                     )
-                    val isLastMonth =
-                        currentDate.year == LocalDate.now().year && currentDate.monthValue == LocalDate.now().monthValue
                     Icon(
-                        modifier = Modifier
-                            .size(16.dp)
-                            .noRippleClickable {
-                                if (!isLastMonth) {
-                                    onAddMonthFromCurrentDate(1)
-                                }
-                            },
-                        painter = painterResource(id = drawable.ic_chevron_right),
+                        modifier = Modifier.size(16.dp),
+                        painter = painterResource(id = drawable.ic_chevron_bottom),
                         contentDescription = null,
-                        tint = if (isLastMonth) Gray03 else Gray06
+                        tint = Gray06
                     )
                 }
             }
@@ -225,13 +210,14 @@ fun LedgerDefaultPreview() {
         totalBalance = 123123,
         ledgerDetails = emptyList(),
         transactionType = LedgerTransactionType.전체,
-        currentDate = LocalDate.now(),
+        startDate = LocalDate.now(),
+        endDate = LocalDate.now(),
         hasTransaction = false,
         isLoading = false,
         isExistLedger = false,
         isStaff = false,
         onChangeTransactionType = {},
-        onAddMonthFromCurrentDate = {},
+        onClickPeriod = {},
         onClickTransactionItem = {}
     )
 }

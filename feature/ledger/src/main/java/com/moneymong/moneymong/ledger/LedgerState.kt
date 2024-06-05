@@ -8,6 +8,11 @@ import com.moneymong.moneymong.model.ledger.LedgerTransactionListResponse
 import com.moneymong.moneymong.model.member.AgencyUser
 import java.time.LocalDate
 
+enum class LedgerSheetType {
+    Agency,
+    DatePicker
+}
+
 data class LedgerState(
     val isAgencyExistLoading: Boolean = true,
     val isLedgerTransactionLoading: Boolean = true,
@@ -25,7 +30,8 @@ data class LedgerState(
     val visibleSnackbar: Boolean = false,
     val agencyList: List<MyAgencyResponse> = emptyList(),
     val memberList: List<AgencyUser> = emptyList(),
-    val errorMessage: String = ""
+    val errorMessage: String = "",
+    val sheetType: LedgerSheetType = LedgerSheetType.DatePicker
 ) : State {
 
     val filterTransactionList: List<LedgerDetail>
