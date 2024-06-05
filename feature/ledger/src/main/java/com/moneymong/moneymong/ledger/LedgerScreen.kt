@@ -42,7 +42,7 @@ import com.moneymong.moneymong.design_system.R
 import com.moneymong.moneymong.design_system.component.bottomSheet.MDSBottomSheet
 import com.moneymong.moneymong.design_system.component.button.FABIconSize
 import com.moneymong.moneymong.design_system.component.button.MDSFloatingActionButton
-import com.moneymong.moneymong.design_system.component.datepicker.MDSBottomSheetWheelDatePicker
+import com.moneymong.moneymong.design_system.component.datepicker.MDSWheelDatePicker
 import com.moneymong.moneymong.design_system.component.snackbar.MDSSnackbarHost
 import com.moneymong.moneymong.design_system.error.ErrorDialog
 import com.moneymong.moneymong.design_system.theme.Mint02
@@ -157,7 +157,7 @@ fun LedgerScreen(
                 header = state.currentAgency?.name ?: "장부",
                 icon = R.drawable.ic_chevron_bottom,
                 visibleArrow = state.agencyList.isNotEmpty(),
-                onClickDownArrow = { viewModel.eventEmit(LedgerSideEffect.LedgerOpenSheet) }
+                onClickDownArrow = viewModel::onClickAgencyChange
             )
         },
         snackbarHost = {
@@ -176,23 +176,34 @@ fun LedgerScreen(
                 sheetState = sheetState,
                 onDismissRequest = { viewModel.eventEmit(LedgerSideEffect.LedgerCloseSheet) },
                 content = {
-                    LedgerAgencySelectBottomSheet(
-                        currentAgencyId = state.agencyId,
-                        agencyList = state.agencyList,
-                        onClickItem = {
-                            viewModel.eventEmit(
-                                LedgerSideEffect.LedgerSelectedAgencyChange(
-                                    it
-                                )
+                    when (state.sheetType) {
+                        LedgerSheetType.Agency -> {
+                            LedgerAgencySelectBottomSheet(
+                                currentAgencyId = state.agencyId,
+                                agencyList = state.agencyList,
+                                onClickItem = {
+                                    viewModel.eventEmit(
+                                        LedgerSideEffect.LedgerSelectedAgencyChange(
+                                            it
+                                        )
+                                    )
+                                }
                             )
                         }
-                    )
+                        LedgerSheetType.DatePicker -> {
+                            MDSWheelDatePicker(
+                                startDate = state.startDate,
+                                endDate = state.endDate,
+                                confirmDateChange = viewModel::onClickDateChange,
+                                confirmValidValue = {  },
+                                onDismissRequest = { viewModel.eventEmit(LedgerSideEffect.LedgerCloseSheet) }
+                            )
+                        }
+                    }
                 }
             )
         }
-        MDSBottomSheetWheelDatePicker(confirmDateChange = {_,_ ->}) {
 
-        }
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -216,13 +227,14 @@ fun LedgerScreen(
                                     ?: 0,
                                 ledgerDetails = state.filterTransactionList,
                                 transactionType = state.transactionType,
-                                currentDate = state.endDate,
+                                startDate = state.startDate,
+                                endDate = state.endDate,
                                 hasTransaction = state.hasTransaction,
                                 isLoading = state.isLoading,
                                 isExistLedger = state.isExistLedger,
                                 isStaff = state.isStaff,
                                 onChangeTransactionType = viewModel::onChangeTransactionType,
-                                onAddMonthFromCurrentDate = {},
+                                onClickPeriod = viewModel::onClickPeriod,
                                 onClickTransactionItem = {
                                     viewModel.eventEmit(
                                         LedgerSideEffect.LedgerNavigateToLedgerDetail(
