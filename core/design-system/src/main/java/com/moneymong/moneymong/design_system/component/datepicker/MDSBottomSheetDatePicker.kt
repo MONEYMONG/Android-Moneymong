@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
@@ -37,6 +38,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.DpSize
@@ -256,7 +259,6 @@ fun MDSWheelDatePicker(
             )
             Spacer(modifier = Modifier.height(16.dp))
         }
-
         MDSSnackbarHost(
             modifier = Modifier
                 .padding(start = 20.dp, bottom = 100.dp, end = 20.dp)
@@ -323,6 +325,9 @@ internal fun <T> WheelPicker(
     val snapFlingBehavior = rememberSnapFlingBehavior(snappingLayout)
 
     val visibleItemsMiddle by remember { derivedStateOf { visibleItemsCount / 2 } }
+    val itemHeightPixels = remember { mutableIntStateOf(0) }
+    val itemHeightDp = pixelsToDp(itemHeightPixels.intValue)
+
 
     LaunchedEffect(lazyListState) {
         snapshotFlow { lazyListState.firstVisibleItemIndex }
@@ -338,17 +343,38 @@ internal fun <T> WheelPicker(
         lazyListState.scrollToItem(startIndex - 1)
     }
 
-    LazyColumn(
-        modifier = modifier
-            .width(size.width)
-            .height(size.height),
-        verticalArrangement = Arrangement.spacedBy(28.dp),
-        state = lazyListState,
-        flingBehavior = snapFlingBehavior
-    ) {
-        items(items.size) { index ->
-            content(items[index], state.calculateItemColor(index))
+    Box(modifier = modifier) {
+        LazyColumn(
+            modifier = modifier
+                .width(size.width)
+                .height(size.height),
+            verticalArrangement = Arrangement.spacedBy(28.dp),
+            state = lazyListState,
+            flingBehavior = snapFlingBehavior
+        ) {
+            items(items.size) { index ->
+                Box(
+                    modifier = Modifier
+                        .onSizeChanged { size -> itemHeightPixels.intValue = size.height }
+                ) {
+                    content(items[index], state.calculateItemColor(index))
+                }
+            }
         }
+        Divider(
+            modifier = Modifier
+                .width(64.dp)
+                .offset(y = (itemHeightDp - 4.dp) * (visibleItemsMiddle + 1)),
+            thickness = 2.dp,
+            color = Blue04
+        )
+        Divider(
+            modifier = Modifier
+                .width(64.dp)
+                .offset(y = (itemHeightDp + 4.dp) * (visibleItemsMiddle + 2)),
+            thickness = 2.dp,
+            color = Blue04
+        )
     }
 }
 
@@ -365,3 +391,6 @@ class DatePickerState() {
             Gray03
         }
 }
+
+@Composable
+private fun pixelsToDp(pixels: Int) = with(LocalDensity.current) { pixels.toDp() }
