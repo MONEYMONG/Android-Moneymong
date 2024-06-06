@@ -188,7 +188,6 @@ fun LedgerScreen(
                                 startDate = state.startDate,
                                 endDate = state.endDate,
                                 confirmDateChange = viewModel::onClickDateChange,
-                                confirmValidValue = viewModel::confirmValidValue,
                                 onDismissRequest = { viewModel.eventEmit(LedgerSideEffect.LedgerCloseSheet) }
                             )
                         }

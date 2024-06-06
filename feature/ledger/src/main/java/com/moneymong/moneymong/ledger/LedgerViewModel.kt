@@ -153,17 +153,6 @@ class LedgerViewModel @Inject constructor(
         fetchLedgerTransactionList()
     }
 
-    fun confirmValidValue(isValid: Boolean) {
-        if (!isValid) {
-            eventEmit(
-                LedgerSideEffect.LedgerVisibleSnackbar(
-                    message = "올바른 범위로 기간을 설정해주세요!",
-                    withDismissAction = true
-                )
-            )
-        }
-    }
-
     fun onChangeTransactionType(transactionType: LedgerTransactionType) = intent {
         reduce { state.copy(transactionType = transactionType) }
     }
