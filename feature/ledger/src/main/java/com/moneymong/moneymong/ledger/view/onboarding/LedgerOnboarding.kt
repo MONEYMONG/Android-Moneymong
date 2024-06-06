@@ -28,7 +28,7 @@ internal fun LedgerOnboarding(
     modifier: Modifier = Modifier,
     isStaff: Boolean,
     dateComponent: OnboardingComponentState,
-    addComponent: OnboardingComponentState = OnboardingComponentState(),
+    addComponent: OnboardingComponentState,
     onDismiss: () -> Unit
 ) {
     var currentPage by remember { mutableStateOf(LedgerOnboardingPage.DATE) }
