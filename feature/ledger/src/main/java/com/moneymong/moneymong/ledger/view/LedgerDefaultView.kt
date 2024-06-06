@@ -75,7 +75,7 @@ enum class LedgerTransactionType(
 }
 
 @Composable
-fun LedgerDefaultView(
+internal fun LedgerDefaultView(
     modifier: Modifier = Modifier,
     totalBalance: Int,
     ledgerDetails: List<LedgerDetail>,
@@ -88,7 +88,8 @@ fun LedgerDefaultView(
     isStaff: Boolean,
     onChangeTransactionType: (LedgerTransactionType) -> Unit,
     onClickPeriod: () -> Unit,
-    onClickTransactionItem: (Int) -> Unit
+    onClickTransactionItem: (Int) -> Unit,
+    addFABState: OnboardingComponentState
 ) {
     var selectedTabIndex by remember { mutableIntStateOf(0) }
     val lazyColumnState = rememberLazyListState()
@@ -199,7 +200,7 @@ fun LedgerDefaultView(
                 .background(color = Gray10.copy(alpha = 0.7f)),
             isStaff = isStaff,
             dateComponent = dateRowState,
-            addComponent = OnboardingComponentState(),
+            addComponent = addFABState,
             onDismiss = {
                 visibleOnboarding = false
             }
@@ -227,7 +228,6 @@ internal fun LedgerDefaultDateRow(
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
-
         ) {
             Text(
                 modifier = Modifier.padding(vertical = 8.dp),
@@ -264,6 +264,7 @@ fun LedgerDefaultPreview() {
         isStaff = false,
         onChangeTransactionType = {},
         onClickPeriod = {},
-        onClickTransactionItem = {}
+        onClickTransactionItem = {},
+        addFABState = OnboardingComponentState()
     )
 }
