@@ -1,5 +1,6 @@
 package com.moneymong.moneymong.ledger.view.onboarding
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -9,7 +10,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.window.Popup
-import androidx.compose.ui.window.PopupProperties
 import java.time.LocalDate
 
 
@@ -34,10 +34,19 @@ internal fun LedgerOnboarding(
     var currentPage by remember { mutableStateOf(LedgerOnboardingPage.DATE) }
     val currentDate = LocalDate.now()
 
-    Popup(
-        properties = PopupProperties(focusable = true),
-        onDismissRequest = { onDismiss() },
-    ) {
+    BackHandler {
+        when (currentPage) {
+            LedgerOnboardingPage.DATE -> {
+                onDismiss()
+            }
+
+            LedgerOnboardingPage.ADD -> {
+                currentPage = LedgerOnboardingPage.DATE
+            }
+        }
+    }
+
+    Popup {
         when (currentPage) {
             LedgerOnboardingPage.DATE -> {
                 LedgerOnboardingDatePage(
