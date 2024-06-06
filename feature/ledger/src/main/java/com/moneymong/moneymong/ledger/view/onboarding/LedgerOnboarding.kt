@@ -45,7 +45,11 @@ internal fun LedgerOnboarding(
                     dateComponent = dateComponent,
                     currentDate = currentDate,
                     onClickNext = {
-                        currentPage = LedgerOnboardingPage.ADD
+                        if (isStaff) {
+                            currentPage = LedgerOnboardingPage.ADD
+                        } else {
+                            onDismiss()
+                        }
                     }
                 )
             }
