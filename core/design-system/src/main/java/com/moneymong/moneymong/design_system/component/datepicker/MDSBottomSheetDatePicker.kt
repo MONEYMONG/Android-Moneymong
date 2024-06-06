@@ -21,6 +21,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -29,6 +30,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
@@ -43,6 +45,7 @@ import com.moneymong.moneymong.design_system.R
 import com.moneymong.moneymong.design_system.component.button.MDSButton
 import com.moneymong.moneymong.design_system.component.button.MDSButtonSize
 import com.moneymong.moneymong.design_system.component.button.MDSButtonType
+import com.moneymong.moneymong.design_system.component.snackbar.MDSSnackbarHost
 import com.moneymong.moneymong.design_system.theme.Blue01
 import com.moneymong.moneymong.design_system.theme.Blue03
 import com.moneymong.moneymong.design_system.theme.Blue04
@@ -58,6 +61,7 @@ import com.moneymong.moneymong.design_system.theme.Red03
 import com.moneymong.moneymong.design_system.theme.White
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 import java.time.LocalDate
 
 enum class MDSDateType(val description: String) {
@@ -85,6 +89,9 @@ fun MDSWheelDatePicker(
     val years by remember { mutableStateOf(yearRange.toList()) }
     var startYearIndex by remember { mutableIntStateOf(years.indexOf(endDate.year)) }
     var startMonthIndex by remember { mutableIntStateOf(months.indexOf(endDate.monthValue)) }
+
+    val scope = rememberCoroutineScope()
+    val snackbarHostState = remember { SnackbarHostState() }
 
     val onChangeDateType: (MDSDateType) -> Unit = {
         dateType = it
@@ -133,99 +140,129 @@ fun MDSWheelDatePicker(
         confirmValidValue(isValidValue)
     }
 
-    Column(
+    LaunchedEffect(isValidValue) {
+        if (!isValidValue) {
+            scope.launch {
+                snackbarHostState.currentSnackbarData?.dismiss()
+                snackbarHostState.showSnackbar(
+                    message = "올바른 범위로 기간을 설정해주세요!",
+                    withDismissAction = true,
+                    actionLabel = ""
+                )
+            }
+        } else {
+            scope.launch {
+                snackbarHostState.currentSnackbarData?.dismiss()
+            }
+        }
+    }
+
+    Box(
         modifier = modifier
             .fillMaxWidth()
-            .padding(start = 20.dp, top = 20.dp, end = 20.dp, bottom = 16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Box(modifier = Modifier.fillMaxWidth()) {
-            Icon(
-                modifier = Modifier
-                    .clickable { onDismissRequest() }
-                    .align(Alignment.CenterEnd),
-                painter = painterResource(id = R.drawable.ic_close_default),
-                contentDescription = null,
-                tint = Gray05
-            )
-        }
-        Spacer(modifier = Modifier.height(12.dp))
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
+
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 20.dp, top = 20.dp, end = 20.dp, bottom = 16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            MDSDatePickerDateView(
-                dateType = MDSDateType.START,
-                year = snappedStartYear,
-                month = snappedStartMonth,
-                selected = dateType == MDSDateType.START,
-                isValidValue = isValidValue,
-                onClick = onChangeDateType
+            Box(modifier = Modifier.fillMaxWidth()) {
+                Icon(
+                    modifier = Modifier
+                        .clickable { onDismissRequest() }
+                        .align(Alignment.CenterEnd),
+                    painter = painterResource(id = R.drawable.ic_close_default),
+                    contentDescription = null,
+                    tint = Gray05
+                )
+            }
+            Spacer(modifier = Modifier.height(12.dp))
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                MDSDatePickerDateView(
+                    dateType = MDSDateType.START,
+                    year = snappedStartYear,
+                    month = snappedStartMonth,
+                    selected = dateType == MDSDateType.START,
+                    isValidValue = isValidValue,
+                    onClick = onChangeDateType
+                )
+                MDSDatePickerDateView(
+                    dateType = MDSDateType.END,
+                    year = snappedEndYear,
+                    month = snappedEndMonth,
+                    selected = dateType == MDSDateType.END,
+                    isValidValue = isValidValue,
+                    onClick = onChangeDateType
+                )
+            }
+            Spacer(modifier = Modifier.height(16.dp))
+            Divider(
+                modifier = Modifier.fillMaxWidth(),
+                thickness = 1.dp,
+                color = Gray02
             )
-            MDSDatePickerDateView(
-                dateType = MDSDateType.END,
-                year = snappedEndYear,
-                month = snappedEndMonth,
-                selected = dateType == MDSDateType.END,
-                isValidValue = isValidValue,
-                onClick = onChangeDateType
+            Spacer(modifier = Modifier.height(16.dp))
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center,
+            ) {
+                WheelPicker(
+                    items = years,
+                    startIndex = startYearIndex,
+                    confirmDateChange = updateYear
+                ) { year, color ->
+                    Text(
+                        modifier = Modifier.width(64.dp),
+                        text = if (year == yearRange.first || year == yearRange.last) "" else "${year}년",
+                        style = Heading2,
+                        color = color,
+                        textAlign = TextAlign.Center
+                    )
+                }
+                Spacer(modifier = Modifier.width(40.dp))
+                WheelPicker(
+                    items = months,
+                    startIndex = startMonthIndex,
+                    confirmDateChange = updateMonth
+                ) { month, color ->
+                    Text(
+                        modifier = Modifier.width(64.dp),
+                        text = if (month == months.first() || month == months.last()) "" else "${month}월",
+                        style = Heading2,
+                        color = color,
+                        textAlign = TextAlign.Center
+                    )
+                }
+            }
+            Spacer(modifier = Modifier.height(20.dp))
+            MDSButton(
+                modifier = Modifier.fillMaxWidth(),
+                type = MDSButtonType.PRIMARY,
+                size = MDSButtonSize.LARGE,
+                text = "완료",
+                enabled = isValidValue,
+                onClick = {
+                    confirmDateChange(
+                        LocalDate.of(snappedStartYear, snappedStartMonth, 1),
+                        LocalDate.of(snappedEndYear, snappedEndMonth, 1)
+                    )
+                }
             )
+            Spacer(modifier = Modifier.height(16.dp))
         }
-        Spacer(modifier = Modifier.height(16.dp))
-        Divider(
-            modifier = Modifier.fillMaxWidth(),
-            thickness = 1.dp,
-            color = Gray02
+
+        MDSSnackbarHost(
+            modifier = Modifier
+                .padding(start = 20.dp, bottom = 100.dp, end = 20.dp)
+                .align(Alignment.BottomCenter),
+            hostState = snackbarHostState
         )
-        Spacer(modifier = Modifier.height(16.dp))
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.Center,
-        ) {
-            WheelPicker(
-                items = years,
-                startIndex = startYearIndex,
-                confirmDateChange = updateYear
-            ) { year, color ->
-                Text(
-                    modifier = Modifier.width(64.dp),
-                    text = if (year == yearRange.first || year == yearRange.last) "" else "${year}년",
-                    style = Heading2,
-                    color = color,
-                    textAlign = TextAlign.Center
-                )
-            }
-            Spacer(modifier = Modifier.width(40.dp))
-            WheelPicker(
-                items = months,
-                startIndex = startMonthIndex,
-                confirmDateChange = updateMonth
-            ) { month, color ->
-                Text(
-                    modifier = Modifier.width(64.dp),
-                    text = if (month == months.first() || month == months.last()) "" else "${month}월",
-                    style = Heading2,
-                    color = color,
-                    textAlign = TextAlign.Center
-                )
-            }
-        }
-        Spacer(modifier = Modifier.height(20.dp))
-        MDSButton(
-            modifier = Modifier.fillMaxWidth(),
-            type = MDSButtonType.PRIMARY,
-            size = MDSButtonSize.LARGE,
-            text = "완료",
-            enabled = isValidValue,
-            onClick = {
-                confirmDateChange(
-                    LocalDate.of(snappedStartYear, snappedStartMonth, 1),
-                    LocalDate.of(snappedEndYear, snappedEndMonth, 1)
-                )
-            }
-        )
-        Spacer(modifier = Modifier.height(16.dp))
     }
 }
 
