@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.layout
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import com.moneymong.moneymong.design_system.R
@@ -25,6 +26,24 @@ internal fun LedgerOnboardingAddPage(
     onClickPrevious: () -> Unit
 ) {
     Box(modifier = modifier) {
+        LedgerOnboardingToolTip(
+            modifier = Modifier.layout { measurable, constraints ->
+                val placeable = measurable.measure(constraints)
+                layout(placeable.width, placeable.height) {
+                    val tooltipX =
+                        addComponent.offset.x.toInt() + addComponent.size.width - placeable.width
+                    val tooltipY =
+                        addComponent.offset.y.toInt() - placeable.height - 10.dp.roundToPx()
+                    placeable.placeRelative(
+                        x = tooltipX,
+                        y = tooltipY
+                    )
+                }
+            },
+            text = "장부 내역을 등록해보세요!",
+            verticalArrowPosition = VerticalArrowPosition.BOTTOM,
+            horizontalArrowPosition = HorizontalArrowPosition.END
+        )
         MDSFloatingActionButton(
             modifier = Modifier
                 .size(width = addComponent.size.width.pxToDp, addComponent.size.height.pxToDp)
