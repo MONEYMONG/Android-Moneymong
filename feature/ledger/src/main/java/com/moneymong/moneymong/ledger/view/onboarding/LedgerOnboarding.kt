@@ -14,7 +14,7 @@ import java.time.LocalDate
 
 
 internal data class OnboardingComponentState(
-    val offset: Offset = Offset(0f, 0f),
+    val offset: Offset = Offset.Zero,
     val size: IntSize = IntSize.Zero
 )
 
