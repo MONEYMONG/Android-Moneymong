@@ -2,6 +2,7 @@ package com.moneymong.moneymong.ledger.view.onboarding
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -10,6 +11,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.window.Popup
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import com.moneymong.moneymong.design_system.theme.Gray10
+import com.moneymong.moneymong.design_system.theme.White
 import java.time.LocalDate
 
 
@@ -31,6 +35,20 @@ internal fun LedgerOnboarding(
     addComponent: OnboardingComponentState,
     onDismiss: () -> Unit
 ) {
+
+    val systemUiController = rememberSystemUiController()
+
+    DisposableEffect(key1 = Unit) {
+        systemUiController.setStatusBarColor(
+            color = Gray10.copy(alpha = 0.7f),
+            darkIcons = true
+        )
+
+        onDispose {
+            systemUiController.setStatusBarColor(color = White)
+        }
+    }
+
     var currentPage by remember { mutableStateOf(LedgerOnboardingPage.DATE) }
     val currentDate = LocalDate.now()
 
