@@ -10,15 +10,19 @@ class LedgerRemoteDataSourceImpl @Inject constructor(
 ): LedgerRemoteDataSource {
     override suspend fun fetchLedgerTransactionList(
         id: Int,
-        year: Int,
-        month: Int,
+        startYear: Int,
+        startMonth: Int,
+        endYear: Int,
+        endMonth: Int,
         page: Int,
         limit: Int
     ): Result<LedgerTransactionListResponse> =
         ledgerApi.fetchLedgerTransactionList(
             id = id,
-            year = year,
-            month = month,
+            startYear = startYear,
+            startMonth = startMonth,
+            endYear = endYear,
+            endMonth = endMonth,
             page = page,
             limit = limit
         )
