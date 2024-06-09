@@ -154,9 +154,7 @@ fun MDSWheelDatePicker(
                 )
             }
         } else {
-            scope.launch {
-                snackbarHostState.currentSnackbarData?.dismiss()
-            }
+            snackbarHostState.currentSnackbarData?.dismiss()
         }
     }
 
@@ -290,7 +288,7 @@ internal fun MDSDatePickerDateView(
         Column(
             modifier = Modifier
                 .wrapContentSize()
-                .padding(start = 12.dp, top = 10.dp, end = 19.dp, bottom = 12.dp)
+                .padding(start = 12.dp, top = 10.dp, end = 19.dp, bottom = 10.dp)
         ) {
             Text(
                 text = dateType.description,
