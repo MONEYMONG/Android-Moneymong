@@ -89,7 +89,9 @@ internal fun LedgerDefaultView(
     onChangeTransactionType: (LedgerTransactionType) -> Unit,
     onClickPeriod: () -> Unit,
     onClickTransactionItem: (Int) -> Unit,
-    addFABState: OnboardingComponentState
+    addFABState: OnboardingComponentState,
+    visibleOnboarding: Boolean,
+    onDismissOnboarding: () -> Unit
 ) {
     var selectedTabIndex by remember { mutableIntStateOf(0) }
     val lazyColumnState = rememberLazyListState()
@@ -190,9 +192,6 @@ internal fun LedgerDefaultView(
         }
     }
 
-    // todo: move to vm
-    var visibleOnboarding by remember { mutableStateOf(true) }
-
     if (visibleOnboarding) {
         LedgerOnboarding(
             modifier = Modifier
@@ -201,9 +200,7 @@ internal fun LedgerDefaultView(
             isStaff = isStaff,
             dateComponent = dateRowState,
             addComponent = addFABState,
-            onDismiss = {
-                visibleOnboarding = false
-            }
+            onDismiss = onDismissOnboarding
         )
     }
 }
@@ -265,6 +262,8 @@ fun LedgerDefaultPreview() {
         onChangeTransactionType = {},
         onClickPeriod = {},
         onClickTransactionItem = {},
-        addFABState = OnboardingComponentState()
+        addFABState = OnboardingComponentState(),
+        visibleOnboarding = true,
+        onDismissOnboarding = {}
     )
 }

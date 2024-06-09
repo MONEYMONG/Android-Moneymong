@@ -239,6 +239,8 @@ fun LedgerScreen(
                                     )
                                 },
                                 addFABState = addFABState,
+                                visibleOnboarding = state.visibleOnboarding,
+                                onDismissOnboarding = viewModel::onDismissOnboarding
                             )
                             if (state.isStaff) {
                                 Column(

@@ -31,6 +31,7 @@ data class LedgerState(
     val memberList: List<AgencyUser> = emptyList(),
     val errorMessage: String = "",
     val sheetType: LedgerSheetType = LedgerSheetType.DatePicker
+    val visibleOnboarding: Boolean = false
 ) : State {
 
     val filterTransactionList: List<LedgerDetail>
