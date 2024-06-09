@@ -12,11 +12,13 @@ import retrofit2.http.Query
 interface LedgerApi {
 
     // GET
-    @GET("api/v1/ledger/{id}")
+    @GET("api/v2/ledger/{id}")
     suspend fun fetchLedgerTransactionList(
         @Path("id") id: Int,
-        @Query("year") year: Int,
-        @Query("month") month: Int,
+        @Query("startYear") startYear: Int,
+        @Query("startMonth") startMonth: Int,
+        @Query("endYear") endYear: Int,
+        @Query("endMonth") endMonth: Int,
         @Query("page") page: Int,
         @Query("limit") limit: Int
     ): Result<LedgerTransactionListResponse>
