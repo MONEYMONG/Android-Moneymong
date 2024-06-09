@@ -5,6 +5,7 @@ import com.moneymong.moneymong.ledger.view.LedgerTransactionType
 import com.moneymong.moneymong.model.agency.MyAgencyResponse
 import com.moneymong.moneymong.model.ledger.LedgerDetail
 import com.moneymong.moneymong.model.ledger.LedgerTransactionListResponse
+import com.moneymong.moneymong.model.ledger.OnboardingType
 import com.moneymong.moneymong.model.member.AgencyUser
 import java.time.LocalDate
 
@@ -55,4 +56,7 @@ data class LedgerState(
 
     val isLoading: Boolean
         get() = isAgencyExistLoading || isLedgerTransactionLoading || isMyAgencyLoading || isAgencyMemberLoading
+
+    val onboardingType: OnboardingType
+        get() = if (isStaff) OnboardingType.STAFF else OnboardingType.MEMBER
 }
