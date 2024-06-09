@@ -153,9 +153,10 @@ class LedgerViewModel @Inject constructor(
     }
 
     private fun fetchVisibleLedgerOnboarding() = intent {
-        fetchVisibleLedgerOnboardingUseCase().collectLatest { visible ->
-            reduce { state.copy(visibleOnboarding = visible) }
-        }
+        fetchVisibleLedgerOnboardingUseCase(onboardingType = state.onboardingType)
+            .collectLatest { visible ->
+                reduce { state.copy(visibleOnboarding = visible) }
+            }
     }
 
     fun reFetchLedgerData(agencyId: Int) {
@@ -212,7 +213,7 @@ class LedgerViewModel @Inject constructor(
     }
 
     fun onDismissOnboarding() = intent {
-        postDisplayedLedgerOnboardingUseCase()
+        postDisplayedLedgerOnboardingUseCase(onboardingType = state.onboardingType)
         reduce { state.copy(visibleOnboarding = false) }
     }
 }
