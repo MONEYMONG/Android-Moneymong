@@ -16,7 +16,9 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import org.orbitmvi.orbit.annotation.OrbitExperimental
 import org.orbitmvi.orbit.syntax.simple.blockingIntent
 import org.orbitmvi.orbit.syntax.simple.intent
+import org.orbitmvi.orbit.syntax.simple.postSideEffect
 import org.orbitmvi.orbit.syntax.simple.reduce
+import java.time.LocalDate
 import javax.inject.Inject
 
 @OptIn(OrbitExperimental::class)
@@ -33,7 +35,7 @@ class LedgerViewModel @Inject constructor(
 ) : BaseViewModel<LedgerState, LedgerSideEffect>(LedgerState()) {
 
     init {
-        onChangeSnackbarState(visible = LedgerArgs(savedStateHandle).ledgerPostSuccess)
+        checkPostSuccess(LedgerArgs(savedStateHandle).ledgerPostSuccess)
         fetchDefaultInfo()
         fetchMyAgencyList()
         fetchAgencyExistLedger()
@@ -75,25 +77,27 @@ class LedgerViewModel @Inject constructor(
             reduce { state.copy(isLedgerTransactionLoading = true) }
             fetchLedgerTransactionListUseCase(
                 id = state.agencyId,
-                year = state.currentDate.year,
-                month = state.currentDate.monthValue,
+                startYear = state.startDate.year,
+                startMonth = state.startDate.monthValue,
+                endYear = state.endDate.year,
+                endMonth = state.endDate.monthValue,
                 page = 0,
-                limit = 1000
+                limit = 100
             ).onSuccess {
-                    reduce {
-                        state.copy(
-                            ledgerTransaction = it,
-                            visibleError = false
-                        )
-                    }
-                }.onFailure {
-                    reduce {
-                        state.copy(
-                            visibleError = true,
-                            errorMessage = it.message ?: MoneyMongError.UnExpectedError.message
-                        )
-                    }
-                }.also { reduce { state.copy(isLedgerTransactionLoading = false) } }
+                reduce {
+                    state.copy(
+                        ledgerTransaction = it,
+                        visibleError = false
+                    )
+                }
+            }.onFailure {
+                reduce {
+                    state.copy(
+                        visibleError = true,
+                        errorMessage = it.message ?: MoneyMongError.UnExpectedError.message
+                    )
+                }
+            }.also { reduce { state.copy(isLedgerTransactionLoading = false) } }
         }
     }
 
@@ -153,20 +157,45 @@ class LedgerViewModel @Inject constructor(
         reduce { state.copy(transactionType = transactionType) }
     }
 
-    fun onAddMonthFromCurrentDate(addMonth: Long) = intent {
-        val nextDate = state.currentDate.plusMonths(addMonth)
-        reduce { state.copy(currentDate = nextDate) }
-    }
-
     fun onChangeSheetState(visible: Boolean) = intent {
         reduce { state.copy(showBottomSheet = visible) }
     }
 
-    fun onChangeSnackbarState(visible: Boolean) = intent {
-        reduce { state.copy(visibleSnackbar = visible) }
+    fun checkPostSuccess(success: Boolean) {
+        if (success) {
+            eventEmit(
+                LedgerSideEffect.LedgerVisibleSnackbar(
+                    message = "성공적으로 기록됐습니다",
+                    withDismissAction = true
+                )
+            )
+        }
     }
 
     fun onChangeVisibleErrorDialog(visible: Boolean) = intent {
         reduce { state.copy(visibleError = visible) }
+    }
+
+    fun onClickAgencyChange() = intent {
+        reduce { state.copy(sheetType = LedgerSheetType.Agency) }
+        postSideEffect(LedgerSideEffect.LedgerOpenSheet)
+    }
+
+    fun onClickPeriod() = intent {
+        reduce { state.copy(sheetType = LedgerSheetType.DatePicker) }
+        postSideEffect(LedgerSideEffect.LedgerOpenSheet)
+    }
+
+    fun onClickDateChange(startDate: LocalDate, endDate: LocalDate) {
+        intent {
+            reduce {
+                state.copy(
+                    startDate = startDate,
+                    endDate = endDate
+                )
+            }
+            postSideEffect(LedgerSideEffect.LedgerCloseSheet)
+        }
+        fetchLedgerTransactionList()
     }
 }

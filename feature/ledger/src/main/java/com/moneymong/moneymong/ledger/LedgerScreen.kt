@@ -42,6 +42,7 @@ import com.moneymong.moneymong.design_system.R
 import com.moneymong.moneymong.design_system.component.bottomSheet.MDSBottomSheet
 import com.moneymong.moneymong.design_system.component.button.FABIconSize
 import com.moneymong.moneymong.design_system.component.button.MDSFloatingActionButton
+import com.moneymong.moneymong.design_system.component.datepicker.MDSWheelDatePicker
 import com.moneymong.moneymong.design_system.component.snackbar.MDSSnackbarHost
 import com.moneymong.moneymong.design_system.error.ErrorDialog
 import com.moneymong.moneymong.design_system.theme.Mint02
@@ -80,27 +81,10 @@ fun LedgerScreen(
     val pagerState = rememberPagerState(pageCount = { tabs.size })
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
-    LaunchedEffect(state.visibleSnackbar) {
-        if (state.visibleSnackbar) {
-            coroutineScope.launch {
-                snackbarHostState.showSnackbar(
-                    message = "성공적으로 기록됐습니다",
-                    withDismissAction = true,
-                    actionLabel = ""
-                )
-            }
-            viewModel.onChangeSnackbarState(visible = false)
-        }
-    }
-
     LaunchedEffect(Unit) {
         viewModel.fetchMyAgencyList()
         viewModel.fetchAgencyMemberList()
         viewModel.fetchAgencyExistLedger()
-    }
-
-    LaunchedEffect(state.currentDate) {
-        viewModel.fetchLedgerTransactionList()
     }
 
     viewModel.collectSideEffect {
@@ -138,6 +122,16 @@ fun LedgerScreen(
                 viewModel.reFetchLedgerData(it.agencyId)
                 viewModel.eventEmit(LedgerSideEffect.LedgerCloseSheet)
             }
+
+            is LedgerSideEffect.LedgerVisibleSnackbar -> {
+                coroutineScope.launch {
+                    snackbarHostState.showSnackbar(
+                        message = it.message,
+                        withDismissAction = it.withDismissAction,
+                        actionLabel = ""
+                    )
+                }
+            }
         }
     }
 
@@ -156,7 +150,7 @@ fun LedgerScreen(
                 header = state.currentAgency?.name ?: "장부",
                 icon = R.drawable.ic_chevron_bottom,
                 visibleArrow = state.agencyList.isNotEmpty(),
-                onClickDownArrow = { viewModel.eventEmit(LedgerSideEffect.LedgerOpenSheet) }
+                onClickDownArrow = viewModel::onClickAgencyChange
             )
         },
         snackbarHost = {
@@ -175,20 +169,33 @@ fun LedgerScreen(
                 sheetState = sheetState,
                 onDismissRequest = { viewModel.eventEmit(LedgerSideEffect.LedgerCloseSheet) },
                 content = {
-                    LedgerAgencySelectBottomSheet(
-                        currentAgencyId = state.agencyId,
-                        agencyList = state.agencyList,
-                        onClickItem = {
-                            viewModel.eventEmit(
-                                LedgerSideEffect.LedgerSelectedAgencyChange(
-                                    it
-                                )
+                    when (state.sheetType) {
+                        LedgerSheetType.Agency -> {
+                            LedgerAgencySelectBottomSheet(
+                                currentAgencyId = state.agencyId,
+                                agencyList = state.agencyList,
+                                onClickItem = {
+                                    viewModel.eventEmit(
+                                        LedgerSideEffect.LedgerSelectedAgencyChange(
+                                            it
+                                        )
+                                    )
+                                }
                             )
                         }
-                    )
+                        LedgerSheetType.DatePicker -> {
+                            MDSWheelDatePicker(
+                                startDate = state.startDate,
+                                endDate = state.endDate,
+                                confirmDateChange = viewModel::onClickDateChange,
+                                onDismissRequest = { viewModel.eventEmit(LedgerSideEffect.LedgerCloseSheet) }
+                            )
+                        }
+                    }
                 }
             )
         }
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -212,13 +219,14 @@ fun LedgerScreen(
                                     ?: 0,
                                 ledgerDetails = state.filterTransactionList,
                                 transactionType = state.transactionType,
-                                currentDate = state.currentDate,
+                                startDate = state.startDate,
+                                endDate = state.endDate,
                                 hasTransaction = state.hasTransaction,
                                 isLoading = state.isLoading,
                                 isExistLedger = state.isExistLedger,
                                 isStaff = state.isStaff,
                                 onChangeTransactionType = viewModel::onChangeTransactionType,
-                                onAddMonthFromCurrentDate = viewModel::onAddMonthFromCurrentDate,
+                                onClickPeriod = viewModel::onClickPeriod,
                                 onClickTransactionItem = {
                                     viewModel.eventEmit(
                                         LedgerSideEffect.LedgerNavigateToLedgerDetail(
