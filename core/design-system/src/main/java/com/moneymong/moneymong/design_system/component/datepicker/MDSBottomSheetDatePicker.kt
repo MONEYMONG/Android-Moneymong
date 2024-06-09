@@ -43,6 +43,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.DpSize
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import com.moneymong.moneymong.design_system.R
 import com.moneymong.moneymong.design_system.component.button.MDSButton
@@ -214,6 +215,7 @@ fun MDSWheelDatePicker(
                 horizontalArrangement = Arrangement.Center,
             ) {
                 WheelPicker(
+                    size = DpSize(width = 64.dp, height = ((Heading2.lineHeight.toDp() * 3) + (28.dp * 2))),
                     items = years,
                     startIndex = startYearIndex,
                     confirmDateChange = updateYear
@@ -392,3 +394,6 @@ class DatePickerState() {
 
 @Composable
 private fun pixelsToDp(pixels: Int) = with(LocalDensity.current) { pixels.toDp() }
+
+@Composable
+private fun TextUnit.toDp() = with(LocalDensity.current) { this@toDp.toDp() }
