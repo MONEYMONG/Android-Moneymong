@@ -31,7 +31,7 @@ data class LedgerState(
     val agencyList: List<MyAgencyResponse> = emptyList(),
     val memberList: List<AgencyUser> = emptyList(),
     val errorMessage: String = "",
-    val sheetType: LedgerSheetType = LedgerSheetType.DatePicker
+    val sheetType: LedgerSheetType = LedgerSheetType.DatePicker,
     val visibleOnboarding: Boolean = false
 ) : State {
 
@@ -39,7 +39,8 @@ data class LedgerState(
         get() = if (transactionType == LedgerTransactionType.전체) {
             ledgerTransaction?.ledgerInfoViewDetails.orEmpty()
         } else {
-            ledgerTransaction?.ledgerInfoViewDetails?.filter { it.fundType == transactionType.type }.orEmpty()
+            ledgerTransaction?.ledgerInfoViewDetails?.filter { it.fundType == transactionType.type }
+                .orEmpty()
         }
 
     val hasTransaction: Boolean
