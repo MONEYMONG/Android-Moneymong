@@ -9,5 +9,7 @@ android {
 }
 
 dependencies {
+    implementation(projects.core.ui)
+
     implementation(libs.androidx.core.ktx)
 }
