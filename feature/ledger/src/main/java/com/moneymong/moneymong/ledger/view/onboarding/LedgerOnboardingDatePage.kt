@@ -34,8 +34,9 @@ internal fun LedgerOnboardingDatePage(
                 },
         ) {
             LedgerDefaultDateRow(
-                currentDate = currentDate,
-                onAddMonthFromCurrentDate = {}
+                startDate = currentDate.minusMonths(6),
+                endDate = currentDate,
+                onClickPeriod = {},
             )
             Spacer(modifier = Modifier.height(10.dp))
             LedgerOnboardingToolTip(
