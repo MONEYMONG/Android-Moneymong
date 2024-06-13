@@ -32,6 +32,8 @@ import com.moneymong.moneymong.design_system.R
 import com.moneymong.moneymong.design_system.component.button.MDSButton
 import com.moneymong.moneymong.design_system.component.button.MDSButtonSize
 import com.moneymong.moneymong.design_system.component.button.MDSButtonType
+import com.moneymong.moneymong.design_system.theme.Body4
+import com.moneymong.moneymong.design_system.theme.Gray05
 import com.moneymong.moneymong.design_system.theme.Gray10
 import com.moneymong.moneymong.design_system.theme.Heading1
 import com.moneymong.moneymong.design_system.theme.MMHorizontalSpacing
@@ -41,6 +43,7 @@ import com.moneymong.moneymong.design_system.theme.White
 fun ErrorDialog(
     modifier: Modifier = Modifier,
     message: String,
+    subMessage: String? = null,
     onConfirm: () -> Unit
 ) {
     val horizontalPadding = 22.dp
@@ -77,6 +80,15 @@ fun ErrorDialog(
                 style = Heading1,
                 color = Gray10
             )
+            if (subMessage != null) {
+                Spacer(modifier = Modifier.height(2.dp))
+                Text(
+                    text = subMessage,
+                    textAlign = TextAlign.Center,
+                    style = Body4,
+                    color = Gray05
+                )
+            }
             Spacer(modifier = Modifier.height(16.dp))
             MDSButton(
                 modifier = Modifier.width(buttonWidth),
@@ -104,6 +116,28 @@ fun ErrorDialogPreview() {
         ) {
             ErrorDialog(
                 message = "ddddddddddddddddddddddddddddddddddddddddddddddddddd",
+                onConfirm = { visibleDialog = false }
+            )
+        }
+    }
+}
+
+
+@Preview(
+    showBackground = true,
+    device = "spec:shape=Normal,width=240,height=640, unit=dp, dpi= 480"
+)
+@Composable
+fun ErrorDialogWithSubMessagePreview() {
+    var visibleDialog by remember { mutableStateOf(true) }
+
+    if (visibleDialog) {
+        Box(
+            modifier = Modifier.fillMaxSize()
+        ) {
+            ErrorDialog(
+                message = "ddddddddddddddddddddddddddddddddddddddddddddddddddd",
+                subMessage = "장부 페이지에서 가입한 소속을 확인해보세요",
                 onConfirm = { visibleDialog = false }
             )
         }
