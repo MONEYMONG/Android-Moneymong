@@ -69,9 +69,13 @@ fun AgencySearchScreen(
     }
 
     if (state.visibleWarningDialog) {
-        ErrorDialog(message = "이미 가입된 소속입니다") {
-            viewModel.changeVisibleWarningDialog(false)
-        }
+        ErrorDialog(
+            message = "이미 가입한 소속입니다",
+            subMessage = "장부 페이지에서 가입한 소속을 확인해보세요",
+            onConfirm = {
+                viewModel.changeVisibleWarningDialog(false)
+            }
+        )
     }
 
     Box(
