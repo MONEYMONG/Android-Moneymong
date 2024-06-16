@@ -43,7 +43,7 @@ import com.moneymong.moneymong.design_system.theme.White
 fun ErrorDialog(
     modifier: Modifier = Modifier,
     message: String,
-    subMessage: String? = null,
+    subMessage: String = "",
     onConfirm: () -> Unit
 ) {
     val horizontalPadding = 22.dp
@@ -80,7 +80,7 @@ fun ErrorDialog(
                 style = Heading1,
                 color = Gray10
             )
-            if (subMessage != null) {
+            if (subMessage.isNotBlank()) {
                 Spacer(modifier = Modifier.height(2.dp))
                 Text(
                     text = subMessage,
