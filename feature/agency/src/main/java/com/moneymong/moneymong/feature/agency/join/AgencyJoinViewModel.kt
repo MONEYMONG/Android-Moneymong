@@ -1,5 +1,6 @@
 package com.moneymong.moneymong.feature.agency.join
 
+import androidx.core.text.isDigitsOnly
 import androidx.lifecycle.viewModelScope
 import com.moneymong.moneymong.common.base.BaseViewModel
 import com.moneymong.moneymong.domain.usecase.agency.AgencyJoinUseCase
@@ -58,7 +59,7 @@ class AgencyJoinViewModel @Inject constructor(
 
     fun changeInputNumber(input: String) = intent intent@{
         with(input) {
-            if (state.isError.not() && (length <= CODE_MAX_SIZE)) {
+            if (isDigitsOnly() && state.isError.not() && (length <= CODE_MAX_SIZE)) {
                 this@intent.reduce {
                     state.copy(inputCode = input)
                 }

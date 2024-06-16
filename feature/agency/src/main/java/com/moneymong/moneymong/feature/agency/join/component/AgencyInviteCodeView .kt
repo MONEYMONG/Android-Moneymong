@@ -57,7 +57,7 @@ fun AgencyInviteCodeView(
         )
         Spacer(modifier = Modifier.height(8.dp))
         InviteCodeField(
-            modifier = modifier
+            modifier = Modifier
                 .focusRequester(focusRequester)
                 .fillMaxWidth(),
             value = value,
