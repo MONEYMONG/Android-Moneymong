@@ -4,6 +4,7 @@ import androidx.lifecycle.viewModelScope
 import com.moneymong.moneymong.common.base.BaseViewModel
 import com.moneymong.moneymong.domain.usecase.agency.AgencyJoinUseCase
 import com.moneymong.moneymong.domain.usecase.agency.SaveAgencyIdUseCase
+import com.moneymong.moneymong.feature.agency.join.component.CODE_MAX_SIZE
 import com.moneymong.moneymong.model.agency.AgencyJoinRequest
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -13,14 +14,13 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AgencyJoinViewModel @Inject constructor(
-    private val useCase: AgencyJoinUseCase,
+    private val agencyJoinUseCase: AgencyJoinUseCase,
     private val saveAgencyIdUseCase: SaveAgencyIdUseCase
 ) : BaseViewModel<AgencyJoinState, AgencyJoinSideEffect>(AgencyJoinState()) {
 
-    fun agencyCodeNumbers(agencyId: Long) = intent {
-        val codeNumbers = state.numbers.joinToString(separator = "")
+    fun checkInviteCode(agencyId: Long) = intent {
         viewModelScope.launch {
-            useCase.invoke(agencyId, AgencyJoinRequest(codeNumbers))
+            agencyJoinUseCase(agencyId = agencyId, data = AgencyJoinRequest(state.inputCode))
                 .onSuccess {
                     if (it.certified) {
                         saveAgencyIdUseCase(agencyId.toInt())
@@ -45,45 +45,36 @@ class AgencyJoinViewModel @Inject constructor(
                             errorPopUpMessage = it.message.toString()
                         )
                     }
-
                 }
         }
-
     }
 
 
     fun onIsErrorChanged(newIsError: Boolean) = intent {
         reduce {
-            state.copy(
-                isError = newIsError
-            )
+            state.copy(isError = newIsError)
         }
     }
 
-    fun onIsNumbersChanged(index: Int, value: String) = intent {
-        val newNumbers = state.numbers.toMutableList().apply {
-            this[index] = value
-        }
-        reduce {
-            state.copy(
-                numbers = newNumbers
-            )
+    fun changeInputNumber(input: String) = intent intent@{
+        with(input) {
+            if (state.isError.not() && (length <= CODE_MAX_SIZE)) {
+                this@intent.reduce {
+                    state.copy(inputCode = input)
+                }
+            }
         }
     }
 
     fun resetNumbers() = intent {
         reduce {
-            state.copy(
-                numbers = List(6) { "" }
-            )
+            state.copy(inputCode = "")
         }
     }
 
     fun visiblePopUpErrorChanged(visibleError: Boolean) = intent {
         reduce {
-            state.copy(
-                visiblePopUpError = visibleError,
-            )
+            state.copy(visiblePopUpError = visibleError)
         }
     }
 }
