@@ -8,8 +8,10 @@ import javax.inject.Inject
 class AgencyJoinUseCase @Inject constructor(
     private val agencyRepository: AgencyRepository
 ) {
-    suspend fun invoke(agencyId: Long, data: AgencyJoinRequest): Result<AgencyJoinResponse> {
+    suspend operator fun invoke(
+        agencyId: Long,
+        data: AgencyJoinRequest
+    ): Result<AgencyJoinResponse> {
         return agencyRepository.agencyCodeNumbers(agencyId, data)
     }
-
 }
