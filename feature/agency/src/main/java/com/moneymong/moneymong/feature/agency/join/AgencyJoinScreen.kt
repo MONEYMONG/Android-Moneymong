@@ -20,11 +20,9 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.BottomCenter
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -38,6 +36,7 @@ import com.moneymong.moneymong.design_system.theme.Heading3
 import com.moneymong.moneymong.design_system.theme.MMHorizontalSpacing
 import com.moneymong.moneymong.design_system.theme.White
 import com.moneymong.moneymong.feature.agency.join.component.AgencyInviteCodeView
+import kotlinx.coroutines.delay
 import org.orbitmvi.orbit.compose.collectAsState
 
 
@@ -90,7 +89,6 @@ fun AgencyJoinScreen(
     )
 }
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 private fun JoinContent(
     modifier: Modifier = Modifier,
@@ -102,7 +100,7 @@ private fun JoinContent(
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
     val focusRequester = remember { FocusRequester() }
-    val keyboardController = LocalSoftwareKeyboardController.current
+    val focusManager = LocalFocusManager.current
 
     if (state.visiblePopUpError) {
         ErrorDialog(
@@ -116,10 +114,6 @@ private fun JoinContent(
         )
     }
 
-    LaunchedEffect(key1 = Unit) {
-        focusRequester.requestFocus()
-    }
-
     LaunchedEffect(key1 = state.isError) {
         if (state.isError) {
             val result = snackbarHostState.showSnackbar(
@@ -130,9 +124,11 @@ private fun JoinContent(
             if (result == SnackbarResult.ActionPerformed) {
                 viewModel.onIsErrorChanged(false)
                 viewModel.resetNumbers()
-                focusRequester.requestFocus()
-                keyboardController?.show()
             }
+        } else {
+            val snackbarFadeOutMillis = 75L //  androidx.compose.material3.SnackbarHostState.kt
+            delay(snackbarFadeOutMillis)
+            focusRequester.requestFocus()
         }
     }
 
@@ -162,13 +158,14 @@ private fun JoinContent(
             horizontalArrangement = Arrangement.Start
         ) {
             AgencyInviteCodeView(
-                modifier = Modifier.focusRequester(focusRequester),
+                modifier = Modifier,
+                focusRequester = focusRequester,
                 isError = state.isError,
                 inputCode = state.inputCode,
                 onValueChanged = viewModel::changeInputNumber,
                 checkInviteCode = {
                     viewModel.checkInviteCode(agencyId = agencyId)
-                    keyboardController?.hide()
+                    focusManager.clearFocus()
                 },
             )
         }
