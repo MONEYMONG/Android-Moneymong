@@ -13,6 +13,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.unit.dp
 import com.moneymong.moneymong.design_system.theme.Blue04
 import com.moneymong.moneymong.design_system.theme.Body2
@@ -26,6 +28,7 @@ internal const val CODE_MAX_SIZE = 6
 @Composable
 fun AgencyInviteCodeView(
     modifier: Modifier = Modifier,
+    focusRequester: FocusRequester,
     isError: Boolean,
     inputCode: String,
     onValueChanged: (String) -> Unit,
@@ -54,7 +57,9 @@ fun AgencyInviteCodeView(
         )
         Spacer(modifier = Modifier.height(8.dp))
         InviteCodeField(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = modifier
+                .focusRequester(focusRequester)
+                .fillMaxWidth(),
             value = value,
             onValueChange = onValueChanged,
             isError = isError
