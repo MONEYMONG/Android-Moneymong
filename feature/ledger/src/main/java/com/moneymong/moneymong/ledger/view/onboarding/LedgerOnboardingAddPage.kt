@@ -7,7 +7,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material.ripple.LocalRippleTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.layout
@@ -16,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import com.moneymong.moneymong.design_system.R
 import com.moneymong.moneymong.design_system.component.button.MDSFloatingActionButton
 import com.moneymong.moneymong.design_system.theme.Mint03
+import com.moneymong.moneymong.ui.NoRippleTheme
 import com.moneymong.moneymong.ui.pxToDp
 
 @Composable
@@ -44,19 +47,25 @@ internal fun LedgerOnboardingAddPage(
             verticalArrowPosition = VerticalArrowPosition.BOTTOM,
             horizontalArrowPosition = HorizontalArrowPosition.END
         )
-        MDSFloatingActionButton(
-            modifier = Modifier
-                .size(width = addComponent.size.width.pxToDp, addComponent.size.height.pxToDp)
-                .offset {
-                    IntOffset(
-                        x = addComponent.offset.x.toInt(),
-                        y = addComponent.offset.y.toInt()
+
+        CompositionLocalProvider(LocalRippleTheme provides NoRippleTheme) {
+            MDSFloatingActionButton(
+                modifier = Modifier
+                    .size(
+                        width = addComponent.size.width.pxToDp,
+                        height = addComponent.size.height.pxToDp
                     )
-                },
-            iconResource = R.drawable.ic_plus_default,
-            containerColor = Mint03,
-            onClick = {}
-        )
+                    .offset {
+                        IntOffset(
+                            x = addComponent.offset.x.toInt(),
+                            y = addComponent.offset.y.toInt()
+                        )
+                    },
+                iconResource = R.drawable.ic_plus_default,
+                containerColor = Mint03,
+                onClick = {}
+            )
+        }
         Row(
             modifier = Modifier
                 .fillMaxWidth()
