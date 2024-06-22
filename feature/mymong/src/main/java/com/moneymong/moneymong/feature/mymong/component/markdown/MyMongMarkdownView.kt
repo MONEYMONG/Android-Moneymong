@@ -8,6 +8,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.moneymong.moneymong.design_system.theme.Gray10
+import java.util.LinkedList
 
 @Composable
 fun MyMongMarkdownView(
@@ -16,7 +17,7 @@ fun MyMongMarkdownView(
     textColor: Color = Gray10
 ) {
     var isTable = false
-    val tableLines = mutableListOf<String>()
+    val tableLines = LinkedList<String>()
 
     Column(modifier = modifier) {
         val lines = markdownText.split("\n")
@@ -36,6 +37,9 @@ fun MyMongMarkdownView(
                     textColor = textColor
                 )
             }
+        }
+        if (isTable) {
+            MyMongMarkdownTable(lines = tableLines)
         }
     }
 }

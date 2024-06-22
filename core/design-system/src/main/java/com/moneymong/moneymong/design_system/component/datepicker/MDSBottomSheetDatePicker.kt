@@ -39,11 +39,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onSizeChanged
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.DpSize
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import com.moneymong.moneymong.design_system.R
 import com.moneymong.moneymong.design_system.component.button.MDSButton
@@ -63,6 +61,8 @@ import com.moneymong.moneymong.design_system.theme.Red01
 import com.moneymong.moneymong.design_system.theme.Red02
 import com.moneymong.moneymong.design_system.theme.Red03
 import com.moneymong.moneymong.design_system.theme.White
+import com.moneymong.moneymong.ui.pxToDp
+import com.moneymong.moneymong.ui.spToDp
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
@@ -215,7 +215,6 @@ fun MDSWheelDatePicker(
                 horizontalArrangement = Arrangement.Center,
             ) {
                 WheelPicker(
-                    size = DpSize(width = 64.dp, height = ((Heading2.lineHeight.toDp() * 3) + (28.dp * 2))),
                     items = years,
                     startIndex = startYearIndex,
                     confirmDateChange = updateYear
@@ -312,7 +311,7 @@ internal fun MDSDatePickerDateView(
 internal fun <T> WheelPicker(
     modifier: Modifier = Modifier,
     state: DatePickerState = rememberMDSDatePickerState(),
-    size: DpSize = DpSize(width = 64.dp, height = 140.dp),
+    size: DpSize = DpSize(width = 64.dp, height = ((Heading2.lineHeight.spToDp * 3) + (28.dp * 2))),
     items: List<T>,
     startIndex: Int = 0,
     visibleItemsCount: Int = 3,
@@ -326,7 +325,7 @@ internal fun <T> WheelPicker(
 
     val visibleItemsMiddle by remember { derivedStateOf { visibleItemsCount / 2 } }
     val itemHeightPixels = remember { mutableIntStateOf(0) }
-    val itemHeightDp = pixelsToDp(itemHeightPixels.intValue)
+    val itemHeightDp = itemHeightPixels.intValue.pxToDp
 
 
     LaunchedEffect(lazyListState) {
@@ -391,9 +390,3 @@ class DatePickerState() {
             Gray03
         }
 }
-
-@Composable
-private fun pixelsToDp(pixels: Int) = with(LocalDensity.current) { pixels.toDp() }
-
-@Composable
-private fun TextUnit.toDp() = with(LocalDensity.current) { this@toDp.toDp() }

@@ -32,6 +32,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -54,6 +56,7 @@ import com.moneymong.moneymong.ledger.view.LedgerDefaultView
 import com.moneymong.moneymong.ledger.view.LedgerTab
 import com.moneymong.moneymong.ledger.view.LedgerTabRowView
 import com.moneymong.moneymong.ledger.view.LedgerTopbarView
+import com.moneymong.moneymong.ledger.view.onboarding.OnboardingComponentState
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.compose.collectAsState
 import org.orbitmvi.orbit.compose.collectSideEffect
@@ -80,6 +83,7 @@ fun LedgerScreen(
     val snackbarHostState = remember { SnackbarHostState() }
     val pagerState = rememberPagerState(pageCount = { tabs.size })
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+    var addFABState by remember { mutableStateOf(OnboardingComponentState()) }
 
     LaunchedEffect(Unit) {
         viewModel.fetchMyAgencyList()
@@ -233,7 +237,10 @@ fun LedgerScreen(
                                             it
                                         )
                                     )
-                                }
+                                },
+                                addFABState = addFABState,
+                                visibleOnboarding = state.visibleOnboarding,
+                                onDismissOnboarding = viewModel::onDismissOnboarding
                             )
                             if (state.isStaff) {
                                 Column(
@@ -297,7 +304,14 @@ fun LedgerScreen(
                                     val containerColor =
                                         if (expandableFab) Mint02 else Mint03
                                     MDSFloatingActionButton(
-                                        modifier = Modifier.rotate(rotationAngle),
+                                        modifier = Modifier
+                                            .rotate(rotationAngle)
+                                            .onGloballyPositioned { layoutCoordinates ->
+                                                addFABState = OnboardingComponentState(
+                                                    offset = layoutCoordinates.localToRoot(Offset.Zero),
+                                                    size = layoutCoordinates.size
+                                                )
+                                            },
                                         iconResource = R.drawable.ic_plus_default,
                                         containerColor = containerColor,
                                         onClick = {
