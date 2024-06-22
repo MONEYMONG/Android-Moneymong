@@ -32,7 +32,9 @@ data class OCRDetailState(
     val isTotalPriceError: Boolean = false,
     val isPaymentDateError: Boolean = false,
     val isPaymentTimeError: Boolean = false,
-    val isMemoError: Boolean = false
+    val isMemoError: Boolean = false,
+    val showErrorDialog: Boolean = false,
+    val errorMessage: String = ""
 ) : State {
 
     val receipt: DocumentResult?
