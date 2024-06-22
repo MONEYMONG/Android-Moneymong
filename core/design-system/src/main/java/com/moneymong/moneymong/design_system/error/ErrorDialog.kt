@@ -43,7 +43,7 @@ import com.moneymong.moneymong.design_system.theme.White
 fun ErrorDialog(
     modifier: Modifier = Modifier,
     message: String,
-    description: String,
+    description: String = "",
     onConfirm: () -> Unit
 ) {
     val horizontalPadding = 22.dp

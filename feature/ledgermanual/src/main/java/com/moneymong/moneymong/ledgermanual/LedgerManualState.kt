@@ -25,7 +25,9 @@ data class LedgerManualState(
     val isPaymentTimeError: Boolean = false,
     val isMemoError: Boolean = false,
     val isReceipt: Boolean? = null,
-    val showPopBackStackModal: Boolean = false
+    val showPopBackStackModal: Boolean = false,
+    val showErrorDialog: Boolean = false,
+    val errorMessage: String = ""
 ) : State {
 
     val enabled: Boolean
