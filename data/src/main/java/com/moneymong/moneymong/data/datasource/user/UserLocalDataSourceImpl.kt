@@ -12,10 +12,11 @@ import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import java.io.IOException
 import javax.inject.Inject
+import javax.inject.Named
 
 class UserLocalDataSourceImpl @Inject constructor(
-    private val userDataStorePreferences: DataStore<Preferences>
-): UserLocalDataSource {
+    @Named("user") private val userDataStorePreferences: DataStore<Preferences>
+) : UserLocalDataSource {
 
 
     override suspend fun saveUserId(userId: Int) {
