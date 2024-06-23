@@ -80,7 +80,7 @@ fun ErrorDialog(
                 style = Heading1,
                 color = Gray10
             )
-            if (description.isNotEmpty()) {
+            if (description.isNotBlank()) {
                 Spacer(modifier = Modifier.height(2.dp))
                 Text(
                     text = description,
@@ -89,7 +89,7 @@ fun ErrorDialog(
                     color = Gray06
                 )
             }
-            Spacer(modifier = Modifier.height(10.dp))
+            Spacer(modifier = Modifier.height(16.dp))
             MDSButton(
                 modifier = Modifier.width(buttonWidth),
                 onClick = onConfirm,
