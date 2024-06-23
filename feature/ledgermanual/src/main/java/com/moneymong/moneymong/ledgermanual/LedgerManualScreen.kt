@@ -168,7 +168,6 @@ fun LedgerManualScreen(
     if (state.showErrorDialog) {
         ErrorDialog(
             message = state.errorMessage,
-            description = "",
             onConfirm = viewModel::onClickErrorDialogConfirm
         )
     }
