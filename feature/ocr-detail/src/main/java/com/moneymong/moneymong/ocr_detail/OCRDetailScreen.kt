@@ -64,6 +64,7 @@ import com.moneymong.moneymong.design_system.component.textfield.util.MDSTextFie
 import com.moneymong.moneymong.design_system.component.textfield.visualtransformation.DateVisualTransformation
 import com.moneymong.moneymong.design_system.component.textfield.visualtransformation.PriceVisualTransformation
 import com.moneymong.moneymong.design_system.component.textfield.visualtransformation.TimeVisualTransformation
+import com.moneymong.moneymong.design_system.error.ErrorDialog
 import com.moneymong.moneymong.design_system.theme.Blue01
 import com.moneymong.moneymong.design_system.theme.Blue04
 import com.moneymong.moneymong.design_system.theme.Body2
@@ -117,12 +118,23 @@ fun OCRDetailScreen(
             is OCRDetailSideEffect.OCRDetailNavigateToLedger -> {
                 navigateToLedger(true)
             }
+
+            is OCRDetailSideEffect.OCRDetailHideErrorDialog -> {
+                viewModel.visibleErrorDialog(false)
+            }
         }
     }
 
     LaunchedEffect(Unit) {
         viewModel.init(document)
         viewModel.reduceReceiptFile(state.receiptImage.base64ToFile(context))
+    }
+
+    if (state.showErrorDialog) {
+        ErrorDialog(
+            message = state.errorMessage,
+            onConfirm = viewModel::onClickErrorDialogConfirm
+        )
     }
 
     Scaffold(

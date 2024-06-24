@@ -12,6 +12,8 @@ import com.moneymong.moneymong.data.datasource.signup.UnivRemoteDataSource
 import com.moneymong.moneymong.data.datasource.signup.UnivRemoteDataSourceImpl
 import com.moneymong.moneymong.data.datasource.agency.AgencyRemoteDataSource
 import com.moneymong.moneymong.data.datasource.agency.AgencyRemoteDataSourceImpl
+import com.moneymong.moneymong.data.datasource.ledger.LedgerLocalDataSource
+import com.moneymong.moneymong.data.datasource.ledger.LedgerLocalDataSourceImpl
 import com.moneymong.moneymong.data.datasource.ledger.LedgerRemoteDataSource
 import com.moneymong.moneymong.data.datasource.ledger.LedgerRemoteDataSourceImpl
 import com.moneymong.moneymong.data.datasource.ledgerdetail.LedgerDetailRemoteDataSource
@@ -74,22 +76,27 @@ interface DataSourceModule {
     ): UserLocalDataSource
 
     @Binds
-    fun provideOCRRemoteDataSource(
+    fun bindOCRRemoteDataSource(
         ocrRemoteDataSourceImpl: OCRRemoteDataSourceImpl
     ): OCRRemoteDataSource
 
     @Binds
-    fun provideLedgerRemoteDataSource(
+    fun bindLedgerRemoteDataSource(
         ledgerRemoteDataSourceImpl: LedgerRemoteDataSourceImpl
     ): LedgerRemoteDataSource
 
     @Binds
-    fun provideMemberRemoteDataSource(
+    fun bindLedgerLocalDataSource(
+        ledgerLocalDataSourceImpl: LedgerLocalDataSourceImpl
+    ): LedgerLocalDataSource
+
+    @Binds
+    fun bindMemberRemoteDataSource(
         memberRemoteDataSourceImpl: MemberRemoteDataSourceImpl
     ): MemberRemoteDataSource
 
     @Binds
-    fun provideLedgerDetailRemoteDataSource(
+    fun bindLedgerDetailRemoteDataSource(
         ledgerDetailRemoteDataSourceImpl: LedgerDetailRemoteDataSourceImpl
     ): LedgerDetailRemoteDataSource
 }
