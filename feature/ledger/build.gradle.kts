@@ -11,6 +11,7 @@ android {
 
 dependencies {
     implementation(projects.core.common)
+    implementation(projects.core.ui)
     implementation(projects.core.model)
     implementation(projects.domain)
     implementation(projects.feature.member)
@@ -18,6 +19,7 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.appcompat)
     implementation(libs.material)
+    implementation(libs.accompanist.systemuicontroller)
 
     implementation(libs.orbit.core)
     implementation(libs.orbit.compose)
