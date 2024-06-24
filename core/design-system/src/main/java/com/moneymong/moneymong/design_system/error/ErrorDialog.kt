@@ -122,3 +122,25 @@ fun ErrorDialogPreview() {
         }
     }
 }
+
+
+@Preview(
+    showBackground = true,
+    device = "spec:shape=Normal,width=240,height=640, unit=dp, dpi= 480"
+)
+@Composable
+fun ErrorDialogWithSubMessagePreview() {
+    var visibleDialog by remember { mutableStateOf(true) }
+
+    if (visibleDialog) {
+        Box(
+            modifier = Modifier.fillMaxSize()
+        ) {
+            ErrorDialog(
+                message = "ddddddddddddddddddddddddddddddddddddddddddddddddddd",
+                subMessage = "장부 페이지에서 가입한 소속을 확인해보세요",
+                onConfirm = { visibleDialog = false }
+            )
+        }
+    }
+}
