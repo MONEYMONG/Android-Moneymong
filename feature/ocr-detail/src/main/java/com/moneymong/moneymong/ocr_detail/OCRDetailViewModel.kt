@@ -43,8 +43,10 @@ class OCRDetailViewModel @Inject constructor(
 
     fun init(document: DocumentResponse?) = intent {
         val receipt = document?.images?.first()?.receipt?.result
-        val currentDate = SimpleDateFormat("yyyyMMdd", Locale.KOREA).format(Date(System.currentTimeMillis()))
-        val currentTime = SimpleDateFormat("HHmmss", Locale.KOREA).format(Date(System.currentTimeMillis()))
+        val currentDate =
+            SimpleDateFormat("yyyyMMdd", Locale.KOREA).format(Date(System.currentTimeMillis()))
+        val currentTime =
+            SimpleDateFormat("HHmmss", Locale.KOREA).format(Date(System.currentTimeMillis()))
         val paymentDateString = receipt?.paymentInfo?.date?.formatted?.let {
             ("${it.year}${it.month}${it.day}").run {
                 if (validateValue(length = 8, isDigit = true) && isValidPaymentDate()) {
@@ -106,7 +108,7 @@ class OCRDetailViewModel @Inject constructor(
                 .onSuccess {
                     postSideEffect(OCRDetailSideEffect.OCRDetailNavigateToLedger)
                 }.onFailure {
-                    // TODO
+                    showErrorDialog(it.message.orEmpty())
                 }.also { reduce { state.copy(isLoading = false) } }
         }
     }
@@ -125,7 +127,7 @@ class OCRDetailViewModel @Inject constructor(
                             reduce { state.copy(documentImageUrls = state.documentImageUrls + it.path) }
                         }
                     }.onFailure {
-                        // TODO
+                        showErrorDialog(it.message.orEmpty())
                     }.also { reduce { state.copy(isLoading = false) } }
             }
         }
@@ -134,6 +136,8 @@ class OCRDetailViewModel @Inject constructor(
     fun onClickPostLedger() = intent {
         postDocumentImage(imageFile = state.receiptFile, isReceipt = true)
     }
+
+    fun onClickErrorDialogConfirm() = eventEmit(OCRDetailSideEffect.OCRDetailHideErrorDialog)
 
     fun addDocumentImage(file: File?) = intent {
         val newDocumentUris = state.documentImageUrls.toMutableList()
@@ -224,6 +228,21 @@ class OCRDetailViewModel @Inject constructor(
 
     fun onChangeFundType(fundType: FundType) = intent {
         reduce { state.copy(fundType = fundType) }
+    }
+
+    fun visibleErrorDialog(visible: Boolean) = intent {
+        reduce {
+            state.copy(showErrorDialog = visible)
+        }
+    }
+
+    private fun showErrorDialog(message: String) = intent {
+        reduce {
+            state.copy(
+                showErrorDialog = true,
+                errorMessage = message
+            )
+        }
     }
 
     private fun trimStartWithZero(value: TextFieldValue) =
