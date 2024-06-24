@@ -62,7 +62,12 @@ class LedgerManualViewModel @Inject constructor(
                 .onSuccess {
                     postSideEffect(LedgerManualSideEffect.LedgerManualNavigateToLedger)
                 }.onFailure {
-                    // TODO
+                    reduce {
+                        state.copy(
+                            showErrorDialog = true,
+                            errorMessage = it.message.orEmpty()
+                        )
+                    }
                 }.also { reduce { state.copy(isLoading = false) } }
         }
     }
@@ -165,6 +170,10 @@ class LedgerManualViewModel @Inject constructor(
         reduce { state.copy(fundType = fundType) }
     }
 
+    fun visibleErrorDialog(visible: Boolean) = intent {
+        reduce { state.copy(showErrorDialog = visible) }
+    }
+
     fun visiblePopBackStackModal(visible: Boolean) = intent {
         reduce { state.copy(showPopBackStackModal = visible) }
     }
@@ -178,6 +187,8 @@ class LedgerManualViewModel @Inject constructor(
     }
 
     fun onClickPostTransaction() = eventEmit(LedgerManualSideEffect.LedgerManualPostTransaction)
+
+    fun onClickErrorDialogConfirm() = eventEmit(LedgerManualSideEffect.LedgerManualHideErrorDialog)
 
     private fun trimStartWithZero(value: TextFieldValue) =
         if (value.text.isNotEmpty() && value.text.all { it == '0' }) {
