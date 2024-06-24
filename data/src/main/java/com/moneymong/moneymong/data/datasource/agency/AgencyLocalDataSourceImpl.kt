@@ -10,10 +10,11 @@ import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import java.io.IOException
 import javax.inject.Inject
+import javax.inject.Named
 
 class AgencyLocalDataSourceImpl @Inject constructor(
-    private val userDataStorePreferences: DataStore<Preferences>
-): AgencyLocalDataSource {
+    @Named("user") private val userDataStorePreferences: DataStore<Preferences>
+) : AgencyLocalDataSource {
     override suspend fun saveAgencyId(agencyId: Int) {
         userDataStorePreferences.edit { preferences ->
             preferences[AGENCY_ID] = agencyId
