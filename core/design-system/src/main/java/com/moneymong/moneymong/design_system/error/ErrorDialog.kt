@@ -33,7 +33,7 @@ import com.moneymong.moneymong.design_system.component.button.MDSButton
 import com.moneymong.moneymong.design_system.component.button.MDSButtonSize
 import com.moneymong.moneymong.design_system.component.button.MDSButtonType
 import com.moneymong.moneymong.design_system.theme.Body4
-import com.moneymong.moneymong.design_system.theme.Gray05
+import com.moneymong.moneymong.design_system.theme.Gray06
 import com.moneymong.moneymong.design_system.theme.Gray10
 import com.moneymong.moneymong.design_system.theme.Heading1
 import com.moneymong.moneymong.design_system.theme.MMHorizontalSpacing
@@ -43,7 +43,7 @@ import com.moneymong.moneymong.design_system.theme.White
 fun ErrorDialog(
     modifier: Modifier = Modifier,
     message: String,
-    subMessage: String = "",
+    description: String = "",
     onConfirm: () -> Unit
 ) {
     val horizontalPadding = 22.dp
@@ -80,13 +80,13 @@ fun ErrorDialog(
                 style = Heading1,
                 color = Gray10
             )
-            if (subMessage.isNotBlank()) {
+            if (description.isNotBlank()) {
                 Spacer(modifier = Modifier.height(2.dp))
                 Text(
-                    text = subMessage,
+                    text = description,
                     textAlign = TextAlign.Center,
                     style = Body4,
-                    color = Gray05
+                    color = Gray06
                 )
             }
             Spacer(modifier = Modifier.height(16.dp))
@@ -115,7 +115,8 @@ fun ErrorDialogPreview() {
             modifier = Modifier.fillMaxSize()
         ) {
             ErrorDialog(
-                message = "ddddddddddddddddddddddddddddddddddddddddddddddddddd",
+                message = "dddddddddddddddddd",
+                description = "이것은 설명입니다",
                 onConfirm = { visibleDialog = false }
             )
         }
