@@ -138,7 +138,7 @@ fun ErrorDialogWithSubMessagePreview() {
         ) {
             ErrorDialog(
                 message = "ddddddddddddddddddddddddddddddddddddddddddddddddddd",
-                subMessage = "장부 페이지에서 가입한 소속을 확인해보세요",
+                description = "장부 페이지에서 가입한 소속을 확인해보세요",
                 onConfirm = { visibleDialog = false }
             )
         }
