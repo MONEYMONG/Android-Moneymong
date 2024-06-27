@@ -1,4 +1,4 @@
-![cover](https://github.com/MONEYMONG/Android-Moneymong/assets/64366488/d8d0ddcd-3eae-453d-87d0-b9138353fb71)
+![cover](https://github.com/MONEYMONG/Android-Moneymong/assets/64366488/034a0bf6-f3fd-446d-a35d-35808ab4b7a9)
 <div align="center">
   <a href="https://github.com/MONEYMONG/Android-Moneymong/graphs/contributors">
     <img src="https://contrib.rocks/image?repo=MONEYMONG/Android-Moneymong" />
