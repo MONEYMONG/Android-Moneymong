@@ -47,5 +47,4 @@
 
 -keep class com.moneymong.moneymong.network.request.** { *; }
 -keep class com.moneymong.moneymong.network.response.** { *; }
--keep class com.moneymong.moneymong.domain.entity.** { *; }
--keep class com.moneymong.moneymong.domain.param.** { *; }
+-keep class com.moneymong.moneymong.model.** { *; }
