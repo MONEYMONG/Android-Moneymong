@@ -34,8 +34,8 @@ import com.moneymong.moneymong.design_system.component.tooltip.MDSToolTipPositio
 import com.moneymong.moneymong.design_system.error.ErrorDialog
 import com.moneymong.moneymong.design_system.error.ErrorItem
 import com.moneymong.moneymong.design_system.error.ErrorScreen
-import com.moneymong.moneymong.design_system.loading.LoadingItem
-import com.moneymong.moneymong.design_system.loading.LoadingScreen
+import com.moneymong.moneymong.design_system.component.indicator.LoadingItem
+import com.moneymong.moneymong.design_system.component.indicator.LoadingScreen
 import com.moneymong.moneymong.design_system.theme.Body4
 import com.moneymong.moneymong.design_system.theme.Gray01
 import com.moneymong.moneymong.design_system.theme.Gray08
