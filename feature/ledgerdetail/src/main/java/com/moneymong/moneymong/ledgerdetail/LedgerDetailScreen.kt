@@ -58,7 +58,7 @@ import com.moneymong.moneymong.design_system.component.textfield.visualtransform
 import com.moneymong.moneymong.design_system.component.textfield.visualtransformation.PriceVisualTransformation
 import com.moneymong.moneymong.design_system.component.textfield.visualtransformation.TimeVisualTransformation
 import com.moneymong.moneymong.design_system.error.ErrorDialog
-import com.moneymong.moneymong.design_system.loading.LoadingScreen
+import com.moneymong.moneymong.design_system.component.indicator.LoadingScreen
 import com.moneymong.moneymong.design_system.theme.Blue01
 import com.moneymong.moneymong.design_system.theme.Blue03
 import com.moneymong.moneymong.design_system.theme.Blue04
