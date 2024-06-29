@@ -36,7 +36,7 @@ import com.moneymong.moneymong.common.ui.noRippleClickable
 import com.moneymong.moneymong.common.ui.toWonFormat
 import com.moneymong.moneymong.design_system.R.drawable
 import com.moneymong.moneymong.design_system.component.chip.MDSChip
-import com.moneymong.moneymong.design_system.loading.LoadingScreen
+import com.moneymong.moneymong.design_system.component.indicator.LoadingScreen
 import com.moneymong.moneymong.design_system.theme.Body2
 import com.moneymong.moneymong.design_system.theme.Body3
 import com.moneymong.moneymong.design_system.theme.Gray01
