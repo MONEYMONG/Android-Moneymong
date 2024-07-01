@@ -9,8 +9,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.IntRect
 import androidx.compose.ui.unit.IntSize
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.window.Popup
+import androidx.compose.ui.window.PopupPositionProvider
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.moneymong.moneymong.design_system.theme.Gray10
 import com.moneymong.moneymong.design_system.theme.White
@@ -64,7 +68,9 @@ internal fun LedgerOnboarding(
         }
     }
 
-    Popup {
+    Popup(
+        popupPositionProvider = LedgerPopupPositionProvider()
+    ) {
         when (currentPage) {
             LedgerOnboardingPage.DATE -> {
                 LedgerOnboardingDatePage(
@@ -94,5 +100,21 @@ internal fun LedgerOnboarding(
                 )
             }
         }
+    }
+}
+
+
+private class LedgerPopupPositionProvider : PopupPositionProvider {
+    override fun calculatePosition(
+        anchorBounds: IntRect,
+        windowSize: IntSize,
+        layoutDirection: LayoutDirection,
+        popupContentSize: IntSize
+    ): IntOffset {
+
+        return IntOffset(
+            x = 0,
+            y = 0
+        )
     }
 }
