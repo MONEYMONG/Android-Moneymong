@@ -18,6 +18,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
@@ -45,6 +48,7 @@ import com.moneymong.moneymong.design_system.component.bottomSheet.MDSBottomShee
 import com.moneymong.moneymong.design_system.component.button.FABIconSize
 import com.moneymong.moneymong.design_system.component.button.MDSFloatingActionButton
 import com.moneymong.moneymong.design_system.component.datepicker.MDSWheelDatePicker
+import com.moneymong.moneymong.design_system.component.indicator.MDSRefreshIndicator
 import com.moneymong.moneymong.design_system.component.snackbar.MDSSnackbarHost
 import com.moneymong.moneymong.design_system.error.ErrorDialog
 import com.moneymong.moneymong.design_system.theme.Mint02
@@ -63,7 +67,7 @@ import org.orbitmvi.orbit.compose.collectSideEffect
 
 @OptIn(
     ExperimentalFoundationApi::class,
-    ExperimentalMaterial3Api::class
+    ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class
 )
 @Composable
 fun LedgerScreen(
@@ -84,6 +88,10 @@ fun LedgerScreen(
     val pagerState = rememberPagerState(pageCount = { tabs.size })
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     var addFABState by remember { mutableStateOf(OnboardingComponentState()) }
+    val pullRefreshState = rememberPullRefreshState(
+        refreshing = state.isRefreshing,
+        onRefresh = viewModel::fetchLedgerTransactionList
+    )
 
     LaunchedEffect(Unit) {
         viewModel.fetchMyAgencyList()
@@ -148,6 +156,7 @@ fun LedgerScreen(
     }
 
     Scaffold(
+        modifier = Modifier.pullRefresh(pullRefreshState),
         topBar = {
             LedgerTopbarView(
                 modifier = Modifier.background(White),
@@ -187,6 +196,7 @@ fun LedgerScreen(
                                 }
                             )
                         }
+
                         LedgerSheetType.DatePicker -> {
                             MDSWheelDatePicker(
                                 startDate = state.startDate,
@@ -329,6 +339,10 @@ fun LedgerScreen(
                 }
             }
         }
+        MDSRefreshIndicator(
+            pullRefreshState = pullRefreshState,
+            isRefreshing = state.isRefreshing
+        )
     }
 }
 
