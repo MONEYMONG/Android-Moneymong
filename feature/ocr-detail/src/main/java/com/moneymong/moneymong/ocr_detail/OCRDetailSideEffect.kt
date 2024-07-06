@@ -5,4 +5,5 @@ import com.moneymong.moneymong.common.base.SideEffect
 sealed class OCRDetailSideEffect : SideEffect {
     data object OCRDetailOpenImagePicker : OCRDetailSideEffect()
     data object OCRDetailNavigateToLedger : OCRDetailSideEffect()
+    data object OCRDetailHideErrorDialog : OCRDetailSideEffect()
 }

@@ -1,8 +1,6 @@
 package com.moneymong.moneymong.feature.agency.join
 
-import android.util.Log
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -24,6 +22,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.BottomCenter
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -37,6 +36,7 @@ import com.moneymong.moneymong.design_system.theme.Heading3
 import com.moneymong.moneymong.design_system.theme.MMHorizontalSpacing
 import com.moneymong.moneymong.design_system.theme.White
 import com.moneymong.moneymong.feature.agency.join.component.AgencyInviteCodeView
+import kotlinx.coroutines.delay
 import org.orbitmvi.orbit.compose.collectAsState
 
 
@@ -99,7 +99,8 @@ private fun JoinContent(
     navigateUp: () -> Unit
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
-    val focusRequesters = remember { List(6) { FocusRequester() } }
+    val focusRequester = remember { FocusRequester() }
+    val focusManager = LocalFocusManager.current
 
     if (state.visiblePopUpError) {
         ErrorDialog(
@@ -114,7 +115,6 @@ private fun JoinContent(
     }
 
     LaunchedEffect(key1 = state.isError) {
-        Log.d("launch", state.isError.toString())
         if (state.isError) {
             val result = snackbarHostState.showSnackbar(
                 message = "잘못된 초대코드입니다.",
@@ -122,10 +122,13 @@ private fun JoinContent(
             )
 
             if (result == SnackbarResult.ActionPerformed) {
-                focusRequesters[0].requestFocus()
                 viewModel.onIsErrorChanged(false)
                 viewModel.resetNumbers()
             }
+        } else {
+            val snackbarFadeOutMillis = 75L //  androidx.compose.material3.SnackbarHostState.kt
+            delay(snackbarFadeOutMillis)
+            focusRequester.requestFocus()
         }
     }
 
@@ -155,28 +158,29 @@ private fun JoinContent(
             horizontalArrangement = Arrangement.Start
         ) {
             AgencyInviteCodeView(
-                agencyId = agencyId,
-                focusRequesters = focusRequesters,
+                modifier = Modifier,
+                focusRequester = focusRequester,
                 isError = state.isError,
-                numbers = state.numbers,
-                agencyCodeNumbers = { agencyId -> viewModel.agencyCodeNumbers(agencyId) },
-                onIsErrorChanged = { isError -> viewModel.onIsErrorChanged(isError) },
-                onIsNumbersChanged = { index, value -> viewModel.onIsNumbersChanged(index, value) },
+                inputCode = state.inputCode,
+                onValueChanged = viewModel::changeInputNumber,
+                checkInviteCode = {
+                    viewModel.checkInviteCode(agencyId = agencyId)
+                    focusManager.clearFocus()
+                },
             )
         }
-        Box(
+    }
+
+    Box(
+        modifier = Modifier.fillMaxSize()
+    ) {
+        MDSSnackbarHost(
+            hostState = snackbarHostState,
             modifier = Modifier
                 .fillMaxWidth()
-                .weight(1f)
-        ) {
-            MDSSnackbarHost(
-                hostState = snackbarHostState,
-                modifier = Modifier
-                    .align(BottomCenter)
-                    .padding(bottom = 20.dp)
-            )
-        }
-
+                .align(BottomCenter)
+                .padding(bottom = 20.dp)
+        )
     }
 }
 

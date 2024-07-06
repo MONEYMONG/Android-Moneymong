@@ -2,7 +2,6 @@ package com.moneymong.moneymong.feature.sign.item
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -21,7 +20,7 @@ import com.moneymong.moneymong.design_system.theme.Blue04
 import com.moneymong.moneymong.design_system.theme.Body4
 import com.moneymong.moneymong.design_system.theme.Gray03
 import com.moneymong.moneymong.design_system.theme.White
-import com.moneymong.moneymong.domain.entity.signup.University
+import com.moneymong.moneymong.model.sign.University
 
 
 @Composable

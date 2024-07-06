@@ -18,6 +18,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
@@ -32,6 +35,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -42,30 +47,27 @@ import com.moneymong.moneymong.design_system.R
 import com.moneymong.moneymong.design_system.component.bottomSheet.MDSBottomSheet
 import com.moneymong.moneymong.design_system.component.button.FABIconSize
 import com.moneymong.moneymong.design_system.component.button.MDSFloatingActionButton
+import com.moneymong.moneymong.design_system.component.datepicker.MDSWheelDatePicker
+import com.moneymong.moneymong.design_system.component.indicator.MDSRefreshIndicator
 import com.moneymong.moneymong.design_system.component.snackbar.MDSSnackbarHost
-import com.moneymong.moneymong.design_system.component.tooltip.MDSToolTip
-import com.moneymong.moneymong.design_system.component.tooltip.MDSToolTipPosition
 import com.moneymong.moneymong.design_system.error.ErrorDialog
-import com.moneymong.moneymong.design_system.error.ErrorScreen
-import com.moneymong.moneymong.design_system.loading.LoadingScreen
 import com.moneymong.moneymong.design_system.theme.Mint02
 import com.moneymong.moneymong.design_system.theme.Mint03
 import com.moneymong.moneymong.design_system.theme.White
 import com.moneymong.moneymong.ledger.view.LedgerAgencyEmptyView
 import com.moneymong.moneymong.ledger.view.LedgerAgencySelectBottomSheet
 import com.moneymong.moneymong.ledger.view.LedgerDefaultView
-import com.moneymong.moneymong.ledger.view.LedgerMemberEmptyView
-import com.moneymong.moneymong.ledger.view.LedgerStaffEmptyView
 import com.moneymong.moneymong.ledger.view.LedgerTab
 import com.moneymong.moneymong.ledger.view.LedgerTabRowView
 import com.moneymong.moneymong.ledger.view.LedgerTopbarView
+import com.moneymong.moneymong.ledger.view.onboarding.OnboardingComponentState
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.compose.collectAsState
 import org.orbitmvi.orbit.compose.collectSideEffect
 
 @OptIn(
     ExperimentalFoundationApi::class,
-    ExperimentalMaterial3Api::class
+    ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class
 )
 @Composable
 fun LedgerScreen(
@@ -85,28 +87,16 @@ fun LedgerScreen(
     val snackbarHostState = remember { SnackbarHostState() }
     val pagerState = rememberPagerState(pageCount = { tabs.size })
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-
-    LaunchedEffect(state.visibleSnackbar) {
-        if (state.visibleSnackbar) {
-            coroutineScope.launch {
-                snackbarHostState.showSnackbar(
-                    message = "성공적으로 기록됐습니다",
-                    withDismissAction = true,
-                    actionLabel = ""
-                )
-            }
-            viewModel.onChangeSnackbarState(visible = false)
-        }
-    }
+    var addFABState by remember { mutableStateOf(OnboardingComponentState()) }
+    val pullRefreshState = rememberPullRefreshState(
+        refreshing = state.isRefreshing,
+        onRefresh = viewModel::fetchLedgerTransactionList
+    )
 
     LaunchedEffect(Unit) {
         viewModel.fetchMyAgencyList()
         viewModel.fetchAgencyMemberList()
         viewModel.fetchAgencyExistLedger()
-    }
-
-    LaunchedEffect(state.currentDate) {
-        viewModel.fetchLedgerTransactionList()
     }
 
     viewModel.collectSideEffect {
@@ -144,6 +134,16 @@ fun LedgerScreen(
                 viewModel.reFetchLedgerData(it.agencyId)
                 viewModel.eventEmit(LedgerSideEffect.LedgerCloseSheet)
             }
+
+            is LedgerSideEffect.LedgerVisibleSnackbar -> {
+                coroutineScope.launch {
+                    snackbarHostState.showSnackbar(
+                        message = it.message,
+                        withDismissAction = it.withDismissAction,
+                        actionLabel = ""
+                    )
+                }
+            }
         }
     }
 
@@ -156,13 +156,14 @@ fun LedgerScreen(
     }
 
     Scaffold(
+        modifier = Modifier.pullRefresh(pullRefreshState),
         topBar = {
             LedgerTopbarView(
                 modifier = Modifier.background(White),
                 header = state.currentAgency?.name ?: "장부",
                 icon = R.drawable.ic_chevron_bottom,
                 visibleArrow = state.agencyList.isNotEmpty(),
-                onClickDownArrow = { viewModel.eventEmit(LedgerSideEffect.LedgerOpenSheet) }
+                onClickDownArrow = viewModel::onClickAgencyChange
             )
         },
         snackbarHost = {
@@ -181,20 +182,34 @@ fun LedgerScreen(
                 sheetState = sheetState,
                 onDismissRequest = { viewModel.eventEmit(LedgerSideEffect.LedgerCloseSheet) },
                 content = {
-                    LedgerAgencySelectBottomSheet(
-                        currentAgencyId = state.agencyId,
-                        agencyList = state.agencyList,
-                        onClickItem = {
-                            viewModel.eventEmit(
-                                LedgerSideEffect.LedgerSelectedAgencyChange(
-                                    it
-                                )
+                    when (state.sheetType) {
+                        LedgerSheetType.Agency -> {
+                            LedgerAgencySelectBottomSheet(
+                                currentAgencyId = state.agencyId,
+                                agencyList = state.agencyList,
+                                onClickItem = {
+                                    viewModel.eventEmit(
+                                        LedgerSideEffect.LedgerSelectedAgencyChange(
+                                            it
+                                        )
+                                    )
+                                }
                             )
                         }
-                    )
+
+                        LedgerSheetType.DatePicker -> {
+                            MDSWheelDatePicker(
+                                startDate = state.startDate,
+                                endDate = state.endDate,
+                                confirmDateChange = viewModel::onClickDateChange,
+                                onDismissRequest = { viewModel.eventEmit(LedgerSideEffect.LedgerCloseSheet) }
+                            )
+                        }
+                    }
                 }
             )
         }
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -213,36 +228,30 @@ fun LedgerScreen(
                 HorizontalPager(state = pagerState) { index ->
                     if (tabs[index] == LedgerTab.Ledger) {
                         Box(modifier = modifier.fillMaxSize()) {
-                            if (state.isExistLedger) { // 소속에 장부가 존재한다면
-                                LedgerDefaultView(
-                                    totalBalance = state.ledgerTransaction?.totalBalance
-                                        ?: 0,
-                                    ledgerDetails = state.filterTransactionList,
-                                    transactionType = state.transactionType,
-                                    currentDate = state.currentDate,
-                                    hasTransaction = state.hasTransaction,
-                                    isLoading = state.isLoading,
-                                    onChangeTransactionType = viewModel::onChangeTransactionType,
-                                    onAddMonthFromCurrentDate = viewModel::onAddMonthFromCurrentDate,
-                                    onClickTransactionItem = {
-                                        viewModel.eventEmit(
-                                            LedgerSideEffect.LedgerNavigateToLedgerDetail(
-                                                it
-                                            )
+                            LedgerDefaultView(
+                                totalBalance = state.ledgerTransaction?.totalBalance
+                                    ?: 0,
+                                ledgerDetails = state.filterTransactionList,
+                                transactionType = state.transactionType,
+                                startDate = state.startDate,
+                                endDate = state.endDate,
+                                hasTransaction = state.hasTransaction,
+                                isLoading = state.isLoading,
+                                isExistLedger = state.isExistLedger,
+                                isStaff = state.isStaff,
+                                onChangeTransactionType = viewModel::onChangeTransactionType,
+                                onClickPeriod = viewModel::onClickPeriod,
+                                onClickTransactionItem = {
+                                    viewModel.eventEmit(
+                                        LedgerSideEffect.LedgerNavigateToLedgerDetail(
+                                            it
                                         )
-                                    }
-                                )
-                            } else {
-                                if (state.isLoading) {
-                                    LoadingScreen(modifier = Modifier.fillMaxSize())
-                                } else {
-                                    if (state.isStaff) {
-                                        LedgerStaffEmptyView()
-                                    } else {
-                                        LedgerMemberEmptyView()
-                                    }
-                                }
-                            }
+                                    )
+                                },
+                                addFABState = addFABState,
+                                visibleOnboarding = state.visibleOnboarding,
+                                onDismissOnboarding = viewModel::onDismissOnboarding
+                            )
                             if (state.isStaff) {
                                 Column(
                                     modifier = Modifier
@@ -250,13 +259,6 @@ fun LedgerScreen(
                                         .padding(end = 20.dp, bottom = 20.dp),
                                     horizontalAlignment = Alignment.End
                                 ) {
-                                    if (!state.isExistLedger && !expandableFab) {
-                                        MDSToolTip(
-                                            text = "해당 기능을 사용해보세요",
-                                            position = MDSToolTipPosition.Right
-                                        )
-                                        Spacer(modifier = Modifier.height(8.dp))
-                                    }
                                     AnimatedVisibility(
                                         visible = expandableFab,
                                         enter = slideInVertically(
@@ -312,7 +314,14 @@ fun LedgerScreen(
                                     val containerColor =
                                         if (expandableFab) Mint02 else Mint03
                                     MDSFloatingActionButton(
-                                        modifier = Modifier.rotate(rotationAngle),
+                                        modifier = Modifier
+                                            .rotate(rotationAngle)
+                                            .onGloballyPositioned { layoutCoordinates ->
+                                                addFABState = OnboardingComponentState(
+                                                    offset = layoutCoordinates.localToRoot(Offset.Zero),
+                                                    size = layoutCoordinates.size
+                                                )
+                                            },
                                         iconResource = R.drawable.ic_plus_default,
                                         containerColor = containerColor,
                                         onClick = {
@@ -330,6 +339,10 @@ fun LedgerScreen(
                 }
             }
         }
+        MDSRefreshIndicator(
+            pullRefreshState = pullRefreshState,
+            isRefreshing = state.isRefreshing
+        )
     }
 }
 
