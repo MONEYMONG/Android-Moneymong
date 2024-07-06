@@ -5,7 +5,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import com.google.gson.Gson
-import com.moneymong.moneymong.domain.entity.ocr.DocumentEntity
+import com.moneymong.moneymong.model.ocr.DocumentResponse
 import com.moneymong.moneymong.ocr_detail.OCRDetailScreen
 
 const val ocrDetailRoute = "ocrdetail_route?document={document}"
@@ -24,11 +24,11 @@ fun NavGraphBuilder.ocrDetailScreen(
     composable(route = ocrDetailRoute) { backStackEntry ->
         val match = "[^\uAC00-\uD7A3xfe0-9a-zA-Z~!@#$%^&*()_+|<>?:{}]"
         val documentJson = backStackEntry.arguments?.getString("document")
-        val documentEntity =
-            documentJson?.let { Gson().fromJson(it.replace(match, ""), DocumentEntity::class.java) }
+        val documentResponse =
+            documentJson?.let { Gson().fromJson(it.replace(match, ""), DocumentResponse::class.java) }
 
         OCRDetailScreen(
-            document = documentEntity,
+            document = documentResponse,
             navigateToLedger = navigateToLedger,
             popBackStack = popBackStack
         )

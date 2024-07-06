@@ -1,12 +1,18 @@
 package com.moneymong.moneymong.ledger
 
 import com.moneymong.moneymong.common.base.State
-import com.moneymong.moneymong.domain.entity.agency.MyAgencyEntity
-import com.moneymong.moneymong.domain.entity.ledger.LedgerDetailEntity
-import com.moneymong.moneymong.domain.entity.ledger.LedgerTransactionListEntity
-import com.moneymong.moneymong.domain.entity.member.AgencyUserEntity
 import com.moneymong.moneymong.ledger.view.LedgerTransactionType
+import com.moneymong.moneymong.model.agency.MyAgencyResponse
+import com.moneymong.moneymong.model.ledger.LedgerDetail
+import com.moneymong.moneymong.model.ledger.LedgerTransactionListResponse
+import com.moneymong.moneymong.model.ledger.OnboardingType
+import com.moneymong.moneymong.model.member.AgencyUser
 import java.time.LocalDate
+
+enum class LedgerSheetType {
+    Agency,
+    DatePicker
+}
 
 data class LedgerState(
     val isAgencyExistLoading: Boolean = true,
@@ -17,21 +23,25 @@ data class LedgerState(
     val userId: Int = 0,
     val isExistLedger: Boolean = false,
     val showBottomSheet: Boolean = false,
-    val ledgerTransaction: LedgerTransactionListEntity? = null,
+    val ledgerTransaction: LedgerTransactionListResponse? = null,
     val transactionType: LedgerTransactionType = LedgerTransactionType.전체,
-    val currentDate: LocalDate = LocalDate.now(),
+    val startDate: LocalDate = LocalDate.now().minusMonths(6),
+    val endDate: LocalDate = LocalDate.now(),
     val visibleError: Boolean = false,
-    val visibleSnackbar: Boolean = false,
-    val agencyList: List<MyAgencyEntity> = emptyList(),
-    val memberList: List<AgencyUserEntity> = emptyList(),
-    val errorMessage: String = ""
+    val agencyList: List<MyAgencyResponse> = emptyList(),
+    val memberList: List<AgencyUser> = emptyList(),
+    val errorMessage: String = "",
+    val sheetType: LedgerSheetType = LedgerSheetType.DatePicker,
+    val visibleOnboarding: Boolean = false,
+    val isRefreshing: Boolean = false,
 ) : State {
 
-    val filterTransactionList: List<LedgerDetailEntity>
+    val filterTransactionList: List<LedgerDetail>
         get() = if (transactionType == LedgerTransactionType.전체) {
             ledgerTransaction?.ledgerInfoViewDetails.orEmpty()
         } else {
-            ledgerTransaction?.ledgerInfoViewDetails?.filter { it.fundType == transactionType.type }.orEmpty()
+            ledgerTransaction?.ledgerInfoViewDetails?.filter { it.fundType == transactionType.type }
+                .orEmpty()
         }
 
     val hasTransaction: Boolean
@@ -40,7 +50,7 @@ data class LedgerState(
     val existAgency: Boolean
         get() = agencyList.isNotEmpty()
 
-    val currentAgency: MyAgencyEntity?
+    val currentAgency: MyAgencyResponse?
         get() = agencyList.find { it.id == agencyId }
 
     val isStaff: Boolean
@@ -48,4 +58,7 @@ data class LedgerState(
 
     val isLoading: Boolean
         get() = isAgencyExistLoading || isLedgerTransactionLoading || isMyAgencyLoading || isAgencyMemberLoading
+
+    val onboardingType: OnboardingType
+        get() = if (isStaff) OnboardingType.STAFF else OnboardingType.MEMBER
 }

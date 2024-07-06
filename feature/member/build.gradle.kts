@@ -42,6 +42,7 @@ dependencies {
 
     implementation(projects.core.common)
     implementation(projects.core.designSystem)
+    implementation(projects.core.model)
     implementation(projects.domain)
 
     implementation(libs.orbit.compose)

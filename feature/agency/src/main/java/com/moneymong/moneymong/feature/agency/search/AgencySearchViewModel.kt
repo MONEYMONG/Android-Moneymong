@@ -42,14 +42,14 @@ class AgencySearchViewModel @Inject constructor(
                 isError = false
             )
         }
-        fetchMyAgencyListUseCase(Unit)
+        fetchMyAgencyListUseCase()
             .also {
                 reduce { state.copy(isLoading = false) }
             }
             .onSuccess {
                 reduce {
                     state.copy(
-                        joinedAgencies = it.map { myAgencyEntity -> myAgencyEntity.toAgency() }
+                        joinedAgencies = it.map { myAgencyResponse -> myAgencyResponse.toAgency() }
                     )
                 }
             }.onFailure {

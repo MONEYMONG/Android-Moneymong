@@ -3,21 +3,17 @@ package com.moneymong.moneymong.data.repository.agency
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import androidx.paging.map
 import com.moneymong.moneymong.data.datasource.agency.AgencyLocalDataSource
 import com.moneymong.moneymong.data.datasource.agency.AgencyRemoteDataSource
-import com.moneymong.moneymong.data.mapper.agency.toEntity
-import com.moneymong.moneymong.data.mapper.agency.toRequest
 import com.moneymong.moneymong.data.pagingsource.AgencyPagingSource
-import com.moneymong.moneymong.domain.entity.agency.AgencyGetEntity
-import com.moneymong.moneymong.domain.entity.agency.AgencyJoinEntity
-import com.moneymong.moneymong.domain.entity.agency.MyAgencyEntity
-import com.moneymong.moneymong.domain.entity.agency.AgencyRegisterEntity
-import com.moneymong.moneymong.domain.param.agency.AgencyJoinParam
-import com.moneymong.moneymong.domain.param.agency.AgencyRegisterParam
 import com.moneymong.moneymong.domain.repository.AgencyRepository
+import com.moneymong.moneymong.model.agency.AgencyGetResponse
+import com.moneymong.moneymong.model.agency.AgencyJoinRequest
+import com.moneymong.moneymong.model.agency.AgencyJoinResponse
+import com.moneymong.moneymong.model.agency.AgencyRegisterRequest
+import com.moneymong.moneymong.model.agency.MyAgencyResponse
+import com.moneymong.moneymong.model.agency.RegisterAgencyResponse
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class AgencyRepositoryImpl @Inject constructor(
@@ -25,30 +21,25 @@ class AgencyRepositoryImpl @Inject constructor(
     private val agencyLocalDataSource: AgencyLocalDataSource
 ) : AgencyRepository {
 
-    override suspend fun registerAgency(param: AgencyRegisterParam): Result<AgencyRegisterEntity> {
-        return agencyRemoteDataSource.registerAgency(param.toRequest()).map { it.toEntity() }
+    override suspend fun registerAgency(request: AgencyRegisterRequest): Result<RegisterAgencyResponse> {
+        return agencyRemoteDataSource.registerAgency(request)
     }
 
-    override fun getAgencies(): Flow<PagingData<AgencyGetEntity>> {
+    override fun getAgencies(): Flow<PagingData<AgencyGetResponse>> {
         return Pager(
             config = PagingConfig(pageSize = 10, initialLoadSize = 10),
             pagingSourceFactory = { AgencyPagingSource(agencyRemoteDataSource) }
-        ).flow.map { pagingData ->
-            pagingData.map { response ->
-                response.toEntity()
-            }
-        }
+        ).flow
     }
 
-    override suspend fun fetchMyAgencyList(): Result<List<MyAgencyEntity>> =
-        agencyRemoteDataSource.fetchMyAgencyList().map { it.map { it.toEntity() } }
+    override suspend fun fetchMyAgencyList(): Result<List<MyAgencyResponse>> =
+        agencyRemoteDataSource.fetchMyAgencyList()
 
     override suspend fun agencyCodeNumbers(
         agencyId: Long,
-        data: AgencyJoinParam
-    ): Result<AgencyJoinEntity> {
-        return agencyRemoteDataSource.agencyCodeNumbers(agencyId, data.toRequest())
-            .map { it.toEntity() }
+        data: AgencyJoinRequest
+    ): Result<AgencyJoinResponse> {
+        return agencyRemoteDataSource.agencyCodeNumbers(agencyId, data)
     }
 
     override suspend fun saveAgencyId(agencyId: Int) =

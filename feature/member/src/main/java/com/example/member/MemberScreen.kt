@@ -75,7 +75,7 @@ fun MemberScreen(
         viewModel.updateAgencyId(agencyId)
         viewModel.eventEmit(MemberSideEffect.GetInvitationCode(agencyId.toLong()))
         viewModel.eventEmit(MemberSideEffect.GetMemberLists(agencyId.toLong()))
-        viewModel.eventEmit(MemberSideEffect.GetMyInfo(Unit))
+        viewModel.eventEmit(MemberSideEffect.GetMyInfo)
     }
 
     if(state.isBlockedUser){
@@ -101,7 +101,7 @@ fun MemberScreen(
             }
 
             is MemberSideEffect.GetMyInfo -> {
-                viewModel.getMyInfo(it.data)
+                viewModel.getMyInfo()
             }
 
             is MemberSideEffect.UpdateMemberAuthor -> {
@@ -117,7 +117,7 @@ fun MemberScreen(
     LaunchedEffect(key1 = Unit) {
         viewModel.eventEmit(MemberSideEffect.GetInvitationCode(state.agencyId.toLong()))
         viewModel.eventEmit(MemberSideEffect.GetMemberLists(state.agencyId.toLong()))
-        viewModel.eventEmit(MemberSideEffect.GetMyInfo(Unit))
+        viewModel.eventEmit(MemberSideEffect.GetMyInfo)
     }
 
 
@@ -174,7 +174,7 @@ fun MemberScreen(
             onConfirm = {
                 viewModel.eventEmit(MemberSideEffect.GetInvitationCode(state.agencyId.toLong()))
                 viewModel.eventEmit(MemberSideEffect.GetMemberLists(state.agencyId.toLong()))
-                viewModel.eventEmit(MemberSideEffect.GetMyInfo(Unit))
+                viewModel.eventEmit(MemberSideEffect.GetMyInfo)
                 viewModel.visiblePopUpErrorChanged(false)
             }
         )
@@ -351,7 +351,7 @@ fun MemberScreen(
                 viewModel.visibleErrorChanged(false)
                 viewModel.eventEmit(MemberSideEffect.GetInvitationCode(state.agencyId.toLong()))
                 viewModel.eventEmit(MemberSideEffect.GetMemberLists(state.agencyId.toLong()))
-                viewModel.eventEmit(MemberSideEffect.GetMyInfo(Unit))
+                viewModel.eventEmit(MemberSideEffect.GetMyInfo)
             }
         )
         Column(
