@@ -2,14 +2,11 @@ package com.moneymong.moneymong.data.repository.login
 
 import com.moneymong.moneymong.data.datasource.login.LoginLocalDataSource
 import com.moneymong.moneymong.data.datasource.login.TokenRemoteDataSource
-import com.moneymong.moneymong.data.mapper.login.toEntity
-import com.moneymong.moneymong.data.mapper.login.toRequest
-import com.moneymong.moneymong.domain.entity.login.RefreshTokenEntity
-import com.moneymong.moneymong.domain.entity.login.UserDataStoreInfoEntity
-import com.moneymong.moneymong.domain.param.login.RefreshTokenParam
 import com.moneymong.moneymong.domain.repository.TokenRepository
+import com.moneymong.moneymong.model.sign.RefreshTokenRequest
+import com.moneymong.moneymong.model.sign.RefreshTokenResponse
+import com.moneymong.moneymong.model.sign.UserDataStoreInfoResponse
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.SharedFlow
 import javax.inject.Inject
 
 class TokenRepositoryImpl @Inject constructor(
@@ -30,12 +27,12 @@ class TokenRepositoryImpl @Inject constructor(
         return localDataSource.getAccessToken()
     }
 
-    override suspend fun getDataStoreInfo(): Result<UserDataStoreInfoEntity> {
-        return localDataSource.getDataStoreInfo().map { it.toEntity() }
+    override suspend fun getDataStoreInfo(): Result<UserDataStoreInfoResponse> {
+        return localDataSource.getDataStoreInfo()
     }
 
-    override suspend fun getUpdateToken(refreshToken: String): Result<RefreshTokenEntity> {
-        return tokenRemoteDataSource.getUpdateToken(refreshToken).map { it.toEntity() }
+    override suspend fun getUpdateToken(refreshToken: String): Result<RefreshTokenResponse> {
+        return tokenRemoteDataSource.getUpdateToken(refreshToken)
     }
 
     override suspend fun deleteToken() {
@@ -50,8 +47,8 @@ class TokenRepositoryImpl @Inject constructor(
         localDataSource.updateAccessToken(aToken)
     }
 
-    override suspend fun deleteRefreshToken(body: RefreshTokenParam) {
-        tokenRemoteDataSource.deleteRefreshToken(body.toRequest())
+    override suspend fun deleteRefreshToken(body: RefreshTokenRequest) {
+        tokenRemoteDataSource.deleteRefreshToken(body)
     }
 
     override suspend fun getSchoolInfo(): Result<Boolean> {

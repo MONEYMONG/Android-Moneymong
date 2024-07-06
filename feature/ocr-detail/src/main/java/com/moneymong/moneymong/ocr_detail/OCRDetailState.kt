@@ -3,9 +3,9 @@ package com.moneymong.moneymong.ocr_detail
 import androidx.compose.ui.text.input.TextFieldValue
 import com.moneymong.moneymong.common.base.State
 import com.moneymong.moneymong.design_system.component.textfield.util.PriceType
-import com.moneymong.moneymong.domain.entity.ocr.DocumentEntity
-import com.moneymong.moneymong.domain.entity.ocr.DocumentResultEntity
-import com.moneymong.moneymong.domain.param.ledger.FundType
+import com.moneymong.moneymong.model.ledger.FundType
+import com.moneymong.moneymong.model.ocr.DocumentResponse
+import com.moneymong.moneymong.model.ocr.DocumentResult
 import java.io.File
 import java.time.LocalDateTime
 import java.time.OffsetDateTime
@@ -15,7 +15,7 @@ import java.util.Locale
 
 data class OCRDetailState(
     val isLoading: Boolean = false,
-    val document: DocumentEntity? = null,
+    val document: DocumentResponse? = null,
     val receiptImage: String = "",
     val receiptFile: File? = null,
     val storeNameValue: TextFieldValue = TextFieldValue(),
@@ -32,10 +32,12 @@ data class OCRDetailState(
     val isTotalPriceError: Boolean = false,
     val isPaymentDateError: Boolean = false,
     val isPaymentTimeError: Boolean = false,
-    val isMemoError: Boolean = false
+    val isMemoError: Boolean = false,
+    val showErrorDialog: Boolean = false,
+    val errorMessage: String = ""
 ) : State {
 
-    val receipt: DocumentResultEntity?
+    val receipt: DocumentResult?
         get() = document?.images?.first()?.receipt?.result
 
     val postPaymentDate: String

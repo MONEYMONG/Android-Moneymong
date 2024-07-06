@@ -1,6 +1,6 @@
 package com.moneymong.moneymong.data.datasource.login
 
-import com.moneymong.moneymong.network.response.login.UserDataStoreInfoResponse
+import com.moneymong.moneymong.model.sign.UserDataStoreInfoResponse
 
 interface LoginLocalDataSource {
     suspend fun getRefreshToken(): Result<String>

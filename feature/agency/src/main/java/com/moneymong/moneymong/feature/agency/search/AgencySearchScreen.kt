@@ -34,8 +34,8 @@ import com.moneymong.moneymong.design_system.component.tooltip.MDSToolTipPositio
 import com.moneymong.moneymong.design_system.error.ErrorDialog
 import com.moneymong.moneymong.design_system.error.ErrorItem
 import com.moneymong.moneymong.design_system.error.ErrorScreen
-import com.moneymong.moneymong.design_system.loading.LoadingItem
-import com.moneymong.moneymong.design_system.loading.LoadingScreen
+import com.moneymong.moneymong.design_system.component.indicator.LoadingItem
+import com.moneymong.moneymong.design_system.component.indicator.LoadingScreen
 import com.moneymong.moneymong.design_system.theme.Body4
 import com.moneymong.moneymong.design_system.theme.Gray01
 import com.moneymong.moneymong.design_system.theme.Gray08
@@ -69,9 +69,13 @@ fun AgencySearchScreen(
     }
 
     if (state.visibleWarningDialog) {
-        ErrorDialog(message = "이미 가입된 소속입니다") {
-            viewModel.changeVisibleWarningDialog(false)
-        }
+        ErrorDialog(
+            message = "이미 가입한 소속입니다",
+            description = "장부 페이지에서 가입한 소속을 확인해보세요",
+            onConfirm = {
+                viewModel.changeVisibleWarningDialog(false)
+            }
+        )
     }
 
     Box(

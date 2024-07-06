@@ -3,10 +3,11 @@ package com.moneymong.moneymong.ocr
 import android.content.SharedPreferences
 import androidx.core.content.edit
 import com.moneymong.moneymong.common.base.BaseViewModel
-import com.moneymong.moneymong.domain.param.ocr.DocumentParam
 import com.moneymong.moneymong.domain.usecase.ocr.DocumentOCRUseCase
 import com.moneymong.moneymong.domain.usecase.user.FetchDeniedCameraPermissionUseCase
 import com.moneymong.moneymong.domain.usecase.user.SaveDeniedCameraPermissionUseCase
+import com.moneymong.moneymong.model.ocr.DocumentFormat
+import com.moneymong.moneymong.model.ocr.DocumentRequest
 import com.moneymong.moneymong.ocr.util.ModalType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import org.orbitmvi.orbit.annotation.OrbitExperimental
@@ -35,17 +36,18 @@ class OCRViewModel @Inject constructor(
                 state.copy(isLoading = true)
             }
 
-            val documentParam = DocumentParam(
+            val request = DocumentRequest(
                 requestId = "moneymong",
                 timestamp = System.currentTimeMillis(),
                 images = listOf(
-                    DocumentParam.DocumentImageParam(
+                    DocumentRequest.DocumentImage(
+                        format = DocumentFormat.JPEG.format,
                         data = receiptImage,
                         name = "moneymong_receipt"
                     )
                 )
             )
-            documentOCRUseCase(documentParam)
+            documentOCRUseCase(request)
                 .onSuccess {
                     reduce { state.copy(document = it) }
                     possibleNavigateToOCRResult(it.images.first().inferResult.orEmpty())
@@ -67,7 +69,7 @@ class OCRViewModel @Inject constructor(
 
     @OptIn(OrbitExperimental::class)
     fun fetchDeniedCameraPermission() = blockingIntent {
-        val isDeniedCamera = fetchDeniedCameraPermissionUseCase(Unit)
+        val isDeniedCamera = fetchDeniedCameraPermissionUseCase()
         reduce { state.copy(isDeniedCamera = isDeniedCamera) }
     }
 

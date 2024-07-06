@@ -42,7 +42,7 @@ class MyMongViewModel @Inject constructor(
                 isInfoError = false,
             )
         }
-        getMyInfoUseCase(data = Unit)
+        getMyInfoUseCase()
             .also {
                 reduce {
                     state.copy(isInfoLoading = false)
@@ -67,7 +67,7 @@ class MyMongViewModel @Inject constructor(
     }
 
     fun logout() = intent {
-        logoutUseCase(data = Unit)
+        logoutUseCase()
             .onSuccess {
                 clearLocalData()
                 postSideEffect(sideEffect = MyMongSideEffect.NavigateToLogin)
