@@ -1,7 +1,7 @@
 package com.moneymong.moneymong.domain.repository
 
-import com.moneymong.moneymong.domain.util.LoginCallback
+import com.moneymong.moneymong.model.sign.LoginType
 
 interface LoginRepository {
-    suspend fun kakaoLogin(callback: LoginCallback)
+    suspend fun postAccessToken(type: LoginType, accessToken: String): Result<Unit>
 }
