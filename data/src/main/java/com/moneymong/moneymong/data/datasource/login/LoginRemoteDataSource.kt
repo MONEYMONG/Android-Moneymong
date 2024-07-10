@@ -1,9 +1,8 @@
 package com.moneymong.moneymong.data.datasource.login
 
-import com.moneymong.moneymong.domain.util.LoginCallback
+import com.moneymong.moneymong.model.sign.LoginType
 
 
 interface LoginRemoteDataSource {
-    suspend fun loginWithKakaoTalk(callback: LoginCallback)
-    suspend fun loginWithKakaoAccount(callback: LoginCallback)
+    suspend fun postAccessToken(type: LoginType, accessToken: String): Result<Unit>
 }

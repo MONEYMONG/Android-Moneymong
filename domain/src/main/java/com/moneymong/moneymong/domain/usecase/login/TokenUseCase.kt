@@ -18,5 +18,4 @@ class TokenUseCase @Inject constructor(
     suspend fun getSchoolInfo(): Result<Boolean> {
         return tokenRepository.getSchoolInfo()
     }
-
 }
