@@ -3,15 +3,17 @@ package com.moneymong.moneymong.data.repository.login
 import com.moneymong.moneymong.data.datasource.login.LoginLocalDataSource
 import com.moneymong.moneymong.data.datasource.login.TokenRemoteDataSource
 import com.moneymong.moneymong.domain.repository.TokenRepository
+import com.moneymong.moneymong.model.sign.LoginType
 import com.moneymong.moneymong.model.sign.RefreshTokenRequest
 import com.moneymong.moneymong.model.sign.RefreshTokenResponse
+import com.moneymong.moneymong.model.sign.TokenResponse
 import com.moneymong.moneymong.model.sign.UserDataStoreInfoResponse
 import kotlinx.coroutines.flow.MutableSharedFlow
 import javax.inject.Inject
 
 class TokenRepositoryImpl @Inject constructor(
-    private val localDataSource: LoginLocalDataSource,
-    private val tokenRemoteDataSource: TokenRemoteDataSource
+    private val loginLocalDataSource: LoginLocalDataSource,
+    private val tokenRemoteDataSource: TokenRemoteDataSource,
 ) : TokenRepository {
     override val tokenUpdateFailed = MutableSharedFlow<Boolean>(replay = 1)
 
@@ -20,15 +22,26 @@ class TokenRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getRefreshToken(): Result<String> {
-        return localDataSource.getRefreshToken()
+        return loginLocalDataSource.getRefreshToken()
+    }
+
+    override suspend fun postAccessToken(type: LoginType, accessToken: String): Result<TokenResponse> {
+        return tokenRemoteDataSource.postAccessToken(type = type, accessToken = accessToken).onSuccess {
+            loginLocalDataSource.setDataStore(
+                it.accessToken,
+                it.refreshToken,
+                it.loginSuccess,
+                it.schoolInfoExist
+            )
+        }
     }
 
     override suspend fun getAccessToken(): Result<String> {
-        return localDataSource.getAccessToken()
+        return loginLocalDataSource.getAccessToken()
     }
 
     override suspend fun getDataStoreInfo(): Result<UserDataStoreInfoResponse> {
-        return localDataSource.getDataStoreInfo()
+        return loginLocalDataSource.getDataStoreInfo()
     }
 
     override suspend fun getUpdateToken(refreshToken: String): Result<RefreshTokenResponse> {
@@ -36,15 +49,15 @@ class TokenRepositoryImpl @Inject constructor(
     }
 
     override suspend fun deleteToken() {
-        localDataSource.deleteToken()
+        loginLocalDataSource.deleteToken()
     }
 
     override suspend fun updateTokens(aToken: String, rToken: String) {
-        localDataSource.updateTokens(aToken, rToken)
+        loginLocalDataSource.updateTokens(aToken, rToken)
     }
 
     override suspend fun updateAccessToken(aToken: String) {
-        localDataSource.updateAccessToken(aToken)
+        loginLocalDataSource.updateAccessToken(aToken)
     }
 
     override suspend fun deleteRefreshToken(body: RefreshTokenRequest) {
@@ -52,11 +65,11 @@ class TokenRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getSchoolInfo(): Result<Boolean> {
-        return localDataSource.getSchoolInfo()
+        return loginLocalDataSource.getSchoolInfo()
     }
 
-    override suspend fun setSchoolInfoExist(infoExist : Boolean) {
-        return localDataSource.setSchoolInfoExist(infoExist)
+    override suspend fun setSchoolInfoExist(infoExist: Boolean) {
+        return loginLocalDataSource.setSchoolInfoExist(infoExist)
     }
 
 }

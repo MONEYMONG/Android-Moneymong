@@ -66,7 +66,12 @@ class LoginLocalDataSourceImpl @Inject constructor(
         }
     }
 
-    suspend fun setDataStore(aToken: String, rToken: String, success: Boolean, infoExist: Boolean) {
+    override suspend fun setDataStore(
+        aToken: String,
+        rToken: String,
+        success: Boolean,
+        infoExist: Boolean
+    ) {
         context.dataStore.edit { preferences ->
             preferences[accessToken] = aToken
             preferences[refreshToken] = rToken
