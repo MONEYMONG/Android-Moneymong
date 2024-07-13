@@ -1,4 +1,4 @@
-package com.moneymong.moneymong.domain.usecase.login
+package com.moneymong.moneymong.domain.usecase.token
 
 import com.moneymong.moneymong.domain.repository.TokenRepository
 import com.moneymong.moneymong.domain.repository.user.UserRepository

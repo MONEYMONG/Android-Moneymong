@@ -1,4 +1,4 @@
-package com.moneymong.moneymong.data.repository.login
+package com.moneymong.moneymong.data.repository.token
 
 import com.moneymong.moneymong.data.datasource.login.LoginLocalDataSource
 import com.moneymong.moneymong.data.datasource.login.TokenRemoteDataSource
