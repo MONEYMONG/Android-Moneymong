@@ -1,8 +1,8 @@
 package com.moneymong.moneymong.feature.sign.viewmodel
 
 import com.moneymong.moneymong.common.base.BaseViewModel
-import com.moneymong.moneymong.domain.usecase.login.PostAccessTokenUseCase
-import com.moneymong.moneymong.domain.usecase.login.TokenUseCase
+import com.moneymong.moneymong.domain.usecase.token.PostAccessTokenUseCase
+import com.moneymong.moneymong.domain.usecase.token.TokenUseCase
 import com.moneymong.moneymong.feature.sign.sideeffect.LoginSideEffect
 import com.moneymong.moneymong.feature.sign.state.LoginState
 import com.moneymong.moneymong.model.sign.LoginType
