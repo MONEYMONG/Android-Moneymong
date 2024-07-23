@@ -34,25 +34,21 @@ jobs:
       run: ./gradlew clean
 
     - name: Decode Service Account Key
-      env:
-        SERVICE_ACCOUNT_KEY_BASE64: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_KEY }}
       run: |
-        echo $SERVICE_ACCOUNT_KEY_BASE64 | base64 --decode > $GITHUB_WORKSPACE/service_account_key.json
+        echo "${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_KEY }}" | base64 --decode > app/service_account_key.json
 
     - name: Decode Keystore File
-      env:
-        KEY_STORE_BASE64: ${{ secrets.KEYSTORE_FILE }}
       run: |
-        echo $KEY_STORE_BASE64 | base64 --decode > $GITHUB_WORKSPACE/moneymong_keystore.jks
+        echo "${{ secrets.KEYSTORE_FILE }}" | base64 --decode > app/moneymong_keystore.jks
 
     - name: Build & Deploy Android release
       env:
-        SERVICE_ACCOUNT_KEY: $GITHUB_WORKSPACE/service_account_key.json
-        KEYSTORE_FILE: $GITHUB_WORKSPACE/moneymong_keystore.jks
+        SERVICE_ACCOUNT_KEY: app/service_account_key.json
+        KEYSTORE_FILE: app/moneymong_keystore.jks
         KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
         KEYSTORE_KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
         KEYSTORE_KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
       run: bundle exec fastlane deploy
 
     - name: Remove Credential
-      run: rm $GITHUB_WORKSPACE/service_account_key.json $GITHUB_WORKSPACE/moneymong_keystore.jks ./local.properties
+      run: rm app/service_account_key.json app/moneymong_keystore.jks ./local.properties
