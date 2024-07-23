@@ -6,7 +6,6 @@ on:
       - 'release/release'
       - 'feature/moneymong-500-ci-cd-구축'
 
-
 jobs:
   build:
 
