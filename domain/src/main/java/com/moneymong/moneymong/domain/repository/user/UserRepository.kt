@@ -4,7 +4,6 @@ import com.moneymong.moneymong.model.user.UserResponse
 
 
 interface UserRepository {
-    
 
     suspend fun getMyInfo(): Result<UserResponse>
 
@@ -15,6 +14,8 @@ interface UserRepository {
     suspend fun saveUserId(userId: Int)
 
     suspend fun fetchUserId(): Int
+
+    suspend fun saveUserInfo()
 
     suspend fun saveUserNickName(nickname: String)
 
