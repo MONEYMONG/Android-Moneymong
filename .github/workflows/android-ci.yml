@@ -43,7 +43,7 @@ jobs:
       env:
         KEY_STORE_BASE64: ${{ secrets.KEYSTORE_FILE }}
       run: |
-        echo $KEY_STORE_BASE64 | base64 --decode > moneymong_keystore.keystore
+        echo $KEY_STORE_BASE64 | base64 --decode > app/moneymong_keystore.keystore
 
     - name: Build & Deploy Android release
       env:
@@ -55,4 +55,4 @@ jobs:
       run: bundle exec fastlane deploy
 
     - name: Remove Credential
-      run: rm service_account_key.json moneymong_keystore.keystore local.properties
+      run: rm service_account_key.json app/moneymong_keystore.keystore local.properties
