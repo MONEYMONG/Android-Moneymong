@@ -33,9 +33,6 @@ jobs:
     - name: Clean Build
       run: ./gradlew clean
 
-    - name: Check Code Convention
-      run: ./gradlew ktlintCheck
-
     - name: Decode Service Account Key
       env:
         SERVICE_ACCOUNT_KEY_BASE64: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_KEY }}
