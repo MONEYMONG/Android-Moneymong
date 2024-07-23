@@ -52,6 +52,7 @@ jobs:
         KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
         KEYSTORE_KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
         KEYSTORE_KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+      working-directory: $GITHUB_WORKSPACE/app
       run: bundle exec fastlane deploy
 
     - name: Remove Credential
