@@ -2,7 +2,10 @@ name: Android CI
 
 on:
   push:
-    branches: [ "release/release" ]
+    branches:
+      - 'release/release'
+      - 'feature/moneymong-500-ci-cd-구축'
+
 
 jobs:
   build:
