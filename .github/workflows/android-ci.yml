@@ -23,6 +23,13 @@ jobs:
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
 
+    - name: Create API Certificate
+      run: |
+        echo "sdk.dir=$ANDROID_SDK_ROOT" > ./local.properties
+        echo "native_app_key=\"${{ secrets.NATIVE_APP_KEY }}\"" >> ./local.properties
+        echo "CLOVA_OCR_DOCUMENT_SECRET=\"${{ secrets.CLOVA_OCR_DOCUMENT_SECRET }}\"" >> ./local.properties
+        echo "CLOVA_OCR_DOCUMENT_BASEURL=\"${{ secrets.CLOVA_OCR_DOCUMENT_BASEURL }}\"" >> ./local.properties
+
     - name: Clean Build
       run: ./gradlew clean
 
@@ -50,4 +57,4 @@ jobs:
       run: bundle exec fastlane deploy
 
     - name: Remove Credential
-      run: rm service_account_key.json moneymong_keystore.keystore
+      run: rm service_account_key.json moneymong_keystore.keystore local.properties
