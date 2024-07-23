@@ -52,7 +52,8 @@ jobs:
         KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
         KEYSTORE_KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
         KEYSTORE_KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+      working-directory: ${{ github.workspace }}
       run: bundle exec fastlane deploy
 
     - name: Remove Credential
-      run: rm service_account_key.json moneymong_keystore.jks local.properties
+      run: rm service_account_key.json moneymong_keystore.jks ./local.properties
