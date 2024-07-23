@@ -30,6 +30,8 @@ platform :android do
     # You can also use other beta testing services here
   end
 
+  keystore = File.join(Dir.pwd, “my_keystore.jks”)
+  json_file = File.join(Dir.pwd, “my_json_key.json”)
   desc "Deploy a new version to the Google Play"
   lane :deploy do
     gradle(
@@ -37,11 +39,11 @@ platform :android do
         flavor: "live",
         build_type: 'Release',
         properties: {
-            "android.injected.signing.store.file" => ENV["KEYSTORE_FILE"],
-            "android.injected.signing.store.password" => ENV["KEYSTORE_PASSWORD"],
-            "android.injected.signing.key.alias" => ENV["KEYSTORE_KEY_ALIAS"],
-            "android.injected.signing.key.password" => ENV["KEYSTORE_KEY_PASSWORD"],
-        },
+                "android.injected.signing.store.file" => "#{ENV["CWD"]}/app/#{ENV["KEYSTORE_FILE"]}",
+                "android.injected.signing.store.password" => "#{ENV["KEYSTORE_PASSWORD"]}",
+                "android.injected.signing.key.alias" => "#{ENV["KEYSTORE_KEY_ALIAS"]}",
+                "android.injected.signing.key.password" => "#{ENV["KEYSTORE_KEY_PASSWORD"]}",
+              },
     )
     upload_to_play_store
   end
