@@ -34,7 +34,7 @@ platform :android do
   lane :deploy do
     gradle(
         task: 'bundle',
-        flavor: "live"
+        flavor: "live",
         build_type: 'Release'
         properties: {
             "android.injected.signing.store.file" => ENV["KEYSTORE_FILE"],
