@@ -25,6 +25,9 @@ platform :android do
         version_code: new_release
     )
 
+    git_add(
+      path: "./app/build.gradle.kts"
+    )
     git_commit(
       path: ["./app/build.gradle.kts"],
       message: "RELEASE INCREMENT VERSION CODE"
