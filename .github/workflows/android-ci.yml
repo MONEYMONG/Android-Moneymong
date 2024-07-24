@@ -41,6 +41,11 @@ jobs:
       run: |
         echo "${{ secrets.KEYSTORE_FILE }}" | base64 --decode > ./app/moneymong_keystore.jks
 
+    - name: Install Dependencies
+      run: |
+        gem install bundler
+        bundle install
+
     - name: Build & Deploy Android release
       env:
         SERVICE_ACCOUNT_KEY: ${{ github.workspace }}/app/service_account_key.json
@@ -52,4 +57,7 @@ jobs:
       run: bundle exec fastlane deploy
 
     - name: Remove Credential
-      run: rm ./app/${SERVICE_ACCOUNT_KEY} && rm ./app/${KEYSTORE_FILE} && rm ./local.properties
+      run: | 
+        rm ./app/${SERVICE_ACCOUNT_KEY}
+        rm ./app/${KEYSTORE_FILE}
+        rm ./local.properties
