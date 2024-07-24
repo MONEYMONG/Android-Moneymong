@@ -16,6 +16,20 @@
 default_platform(:android)
 
 platform :android do
+  desc "Increment the Version Code"
+  lane :increment_version_code do
+    increment_version_code(
+        gradle_file_path: './app/build.gradle'
+    )
+
+    git_commit(
+      path: ["./app/build.gradle"],
+      message: "RELEASE INCREMENT VERSION CODE"
+    )
+
+    push_to_git_remote
+  end
+
   desc "Runs all the tests"
   lane :test do
     gradle(task: "test")
@@ -32,6 +46,8 @@ platform :android do
 
   desc "Deploy a new version to the Google Play"
   lane :deploy do
+    increment_version_code
+
     gradle(
         task: 'bundle',
         flavor: "live",
