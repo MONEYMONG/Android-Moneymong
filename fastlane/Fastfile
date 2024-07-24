@@ -22,11 +22,12 @@ platform :android do
     new_release = latest_release + 1
 
     increment_version_code(
+        gradle_file_path: './app/build.gradle.kts',
         version_code: new_release
     )
 
     git_add(
-      path: "./app/build.gradle.kts"
+      path: ["./app/build.gradle.kts"]
     )
     git_commit(
       path: ["./app/build.gradle.kts"],
