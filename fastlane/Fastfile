@@ -17,7 +17,7 @@ default_platform(:android)
 
 platform :android do
   desc "Increment the Version Code"
-  lane :increment_version_code do
+  lane :increment_code do
     increment_version_code(
         gradle_file_path: './app/build.gradle'
     )
@@ -46,7 +46,7 @@ platform :android do
 
   desc "Deploy a new version to the Google Play"
   lane :deploy do
-    increment_version_code
+    increment_code
 
     gradle(
         task: 'bundle',
