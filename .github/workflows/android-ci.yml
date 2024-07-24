@@ -43,8 +43,8 @@ jobs:
 
     - name: Build & Deploy Android release
       env:
-        SERVICE_ACCOUNT_KEY: ./app/service_account_key.json
-        KEYSTORE_FILE: ./app/moneymong_keystore.jks
+        SERVICE_ACCOUNT_KEY: ${{ github.workspace }}/app/service_account_key.json
+        KEYSTORE_FILE: ${{ github.workspace }}/app/moneymong_keystore.jks
         KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
         KEYSTORE_KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
         KEYSTORE_KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
