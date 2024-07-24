@@ -18,8 +18,11 @@ default_platform(:android)
 platform :android do
   desc "Increment the Version Code"
   lane :increment_code do
+    latest_release = google_play_track_version_code()[0]
+    new_release = latest_release + 1
+
     increment_version_code(
-        gradle_file_path: './app/build.gradle'
+        version_code: new_release
     )
 
     git_commit(
