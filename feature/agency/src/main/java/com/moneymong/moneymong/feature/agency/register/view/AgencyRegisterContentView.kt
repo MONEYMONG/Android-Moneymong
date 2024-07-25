@@ -20,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.moneymong.moneymong.design_system.component.selection.MDSSelection
 import com.moneymong.moneymong.design_system.component.textfield.MDSTextField
@@ -59,7 +60,7 @@ internal fun AgencyResisterContentView(
 @Composable
 private fun TitleView() {
     Text(
-        text = "동아리 or 학생회 등록에\n필요한 항목들을 채워주세요.",
+        text = "회비 관리가 필요한\n소속 정보를 알려주세요!",
         color = Gray10,
         style = Heading2
     )
@@ -83,15 +84,21 @@ private fun SelectTypeView(
         ) {
             MDSSelection(
                 modifier = Modifier.weight(1f),
-                text = "동아리",
+                text = AgencyType.CLUB.text,
                 isSelected = agencyType == AgencyType.CLUB,
                 onClick = { onAgencyTypeChange(AgencyType.CLUB) }
             )
             MDSSelection(
                 modifier = Modifier.weight(1f),
-                text = "학생회",
+                text = AgencyType.COUNCIL.text,
                 isSelected = agencyType == AgencyType.COUNCIL,
                 onClick = { onAgencyTypeChange(AgencyType.COUNCIL) }
+            )
+            MDSSelection(
+                modifier = Modifier.weight(1f),
+                text = AgencyType.GENERAL.text,
+                isSelected = agencyType == AgencyType.GENERAL,
+                onClick = { onAgencyTypeChange(AgencyType.GENERAL) }
             )
         }
     }
@@ -143,5 +150,18 @@ private fun InputNameView(
         keyboardActions = KeyboardActions(onDone = {
             focusManager.clearFocus()
         })
+    )
+}
+
+
+@Preview
+@Composable
+private fun AgencyResisterContentViewPreview() {
+    AgencyResisterContentView(
+        agencyType = AgencyType.GENERAL,
+        onAgencyTypeChange = {},
+        agencyName = TextFieldValue("동아리"),
+        onAgencyNameChange = {},
+        changeNameTextFieldIsError = {}
     )
 }
