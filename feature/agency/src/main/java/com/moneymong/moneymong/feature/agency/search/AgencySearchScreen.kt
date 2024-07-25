@@ -29,13 +29,13 @@ import androidx.paging.compose.itemKey
 import com.moneymong.moneymong.common.error.MoneyMongError
 import com.moneymong.moneymong.design_system.R
 import com.moneymong.moneymong.design_system.component.button.MDSFloatingActionButton
+import com.moneymong.moneymong.design_system.component.indicator.LoadingItem
+import com.moneymong.moneymong.design_system.component.indicator.LoadingScreen
 import com.moneymong.moneymong.design_system.component.tooltip.MDSToolTip
 import com.moneymong.moneymong.design_system.component.tooltip.MDSToolTipPosition
 import com.moneymong.moneymong.design_system.error.ErrorDialog
 import com.moneymong.moneymong.design_system.error.ErrorItem
 import com.moneymong.moneymong.design_system.error.ErrorScreen
-import com.moneymong.moneymong.design_system.component.indicator.LoadingItem
-import com.moneymong.moneymong.design_system.component.indicator.LoadingScreen
 import com.moneymong.moneymong.design_system.theme.Body4
 import com.moneymong.moneymong.design_system.theme.Gray01
 import com.moneymong.moneymong.design_system.theme.Gray08
@@ -50,7 +50,7 @@ import org.orbitmvi.orbit.compose.collectSideEffect
 fun AgencySearchScreen(
     modifier: Modifier = Modifier,
     viewModel: AgencySearchViewModel = hiltViewModel(),
-    navigateToRegister: () -> Unit,
+    navigateToRegister: (isUniversityStudent: Boolean) -> Unit,
     navigateAgencyJoin: (agencyId: Long) -> Unit
 ) {
     val state by viewModel.collectAsState()
@@ -59,7 +59,7 @@ fun AgencySearchScreen(
     viewModel.collectSideEffect {
         when (it) {
             is AgencySearchSideEffect.NavigateToRegister -> {
-                navigateToRegister()
+                navigateToRegister(it.isUniversityStudent)
             }
 
             is AgencySearchSideEffect.NavigateToAgencyJoin -> {

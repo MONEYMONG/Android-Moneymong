@@ -20,7 +20,8 @@ class AgencySearchViewModel @Inject constructor(
 ) : BaseViewModel<AgencySearchState, AgencySearchSideEffect>(AgencySearchState()) {
 
     fun navigateToRegister() =
-        eventEmit(sideEffect = AgencySearchSideEffect.NavigateToRegister)
+        // todo: 서버 쪽에서 '대학 없음' 의 제공 방법이 나오면 교체
+        eventEmit(sideEffect = AgencySearchSideEffect.NavigateToRegister(isUniversityStudent = false))
 
     fun navigateToJoin(agencyId: Long) =
         eventEmit(sideEffect = AgencySearchSideEffect.NavigateToAgencyJoin(agencyId))
