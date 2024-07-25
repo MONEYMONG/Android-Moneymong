@@ -60,6 +60,6 @@ jobs:
 
     - name: Remove Credential
       run: | 
-        rm ./app/${SERVICE_ACCOUNT_KEY}
-        rm ./app/${KEYSTORE_FILE}
+        rm ./app/service_account_key.json
+        rm ./app/moneymong_keystore.jks
         rm ./local.properties
