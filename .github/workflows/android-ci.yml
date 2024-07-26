@@ -58,6 +58,7 @@ jobs:
 #        CWD: ${{ github.workspace }}
 #      run: bundle exec fastlane deploy
 
+
     - name: Remove Credential
       run: | 
         rm ./app/service_account_key.json
