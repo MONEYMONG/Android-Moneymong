@@ -38,14 +38,16 @@ internal fun AgencyResisterContentView(
     onAgencyTypeChange: (AgencyType) -> Unit,
     agencyName: TextFieldValue,
     onAgencyNameChange: (TextFieldValue) -> Unit,
-    changeNameTextFieldIsError: (Boolean) -> Unit
+    changeNameTextFieldIsError: (Boolean) -> Unit,
+    registrableClubOrCouncil: Boolean
 ) {
     Column(modifier = modifier) {
         TitleView()
         Spacer(modifier = Modifier.height(44.dp))
         SelectTypeView(
             agencyType = agencyType,
-            onAgencyTypeChange = onAgencyTypeChange
+            onAgencyTypeChange = onAgencyTypeChange,
+            registrableClubOrCouncil = registrableClubOrCouncil
         )
         Spacer(modifier = Modifier.height(24.dp))
         InputNameView(
@@ -70,7 +72,8 @@ private fun TitleView() {
 @Composable
 private fun SelectTypeView(
     agencyType: AgencyType?,
-    onAgencyTypeChange: (AgencyType) -> Unit
+    onAgencyTypeChange: (AgencyType) -> Unit,
+    registrableClubOrCouncil: Boolean
 ) {
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
         Text(
@@ -85,19 +88,21 @@ private fun SelectTypeView(
             MDSSelection(
                 modifier = Modifier.weight(1f),
                 text = AgencyType.CLUB.text,
+                enabled = registrableClubOrCouncil,
                 isSelected = agencyType == AgencyType.CLUB,
                 onClick = { onAgencyTypeChange(AgencyType.CLUB) }
             )
             MDSSelection(
                 modifier = Modifier.weight(1f),
                 text = AgencyType.COUNCIL.text,
+                enabled = registrableClubOrCouncil,
                 isSelected = agencyType == AgencyType.COUNCIL,
                 onClick = { onAgencyTypeChange(AgencyType.COUNCIL) }
             )
             MDSSelection(
                 modifier = Modifier.weight(1f),
                 text = AgencyType.GENERAL.text,
-                isSelected = agencyType == AgencyType.GENERAL,
+                isSelected = agencyType == AgencyType.GENERAL || registrableClubOrCouncil.not(),
                 onClick = { onAgencyTypeChange(AgencyType.GENERAL) }
             )
         }
@@ -162,6 +167,7 @@ private fun AgencyResisterContentViewPreview() {
         onAgencyTypeChange = {},
         agencyName = TextFieldValue("동아리"),
         onAgencyNameChange = {},
-        changeNameTextFieldIsError = {}
+        changeNameTextFieldIsError = {},
+        registrableClubOrCouncil = true
     )
 }
