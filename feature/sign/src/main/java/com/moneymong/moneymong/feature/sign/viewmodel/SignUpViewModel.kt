@@ -3,7 +3,8 @@ package com.moneymong.moneymong.feature.sign.viewmodel
 import androidx.compose.ui.text.input.TextFieldValue
 import com.moneymong.moneymong.common.base.BaseViewModel
 import com.moneymong.moneymong.domain.usecase.signup.SchoolInfoUseCase
-import com.moneymong.moneymong.domain.usecase.signup.UnivUseCase
+import com.moneymong.moneymong.domain.usecase.university.CreateUniversityUseCase
+import com.moneymong.moneymong.domain.usecase.university.SearchUniversityUseCase
 import com.moneymong.moneymong.feature.sign.sideeffect.SignUpSideEffect
 import com.moneymong.moneymong.feature.sign.state.SignUpState
 import com.moneymong.moneymong.feature.sign.util.Grade
@@ -20,12 +21,13 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SignUpViewModel @Inject constructor(
-    private val univUseCase: UnivUseCase,
-    private val schoolInfoUseCase : SchoolInfoUseCase,
+    private val createUniversityUseCase: CreateUniversityUseCase,
+    private val searchUniversityUseCase: SearchUniversityUseCase,
+    private val schoolInfoUseCase: SchoolInfoUseCase,
 ) : BaseViewModel<SignUpState, SignUpSideEffect>(SignUpState()) {
     fun createUniv(universityName: String, grade: Int) = intent {
         val body = UnivRequest(universityName, grade)
-        univUseCase.createUniv(body)
+        createUniversityUseCase(body)
             .onSuccess {
                 reduce {
                     state.copy(
@@ -44,7 +46,7 @@ class SignUpViewModel @Inject constructor(
     }
 
     fun searchUniv(searchQuery: String) = intent {
-        univUseCase.searchUniv(searchQuery)
+        searchUniversityUseCase(searchQuery)
             .onSuccess {
                 reduce {
                     state.copy(
@@ -61,7 +63,7 @@ class SignUpViewModel @Inject constructor(
             }
     }
 
-    fun storeSchoolInfoExist(infoExist : Boolean ){
+    fun storeSchoolInfoExist(infoExist: Boolean) {
         CoroutineScope(Dispatchers.IO).launch {
             schoolInfoUseCase.invoke(infoExist)
         }
@@ -149,16 +151,16 @@ class SignUpViewModel @Inject constructor(
         }
     }
 
-    fun visiblePopUpErrorChanged(visiblePopUpError : Boolean) = intent{
-        reduce{
+    fun visiblePopUpErrorChanged(visiblePopUpError: Boolean) = intent {
+        reduce {
             state.copy(
                 visiblePopUpError = visiblePopUpError,
             )
         }
     }
 
-    fun visibleErrorChanged(visibleError : Boolean) = intent{
-        reduce{
+    fun visibleErrorChanged(visibleError: Boolean) = intent {
+        reduce {
             state.copy(
                 visibleError = visibleError,
             )
@@ -166,8 +168,8 @@ class SignUpViewModel @Inject constructor(
     }
 
 
-    fun isButtonVisibleChanged(isButtonVisible : Boolean) = intent{
-        reduce{
+    fun isButtonVisibleChanged(isButtonVisible: Boolean) = intent {
+        reduce {
             state.copy(
                 isButtonVisible = isButtonVisible
             )

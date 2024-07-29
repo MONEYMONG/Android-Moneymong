@@ -1,6 +1,7 @@
 package com.moneymong.moneymong.network.api
 
 import com.moneymong.moneymong.model.sign.UnivRequest
+import com.moneymong.moneymong.model.sign.UnivResponse
 import com.moneymong.moneymong.model.sign.UniversitiesResponse
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -18,4 +19,7 @@ interface UniversityApi {
     suspend fun searchUniv(
         @Query("keyword") searchQuery: String
     ): Result<UniversitiesResponse>
+
+    @GET("api/v1/user-university")
+    suspend fun getMyUniv(): Result<UnivResponse>
 }
