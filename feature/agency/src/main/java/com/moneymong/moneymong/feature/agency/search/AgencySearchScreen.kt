@@ -102,7 +102,7 @@ fun AgencySearchScreen(
                 isLoading = state.isLoading,
                 isError = state.isError,
                 errorMessage = state.errorMessage,
-                fetchMyAgencyList = viewModel::fetchMyAgencyList
+                onRetry = viewModel::getInitialData,
             )
         }
         Column(
@@ -135,7 +135,7 @@ private fun AgencySearchContentView(
     isLoading: Boolean,
     isError: Boolean,
     errorMessage: String,
-    fetchMyAgencyList: () -> Unit
+    onRetry: () -> Unit,
 ) {
     val contentLoading = pagingItems.loadState.refresh is LoadState.Loading || isLoading
     val contentError = pagingItems.loadState.refresh is LoadState.Error || isError
@@ -152,7 +152,7 @@ private fun AgencySearchContentView(
             message = contentErrorMessage,
             onRetry = {
                 pagingItems.retry()
-                fetchMyAgencyList()
+                onRetry()
             },
         )
     } else {
