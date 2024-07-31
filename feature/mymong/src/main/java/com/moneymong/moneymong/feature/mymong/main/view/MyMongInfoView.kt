@@ -146,7 +146,9 @@ fun UniversityInfo(
                 style = Body3
             )
             Spacer(modifier = Modifier.height(6.dp))
-            Row {
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
                 Image(
                     modifier = Modifier.size(24.dp),
                     painter = painterResource(id = R.drawable.img_university),
