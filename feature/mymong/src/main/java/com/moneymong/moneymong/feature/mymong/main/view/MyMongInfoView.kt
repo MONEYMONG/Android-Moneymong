@@ -97,7 +97,7 @@ private fun Profile(
         Spacer(modifier = Modifier.width(16.dp))
         Column {
             Text(
-                text = name,
+                text = name + "님",
                 color = Gray10,
                 style = Heading1
             )
