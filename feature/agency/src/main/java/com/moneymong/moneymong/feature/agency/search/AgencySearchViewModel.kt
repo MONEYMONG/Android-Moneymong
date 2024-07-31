@@ -65,7 +65,7 @@ class AgencySearchViewModel @Inject constructor(
                         isLoading = false,
                         joinedAgencies = fetchMyAgenciesResult.getOrThrow()
                             .map { myAgencyResponse -> myAgencyResponse.toAgency() },
-                        isUniversityStudent = fetchMyUniversityResult.getOrThrow().universityName == "대학 없음",
+                        isUniversityStudent = fetchMyUniversityResult.getOrThrow().universityName != null,
                     )
                 }
             } else {
