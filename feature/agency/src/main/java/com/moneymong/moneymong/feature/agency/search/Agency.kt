@@ -18,7 +18,7 @@ enum class AgencyType(val text: String) {
     fun agencyRegisterTypeToString(): String = when (this) {
         CLUB -> "IN_SCHOOL_CLUB"
         COUNCIL -> "STUDENT_COUNCIL"
-        GENERAL -> "GENERAL"    // todo: 서버 쪽에서 '대학 없음' 을 받는 방법이 나오면 교체
+        GENERAL -> "GENERAL"
     }
 }
 
