@@ -92,17 +92,17 @@ platform :android do
     )
     release_note = "머니몽 Android TB [#{latest_release[:displayVersion]} (#{latest_release[:buildVersion]})]"
 
-#     gradle(
-#         task: 'clean assemble',
-#         flavor: "tb",
-#         build_type: 'Release'
-#     )
-#     firebase_app_distribution(
-#         service_credentials_file: "#{ENV["FIREBASE_CREDENTIALS"]}",
-#         app: "#{ENV["APP_ID"]}",
-#         groups: "fastlane/testers-groups.txt",
-#         release_notes: release_note
-#     )
+    gradle(
+        task: 'clean assemble',
+        flavor: "tb",
+        build_type: 'Release'
+    )
+    firebase_app_distribution(
+        service_credentials_file: "#{ENV["FIREBASE_CREDENTIALS"]}",
+        app: "#{ENV["APP_ID"]}",
+        groups: "fastlane/testers-groups.txt",
+        release_notes: release_note
+    )
 
     send_slack_message(
         msg: "#{release_note} 배포 완료",
