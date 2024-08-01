@@ -96,6 +96,11 @@ jobs:
           run: |
             echo "${{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY }}" | base64 --decode > ./app/firebase_credentials.json
 
+        - name: Install Dependencies
+          run: |
+            gem install bundler
+            bundle install
+
         - name: Build & Deploy Distribute
           env:
             FIREBASE_CREDENTIALS: ${{ github.workspace }}/app/firebase_credentials.json
