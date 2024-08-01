@@ -17,8 +17,9 @@ default_platform(:android)
 
 platform :android do
   desc "Increment the Version Code"
-  lane :increment_code do
+  lane :increment_code do |options|
     latest_release = firebase_app_distribution_get_latest_release(
+            service_credentials_file: options[:firebase_credentials],
             app: "#{ENV["APP_ID"]}"
     )
 
@@ -85,7 +86,9 @@ platform :android do
 
   desc "Deploy a new version to the Firebase Distribution"
   lane :distribute do
-    increment_code
+    increment_code(
+        firebase_credentials: "#{ENV["FIREBASE_CREDENTIALS"]}"
+    )
     latest_release = firebase_app_distribution_get_latest_release(
          service_credentials_file: "#{ENV["FIREBASE_CREDENTIALS"]}",
          app: "#{ENV["APP_ID"]}"
