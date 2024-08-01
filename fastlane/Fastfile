@@ -18,12 +18,13 @@ default_platform(:android)
 platform :android do
   desc "Increment the Version Code"
   lane :increment_code do
-    latest_release = google_play_track_version_codes()[0]
-    new_release = latest_release + 1
+    latest_release = firebase_app_distribution_get_latest_release(
+            app: "#{ENV["APP_ID"]}"
+    )
 
     increment_version_code(
         gradle_file_path: './app/build.gradle.kts',
-        version_code: new_release
+        version_code: latest_release[:buildVersion].to_i + 1
     )
 
     git_add(
@@ -31,7 +32,7 @@ platform :android do
     )
     git_commit(
       path: ["./app/build.gradle.kts"],
-      message: "RELEASE INCREMENT VERSION CODE"
+      message: "INCREMENT VERSION CODE"
     )
 
     push_to_git_remote
@@ -51,9 +52,17 @@ platform :android do
     # You can also use other beta testing services here
   end
 
+  desc "Send Slack Message when Deploy to the Firebase Distribution"
+  lane :send_slack_message do |options|
+    slack(
+        message: options[:msg],
+        slack_url: options[:webhook_url]
+    )
+  end
+
   desc "Deploy a new version to the Google Play"
   lane :deploy do
-    increment_code
+#     increment_code
 
     gradle(
         task: 'bundle',
@@ -73,4 +82,32 @@ platform :android do
         skip_upload_apk: true
     )
   end
+
+  desc "Deploy a new version to the Firebase Distribution"
+  lane :distribute do
+#     increment_code
+    latest_release = firebase_app_distribution_get_latest_release(
+                app: "#{ENV["APP_ID"]}"
+    )
+    release_note = "머니몽 Android TB [#{latest_release[:displayVersion]} (#{latest_release[:buildVersion]})]"
+
+#     gradle(
+#         task: 'clean assemble',
+#         flavor: "tb",
+#         build_type: 'Release'
+#     )
+#     firebase_app_distribution(
+#         service_credentials_file: "#{ENV["FIREBASE_CREDENTIALS"]}",
+#         app: "#{ENV["APP_ID"]}",
+#         groups: "fastlane/testers-groups.txt",
+#         release_notes: release_note
+#     )
+
+    send_slack_message(
+        msg: "#{release_note} 배포 완료",
+        webhook_url: "#{ENV["WEBHOOK_URL"]}"
+    )
+    end
+
+
 end
