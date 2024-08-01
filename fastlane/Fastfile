@@ -89,7 +89,7 @@ platform :android do
 
     latest_release = firebase_app_distribution_get_latest_release(
          service_credentials_file: ENV["FIREBASE_CREDENTIALS"],
-         app: ENV["APP_ID"]
+         app: "#{ENV["APP_ID"]}"
     )
     release_note = "머니몽 Android TB [#{latest_release[:displayVersion]} (#{latest_release[:buildVersion]})]"
 
