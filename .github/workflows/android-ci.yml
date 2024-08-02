@@ -64,7 +64,7 @@ jobs:
           rm ./local.properties
 
     dev_deploy_job:
-      if: contains(github.ref, 'moneymong-')
+      if: contains(github.ref, 'release-')
       runs-on: macos-latest
       permissions:
         contents: write
