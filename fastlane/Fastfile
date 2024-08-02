@@ -85,12 +85,13 @@ platform :android do
          service_credentials_file: "#{ENV["FIREBASE_CREDENTIALS"]}",
          app: "#{ENV["APP_ID"]}"
     )
+    version_name = get_version_name()
     new_version_code = latest_release[:buildVersion].to_i + 1
+    release_note = "머니몽 Android TB [#{version_name} (#{new_version_code})]"
+
     increment_code(
             new_version_code: new_version_code
     )
-
-    release_note = "머니몽 Android TB [#{latest_release[:displayVersion]} (#{latest_release[:buildVersion].to_i + 1})]"
 
     gradle(
         task: 'clean assemble',
