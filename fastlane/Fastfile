@@ -103,7 +103,7 @@ platform :android do
     firebase_app_distribution(
         service_credentials_file: "#{ENV["FIREBASE_CREDENTIALS"]}",
         app: "#{ENV["APP_ID"]}",
-        groups: "fastlane/tester-groups.txt",
+        groups_file: "fastlane/tester-groups.txt",
         release_notes: release_note
     )
 
