@@ -85,7 +85,10 @@ platform :android do
          service_credentials_file: "#{ENV["FIREBASE_CREDENTIALS"]}",
          app: "#{ENV["APP_ID"]}"
     )
-    version_name = get_version_name()
+    version_name = get_version_name(
+         gradle_file_path:"./app/build.gradle.kts",
+         ext_constant_name:"versionName"
+    )
     new_version_code = latest_release[:buildVersion].to_i + 1
     release_note = "머니몽 Android TB [#{version_name} (#{new_version_code})]"
 
@@ -110,5 +113,4 @@ platform :android do
         webhook_url: "#{ENV["WEBHOOK_URL"]}"
     )
     end
-
 end

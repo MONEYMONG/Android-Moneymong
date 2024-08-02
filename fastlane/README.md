@@ -63,6 +63,14 @@ Deploy a new version to the Google Play
 
 Deploy a new version to the Firebase Distribution
 
+### android test2
+
+```sh
+[bundle exec] fastlane android test2
+```
+
+
+
 ----
 
 This README.md is auto-generated and will be re-generated every time [_fastlane_](https://fastlane.tools) is run.
