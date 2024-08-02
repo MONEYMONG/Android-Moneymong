@@ -23,15 +23,15 @@ platform :android do
         version_code: options[:new_version_code]
     )
 
-#     git_add(
-#       path: ["./app/build.gradle.kts"]
-#     )
-#     git_commit(
-#       path: ["./app/build.gradle.kts"],
-#       message: "INCREMENT VERSION CODE"
-#     )
-#
-#     push_to_git_remote
+    git_add(
+      path: ["./app/build.gradle.kts"]
+    )
+    git_commit(
+      path: ["./app/build.gradle.kts"],
+      message: "INCREMENT VERSION CODE"
+    )
+
+    push_to_git_remote
   end
 
   desc "Runs all the tests"
@@ -58,8 +58,6 @@ platform :android do
 
   desc "Deploy a new version to the Google Play"
   lane :deploy do
-    increment_code
-
     gradle(
         task: 'bundle',
         flavor: "live",
