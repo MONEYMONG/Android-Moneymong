@@ -18,7 +18,7 @@ class TokenRemoteDataSourceImpl @Inject constructor(
         type: LoginType,
         accessToken: String
     ): Result<TokenResponse> {
-        return accessTokenApi.postAccessToken(TokenRequest(type.name, accessToken))
+        return accessTokenApi.postAccessToken(TokenRequest(type.name, accessToken, "", ""))
     }
 
     override suspend fun getUpdateToken(refreshToken: String): Result<RefreshTokenResponse> {
