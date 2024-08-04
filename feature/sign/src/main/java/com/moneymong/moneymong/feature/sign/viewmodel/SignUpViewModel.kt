@@ -23,7 +23,7 @@ class SignUpViewModel @Inject constructor(
     private val univUseCase: UnivUseCase,
     private val schoolInfoUseCase : SchoolInfoUseCase,
 ) : BaseViewModel<SignUpState, SignUpSideEffect>(SignUpState()) {
-    fun createUniv(universityName: String, grade: Int) = intent {
+    fun createUniv(universityName: String?, grade: Int?) = intent {
         val body = UnivRequest(universityName, grade)
         univUseCase.createUniv(body)
             .onSuccess {
