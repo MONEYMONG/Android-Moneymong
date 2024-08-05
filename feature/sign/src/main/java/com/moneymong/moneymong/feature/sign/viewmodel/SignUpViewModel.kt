@@ -27,6 +27,7 @@ class SignUpViewModel @Inject constructor(
         val body = UnivRequest(universityName, grade)
         univUseCase.createUniv(body)
             .onSuccess {
+                storeSchoolInfoExist(true)
                 reduce {
                     state.copy(
                         isUnivCreated = true

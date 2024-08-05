@@ -231,7 +231,6 @@ fun SignUpContent(
                             )
                         )
                     },
-                    storeSchoolInfoExist = { viewModel.storeSchoolInfoExist(it) }
                 )
             }
         }
