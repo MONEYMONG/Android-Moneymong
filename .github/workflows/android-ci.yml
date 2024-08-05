@@ -3,11 +3,11 @@ name: Android CI
 on:
   push:
     branches:
-      - 'release/**'
+      - 'feature/**'
 
 jobs:
     release_deploy_job:
-      if: github.ref == 'refs/heads/release/release'
+      if: contains(github.ref, 'moneymong-')
       runs-on: macos-latest
       permissions:
         contents: write
