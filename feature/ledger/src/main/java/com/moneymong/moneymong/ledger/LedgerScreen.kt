@@ -42,6 +42,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavOptions
 import com.example.member.MemberScreen
+import com.moneymong.moneymong.common.event.Event
 import com.moneymong.moneymong.common.ui.plus
 import com.moneymong.moneymong.design_system.R
 import com.moneymong.moneymong.design_system.component.bottomSheet.MDSBottomSheet
@@ -283,7 +284,7 @@ fun LedgerScreen(
                                                 height = 24.dp
                                             ),
                                             containerColor = Mint03,
-                                            onClick = { viewModel.eventEmit(LedgerSideEffect.LedgerNavigateToOCR) }
+                                            onClick = viewModel::onClickLedgerRegisterOCR
                                         )
                                     }
                                     if (expandableFab) Spacer(modifier = Modifier.height(10.dp))
@@ -307,7 +308,7 @@ fun LedgerScreen(
                                         MDSFloatingActionButton(
                                             iconResource = R.drawable.ic_pencil,
                                             containerColor = Mint03,
-                                            onClick = { viewModel.eventEmit(LedgerSideEffect.LedgerNavigateToLedgerManual) }
+                                            onClick = viewModel::onClickLedgerRegisterManual
                                         )
                                     }
                                     if (expandableFab) Spacer(modifier = Modifier.height(10.dp))
@@ -325,7 +326,7 @@ fun LedgerScreen(
                                         iconResource = R.drawable.ic_plus_default,
                                         containerColor = containerColor,
                                         onClick = {
-                                            viewModel.event()
+                                            viewModel.eventTracker.logEvent(Event.PLUS_CLICK)
                                             expandableFab = !expandableFab
                                         }
                                     )

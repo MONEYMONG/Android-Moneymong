@@ -30,7 +30,7 @@ import javax.inject.Inject
 @HiltViewModel
 class LedgerViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    private val eventTracker: EventTracker,
+    val eventTracker: EventTracker,
     private val fetchLedgerTransactionListUseCase: FetchLedgerTransactionListUseCase,
     private val fetchAgencyExistLedgerUseCase: FetchAgencyExistLedgerUseCase,
     private val fetchMyAgencyListUseCase: FetchMyAgencyListUseCase,
@@ -215,12 +215,18 @@ class LedgerViewModel @Inject constructor(
         fetchLedgerTransactionList()
     }
 
+    fun onClickLedgerRegisterOCR() = intent {
+        eventTracker.logEvent(Event.OCR_CLICK)
+        postSideEffect(LedgerSideEffect.LedgerNavigateToOCR)
+    }
+
+    fun onClickLedgerRegisterManual() = intent {
+        eventTracker.logEvent(Event.HAND_CLICK)
+        postSideEffect(LedgerSideEffect.LedgerNavigateToLedgerManual)
+    }
+
     fun onDismissOnboarding() = intent {
         postDisplayedLedgerOnboardingUseCase(onboardingType = state.onboardingType)
         reduce { state.copy(visibleOnboarding = false) }
-    }
-
-    fun event() {
-        eventTracker.logEvent(Event.PLUS_CLICK)
     }
 }
