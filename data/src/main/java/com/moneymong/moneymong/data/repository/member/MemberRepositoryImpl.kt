@@ -31,4 +31,8 @@ class MemberRepositoryImpl @Inject constructor(
         return memberRemoteDataSource.blockMemberAuthor(agencyId, data)
 
     }
+
+    override suspend fun deleteAgency(agencyId: Int): Result<Unit> {
+        return memberRemoteDataSource.deleteAgency(agencyId)
+    }
 }

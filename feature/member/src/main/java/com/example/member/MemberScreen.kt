@@ -37,6 +37,7 @@ import com.moneymong.moneymong.design_system.component.bottomSheet.MDSBottomShee
 import com.moneymong.moneymong.design_system.component.button.MDSButton
 import com.moneymong.moneymong.design_system.component.button.MDSButtonSize
 import com.moneymong.moneymong.design_system.component.button.MDSButtonType
+import com.moneymong.moneymong.design_system.component.modal.MDSModal
 import com.moneymong.moneymong.design_system.component.snackbar.MDSSnackbarHost
 import com.moneymong.moneymong.design_system.error.ErrorDialog
 import com.moneymong.moneymong.design_system.error.ErrorScreen
@@ -50,6 +51,7 @@ import com.moneymong.moneymong.design_system.theme.Gray08
 import com.moneymong.moneymong.design_system.theme.MMHorizontalSpacing
 import com.moneymong.moneymong.design_system.theme.Red03
 import com.moneymong.moneymong.design_system.theme.White
+import com.moneymong.moneymong.model.agency.MyAgencyResponse
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.compose.collectAsState
 import org.orbitmvi.orbit.compose.collectSideEffect
@@ -59,7 +61,10 @@ import org.orbitmvi.orbit.compose.collectSideEffect
 @Composable
 fun MemberScreen(
     viewModel: MemberViewModel = hiltViewModel(),
-    agencyId: Int
+    agencyId: Int,
+    agencyList: List<MyAgencyResponse>,
+    onClickItem: (agencyId: Int) -> Unit,
+    changeAgencyList: (changeAgencyList: List<MyAgencyResponse>) -> Unit
 ) {
     val sheetState = rememberModalBottomSheetState(
         skipPartiallyExpanded = true,
@@ -192,6 +197,44 @@ fun MemberScreen(
             },
             onConfirmation = {
                 viewModel.onShowDialogChanged(false)
+            }
+        )
+    }
+
+    if (state.deleteAgency) {
+        MDSModal(
+            icon = R.drawable.ic_warning_filled,
+            title = "소속을 정말 삭제하시겠어요?",
+            description = "등록된 회비 내역이 모두 사라져요.",
+            negativeBtnText = "취소",
+            positiveBtnText = "확인",
+            onClickNegative = { viewModel.deleteAgencyBtnClicked(false) },
+            onClickPositive = {
+                viewModel.deleteAgency(
+                    agencyId,
+                    agencyList,
+                    onClickItem,
+                    changeAgencyList
+                )
+            }
+        )
+    }
+
+    if (state.deleteAgency) {
+        MDSModal(
+            icon = R.drawable.ic_warning_filled,
+            title = "소속을 정말 삭제하시겠어요?",
+            description = "등록된 회비 내역이 모두 사라져요.",
+            negativeBtnText = "취소",
+            positiveBtnText = "확인",
+            onClickNegative = { viewModel.deleteAgencyBtnClicked(false) },
+            onClickPositive = {
+                viewModel.deleteAgency(
+                    agencyId,
+                    agencyList,
+                    onClickItem,
+                    changeAgencyList
+                )
             }
         )
     }
@@ -383,6 +426,8 @@ fun MemberScreen(
                 invitationCode = state.invitationCode,
                 isReInvitationCode = { viewModel.eventEmit(MemberSideEffect.GetReInvitationCode(it)) }, //TODO
                 onCopyChange = { onCopyClick -> viewModel.onCopyClickChanged(onCopyClick) },
+                deleteAgencyBtnClicked = { onClick ->  viewModel.deleteAgencyBtnClicked(onClick)}
+
             )
 
             MemberListView(
@@ -428,6 +473,8 @@ fun MemberScreen(
                 invitationCode = state.invitationCode,
                 isReInvitationCode = { viewModel.eventEmit(MemberSideEffect.GetReInvitationCode(it)) },
                 onCopyChange = { onCopyClick -> viewModel.onCopyClickChanged(onCopyClick) },
+                deleteAgencyBtnClicked = { onClick ->  viewModel.deleteAgencyBtnClicked(onClick)}
+
             )
 
             MemberListView(
