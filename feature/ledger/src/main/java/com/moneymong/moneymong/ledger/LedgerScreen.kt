@@ -325,6 +325,7 @@ fun LedgerScreen(
                                         iconResource = R.drawable.ic_plus_default,
                                         containerColor = containerColor,
                                         onClick = {
+                                            viewModel.event()
                                             expandableFab = !expandableFab
                                         }
                                     )
