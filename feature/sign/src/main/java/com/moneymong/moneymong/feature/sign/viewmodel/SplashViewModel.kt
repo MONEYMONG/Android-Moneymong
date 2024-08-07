@@ -28,8 +28,8 @@ class SplashViewModel @Inject constructor(
     fun checkTokenValidity() = intent {
         tokenUseCase.getDataStoreInfo()
             .onSuccess {
-                Log.d("Splash", "${it.accessToken}, ${it.schoolInfoExist}")
-                if (it.accessToken.isNotEmpty() && it.schoolInfoExist) {
+                Log.d("Splash", "${it.accessToken}, ${it.schoolInfoProvided}")
+                if (it.accessToken.isNotEmpty() && it.schoolInfoProvided) {
                     reduce {
                         state.copy(
                             isTokenValid = true

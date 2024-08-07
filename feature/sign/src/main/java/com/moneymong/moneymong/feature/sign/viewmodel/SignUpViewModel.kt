@@ -27,7 +27,7 @@ class SignUpViewModel @Inject constructor(
         val body = UnivRequest(universityName, grade)
         univUseCase.createUniv(body)
             .onSuccess {
-                storeSchoolInfoExist(true)
+                storeSchoolInfoProvided(true)
                 reduce {
                     state.copy(
                         isUnivCreated = true
@@ -62,7 +62,7 @@ class SignUpViewModel @Inject constructor(
             }
     }
 
-    fun storeSchoolInfoExist(infoExist : Boolean ){
+    fun storeSchoolInfoProvided(infoExist : Boolean ){
         CoroutineScope(Dispatchers.IO).launch {
             schoolInfoUseCase.invoke(infoExist)
         }

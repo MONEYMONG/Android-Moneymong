@@ -46,13 +46,13 @@ class LoginViewModel @Inject constructor(
             if (result) {
                 reduce {
                     state.copy(
-                        isSchoolInfoExist = true
+                        isSchoolInfoProvided = true
                     )
                 }
             } else {
                 reduce {
                     state.copy(
-                        isSchoolInfoExist = false
+                        isSchoolInfoProvided = false
                     )
                 }
             }
@@ -93,10 +93,10 @@ class LoginViewModel @Inject constructor(
         }
     }
 
-    fun isSchoolInfoExistChanged(isSchoolInfoExist: Boolean?) = intent {
+    fun isSchoolInfoProvidedChanged(isSchoolInfoProvided: Boolean?) = intent {
         reduce {
             state.copy(
-                isSchoolInfoExist = isSchoolInfoExist
+                isSchoolInfoProvided = isSchoolInfoProvided
             )
         }
     }
