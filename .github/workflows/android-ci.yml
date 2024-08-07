@@ -1,0 +1,114 @@
+name: Android CI
+
+on:
+  push:
+    branches:
+      - 'release/**'
+
+jobs:
+    release_deploy_job:
+      if: github.ref == 'refs/heads/release/release'
+      runs-on: macos-latest
+      permissions:
+        contents: write
+
+      steps:
+      - uses: actions/checkout@v4
+      - name: set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: gradle
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Create API Certificate
+        run: |
+          echo "sdk.dir=$ANDROID_SDK_ROOT" > ./local.properties
+          echo "native_app_key=\"${{ secrets.NATIVE_APP_KEY }}\"" >> ./local.properties
+          echo "CLOVA_OCR_DOCUMENT_SECRET=\"${{ secrets.CLOVA_OCR_DOCUMENT_SECRET }}\"" >> ./local.properties
+          echo "CLOVA_OCR_DOCUMENT_BASEURL=\"${{ secrets.CLOVA_OCR_DOCUMENT_BASEURL }}\"" >> ./local.properties
+
+      - name: Clean Build
+        run: ./gradlew clean
+
+      - name: Decode Service Account Key
+        run: |
+          echo "${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_KEY }}" | base64 --decode > ./app/service_account_key.json
+
+      - name: Decode Keystore File
+        run: |
+          echo "${{ secrets.KEYSTORE_FILE }}" | base64 --decode > ./app/moneymong_keystore.jks
+
+      - name: Install Dependencies
+        run: |
+          gem install bundler
+          bundle install
+
+      - name: Build & Deploy Android release
+        env:
+          SERVICE_ACCOUNT_KEY: ${{ github.workspace }}/app/service_account_key.json
+          KEYSTORE_FILE: ${{ github.workspace }}/app/moneymong_keystore.jks
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEYSTORE_KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEYSTORE_KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+          CWD: ${{ github.workspace }}
+        run: bundle exec fastlane deploy
+
+      - name: Remove Credential
+        run: | 
+          rm ./app/service_account_key.json
+          rm ./app/moneymong_keystore.jks
+          rm ./local.properties
+
+    dev_deploy_job:
+      if: contains(github.ref, 'release-')
+      runs-on: macos-latest
+      permissions:
+        contents: write
+
+      steps:
+        - uses: actions/checkout@v4
+        - name: set up JDK 17
+          uses: actions/setup-java@v3
+          with:
+            java-version: '17'
+            distribution: 'temurin'
+            cache: gradle
+
+        - name: Grant execute permission for gradlew
+          run: chmod +x gradlew
+
+        - name: Create API Certificate
+          run: |
+            echo "sdk.dir=$ANDROID_SDK_ROOT" > ./local.properties
+            echo "native_app_key=\"${{ secrets.NATIVE_APP_KEY }}\"" >> ./local.properties
+            echo "CLOVA_OCR_DOCUMENT_SECRET=\"${{ secrets.CLOVA_OCR_DOCUMENT_SECRET }}\"" >> ./local.properties
+            echo "CLOVA_OCR_DOCUMENT_BASEURL=\"${{ secrets.CLOVA_OCR_DOCUMENT_BASEURL }}\"" >> ./local.properties        
+
+        - name: Clean Build
+          run: ./gradlew clean
+
+        - name: Decode Service Account Key
+          run: |
+            echo "${{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY }}" | base64 --decode > ./app/firebase_credentials.json
+
+        - name: Install Dependencies
+          run: |
+            gem install bundler
+            bundle install
+
+        - name: Build & Deploy Distribute
+          env:
+            FIREBASE_CREDENTIALS: ${{ github.workspace }}/app/firebase_credentials.json
+            APP_ID: ${{ secrets.FIREBASE_TB_APP_ID }}
+            WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+            CWD: ${{ github.workspace }}
+          run: bundle exec fastlane distribute
+
+        - name: Remove Credential
+          run: |
+            rm ./local.properties
+            rm ./app/firebase_credentials.json
