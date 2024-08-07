@@ -14,15 +14,6 @@ plugins {
 }
 
 android {
-    signingConfigs {
-        create("release") {
-            storeFile =
-                file(getApiKey("storeFile"))
-            storePassword = getApiKey("storePassword")
-            keyAlias = getApiKey("keyAlias")
-            keyPassword = getApiKey("keyPassword")
-        }
-    }
     namespace = "com.moneymong.moneymong"
     compileSdk = 34
 
@@ -30,7 +21,7 @@ android {
         applicationId = "com.moneymong.moneymong"
         minSdk = 24
         targetSdk = 34
-        versionCode = 12
+        versionCode = 13
         versionName = "1.1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -50,7 +41,6 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            signingConfig = signingConfigs.getByName("release")
         }
     }
     packaging {
