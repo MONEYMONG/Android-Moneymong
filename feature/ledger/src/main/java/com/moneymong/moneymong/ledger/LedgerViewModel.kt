@@ -1,5 +1,6 @@
 package com.moneymong.moneymong.ledger
 
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import com.moneymong.moneymong.common.base.BaseViewModel
 import com.moneymong.moneymong.common.error.MoneyMongError
@@ -14,6 +15,7 @@ import com.moneymong.moneymong.domain.usecase.member.MemberListUseCase
 import com.moneymong.moneymong.domain.usecase.user.FetchUserIdUseCase
 import com.moneymong.moneymong.ledger.navigation.LedgerArgs
 import com.moneymong.moneymong.ledger.view.LedgerTransactionType
+import com.moneymong.moneymong.model.agency.MyAgencyResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collectLatest
 import org.orbitmvi.orbit.annotation.OrbitExperimental
@@ -69,6 +71,7 @@ class LedgerViewModel @Inject constructor(
         reduce { state.copy(isAgencyExistLoading = true) }
         fetchAgencyExistLedgerUseCase(state.agencyId)
             .onSuccess {
+                Log.d("fetchAgencyExistLedger${state.agencyId}",it.toString() )
                 reduce {
                     state.copy(
                         isExistLedger = it,
@@ -90,6 +93,8 @@ class LedgerViewModel @Inject constructor(
                 page = 0,
                 limit = 100
             ).onSuccess {
+                Log.d("fetchLedgerTransactionList${state.existAgency}",it.toString() )
+
                 reduce {
                     state.copy(
                         ledgerTransaction = it,
@@ -97,11 +102,17 @@ class LedgerViewModel @Inject constructor(
                     )
                 }
             }.onFailure {
-                reduce {
+                if (it.message.equals("장부가 존재하지 않습니다.")) {  //TODO - 서버 의논 후 변경 예정
                     state.copy(
-                        visibleError = true,
-                        errorMessage = it.message ?: MoneyMongError.UnExpectedError.message
+                        visibleError = false,
                     )
+                } else {
+                    reduce {
+                        state.copy(
+                            visibleError = true,
+                            errorMessage = it.message ?: MoneyMongError.UnExpectedError.message
+                        )
+                    }
                 }
             }.also { reduce { state.copy(isLedgerTransactionLoading = false) } }
         }
@@ -111,6 +122,8 @@ class LedgerViewModel @Inject constructor(
         reduce { state.copy(isMyAgencyLoading = true) }
         fetchMyAgencyListUseCase()
             .onSuccess {
+                Log.d("fetchMyAgencyList${state.existAgency}",it.toString() )
+
                 reduce {
                     state.copy(
                         agencyList = it,
@@ -142,11 +155,20 @@ class LedgerViewModel @Inject constructor(
                         )
                     }
                 }.onFailure {
-                    reduce {
-                        state.copy(
-                            visibleError = true,
-                            errorMessage = it.message ?: MoneyMongError.UnExpectedError.message
-                        )
+                    if (it.message.equals("소속에 가입 후 장부를 사용할 수 있습니다.")) {  //TODO - 서버 의논 후 변경 예정
+                        reduce {
+                            state.copy(
+                                visibleError = false
+                            )
+                        }
+                    } else {
+                        reduce {
+                            state.copy(
+                                visibleError = true,
+                                errorMessage = it.message
+                                    ?: MoneyMongError.UnExpectedError.message
+                            )
+                        }
                     }
                 }.also { reduce { state.copy(isAgencyMemberLoading = false) } }
         }
@@ -215,5 +237,14 @@ class LedgerViewModel @Inject constructor(
     fun onDismissOnboarding() = intent {
         postDisplayedLedgerOnboardingUseCase(onboardingType = state.onboardingType)
         reduce { state.copy(visibleOnboarding = false) }
+    }
+
+
+    fun changeAgencyList(filteredAgencyList: List<MyAgencyResponse>) = intent {
+        reduce {
+            state.copy(
+                agencyList = filteredAgencyList
+            )
+        }
     }
 }

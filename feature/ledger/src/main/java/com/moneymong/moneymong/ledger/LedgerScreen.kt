@@ -333,7 +333,17 @@ fun LedgerScreen(
                         }
                     } else {
                         Box(modifier = modifier.fillMaxSize()) {
-                            MemberScreen(agencyId = state.agencyId)
+                            MemberScreen(
+                                agencyId = state.agencyId,
+                                agencyList = state.agencyList,
+                                onClickItem = {
+                                    viewModel.eventEmit(
+                                        LedgerSideEffect.LedgerSelectedAgencyChange(
+                                            it
+                                        )
+                                    )
+                                },
+                                changeAgencyList = { viewModel.changeAgencyList(it) })
                         }
                     }
                 }
