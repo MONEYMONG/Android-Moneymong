@@ -11,5 +11,5 @@ interface LoginLocalDataSource {
     suspend fun updateTokens(aToken: String, rToken: String)
     suspend fun updateAccessToken(aToken: String)
     suspend fun getSchoolInfo(): Result<Boolean>
-    suspend fun setSchoolInfoExist(infoExist: Boolean)
+    suspend fun setSchoolInfoProvided(infoExist: Boolean)
 }
