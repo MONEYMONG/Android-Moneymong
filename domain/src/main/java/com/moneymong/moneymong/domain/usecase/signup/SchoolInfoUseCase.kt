@@ -8,6 +8,6 @@ class SchoolInfoUseCase @Inject constructor(
 ) {
 
     suspend operator fun invoke(infoExist: Boolean){
-        tokenRepository.setSchoolInfoExist(infoExist)
+        tokenRepository.setSchoolInfoProvided(infoExist)
     }
 }

@@ -31,7 +31,7 @@ class TokenRepositoryImpl @Inject constructor(
                 it.accessToken,
                 it.refreshToken,
                 it.loginSuccess,
-                it.schoolInfoExist
+                it.schoolInfoProvided
             )
         }
     }
@@ -68,8 +68,8 @@ class TokenRepositoryImpl @Inject constructor(
         return loginLocalDataSource.getSchoolInfo()
     }
 
-    override suspend fun setSchoolInfoExist(infoExist: Boolean) {
-        return loginLocalDataSource.setSchoolInfoExist(infoExist)
+    override suspend fun setSchoolInfoProvided(infoExist: Boolean) {
+        return loginLocalDataSource.setSchoolInfoProvided(infoExist)
     }
 
 }

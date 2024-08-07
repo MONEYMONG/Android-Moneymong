@@ -20,5 +20,5 @@ interface TokenRepository {
     suspend fun updateAccessToken(aToken: String)
     suspend fun deleteRefreshToken(body: RefreshTokenRequest)
     suspend fun getSchoolInfo(): Result<Boolean>
-    suspend fun setSchoolInfoExist(infoExist: Boolean)
+    suspend fun setSchoolInfoProvided(infoExist: Boolean)
 }

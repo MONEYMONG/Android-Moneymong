@@ -36,12 +36,12 @@ fun LoginScreen(
     val state = viewModel.collectAsState().value
     val context = LocalContext.current
 
-    LaunchedEffect(key1 = state.isSchoolInfoExist) {
-        if (state.isSchoolInfoExist == true) {
+    LaunchedEffect(key1 = state.isSchoolInfoProvided) {
+        if (state.isSchoolInfoProvided == true) {
             navigateToLedger()
-        } else if (state.isSchoolInfoExist == false) {
+        } else if (state.isSchoolInfoProvided == false) {
             navigateToSignup()
-            viewModel.isSchoolInfoExistChanged(null)
+            viewModel.isSchoolInfoProvidedChanged(null)
         }
     }
 
