@@ -102,10 +102,12 @@ class LedgerViewModel @Inject constructor(
                     )
                 }
             }.onFailure {
-                if (it.message.equals("장부가 존재하지 않습니다.")) {  //TODO - 서버 의논 후 변경 예정
-                    state.copy(
-                        visibleError = false,
-                    )
+                if (it.message.equals("장부가 존재하지 않습니다.")) {
+                    reduce { //TODO - 서버 의논 후 변경 예정
+                        state.copy(
+                            visibleError = false,
+                        )
+                    }
                 } else {
                     reduce {
                         state.copy(

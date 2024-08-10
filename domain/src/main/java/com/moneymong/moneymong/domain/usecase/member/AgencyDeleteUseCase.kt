@@ -3,7 +3,7 @@ package com.moneymong.moneymong.domain.usecase.member
 import com.moneymong.moneymong.domain.repository.member.MemberRepository
 import javax.inject.Inject
 
-class AgencyDeleteUseCase @Inject constructor(
+class DeleteAgencyUseCase @Inject constructor(
     private val memberRepository: MemberRepository
 ) {
     suspend operator fun invoke(agencyId: Int) : Result<Unit> {

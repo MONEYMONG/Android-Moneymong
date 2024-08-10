@@ -3,7 +3,7 @@ package com.example.member
 import android.util.Log
 import com.moneymong.moneymong.common.base.BaseViewModel
 import com.moneymong.moneymong.domain.usecase.agency.FetchAgencyIdUseCase
-import com.moneymong.moneymong.domain.usecase.member.AgencyDeleteUseCase
+import com.moneymong.moneymong.domain.usecase.member.DeleteAgencyUseCase
 import com.moneymong.moneymong.domain.usecase.member.MemberBlockUseCase
 import com.moneymong.moneymong.domain.usecase.member.MemberInvitationCodeUseCase
 import com.moneymong.moneymong.domain.usecase.member.MemberListUseCase
@@ -30,7 +30,7 @@ class MemberViewModel @Inject constructor(
     private val updateMemberAuthorUseCase: UpdateMemberAuthorUseCase,
     private val memberBlockUseCase: MemberBlockUseCase,
     private val fetchAgencyIdUseCase: FetchAgencyIdUseCase,
-    private val delecteAgencyUseCase: AgencyDeleteUseCase
+    private val deleteAgencyUseCase: DeleteAgencyUseCase
 ) : BaseViewModel<MemberState, MemberSideEffect>(MemberState()) {
 
     init {
@@ -283,7 +283,7 @@ class MemberViewModel @Inject constructor(
         onClickItem: (agencyId: Int) -> Unit,
         changeAgencyList: (agencyList: List<MyAgencyResponse>) -> Unit
     ) = intent {
-        delecteAgencyUseCase.invoke(agencyId)
+        deleteAgencyUseCase.invoke(agencyId)
             .onSuccess {
                 Log.d("deleteAgency${agencyId}", it.toString())
                 val filteredList = agencyList.filter { it.id != agencyId }
@@ -302,6 +302,7 @@ class MemberViewModel @Inject constructor(
             }.onFailure {
                 reduce {
                     state.copy(
+                        deleteAgency = false,
                         visiblePopUpError = true,
                         errorPopUpMessage = it.message.toString()
                     )
