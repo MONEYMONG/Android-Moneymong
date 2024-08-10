@@ -63,7 +63,7 @@ fun MemberScreen(
     viewModel: MemberViewModel = hiltViewModel(),
     agencyId: Int,
     agencyList: List<MyAgencyResponse>,
-    onClickItem: (agencyId: Int) -> Unit,
+    changeAgency: (agencyId: Int) -> Unit,
     changeAgencyList: (changeAgencyList: List<MyAgencyResponse>) -> Unit
 ) {
     val sheetState = rememberModalBottomSheetState(
@@ -213,26 +213,7 @@ fun MemberScreen(
                 viewModel.deleteAgency(
                     agencyId,
                     agencyList,
-                    onClickItem,
-                    changeAgencyList
-                )
-            }
-        )
-    }
-
-    if (state.deleteAgency) {
-        MDSModal(
-            icon = R.drawable.ic_warning_filled,
-            title = "소속을 정말 삭제하시겠어요?",
-            description = "등록된 회비 내역이 모두 사라져요.",
-            negativeBtnText = "취소",
-            positiveBtnText = "확인",
-            onClickNegative = { viewModel.deleteAgencyBtnClicked(false) },
-            onClickPositive = {
-                viewModel.deleteAgency(
-                    agencyId,
-                    agencyList,
-                    onClickItem,
+                    changeAgency,
                     changeAgencyList
                 )
             }
