@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -34,6 +35,7 @@ import com.moneymong.moneymong.design_system.theme.Gray07
 import com.moneymong.moneymong.design_system.theme.MMHorizontalSpacing
 import com.moneymong.moneymong.design_system.theme.White
 import com.moneymong.moneymong.feature.agency.register.view.AgencyResisterContentView
+import com.moneymong.moneymong.feature.agency.search.AgencyType
 import org.orbitmvi.orbit.compose.collectAsState
 import org.orbitmvi.orbit.compose.collectSideEffect
 
@@ -42,7 +44,8 @@ fun AgencyRegisterScreen(
     modifier: Modifier = Modifier,
     viewModel: AgencyRegisterViewModel = hiltViewModel(),
     navigateToComplete: () -> Unit,
-    navigateUp: () -> Unit
+    navigateUp: () -> Unit,
+    registrableClubOrCouncil: Boolean
 ) {
     val state by viewModel.collectAsState()
     val focusManager = LocalFocusManager.current
@@ -57,6 +60,12 @@ fun AgencyRegisterScreen(
             is AgencyRegisterSideEffect.NavigateUp -> {
                 navigateUp()
             }
+        }
+    }
+
+    LaunchedEffect(key1 = registrableClubOrCouncil) {
+        if (registrableClubOrCouncil.not()) {
+            viewModel.changeAgencyType(AgencyType.GENERAL)
         }
     }
 
@@ -117,6 +126,7 @@ fun AgencyRegisterScreen(
             agencyName = state.agencyName,
             onAgencyNameChange = viewModel::changeAgencyName,
             changeNameTextFieldIsError = viewModel::changeNameTextFieldIsError,
+            registrableClubOrCouncil = registrableClubOrCouncil
         )
 
         val canRegister = state.agencyName.text.isNotEmpty() && state.nameTextFieldIsError.not()
@@ -137,6 +147,7 @@ fun AgencyRegisterScreen(
 fun AgencyRegisterScreenPreview() {
     AgencyRegisterScreen(
         navigateToComplete = {},
-        navigateUp = {}
+        navigateUp = {},
+        registrableClubOrCouncil = false
     )
 }
