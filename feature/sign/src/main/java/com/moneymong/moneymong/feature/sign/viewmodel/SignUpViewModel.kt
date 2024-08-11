@@ -1,6 +1,7 @@
 package com.moneymong.moneymong.feature.sign.viewmodel
 
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.lifecycle.viewModelScope
 import com.moneymong.moneymong.common.base.BaseViewModel
 import com.moneymong.moneymong.domain.usecase.signup.SchoolInfoUseCase
 import com.moneymong.moneymong.domain.usecase.signup.UnivUseCase
@@ -63,7 +64,7 @@ class SignUpViewModel @Inject constructor(
     }
 
     fun storeSchoolInfoProvided(infoExist : Boolean ){
-        CoroutineScope(Dispatchers.IO).launch {
+        viewModelScope.launch {
             schoolInfoUseCase.invoke(infoExist)
         }
     }

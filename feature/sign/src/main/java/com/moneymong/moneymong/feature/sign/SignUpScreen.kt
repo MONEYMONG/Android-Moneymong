@@ -73,7 +73,7 @@ fun SignUpScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .background(White)
-                .padding(MMHorizontalSpacing),
+                .padding(horizontal = MMHorizontalSpacing),
             topBar = {
                 Row(
                     modifier = Modifier
@@ -209,7 +209,7 @@ fun SignUpContent(
             }
         }
 
-        Column(
+        Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .align(Alignment.BottomCenter)
