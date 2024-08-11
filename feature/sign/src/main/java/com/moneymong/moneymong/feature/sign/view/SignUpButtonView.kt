@@ -60,6 +60,9 @@ fun SignUpButtonView(
                 style = Body3
             )
 
+            Spacer(modifier = Modifier.height(28.dp))
+
+
         }
     }
 }
