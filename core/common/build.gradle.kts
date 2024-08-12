@@ -2,6 +2,7 @@
 plugins {
     alias(libs.plugins.moneymong.android.library)
     alias(libs.plugins.moneymong.android.library.compose)
+    alias(libs.plugins.moneymong.android.hilt)
 }
 
 android {
@@ -19,6 +20,10 @@ dependencies {
     implementation(libs.orbit.compose)
     implementation(libs.orbit.viewModel)
     implementation(libs.okhttp)
+
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.analytics)
+    implementation(libs.firebase.crashlytics)
 
     testImplementation(libs.junit4)
     androidTestImplementation(libs.androidx.junit)
