@@ -1,6 +1,5 @@
 package com.moneymong.moneymong.network.util
 
-import com.moneymong.moneymong.domain.repository.LoginRepository
 import com.moneymong.moneymong.domain.repository.TokenRepository
 import com.moneymong.moneymong.network.BuildConfig
 import kotlinx.coroutines.runBlocking

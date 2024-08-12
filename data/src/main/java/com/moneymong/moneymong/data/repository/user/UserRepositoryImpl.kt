@@ -40,6 +40,18 @@ class UserRepositoryImpl @Inject constructor(
     override suspend fun fetchUserId(): Int =
         userLocalDataSource.fetchUserId()
 
+    override suspend fun saveUserInfo() {
+        userRemoteDataSource.getMyInfo()
+            .onSuccess {
+                userLocalDataSource.saveUserId(it.id.toInt())
+                userLocalDataSource.saveUserNickName(it.name)
+            }.onFailure {
+                userLocalDataSource.saveUserId(0)
+                userLocalDataSource.saveUserNickName("에러가 발생했습니다.")
+            }
+    }
+
+
     override suspend fun saveUserNickName(nickname: String) =
         userLocalDataSource.saveUserNickName(nickname = nickname)
 
