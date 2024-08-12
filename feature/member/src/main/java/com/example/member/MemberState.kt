@@ -31,4 +31,6 @@ data class MemberState(
     val isUserAuthor: String = "",
     val agencyId: Int = 0,
     val isBlockedUser : Boolean = false,
+    val deleteAgency : Boolean = false,
+
 ) : State
