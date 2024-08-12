@@ -1,6 +1,7 @@
 package com.moneymong.moneymong.feature.sign.viewmodel
 
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.lifecycle.viewModelScope
 import com.moneymong.moneymong.common.base.BaseViewModel
 import com.moneymong.moneymong.domain.usecase.signup.SchoolInfoUseCase
 import com.moneymong.moneymong.domain.usecase.university.CreateUniversityUseCase
@@ -25,10 +26,11 @@ class SignUpViewModel @Inject constructor(
     private val searchUniversityUseCase: SearchUniversityUseCase,
     private val schoolInfoUseCase: SchoolInfoUseCase,
 ) : BaseViewModel<SignUpState, SignUpSideEffect>(SignUpState()) {
-    fun createUniv(universityName: String, grade: Int) = intent {
+    fun createUniv(universityName: String?, grade: Int?) = intent {
         val body = UnivRequest(universityName, grade)
         createUniversityUseCase(body)
             .onSuccess {
+                storeSchoolInfoProvided(true)
                 reduce {
                     state.copy(
                         isUnivCreated = true
@@ -63,8 +65,8 @@ class SignUpViewModel @Inject constructor(
             }
     }
 
-    fun storeSchoolInfoExist(infoExist: Boolean) {
-        CoroutineScope(Dispatchers.IO).launch {
+    fun storeSchoolInfoProvided(infoExist : Boolean ){
+        viewModelScope.launch {
             schoolInfoUseCase.invoke(infoExist)
         }
     }

@@ -11,14 +11,16 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
-import com.moneymong.moneymong.design_system.R
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.moneymong.moneymong.design_system.R
 import com.moneymong.moneymong.design_system.error.ErrorScreen
 import com.moneymong.moneymong.design_system.theme.Blue04
 import com.moneymong.moneymong.design_system.theme.MMHorizontalSpacing
+import com.moneymong.moneymong.feature.sign.util.KakaoLogin
 import com.moneymong.moneymong.feature.sign.view.KakaoLoginView
 import com.moneymong.moneymong.feature.sign.view.TitleView
 import com.moneymong.moneymong.feature.sign.viewmodel.LoginViewModel
@@ -29,35 +31,35 @@ fun LoginScreen(
     navigateToSignup: () -> Unit,
     navigateToLedger: () -> Unit,
     navigateToLogin: () -> Unit,
-    viewModel: LoginViewModel = hiltViewModel(),
-
-    ) {
+    viewModel: LoginViewModel = hiltViewModel()
+) {
     val state = viewModel.collectAsState().value
+    val context = LocalContext.current
 
-    LaunchedEffect(key1 = state.isSchoolInfoExist) {
-        if (state.isSchoolInfoExist == true) {
+    LaunchedEffect(key1 = state.isSchoolInfoProvided) {
+        if (state.isSchoolInfoProvided == true) {
             navigateToLedger()
-        } else if (state.isSchoolInfoExist == false) {
+        } else if (state.isSchoolInfoProvided == false) {
             navigateToSignup()
-            viewModel.isSchoolInfoExistChanged(null)
+            viewModel.isSchoolInfoProvidedChanged(null)
         }
     }
 
     LaunchedEffect(key1 = state.isLoginRequired)
     {
-        if (state.isLoginRequired == true ) {
+        if (state.isLoginRequired == true) {
             navigateToLogin()
             viewModel.isLoginRequiredChanged(false)
         }
     }
 
-    if (state.visibleError == true ) {
+    if (state.visibleError == true) {
         ErrorScreen(
             modifier = Modifier.fillMaxSize(),
             message = state.errorMessage,
             onRetry = { viewModel.visibleErrorChanged(false) }
         )
-    } else if(state.visibleError == false ){
+    } else if (state.visibleError == false) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -86,7 +88,13 @@ fun LoginScreen(
             ) {
                 KakaoLoginView(
                     modifier = Modifier.fillMaxWidth(),
-                    onLoginButtonClicked = { viewModel.onLoginButtonClicked() }
+                    loginByKaKao = {
+                        KakaoLogin(
+                            context = context,
+                            onSuccess = viewModel::onKakaoLoginSuccess,
+                            onFailure = viewModel::onKakaoLoginFailure
+                        )
+                    }
                 )
             }
         }
