@@ -15,6 +15,14 @@ For _fastlane_ installation instructions, see [Installing _fastlane_](https://do
 
 ## Android
 
+### android increment_code
+
+```sh
+[bundle exec] fastlane android increment_code
+```
+
+Increment the Version Code
+
 ### android test
 
 ```sh
@@ -31,6 +39,14 @@ Runs all the tests
 
 Submit a new Beta Build to Crashlytics Beta
 
+### android send_slack_message
+
+```sh
+[bundle exec] fastlane android send_slack_message
+```
+
+Send Slack Message when Deploy to the Firebase Distribution
+
 ### android deploy
 
 ```sh
@@ -38,6 +54,22 @@ Submit a new Beta Build to Crashlytics Beta
 ```
 
 Deploy a new version to the Google Play
+
+### android distribute
+
+```sh
+[bundle exec] fastlane android distribute
+```
+
+Deploy a new version to the Firebase Distribution
+
+### android test2
+
+```sh
+[bundle exec] fastlane android test2
+```
+
+
 
 ----
 
