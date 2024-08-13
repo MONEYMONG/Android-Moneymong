@@ -63,7 +63,7 @@ fun MemberScreen(
     viewModel: MemberViewModel = hiltViewModel(),
     agencyId: Int,
     agencyList: List<MyAgencyResponse>,
-    changeAgency: (agencyId: Int) -> Unit,
+    onClickItem: (agencyId: Int) -> Unit,
     changeAgencyList: (changeAgencyList: List<MyAgencyResponse>) -> Unit
 ) {
     val sheetState = rememberModalBottomSheetState(
@@ -213,7 +213,7 @@ fun MemberScreen(
                 viewModel.deleteAgency(
                     agencyId,
                     agencyList,
-                    changeAgency,
+                    onClickItem,
                     changeAgencyList
                 )
             }
