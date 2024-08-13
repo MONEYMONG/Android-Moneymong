@@ -23,12 +23,10 @@ platform :android do
         version_code: options[:new_version_code]
     )
 
-    git_add(
-      path: ["./app/build.gradle.kts"]
-    )
     git_commit(
       path: ["./app/build.gradle.kts"],
-      message: "INCREMENT VERSION CODE"
+      message: "INCREMENT VERSION CODE",
+      allow_nothing_to_commit: true
     )
 
     push_to_git_remote
