@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.moneymong.moneymong.design_system.R
@@ -20,6 +21,7 @@ import com.moneymong.moneymong.design_system.error.ErrorDialog
 import com.moneymong.moneymong.design_system.theme.Gray01
 import com.moneymong.moneymong.design_system.theme.MMHorizontalSpacing
 import com.moneymong.moneymong.feature.mymong.main.component.MyMongTopBar
+import com.moneymong.moneymong.feature.mymong.main.view.MyMongFeedbackView
 import com.moneymong.moneymong.feature.mymong.main.view.MyMongInfoView
 import com.moneymong.moneymong.feature.mymong.main.view.MyMongSettingView
 import org.orbitmvi.orbit.compose.collectAsState
@@ -52,6 +54,9 @@ fun MyMongScreen(
 
             is MyMongSideEffect.NavigateToLogin -> {
                 navigateToLogin()
+            }
+
+            is MyMongSideEffect.FollowKakaoChannel -> {
             }
         }
     }
@@ -94,7 +99,11 @@ fun MyMongScreen(
             grade = state.grade,
             getInfo = viewModel::getInfo
         )
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(16.dp))
+        MyMongFeedbackView(
+            onClick = viewModel::onClickKakaoChannel
+        )
+        Spacer(modifier = Modifier.height(16.dp))
         MyMongSettingView(
             navigateToTermsOfUse = viewModel::navigateToTermsOfUse,
             navigateToPrivacyPolicy = viewModel::navigateToPriPolicyButton,

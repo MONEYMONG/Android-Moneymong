@@ -24,15 +24,15 @@
         tools:targetApi="31">
         <meta-data
             android:name="com.kakao.sdk.AppKey"
-            android:value="@string/native_app_key"/>
+            android:value="@string/native_app_key" />
 
         <activity
             android:name=".MainActivity"
             android:exported="true"
             android:label="${appLabel}"
-            android:windowSoftInputMode="adjustResize"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.Moneymongandroid"
-            android:screenOrientation="portrait">
+            android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -40,14 +40,17 @@
             </intent-filter>
         </activity>
 
-        <activity android:name="com.kakao.sdk.auth.AuthCodeHandlerActivity"
+        <activity
+            android:name="com.kakao.sdk.auth.AuthCodeHandlerActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
-                <data android:host="oauth"
+                <data
+                    android:host="oauth"
                     android:scheme="@string/kakao_native_app_key" />
             </intent-filter>
 
