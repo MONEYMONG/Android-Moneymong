@@ -42,6 +42,7 @@ import com.moneymong.moneymong.design_system.theme.Gray08
 import com.moneymong.moneymong.design_system.theme.MMHorizontalSpacing
 import com.moneymong.moneymong.design_system.theme.Red03
 import com.moneymong.moneymong.feature.agency.search.component.AgencySearchTopBar
+import com.moneymong.moneymong.feature.agency.search.item.AgencyFeedbackItem
 import com.moneymong.moneymong.feature.agency.search.item.AgencyItem
 import org.orbitmvi.orbit.compose.collectAsState
 import org.orbitmvi.orbit.compose.collectSideEffect
@@ -159,13 +160,15 @@ private fun AgencySearchContentView(
         if (pagingItems.itemCount == 0) {
             ContentViewWithoutAgencies(
                 modifier = modifier,
-                pagingItems = pagingItems
+                pagingItems = pagingItems,
+                onClickFeedbackItem = {}
             )
         } else {
             ContentViewWithAgencies(
                 modifier = modifier,
                 pagingItems = pagingItems,
-                onClickItem = onClickItem
+                onClickItem = onClickItem,
+                onClickFeedbackItem = {}
             )
         }
     }
@@ -176,13 +179,19 @@ private fun AgencySearchContentView(
 private fun ContentViewWithAgencies(
     modifier: Modifier = Modifier,
     pagingItems: LazyPagingItems<Agency>,
-    onClickItem: (agencyId: Long) -> Unit
+    onClickItem: (agencyId: Long) -> Unit,
+    onClickFeedbackItem: () -> Unit
 ) {
     LazyColumn(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(12.dp),
         contentPadding = PaddingValues(vertical = 4.dp)
     ) {
+        item {
+            AgencyFeedbackItem(
+                onClick = onClickFeedbackItem
+            )
+        }
         items(
             count = pagingItems.itemCount, key = pagingItems.itemKey { it.id }
         ) {
@@ -221,6 +230,7 @@ private fun ContentViewWithAgencies(
 private fun ContentViewWithoutAgencies(
     modifier: Modifier = Modifier,
     pagingItems: LazyPagingItems<Agency>,
+    onClickFeedbackItem: () -> Unit
 ) {
 
     when (pagingItems.loadState.refresh) {
@@ -238,25 +248,35 @@ private fun ContentViewWithoutAgencies(
         }
 
         is LoadState.NotLoading -> {
-            Column(
-                modifier = modifier,
-                verticalArrangement = Arrangement.spacedBy(
-                    space = 8.dp,
-                    alignment = Alignment.CenterVertically
-                ),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Image(
-                    modifier = Modifier.size(size = 80.dp),
-                    painter = painterResource(id = R.drawable.img_agency),
-                    contentDescription = "agency image",
+            Box(modifier = Modifier.fillMaxSize()) {
+                AgencyFeedbackItem(
+                    modifier = Modifier
+                        .align(Alignment.TopCenter)
+                        .padding(top = 10.dp),
+                    onClick = onClickFeedbackItem
                 )
-                Text(
-                    text = "아직 등록된 소속이 없어요\n하단 버튼을 통해 등록해보세요",
-                    textAlign = TextAlign.Center,
-                    color = Gray08,
-                    style = Body4
-                )
+                Column(
+                    modifier = modifier
+                        .fillMaxSize()
+                        .align(Alignment.Center),
+                    verticalArrangement = Arrangement.spacedBy(
+                        space = 8.dp,
+                        alignment = Alignment.CenterVertically
+                    ),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Image(
+                        modifier = Modifier.size(size = 80.dp),
+                        painter = painterResource(id = R.drawable.img_agency),
+                        contentDescription = "agency image",
+                    )
+                    Text(
+                        text = "아직 등록된 소속이 없어요\n하단 버튼을 통해 등록해보세요",
+                        textAlign = TextAlign.Center,
+                        color = Gray08,
+                        style = Body4
+                    )
+                }
             }
         }
     }
