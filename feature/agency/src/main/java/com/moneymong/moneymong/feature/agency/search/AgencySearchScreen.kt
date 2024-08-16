@@ -36,9 +36,9 @@ import com.moneymong.moneymong.design_system.component.tooltip.MDSToolTipPositio
 import com.moneymong.moneymong.design_system.error.ErrorDialog
 import com.moneymong.moneymong.design_system.error.ErrorItem
 import com.moneymong.moneymong.design_system.error.ErrorScreen
-import com.moneymong.moneymong.design_system.theme.Body4
+import com.moneymong.moneymong.design_system.theme.Body3
 import com.moneymong.moneymong.design_system.theme.Gray01
-import com.moneymong.moneymong.design_system.theme.Gray08
+import com.moneymong.moneymong.design_system.theme.Gray07
 import com.moneymong.moneymong.design_system.theme.MMHorizontalSpacing
 import com.moneymong.moneymong.design_system.theme.Red03
 import com.moneymong.moneymong.feature.agency.search.component.AgencySearchTopBar
@@ -157,7 +157,7 @@ private fun AgencySearchContentView(
             },
         )
     } else {
-        if (pagingItems.itemCount == 0) {
+        if (pagingItems.itemCount != 0) {
             ContentViewWithoutAgencies(
                 modifier = modifier,
                 pagingItems = pagingItems,
@@ -260,7 +260,7 @@ private fun ContentViewWithoutAgencies(
                         .fillMaxSize()
                         .align(Alignment.Center),
                     verticalArrangement = Arrangement.spacedBy(
-                        space = 8.dp,
+                        space = 4.dp,
                         alignment = Alignment.CenterVertically
                     ),
                     horizontalAlignment = Alignment.CenterHorizontally
@@ -273,8 +273,8 @@ private fun ContentViewWithoutAgencies(
                     Text(
                         text = "아직 등록된 소속이 없어요\n하단 버튼을 통해 등록해보세요",
                         textAlign = TextAlign.Center,
-                        color = Gray08,
-                        style = Body4
+                        color = Gray07,
+                        style = Body3
                     )
                 }
             }
