@@ -17,6 +17,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.moneymong.moneymong.design_system.component.button.MDSButton
@@ -48,7 +49,7 @@ fun MyMongFeedbackView(
             Column {
                 Text(
                     text = "머니몽에게 자유롭게\n문의 해보세요!",
-                    style = Body4,
+                    style = Body4.copy(fontWeight = FontWeight.Bold),
                     color = Gray08
                 )
                 Spacer(modifier = Modifier.height(8.dp))

@@ -87,4 +87,6 @@ class AgencySearchViewModel @Inject constructor(
             state.copy(visibleWarningDialog = visible)
         }
     }
+
+    fun onClickAskFeedback() = eventEmit(AgencySearchSideEffect.FollowAsk)
 }

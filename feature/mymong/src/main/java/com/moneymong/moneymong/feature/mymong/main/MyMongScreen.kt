@@ -1,5 +1,7 @@
 package com.moneymong.moneymong.feature.mymong.main
 
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -37,6 +39,7 @@ fun MyMongScreen(
     navigateToLogin: () -> Unit,
 ) {
     val state by viewModel.collectAsState()
+    val context = LocalContext.current
 
     viewModel.collectSideEffect {
         when (it) {
@@ -57,6 +60,8 @@ fun MyMongScreen(
             }
 
             is MyMongSideEffect.FollowKakaoChannel -> {
+                val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://pf.kakao.com/_zDsyG"))
+                context.startActivity(intent)
             }
         }
     }

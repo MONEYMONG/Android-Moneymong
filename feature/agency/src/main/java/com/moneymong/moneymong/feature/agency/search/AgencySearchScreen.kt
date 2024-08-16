@@ -1,5 +1,7 @@
 package com.moneymong.moneymong.feature.agency.search
 
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -18,6 +20,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -55,6 +58,7 @@ fun AgencySearchScreen(
     navigateAgencyJoin: (agencyId: Long) -> Unit
 ) {
     val state by viewModel.collectAsState()
+    val context = LocalContext.current
     val pagingItems = viewModel.agencies.collectAsLazyPagingItems()
 
     viewModel.collectSideEffect {
@@ -65,6 +69,11 @@ fun AgencySearchScreen(
 
             is AgencySearchSideEffect.NavigateToAgencyJoin -> {
                 navigateAgencyJoin(it.agencyId)
+            }
+
+            is AgencySearchSideEffect.FollowAsk -> {
+                val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://asked.kr/moneymong"))
+                context.startActivity(intent)
             }
         }
     }
@@ -100,6 +109,7 @@ fun AgencySearchScreen(
                         viewModel.navigateToJoin(agencyId)
                     }
                 },
+                onClickFeedbackItem = viewModel::onClickAskFeedback,
                 isLoading = state.isLoading,
                 isError = state.isError,
                 errorMessage = state.errorMessage,
@@ -133,6 +143,7 @@ private fun AgencySearchContentView(
     modifier: Modifier = Modifier,
     pagingItems: LazyPagingItems<Agency>,
     onClickItem: (agencyId: Long) -> Unit,
+    onClickFeedbackItem: () -> Unit,
     isLoading: Boolean,
     isError: Boolean,
     errorMessage: String,
@@ -157,18 +168,18 @@ private fun AgencySearchContentView(
             },
         )
     } else {
-        if (pagingItems.itemCount != 0) {
+        if (pagingItems.itemCount == 0) {
             ContentViewWithoutAgencies(
                 modifier = modifier,
                 pagingItems = pagingItems,
-                onClickFeedbackItem = {}
+                onClickFeedbackItem = onClickFeedbackItem
             )
         } else {
             ContentViewWithAgencies(
                 modifier = modifier,
                 pagingItems = pagingItems,
                 onClickItem = onClickItem,
-                onClickFeedbackItem = {}
+                onClickFeedbackItem = onClickFeedbackItem
             )
         }
     }
