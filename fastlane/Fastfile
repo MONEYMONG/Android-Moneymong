@@ -95,7 +95,7 @@ platform :android do
     gradle(
         task: 'clean assemble',
         flavor: "tb",
-        build_type: 'Release'
+        build_type: 'Debug'
     )
     firebase_app_distribution(
         service_credentials_file: "#{ENV["FIREBASE_CREDENTIALS"]}",
