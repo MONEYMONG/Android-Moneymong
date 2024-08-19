@@ -9,15 +9,15 @@ import com.google.gson.GsonBuilder
 import com.moneymong.moneymong.network.BuildConfig
 import com.moneymong.moneymong.network.adapter.ResultCallAdapterFactory
 import com.moneymong.moneymong.network.api.AccessTokenApi
-import com.moneymong.moneymong.network.api.UniversityApi
-import com.moneymong.moneymong.network.util.AuthInterceptor
-import com.moneymong.moneymong.network.api.MoneyMongApi
 import com.moneymong.moneymong.network.api.AgencyApi
 import com.moneymong.moneymong.network.api.ClovaApi
 import com.moneymong.moneymong.network.api.LedgerApi
 import com.moneymong.moneymong.network.api.LedgerDetailApi
 import com.moneymong.moneymong.network.api.MemberApi
+import com.moneymong.moneymong.network.api.MoneyMongApi
+import com.moneymong.moneymong.network.api.UniversityApi
 import com.moneymong.moneymong.network.api.UserApi
+import com.moneymong.moneymong.network.util.AuthInterceptor
 import com.moneymong.moneymong.network.util.MoneyMongTokenAuthenticator
 import dagger.Module
 import dagger.Provides
@@ -97,7 +97,7 @@ object NetworkModule {
         addConverterFactory(GsonConverterFactory.create(gson))
         addCallAdapterFactory(ResultCallAdapterFactory.create())
     }.build()
-    
+
     @Provides
     @Singleton
     @ClovaRetrofit
@@ -112,7 +112,7 @@ object NetworkModule {
     @Provides
     fun provideMoneyMongApi(@MoneyMongRetrofit retrofit: Retrofit): MoneyMongApi =
         retrofit.create(MoneyMongApi::class.java)
-        
+
     @Provides
     fun provideUnivApi(@MoneyMongRetrofit retrofit: Retrofit): UniversityApi =
         retrofit.create(UniversityApi::class.java)

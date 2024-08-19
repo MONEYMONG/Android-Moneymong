@@ -3,6 +3,8 @@ package com.moneymong.moneymong.ocr_detail
 import android.content.SharedPreferences
 import androidx.compose.ui.text.input.TextFieldValue
 import com.moneymong.moneymong.common.base.BaseViewModel
+import com.moneymong.moneymong.common.event.Event
+import com.moneymong.moneymong.common.event.EventTracker
 import com.moneymong.moneymong.common.ext.toMultipart
 import com.moneymong.moneymong.common.ui.isValidPaymentDate
 import com.moneymong.moneymong.common.ui.isValidPaymentTime
@@ -29,6 +31,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class OCRDetailViewModel @Inject constructor(
+    private val eventTracker: EventTracker,
     private val prefs: SharedPreferences,
     private val postLedgerTransactionUseCase: PostLedgerTransactionUseCase,
     private val postFileUploadUseCase: PostFileUploadUseCase,
@@ -134,6 +137,7 @@ class OCRDetailViewModel @Inject constructor(
     }
 
     fun onClickPostLedger() = intent {
+        eventTracker.logEvent(Event.OCR_MODIFY_TO_REGISTER_CLICK)
         postDocumentImage(imageFile = state.receiptFile, isReceipt = true)
     }
 

@@ -4,5 +4,6 @@ data class TokenResponse(
     val accessToken : String,
     val refreshToken : String,
     val loginSuccess : Boolean,
-    val schoolInfoExist : Boolean
+    val schoolInfoExist : Boolean,
+    val schoolInfoProvided: Boolean
 )
