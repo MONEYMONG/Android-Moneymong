@@ -21,13 +21,13 @@ fun SignUpTitleView(modifier: Modifier = Modifier, subTitleState: Boolean) {
         horizontalAlignment = Alignment.Start
     ) {
         Text(
-            text = "회원가입을 진행해주세요",
+            text = "대학정보를 알려주세요!",
             style = Heading2,
             color = Black
         )
         Text(
             modifier = Modifier.padding(top= 8.dp),
-            text = "아래 항목들을 정확히 채워주세요",
+            text = "학교 이름과 학년을 선택해주세요.",
             style = Body3,
             color = if (!subTitleState) Gray06.copy(alpha = 0.4f) else Gray06
 

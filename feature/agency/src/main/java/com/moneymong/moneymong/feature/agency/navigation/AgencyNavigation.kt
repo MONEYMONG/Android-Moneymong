@@ -19,7 +19,7 @@ fun NavController.navigateAgency(
 
 fun NavGraphBuilder.agencyScreen(
     padding: PaddingValues,
-    navigateToRegister: () -> Unit,
+    navigateToRegister: (isUniversityStudent: Boolean) -> Unit,
     navigateAgencyJoin: (agencyId: Long) -> Unit
 ) {
     composable(route = agencyRoute) {
