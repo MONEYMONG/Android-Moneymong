@@ -4,7 +4,7 @@ on:
   pull_request:
     branches:
       - 'develop'
-    types: [opened, reopened]
+    types: [ opened, reopened ]
 
 jobs:
   assign-reviewer:
@@ -19,10 +19,93 @@ jobs:
           configuration-path: '.github/reviewer.yml'
 
       - name: Get PR Labels
-        id: get_labels
+        id: labels_id
+        run: echo "::set-output name:labels::${{ github.event.pull_request.labels[*].name }}"
+
+      - name: Get PR URL
+        id: url_id
+        run: echo "::set-output name=url::${{ github.event.pull_request.html_url }}"
+
+      - name: Get PR Author
+        id: author_id
         uses: actions/github-script@v6
         with:
           script: |
-            const labels = context.payload.pull_request.labels.map(label => label.name);
-            console.log(`Labels: ${labels.join(', ')}`);
-            console.log('url : ${{ github.event.pull_request.html_url }}');
+            const author = context.payload.pull_request.user.login;
+            core.setOutput('pr_author', author);
+
+      - name: Get Slack Member ID
+        id: slack_id
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const author = ${{ steps.author.outputs.pr_author }};
+            let selectedId;
+            
+            if (author === "Heonbyeong") {
+              selectedId = ${{ secrets.SLACK_ID_ABH }};
+            } else if (author === "jhg3410") {
+              selectedId = ${{ secrets.SLACK_ID_JHG }};
+            } else if (author === "eunseo0105") {
+              selectedId = ${{ secrets.SLACK_ID_KES }};
+            } else {
+              core.setFailed(`Not Found Author.`);
+            }
+            
+            core.setOutput('selected_id', selectedId);
+
+      - name: Send custom JSON data to Slack workflow
+        id: slack
+        uses: slackapi/slack-github-action@v1.26.0
+        with:
+          payload: |
+            {
+              "blocks": [
+                {
+                  "type": "header",
+                  "text": {
+                    "type": "plain_text",
+                    "text": "새로운 PR이 등록되었습니다! 👾",
+                    "emoji": true
+                  }
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "마감일 전까지 늦지 않게 리뷰를 완료하고, 해당 스레드에 공유해주세요!\n<${{ steps.url_id.outputs.url }}>"
+                  }
+                },
+                {
+                  "type": "divider"
+                },
+                {
+                  "type": "section",
+                  "fields": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "*PR Author*\${{ steps.author_id.outputs.pr_author }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Reviewer*\n<@${{ steps.slack_id.outputs.pr_author }}>"
+                    }
+                  ]
+                },
+                {
+                  "type": "section",
+                  "fields": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Priority*\n${{ steps.label_id.outputs.labels }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Due Date*\n2024년 8월 22일"
+                    }
+                  ]
+                }
+              ]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.PR_SLACK_WEBHOOK_URL }}
