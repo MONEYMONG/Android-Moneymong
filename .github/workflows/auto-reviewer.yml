@@ -69,6 +69,7 @@ jobs:
           channel-id: ${{ env.SLACK_CHANNEL_ID }}
           payload: |
             {
+              "text": "새로운 PR이 등록되었습니다! 👾\n마감일 전까지 늦지 않게 리뷰를 완료하고, 해당 스레드에 공유해주세요!",
               "blocks": [
                 {
                   "type": "header",
