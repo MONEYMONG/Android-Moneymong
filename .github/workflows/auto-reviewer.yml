@@ -82,7 +82,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "마감일 전까지 늦지 않게 리뷰를 완료하고, 해당 스레드에 공유해주세요!\n<$PR_URL>"
+                    "text": "마감일 전까지 늦지 않게 리뷰를 완료하고, 해당 스레드에 공유해주세요!\n<${{ env.PR_URL }}>"
                   }
                 },
                 {
@@ -93,11 +93,11 @@ jobs:
                   "fields": [
                     {
                       "type": "mrkdwn",
-                      "text": "*PR Author*\$PR_AUTHOR"
+                      "text": "*PR Author*\n${{ env.PR_AUTHOR }}"
                     },
                     {
                       "type": "mrkdwn",
-                      "text": "*Reviewer*\n<@$PR_AUTHOR>"
+                      "text": "*Reviewer*\n<@${{ steps.slack_id.outputs.selected_id }}>"
                     }
                   ]
                 },
@@ -106,7 +106,7 @@ jobs:
                   "fields": [
                     {
                       "type": "mrkdwn",
-                      "text": "*Priority*\n$PR_LABELS"
+                      "text": "*Priority*\n${{ env.PR_LABELS }}"
                     },
                     {
                       "type": "mrkdwn",
