@@ -1,0 +1,10 @@
+addReviewers: true
+
+addAssignees: author
+
+reviewers:
+  - Heonbyeong
+  - jhg3410
+  - eunseo0105
+
+numberOfReviewers: 1
