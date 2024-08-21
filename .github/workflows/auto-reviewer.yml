@@ -47,15 +47,15 @@ jobs:
         uses: actions/github-script@v6
         with:
           script: |
-            const author = $PR_AUTHOR
+            const author = process.env.PR_AUTHOR
             let selectedId;
             
             if (author === "Heonbyeong") {
-              selectedId = ${{ secrets.SLACK_ID_ABH }};
+              selectedId = process.env.SLACK_ID_ABH;
             } else if (author === "jhg3410") {
-              selectedId = ${{ secrets.SLACK_ID_JHG }};
+              selectedId = process.env.SLACK_ID_JHG;
             } else if (author === "eunseo0105") {
-              selectedId = ${{ secrets.SLACK_ID_KES }};
+              selectedId = process.env.SLACK_ID_KES;
             } else {
               core.setFailed(`Not Found Author.`);
             }
