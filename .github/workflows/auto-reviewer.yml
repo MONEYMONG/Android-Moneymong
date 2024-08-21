@@ -19,7 +19,9 @@ jobs:
           configuration-path: '.github/reviewer.yml'
 
       - name: Get PR Labels
-        run: echo "PR_LABELS=${{ github.event.pull_request.labels[*].name }}" >> $GITHUB_ENV
+        run: |
+          PR_LABELS=$(echo "${{ github.event.pull_request.labels[*].name }}" | tr ' ' ',')
+          echo "PR_LABELS=$PR_LABELS" >> $GITHUB_ENV
 
       - name: Get PR URL
         run: echo "PR_URL=${{ github.event.pull_request.html_url }}" >> $GITHUB_ENV
@@ -62,6 +64,9 @@ jobs:
             
             core.setOutput('selected_id', selectedId);
 
+      - name: Save Slack Member ID to Github ENV
+        run: echo "SLACK_MEMBER_ID=${{ steps.slack_id.outputs.selected_id }}" >> $GITHUB_ENV
+
       - name: Send custom JSON data to Slack workflow
         id: slack
         uses: slackapi/slack-github-action@v1.26.0
@@ -98,7 +103,7 @@ jobs:
                     },
                     {
                       "type": "mrkdwn",
-                      "text": "*Reviewer*\n<@${{ steps.slack_id.outputs.selected_id }}>"
+                      "text": "*Reviewer*\n<@${{ env.SLACK_MEMBER_ID }}>"
                     }
                   ]
                 },
