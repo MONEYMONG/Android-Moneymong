@@ -25,3 +25,4 @@ jobs:
           script: |
             const labels = context.payload.pull_request.labels.map(label => label.name);
             console.log(`Labels: ${labels.join(', ')}`);
+            console.log('url : ${{ github.event.pull_request.html_url }}');
