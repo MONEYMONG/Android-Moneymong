@@ -19,9 +19,7 @@ jobs:
           configuration-path: '.github/reviewer.yml'
 
       - name: Get PR Labels
-        run: |
-          PR_LABELS=$(echo "${{ github.event.pull_request.labels[*].name }}" | tr ' ' ',')
-          echo "PR_LABELS=$PR_LABELS" >> $GITHUB_ENV
+        run: echo "PR_LABELS=${{ github.event.pull_request.labels.[0].name }}" >> $GITHUB_ENV
 
       - name: Get PR URL
         run: echo "PR_URL=${{ github.event.pull_request.html_url }}" >> $GITHUB_ENV
