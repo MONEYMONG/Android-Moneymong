@@ -1,0 +1,16 @@
+name: Auto Reviewer
+
+on:
+  pull_request:
+    branches:
+      - 'develop'
+    types: [opened, reopened]
+
+jobs:
+  assign-reviewer:
+    runs-on: macos-latest
+    steps:
+      - name: Assign Reviewers
+        uses: kentaro-m/auto-assign-action@v2
+        with:
+          configuration-path: '.github/reviewer.yml'
