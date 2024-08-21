@@ -66,6 +66,7 @@ jobs:
         id: slack
         uses: slackapi/slack-github-action@v1.26.0
         with:
+          channel-id: ${{ env.SLACK_CHANNEL_ID }}
           payload: |
             {
               "blocks": [
@@ -116,5 +117,5 @@ jobs:
               ]
             }
         env:
-          SLACK_WEBHOOK_URL: ${{ secrets.PR_SLACK_WEBHOOK_URL }}
-          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_PR_BOT_TOKEN }}
+          SLACK_CHANNEL_ID: ${{ secrets.SLACK_ANDROID_CHANNEL_ID }}
