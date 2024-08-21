@@ -19,27 +19,35 @@ jobs:
           configuration-path: '.github/reviewer.yml'
 
       - name: Get PR Labels
-        id: labels_id
-        run: echo "::set-output name:labels::${{ github.event.pull_request.labels[*].name }}"
+        run: echo "PR_LABELS=${{ github.event.pull_request.labels[*].name }}" >> $GITHUB_ENV
 
       - name: Get PR URL
-        id: url_id
-        run: echo "::set-output name=url::${{ github.event.pull_request.html_url }}"
+        run: echo "PR_URL=${{ github.event.pull_request.html_url }}" >> $GITHUB_ENV
 
       - name: Get PR Author
-        id: author_id
-        uses: actions/github-script@v6
-        with:
-          script: |
-            const author = context.payload.pull_request.user.login;
-            core.setOutput('pr_author', author);
+        run: echo "PR_AUTHOR=${{ github.event.pull_request.user.login }}" >> $GITHUB_ENV
+
+#      - name: Get Assigned Reviewer
+#        uses: actions/github-script@v6
+#        id: get_reviewers
+#        with:
+#          script: |
+#            const reviewers = await github.pulls.listRequestedReviewers({
+#              owner: context.repo.owner,
+#              repo: context.repo.repo,
+#              pull_number: context.payload.pull_request.number
+#            });
+#
+#            const reviewerNames = reviewers.data.users.map(user => user.login).join(',');
+#            console.log(`Assigned reviewers: ${reviewerNames}`);
+#            return reviewerNames;
 
       - name: Get Slack Member ID
         id: slack_id
         uses: actions/github-script@v6
         with:
           script: |
-            const author = ${{ steps.author.outputs.pr_author }};
+            const author = $PR_AUTHOR
             let selectedId;
             
             if (author === "Heonbyeong") {
@@ -73,7 +81,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "마감일 전까지 늦지 않게 리뷰를 완료하고, 해당 스레드에 공유해주세요!\n<${{ steps.url_id.outputs.url }}>"
+                    "text": "마감일 전까지 늦지 않게 리뷰를 완료하고, 해당 스레드에 공유해주세요!\n<$PR_URL>"
                   }
                 },
                 {
@@ -84,11 +92,11 @@ jobs:
                   "fields": [
                     {
                       "type": "mrkdwn",
-                      "text": "*PR Author*\${{ steps.author_id.outputs.pr_author }}"
+                      "text": "*PR Author*\$PR_AUTHOR"
                     },
                     {
                       "type": "mrkdwn",
-                      "text": "*Reviewer*\n<@${{ steps.slack_id.outputs.pr_author }}>"
+                      "text": "*Reviewer*\n<@$PR_AUTHOR>"
                     }
                   ]
                 },
@@ -97,7 +105,7 @@ jobs:
                   "fields": [
                     {
                       "type": "mrkdwn",
-                      "text": "*Priority*\n${{ steps.label_id.outputs.labels }}"
+                      "text": "*Priority*\n$PR_LABELS"
                     },
                     {
                       "type": "mrkdwn",
