@@ -10,7 +10,7 @@ jobs:
   assign-reviewer:
     runs-on: ubuntu-latest
     permissions:
-      contents: write
+      pull-requests: write
 
     steps:
       - name: Assign Reviewers
