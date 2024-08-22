@@ -61,6 +61,11 @@ jobs:
             }
             
             core.setOutput('selected_id', selectedId);
+        env:
+          PR_AUTHOR: ${{ env.PR_AUTHOR }}
+          SLACK_ID_ABH: ${{ secrets.SLACK_ID_ABH }}
+          SLACK_ID_JHG: ${{ secrets.SLACK_ID_JHG }}
+          SLACK_ID_KES: ${{ secrets.SLACK_ID_KES }}
 
       - name: Save Slack Member ID to Github ENV
         run: echo "SLACK_MEMBER_ID=${{ steps.slack_id.outputs.selected_id }}" >> $GITHUB_ENV
