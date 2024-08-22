@@ -41,6 +41,9 @@ jobs:
             const reviewers = pullRequest.requested_reviewers.map(reviewer => reviewer.login).join(',');
             core.setOutput('reviewers', reviewers)
 
+      - name: Get PR Created Time
+        run: echo "PR_CREATED_AT=${{ github.event.pull_request.created_at }}" >> $GITHUB_ENV
+
       - name: Get Slack Member ID
         id: slack_id
         uses: actions/github-script@v6
