@@ -41,8 +41,45 @@ jobs:
             const reviewers = pullRequest.requested_reviewers.map(reviewer => reviewer.login).join(',');
             core.setOutput('reviewers', reviewers)
 
-      - name: Get PR Created Time
-        run: echo "PR_CREATED_AT=${{ github.event.pull_request.created_at }}" >> $GITHUB_ENV
+#       highest: until 24hours
+#       high: until 48hours
+#       medium: until 72hours
+#       low: until 120hours
+#       lowest: until 168hours
+      - name: Calculate Review Due Date
+        id: calculate_due_date_id
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const createdAt = new Date("${{ github.event.pull_request.created_at }}");
+            const label = ${{ env.PR_LABELS }};
+            const hour_abs = 60 * 60 * 1000;
+            let dueDate;
+            
+            if (label.includes("highest")) {
+              dueDate = new Date(createdAt.getTime() + (24 * hour_abs));
+            } else if (label.includes("high")) {
+              dueDate = new Date(createdAt.getTime() + (48 * hour_abs));
+            } else if (label.includes("medium")) {
+              dueDate = new Date(createdAt.getTime() + (72 * hour_abs));
+            } else if (label.includes("low")) {
+              dueDate = new Date(createdAt.getTime() + (120 * hour_abs));
+            } else if (label.includes("lowest")) {
+              dueDate = new Date(createdAt.getTime() + (168 * hour_abs));
+            } else {
+              core.setFailed(`Not Matched Labels.`);
+            }
+            
+            const year = dueDate.getFullYear();
+            const month = dueDate.getMonth() + 1;
+            const day = dueDate.getDate();
+            const hours = dueDate.getHours();
+            const period = hours >= 12 ? '오후' : '오전';
+            const formattedHour = hours % 12 || 12;
+            
+            const formattedTime = `${year}년 ${month}월 ${day}일 ${period} ${formattedHour}시`;
+            
+            core.setOutput('due_date', formattedTime);
 
       - name: Get Slack Member ID
         id: slack_id
@@ -121,7 +158,7 @@ jobs:
                     },
                     {
                       "type": "mrkdwn",
-                      "text": "*Due Date*\n2024년 8월 22일"
+                      "text": "*Due Date*\n${{ env.DUE_DATE }}"
                     }
                   ]
                 }
@@ -130,3 +167,4 @@ jobs:
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_PR_BOT_TOKEN }}
           SLACK_CHANNEL_ID: ${{ secrets.SLACK_ANDROID_CHANNEL_ID }}
+          DUE_DATE: ${{ steps.calculate_due_date_id.outputs.due_date }}
