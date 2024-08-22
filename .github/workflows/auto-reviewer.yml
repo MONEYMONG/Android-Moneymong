@@ -28,18 +28,18 @@ jobs:
         run: echo "PR_AUTHOR=${{ github.event.pull_request.user.login }}" >> $GITHUB_ENV
 
       - name: Get Assigned Reviewer
-        uses: actions/github-script@v6
         id: assigned_reviewers_id
+        uses: actions/github-script@v6
         with:
           script: |
-            const reviewers = await github.pulls.listRequestedReviewers({
+            const { data: pullRequest } = await github.rest.pulls.get({
               owner: context.repo.owner,
               repo: context.repo.repo,
               pull_number: context.payload.pull_request.number
             });
 
-            const reviewerNames = reviewers.data.users.map(user => user.login).join(',');
-            core.setOutput('reviewers', reviewerNames)
+            const reviewers = pullRequest.requested_reviewers.map(reviewer => reviewer.login).join(',');
+            core.setOutput('reviewers', reviewers)
 
       - name: Get Slack Member ID
         id: slack_id
