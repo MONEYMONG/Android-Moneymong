@@ -27,34 +27,33 @@ jobs:
       - name: Get PR Author
         run: echo "PR_AUTHOR=${{ github.event.pull_request.user.login }}" >> $GITHUB_ENV
 
-#      - name: Get Assigned Reviewer
-#        uses: actions/github-script@v6
-#        id: get_reviewers
-#        with:
-#          script: |
-#            const reviewers = await github.pulls.listRequestedReviewers({
-#              owner: context.repo.owner,
-#              repo: context.repo.repo,
-#              pull_number: context.payload.pull_request.number
-#            });
-#
-#            const reviewerNames = reviewers.data.users.map(user => user.login).join(',');
-#            console.log(`Assigned reviewers: ${reviewerNames}`);
-#            return reviewerNames;
+      - name: Get Assigned Reviewer
+        uses: actions/github-script@v6
+        id: assigned_reviewers_id
+        with:
+          script: |
+            const reviewers = await github.pulls.listRequestedReviewers({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.payload.pull_request.number
+            });
+
+            const reviewerNames = reviewers.data.users.map(user => user.login).join(',');
+            core.setOutput('reviewers', reviewerNames)
 
       - name: Get Slack Member ID
         id: slack_id
         uses: actions/github-script@v6
         with:
           script: |
-            const author = process.env.PR_AUTHOR
+            const reviewer = process.env.PR_AUTHOR
             let selectedId;
             
-            if (author === "Heonbyeong") {
+            if (reviewer === "Heonbyeong") {
               selectedId = process.env.SLACK_ID_ABH;
-            } else if (author === "jhg3410") {
+            } else if (reviewer === "jhg3410") {
               selectedId = process.env.SLACK_ID_JHG;
-            } else if (author === "eunseo0105") {
+            } else if (reviewer === "eunseo0105") {
               selectedId = process.env.SLACK_ID_KES;
             } else {
               core.setFailed(`Not Found Author.`);
@@ -62,7 +61,7 @@ jobs:
             
             core.setOutput('selected_id', selectedId);
         env:
-          PR_AUTHOR: ${{ env.PR_AUTHOR }}
+          PR_REVIEWER: ${{ steps.assigned_reviewers_id.outputs.reviewers }}
           SLACK_ID_ABH: ${{ secrets.SLACK_ID_ABH }}
           SLACK_ID_JHG: ${{ secrets.SLACK_ID_JHG }}
           SLACK_ID_KES: ${{ secrets.SLACK_ID_KES }}
