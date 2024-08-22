@@ -51,8 +51,8 @@ jobs:
         uses: actions/github-script@v6
         with:
           script: |
-            const createdAt = new Date("${{ github.event.pull_request.created_at }}");
-            const label = ${{ env.PR_LABELS }};
+            const createdAt = new Date(process.env.CREATED_AT);
+            const label = process.env.PR_LABELS;
             const hour_abs = 60 * 60 * 1000;
             let dueDate;
             
@@ -80,6 +80,9 @@ jobs:
             const formattedTime = `${year}년 ${month}월 ${day}일 ${period} ${formattedHour}시`;
             
             core.setOutput('due_date', formattedTime);
+        env:
+          PR_LABELS: ${{ env.PR_LABELS }}
+          CREATED_AT: ${{ github.event.pull_request.created_at }}
 
       - name: Get Slack Member ID
         id: slack_id
