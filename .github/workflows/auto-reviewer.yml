@@ -46,7 +46,7 @@ jobs:
         uses: actions/github-script@v6
         with:
           script: |
-            const reviewer = process.env.PR_AUTHOR
+            const reviewer = process.env.PR_REVIEWER
             let selectedId;
             
             if (reviewer === "Heonbyeong") {
