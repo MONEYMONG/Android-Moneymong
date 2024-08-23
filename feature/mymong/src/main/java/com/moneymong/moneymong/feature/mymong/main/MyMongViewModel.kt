@@ -94,6 +94,8 @@ class MyMongViewModel @Inject constructor(
         }
     }
 
+    fun onClickKakaoChannel() = eventEmit(MyMongSideEffect.FollowKakaoChannel)
+
     private suspend fun clearLocalData() {
         saveAgencyIdUseCase(0)
         saveUserIdUseCase(0)
