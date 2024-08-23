@@ -37,7 +37,7 @@ fun MyMongFeedbackView(
     Box(
         modifier = modifier
             .myMongRoundRectShadow()
-            .background(color = White, shape = RoundedCornerShape(12.dp))
+            .background(color = White, shape = RoundedCornerShape(16.dp))
     ) {
         Row(
             modifier = Modifier
