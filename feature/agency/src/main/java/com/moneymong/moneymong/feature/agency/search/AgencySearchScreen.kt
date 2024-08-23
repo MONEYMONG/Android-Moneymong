@@ -267,9 +267,7 @@ private fun ContentViewWithoutAgencies(
                     onClick = onClickFeedbackItem
                 )
                 Column(
-                    modifier = modifier
-                        .fillMaxSize()
-                        .align(Alignment.Center),
+                    modifier = modifier.fillMaxSize(),
                     verticalArrangement = Arrangement.spacedBy(
                         space = 4.dp,
                         alignment = Alignment.CenterVertically
