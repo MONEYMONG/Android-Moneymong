@@ -51,12 +51,6 @@ internal fun MyMongSettingView(
     }.versionName
 
     Column(modifier = modifier.fillMaxWidth()) {
-        Text(
-            text = "내 설정",
-            color = Gray10,
-            style = Body4
-        )
-        Spacer(modifier = Modifier.height(8.dp))
         Column(
             modifier = Modifier
                 .fillMaxWidth()

@@ -1,5 +1,7 @@
 package com.moneymong.moneymong.feature.agency.search
 
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -18,6 +20,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -36,12 +39,13 @@ import com.moneymong.moneymong.design_system.component.tooltip.MDSToolTipPositio
 import com.moneymong.moneymong.design_system.error.ErrorDialog
 import com.moneymong.moneymong.design_system.error.ErrorItem
 import com.moneymong.moneymong.design_system.error.ErrorScreen
-import com.moneymong.moneymong.design_system.theme.Body4
+import com.moneymong.moneymong.design_system.theme.Body3
 import com.moneymong.moneymong.design_system.theme.Gray01
-import com.moneymong.moneymong.design_system.theme.Gray08
+import com.moneymong.moneymong.design_system.theme.Gray07
 import com.moneymong.moneymong.design_system.theme.MMHorizontalSpacing
 import com.moneymong.moneymong.design_system.theme.Red03
 import com.moneymong.moneymong.feature.agency.search.component.AgencySearchTopBar
+import com.moneymong.moneymong.feature.agency.search.item.AgencyFeedbackItem
 import com.moneymong.moneymong.feature.agency.search.item.AgencyItem
 import org.orbitmvi.orbit.compose.collectAsState
 import org.orbitmvi.orbit.compose.collectSideEffect
@@ -54,6 +58,7 @@ fun AgencySearchScreen(
     navigateAgencyJoin: (agencyId: Long) -> Unit
 ) {
     val state by viewModel.collectAsState()
+    val context = LocalContext.current
     val pagingItems = viewModel.agencies.collectAsLazyPagingItems()
 
     viewModel.collectSideEffect {
@@ -64,6 +69,11 @@ fun AgencySearchScreen(
 
             is AgencySearchSideEffect.NavigateToAgencyJoin -> {
                 navigateAgencyJoin(it.agencyId)
+            }
+
+            is AgencySearchSideEffect.FollowAsk -> {
+                val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://asked.kr/moneymong"))
+                context.startActivity(intent)
             }
         }
     }
@@ -99,6 +109,7 @@ fun AgencySearchScreen(
                         viewModel.navigateToJoin(agencyId)
                     }
                 },
+                onClickFeedbackItem = viewModel::onClickAskFeedback,
                 isLoading = state.isLoading,
                 isError = state.isError,
                 errorMessage = state.errorMessage,
@@ -132,6 +143,7 @@ private fun AgencySearchContentView(
     modifier: Modifier = Modifier,
     pagingItems: LazyPagingItems<Agency>,
     onClickItem: (agencyId: Long) -> Unit,
+    onClickFeedbackItem: () -> Unit,
     isLoading: Boolean,
     isError: Boolean,
     errorMessage: String,
@@ -159,13 +171,15 @@ private fun AgencySearchContentView(
         if (pagingItems.itemCount == 0) {
             ContentViewWithoutAgencies(
                 modifier = modifier,
-                pagingItems = pagingItems
+                pagingItems = pagingItems,
+                onClickFeedbackItem = onClickFeedbackItem
             )
         } else {
             ContentViewWithAgencies(
                 modifier = modifier,
                 pagingItems = pagingItems,
-                onClickItem = onClickItem
+                onClickItem = onClickItem,
+                onClickFeedbackItem = onClickFeedbackItem
             )
         }
     }
@@ -176,13 +190,19 @@ private fun AgencySearchContentView(
 private fun ContentViewWithAgencies(
     modifier: Modifier = Modifier,
     pagingItems: LazyPagingItems<Agency>,
-    onClickItem: (agencyId: Long) -> Unit
+    onClickItem: (agencyId: Long) -> Unit,
+    onClickFeedbackItem: () -> Unit
 ) {
     LazyColumn(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(12.dp),
         contentPadding = PaddingValues(vertical = 4.dp)
     ) {
+        item {
+            AgencyFeedbackItem(
+                onClick = onClickFeedbackItem
+            )
+        }
         items(
             count = pagingItems.itemCount, key = pagingItems.itemKey { it.id }
         ) {
@@ -221,6 +241,7 @@ private fun ContentViewWithAgencies(
 private fun ContentViewWithoutAgencies(
     modifier: Modifier = Modifier,
     pagingItems: LazyPagingItems<Agency>,
+    onClickFeedbackItem: () -> Unit
 ) {
 
     when (pagingItems.loadState.refresh) {
@@ -238,25 +259,33 @@ private fun ContentViewWithoutAgencies(
         }
 
         is LoadState.NotLoading -> {
-            Column(
-                modifier = modifier,
-                verticalArrangement = Arrangement.spacedBy(
-                    space = 8.dp,
-                    alignment = Alignment.CenterVertically
-                ),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Image(
-                    modifier = Modifier.size(size = 80.dp),
-                    painter = painterResource(id = R.drawable.img_agency),
-                    contentDescription = "agency image",
+            Box(modifier = Modifier.fillMaxSize()) {
+                AgencyFeedbackItem(
+                    modifier = Modifier
+                        .align(Alignment.TopCenter)
+                        .padding(top = 10.dp),
+                    onClick = onClickFeedbackItem
                 )
-                Text(
-                    text = "아직 등록된 소속이 없어요\n하단 버튼을 통해 등록해보세요",
-                    textAlign = TextAlign.Center,
-                    color = Gray08,
-                    style = Body4
-                )
+                Column(
+                    modifier = modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.spacedBy(
+                        space = 4.dp,
+                        alignment = Alignment.CenterVertically
+                    ),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Image(
+                        modifier = Modifier.size(size = 80.dp),
+                        painter = painterResource(id = R.drawable.img_agency),
+                        contentDescription = "agency image",
+                    )
+                    Text(
+                        text = "아직 등록된 소속이 없어요\n하단 버튼을 통해 등록해보세요",
+                        textAlign = TextAlign.Center,
+                        color = Gray07,
+                        style = Body3
+                    )
+                }
             }
         }
     }

@@ -1,5 +1,7 @@
 package com.moneymong.moneymong.feature.mymong.main
 
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -12,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.moneymong.moneymong.design_system.R
@@ -20,6 +23,7 @@ import com.moneymong.moneymong.design_system.error.ErrorDialog
 import com.moneymong.moneymong.design_system.theme.Gray01
 import com.moneymong.moneymong.design_system.theme.MMHorizontalSpacing
 import com.moneymong.moneymong.feature.mymong.main.component.MyMongTopBar
+import com.moneymong.moneymong.feature.mymong.main.view.MyMongFeedbackView
 import com.moneymong.moneymong.feature.mymong.main.view.MyMongInfoView
 import com.moneymong.moneymong.feature.mymong.main.view.MyMongSettingView
 import org.orbitmvi.orbit.compose.collectAsState
@@ -35,6 +39,7 @@ fun MyMongScreen(
     navigateToLogin: () -> Unit,
 ) {
     val state by viewModel.collectAsState()
+    val context = LocalContext.current
 
     viewModel.collectSideEffect {
         when (it) {
@@ -52,6 +57,11 @@ fun MyMongScreen(
 
             is MyMongSideEffect.NavigateToLogin -> {
                 navigateToLogin()
+            }
+
+            is MyMongSideEffect.FollowKakaoChannel -> {
+                val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://pf.kakao.com/_zDsyG"))
+                context.startActivity(intent)
             }
         }
     }
@@ -94,7 +104,11 @@ fun MyMongScreen(
             grade = state.grade,
             getInfo = viewModel::getInfo
         )
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(16.dp))
+        MyMongFeedbackView(
+            onClick = viewModel::onClickKakaoChannel
+        )
+        Spacer(modifier = Modifier.height(16.dp))
         MyMongSettingView(
             navigateToTermsOfUse = viewModel::navigateToTermsOfUse,
             navigateToPrivacyPolicy = viewModel::navigateToPriPolicyButton,
