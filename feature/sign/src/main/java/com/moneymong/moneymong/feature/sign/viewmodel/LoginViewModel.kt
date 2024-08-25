@@ -1,5 +1,6 @@
 package com.moneymong.moneymong.feature.sign.viewmodel
 
+import android.util.Log
 import com.moneymong.moneymong.common.base.BaseViewModel
 import com.moneymong.moneymong.domain.usecase.token.PostAccessTokenUseCase
 import com.moneymong.moneymong.domain.usecase.token.TokenUseCase
@@ -22,6 +23,7 @@ class LoginViewModel @Inject constructor(
         postAccessTokenUseCase(type = LoginType.KAKAO, accessToken = accessToken).onSuccess {
             getSchoolInfo()
         }.onFailure {
+            Log.d("LoginViewModel, in Success.Failure", it.message ?: it.toString())
             reduce {
                 state.copy(
                     visibleError = true,
@@ -32,6 +34,7 @@ class LoginViewModel @Inject constructor(
     }
 
     fun onKakaoLoginFailure(throwable: Throwable) = intent {
+        Log.d("LoginViewModel, in Failure", throwable.message ?: throwable.toString())
         reduce {
             state.copy(
                 visibleError = true,
