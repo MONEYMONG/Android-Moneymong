@@ -1,6 +1,7 @@
 package com.moneymong.moneymong.feature.sign.viewmodel
 
 import android.util.Log
+import com.kakao.sdk.common.KakaoSdk
 import com.moneymong.moneymong.common.base.BaseViewModel
 import com.moneymong.moneymong.domain.usecase.token.PostAccessTokenUseCase
 import com.moneymong.moneymong.domain.usecase.token.TokenUseCase
@@ -34,7 +35,7 @@ class LoginViewModel @Inject constructor(
     }
 
     fun onKakaoLoginFailure(throwable: Throwable) = intent {
-        Log.d("LoginViewModel, in Failure", throwable.message ?: throwable.toString())
+        Log.d("LoginViewModel, in Failure", KakaoSdk.keyHash)
         reduce {
             state.copy(
                 visibleError = true,
