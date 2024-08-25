@@ -24,7 +24,6 @@ class LoginViewModel @Inject constructor(
         postAccessTokenUseCase(type = LoginType.KAKAO, accessToken = accessToken).onSuccess {
             getSchoolInfo()
         }.onFailure {
-            Log.d("LoginViewModel, in Success.Failure", it.message ?: it.toString())
             reduce {
                 state.copy(
                     visibleError = true,
@@ -35,7 +34,6 @@ class LoginViewModel @Inject constructor(
     }
 
     fun onKakaoLoginFailure(throwable: Throwable) = intent {
-        Log.d("LoginViewModel, in Failure", KakaoSdk.keyHash)
         reduce {
             state.copy(
                 visibleError = true,
