@@ -19,5 +19,6 @@ keystore.properties
 # Keystore Files
 *.jks
 *.keystore
+/keystore
 
 *.json
