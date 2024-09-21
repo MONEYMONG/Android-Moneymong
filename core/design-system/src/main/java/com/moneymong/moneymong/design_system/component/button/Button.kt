@@ -18,7 +18,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.moneymong.moneymong.design_system.theme.Body3
+import com.moneymong.moneymong.design_system.theme.Body2
 
 @Composable
 fun MDSButton(
@@ -38,10 +38,10 @@ fun MDSButton(
         modifier = modifier
             .background(
                 color = backgroundColor,
-                shape = RoundedCornerShape(12.dp)
+                shape = RoundedCornerShape(10.dp)
             )
             .clip(
-                RoundedCornerShape(12.dp)
+                RoundedCornerShape(10.dp)
             )
             .clickable(
                 onClick = onClick,
@@ -58,7 +58,7 @@ fun MDSButton(
         ) {
             if (iconResource != null) {
                 Icon(
-                    modifier = Modifier.size(20.dp),
+                    modifier = Modifier.size(18.dp),
                     painter = painterResource(id = iconResource),
                     contentDescription = "Button icon",
                     tint = contentColor
@@ -67,7 +67,7 @@ fun MDSButton(
             Text(
                 text = text,
                 color = contentColor,
-                style = Body3,
+                style = Body2,
             )
         }
     }
