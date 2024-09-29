@@ -135,12 +135,7 @@ fun MDSWheelDatePicker(
         snappedEndYear,
         snappedEndMonth
     ) {
-        isValidValue = if (snappedStartYear < snappedEndYear) {
-            true
-        } else {
-            snappedStartMonth <= snappedEndMonth
-        }
-
+        isValidValue = snappedStartYear <= snappedEndYear && snappedStartMonth <= snappedEndMonth
         confirmValidValue(isValidValue)
     }
 
