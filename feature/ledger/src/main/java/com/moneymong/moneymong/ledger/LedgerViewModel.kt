@@ -74,7 +74,7 @@ class LedgerViewModel @Inject constructor(
         reduce { state.copy(isAgencyExistLoading = true) }
         fetchAgencyExistLedgerUseCase(state.agencyId)
             .onSuccess {
-                Log.d("fetchAgencyExistLedger${state.agencyId}",it.toString() )
+                Log.d("fetchAgencyExistLedger${state.agencyId}", it.toString())
                 reduce {
                     state.copy(
                         isExistLedger = it,
@@ -96,7 +96,7 @@ class LedgerViewModel @Inject constructor(
                 page = 0,
                 limit = 100
             ).onSuccess {
-                Log.d("fetchLedgerTransactionList${state.existAgency}",it.toString() )
+                Log.d("fetchLedgerTransactionList${state.existAgency}", it.toString())
 
                 reduce {
                     state.copy(
@@ -127,7 +127,7 @@ class LedgerViewModel @Inject constructor(
         reduce { state.copy(isMyAgencyLoading = true) }
         fetchMyAgencyListUseCase()
             .onSuccess {
-                Log.d("fetchMyAgencyList${state.existAgency}",it.toString() )
+                Log.d("fetchMyAgencyList${state.existAgency}", it.toString())
 
                 reduce {
                     state.copy(
@@ -188,6 +188,7 @@ class LedgerViewModel @Inject constructor(
 
     fun reFetchLedgerData(agencyId: Int) {
         saveAgencyId(agencyId)
+        updateSelectedDate(startDate = LocalDate.now().minusMonths(6), endDate = LocalDate.now())
         fetchAgencyExistLedger()
         fetchAgencyMemberList()
         fetchLedgerTransactionList()
@@ -227,15 +228,8 @@ class LedgerViewModel @Inject constructor(
     }
 
     fun onClickDateChange(startDate: LocalDate, endDate: LocalDate) {
-        intent {
-            reduce {
-                state.copy(
-                    startDate = startDate,
-                    endDate = endDate
-                )
-            }
-            postSideEffect(LedgerSideEffect.LedgerCloseSheet)
-        }
+        updateSelectedDate(startDate = startDate, endDate = endDate)
+        eventEmit(LedgerSideEffect.LedgerCloseSheet)
         fetchLedgerTransactionList()
     }
 
@@ -259,6 +253,15 @@ class LedgerViewModel @Inject constructor(
         reduce {
             state.copy(
                 agencyList = filteredAgencyList
+            )
+        }
+    }
+
+    fun updateSelectedDate(startDate: LocalDate, endDate: LocalDate) = intent {
+        reduce {
+            state.copy(
+                startDate = startDate,
+                endDate = endDate
             )
         }
     }
