@@ -6,7 +6,7 @@ import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
-import com.moneymong.moneymong.network.response.login.UserDataStoreInfoResponse
+import com.moneymong.moneymong.model.sign.UserDataStoreInfoResponse
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.first
 import javax.inject.Inject
@@ -19,7 +19,7 @@ class LoginLocalDataSourceImpl @Inject constructor(
     private val accessToken = stringPreferencesKey("ACCESS_TOKEN")
     private val refreshToken = stringPreferencesKey("REFRESH_TOKEN")
     private val loginSuccess = booleanPreferencesKey("LOGIN_SUCCESS")
-    private val schoolInfoExist = booleanPreferencesKey("SCHOOL_INFO_EXIST")
+    private val schoolInfoProvided = booleanPreferencesKey("SCHOOL_INFO_PROVIDED")
 
     override suspend fun getRefreshToken(): Result<String> {
         val preferences = context.dataStore.data.first()
@@ -35,7 +35,7 @@ class LoginLocalDataSourceImpl @Inject constructor(
 
     override suspend fun getDataStoreInfo(): Result<UserDataStoreInfoResponse> {
         val preferences = context.dataStore.data.first()
-        return Result.success(UserDataStoreInfoResponse(preferences[accessToken] ?: "",preferences[schoolInfoExist] ?: false))
+        return Result.success(UserDataStoreInfoResponse(preferences[accessToken] ?: "",preferences[schoolInfoProvided] ?: false))
     }
 
     override suspend fun updateTokens(aToken: String, rToken: String) {
@@ -53,8 +53,8 @@ class LoginLocalDataSourceImpl @Inject constructor(
 
     override suspend fun getSchoolInfo(): Result<Boolean> {
         val preferences = context.dataStore.data.first()
-        return preferences[schoolInfoExist]?.let { Result.success(it) }
-            ?: Result.failure(Exception("schoolInfoExist is null"))
+        return preferences[schoolInfoProvided]?.let { Result.success(it) }
+            ?: Result.failure(Exception("schoolInfoProvided is null"))
     }
 
     override suspend fun deleteToken() {
@@ -62,23 +62,27 @@ class LoginLocalDataSourceImpl @Inject constructor(
             preferences.remove(accessToken)
             preferences.remove(refreshToken)
             preferences.remove(loginSuccess)
-            preferences.remove(schoolInfoExist)
+            preferences.remove(schoolInfoProvided)
         }
     }
 
-    suspend fun setDataStore(aToken: String, rToken: String, success: Boolean, infoExist: Boolean) {
+    override suspend fun setDataStore(
+        aToken: String,
+        rToken: String,
+        success: Boolean,
+        infoExist: Boolean
+    ) {
         context.dataStore.edit { preferences ->
             preferences[accessToken] = aToken
             preferences[refreshToken] = rToken
             preferences[loginSuccess] = success
-            preferences[schoolInfoExist] = infoExist
-            Log.d("schoolInfoExist", preferences[schoolInfoExist]!!.toString())
+            preferences[schoolInfoProvided] = infoExist
         }
     }
 
-    override suspend fun setSchoolInfoExist(infoExist: Boolean) {
+    override suspend fun setSchoolInfoProvided(infoExist: Boolean) {
         context.dataStore.edit { preferences ->
-            preferences[schoolInfoExist] = infoExist
+            preferences[schoolInfoProvided] = infoExist
         }
 
     }

@@ -1,11 +1,10 @@
 package com.moneymong.moneymong.network.api
 
-import com.moneymong.moneymong.network.request.member.MemberBlockRequest
-import com.moneymong.moneymong.network.request.member.UpdateAuthorRequest
-import com.moneymong.moneymong.network.response.member.MemberListResponse
+import com.moneymong.moneymong.model.member.MemberBlockRequest
+import com.moneymong.moneymong.model.member.UpdateAuthorRequest
+import com.moneymong.moneymong.model.member.MemberListResponse
 import retrofit2.http.Body
 import retrofit2.http.GET
-import retrofit2.http.Header
 import retrofit2.http.PATCH
 import retrofit2.http.Path
 

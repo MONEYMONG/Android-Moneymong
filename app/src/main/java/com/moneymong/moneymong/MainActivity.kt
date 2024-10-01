@@ -9,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
+import com.moneymong.moneymong.common.event.EventTracker
 import dagger.hilt.android.AndroidEntryPoint
 import com.moneymong.moneymong.design_system.theme.MMTheme
 import com.moneymong.moneymong.domain.repository.TokenRepository
@@ -32,8 +33,13 @@ class MainActivity : ComponentActivity() {
     lateinit var tokenRepository: TokenRepository
     private val expired = mutableStateOf(false)
 
+    @Inject
+    lateinit var eventTracker: EventTracker
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        eventTracker.initialize()
+
         setContent {
             MMTheme {
                 MoneyMongApp(expired.value) {

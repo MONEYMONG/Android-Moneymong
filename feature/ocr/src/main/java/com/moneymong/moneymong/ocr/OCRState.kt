@@ -1,11 +1,11 @@
 package com.moneymong.moneymong.ocr
 
 import com.moneymong.moneymong.common.base.State
-import com.moneymong.moneymong.domain.entity.ocr.DocumentEntity
+import com.moneymong.moneymong.model.ocr.DocumentResponse
 import com.moneymong.moneymong.ocr.util.ModalType
 
 data class OCRState(
-    val document: DocumentEntity? = null,
+    val document: DocumentResponse? = null,
     val modalType: ModalType = ModalType.CameraPermission,
     val permissionDialogStatus: Boolean = false,
     val isDeniedCamera: Boolean = false,

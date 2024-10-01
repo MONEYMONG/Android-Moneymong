@@ -1,6 +1,6 @@
 package com.moneymong.moneymong.network.api
 
-import com.moneymong.moneymong.network.response.user.UserResponse
+import com.moneymong.moneymong.model.user.UserResponse
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET

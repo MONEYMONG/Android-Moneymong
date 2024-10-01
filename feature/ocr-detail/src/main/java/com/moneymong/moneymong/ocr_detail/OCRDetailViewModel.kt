@@ -3,17 +3,20 @@ package com.moneymong.moneymong.ocr_detail
 import android.content.SharedPreferences
 import androidx.compose.ui.text.input.TextFieldValue
 import com.moneymong.moneymong.common.base.BaseViewModel
+import com.moneymong.moneymong.common.event.Event
+import com.moneymong.moneymong.common.event.EventTracker
+import com.moneymong.moneymong.common.ext.toMultipart
 import com.moneymong.moneymong.common.ui.isValidPaymentDate
 import com.moneymong.moneymong.common.ui.isValidPaymentTime
 import com.moneymong.moneymong.common.ui.validateValue
-import com.moneymong.moneymong.domain.entity.ocr.DocumentEntity
-import com.moneymong.moneymong.domain.param.ledger.FundType
-import com.moneymong.moneymong.domain.param.ledger.LedgerTransactionParam
-import com.moneymong.moneymong.domain.param.ocr.FileUploadParam
 import com.moneymong.moneymong.domain.usecase.agency.FetchAgencyIdUseCase
 import com.moneymong.moneymong.domain.usecase.ledger.PostLedgerTransactionUseCase
 import com.moneymong.moneymong.domain.usecase.ocr.PostFileUploadUseCase
 import com.moneymong.moneymong.domain.usecase.user.FetchUserNicknameUseCase
+import com.moneymong.moneymong.model.ledger.FundType
+import com.moneymong.moneymong.model.ledger.LedgerTransactionRequest
+import com.moneymong.moneymong.model.ocr.DocumentResponse
+import com.moneymong.moneymong.model.ocr.FileUploadRequest
 import dagger.hilt.android.lifecycle.HiltViewModel
 import org.orbitmvi.orbit.annotation.OrbitExperimental
 import org.orbitmvi.orbit.syntax.simple.blockingIntent
@@ -28,6 +31,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class OCRDetailViewModel @Inject constructor(
+    private val eventTracker: EventTracker,
     private val prefs: SharedPreferences,
     private val postLedgerTransactionUseCase: PostLedgerTransactionUseCase,
     private val postFileUploadUseCase: PostFileUploadUseCase,
@@ -40,10 +44,12 @@ class OCRDetailViewModel @Inject constructor(
         fetchReceiptImage()
     }
 
-    fun init(document: DocumentEntity?) = intent {
+    fun init(document: DocumentResponse?) = intent {
         val receipt = document?.images?.first()?.receipt?.result
-        val currentDate = SimpleDateFormat("yyyyMMdd", Locale.KOREA).format(Date(System.currentTimeMillis()))
-        val currentTime = SimpleDateFormat("HHmmss", Locale.KOREA).format(Date(System.currentTimeMillis()))
+        val currentDate =
+            SimpleDateFormat("yyyyMMdd", Locale.KOREA).format(Date(System.currentTimeMillis()))
+        val currentTime =
+            SimpleDateFormat("HHmmss", Locale.KOREA).format(Date(System.currentTimeMillis()))
         val paymentDateString = receipt?.paymentInfo?.date?.formatted?.let {
             ("${it.year}${it.month}${it.day}").run {
                 if (validateValue(length = 8, isDigit = true) && isValidPaymentDate()) {
@@ -75,8 +81,8 @@ class OCRDetailViewModel @Inject constructor(
 
     @OptIn(OrbitExperimental::class)
     fun fetchUserInfo() = blockingIntent {
-        val agencyId = fetchAgencyIdUseCase(Unit)
-        val userNickname = fetchUserNicknameUseCase(Unit)
+        val agencyId = fetchAgencyIdUseCase()
+        val userNickname = fetchUserNicknameUseCase()
         reduce {
             state.copy(
                 agencyId = agencyId,
@@ -90,10 +96,9 @@ class OCRDetailViewModel @Inject constructor(
             reduce { state.copy(isLoading = true) }
             // empty string을 제거하고 요청을 보내기 위함
             val documentImageUrls = state.documentImageUrls - ""
-            val ledgerTransactionParam = LedgerTransactionParam(
-                id = state.agencyId,
+            val ledgerTransactionRequest = LedgerTransactionRequest(
                 storeInfo = state.storeNameValue.text,
-                fundType = state.fundType,
+                fundType = state.fundType.name,
                 amount = state.totalPriceValue.text.replace(".", "").toInt(),
                 description = state.memoValue.text,
                 paymentDate = state.postPaymentDate,
@@ -102,11 +107,11 @@ class OCRDetailViewModel @Inject constructor(
                     emptyList()
                 }
             )
-            postLedgerTransactionUseCase(ledgerTransactionParam)
+            postLedgerTransactionUseCase(state.agencyId, ledgerTransactionRequest)
                 .onSuccess {
                     postSideEffect(OCRDetailSideEffect.OCRDetailNavigateToLedger)
                 }.onFailure {
-                    // TODO
+                    showErrorDialog(it.message.orEmpty())
                 }.also { reduce { state.copy(isLoading = false) } }
         }
     }
@@ -115,7 +120,7 @@ class OCRDetailViewModel @Inject constructor(
         imageFile?.let {
             if (!state.isLoading) {
                 reduce { state.copy(isLoading = true) }
-                val file = FileUploadParam(it, "ocr")
+                val file = FileUploadRequest(it.toMultipart(), "ocr")
                 postFileUploadUseCase(file)
                     .onSuccess {
                         if (isReceipt) {
@@ -125,15 +130,18 @@ class OCRDetailViewModel @Inject constructor(
                             reduce { state.copy(documentImageUrls = state.documentImageUrls + it.path) }
                         }
                     }.onFailure {
-                        // TODO
+                        showErrorDialog(it.message.orEmpty())
                     }.also { reduce { state.copy(isLoading = false) } }
             }
         }
     }
 
     fun onClickPostLedger() = intent {
+        eventTracker.logEvent(Event.OCR_MODIFY_TO_REGISTER_CLICK)
         postDocumentImage(imageFile = state.receiptFile, isReceipt = true)
     }
+
+    fun onClickErrorDialogConfirm() = eventEmit(OCRDetailSideEffect.OCRDetailHideErrorDialog)
 
     fun addDocumentImage(file: File?) = intent {
         val newDocumentUris = state.documentImageUrls.toMutableList()
@@ -224,6 +232,21 @@ class OCRDetailViewModel @Inject constructor(
 
     fun onChangeFundType(fundType: FundType) = intent {
         reduce { state.copy(fundType = fundType) }
+    }
+
+    fun visibleErrorDialog(visible: Boolean) = intent {
+        reduce {
+            state.copy(showErrorDialog = visible)
+        }
+    }
+
+    private fun showErrorDialog(message: String) = intent {
+        reduce {
+            state.copy(
+                showErrorDialog = true,
+                errorMessage = message
+            )
+        }
     }
 
     private fun trimStartWithZero(value: TextFieldValue) =

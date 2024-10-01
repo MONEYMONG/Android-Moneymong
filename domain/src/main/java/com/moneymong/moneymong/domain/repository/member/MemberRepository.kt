@@ -1,14 +1,16 @@
 package com.moneymong.moneymong.domain.repository.member
 
-import com.moneymong.moneymong.domain.entity.member.AgencyCodeEntity
-import com.moneymong.moneymong.domain.entity.member.MemberListEntity
-import com.moneymong.moneymong.domain.param.member.MemberBlockParam
-import com.moneymong.moneymong.domain.param.member.UpdateAuthorParam
+import com.moneymong.moneymong.model.member.InvitationCodeResponse
+import com.moneymong.moneymong.model.member.MemberBlockRequest
+import com.moneymong.moneymong.model.member.MemberListResponse
+import com.moneymong.moneymong.model.member.UpdateAuthorRequest
 
 interface MemberRepository {
-    suspend fun getInvitationCode(agencyId: Long): Result<AgencyCodeEntity>
-    suspend fun reInvitationCode(agencyId: Long): Result<AgencyCodeEntity>
-    suspend fun getMemberLists(agencyId: Long) : Result<MemberListEntity>
-    suspend fun updateMemberAuthor(agencyId : Long, data : UpdateAuthorParam) : Result<Unit>
-    suspend fun blockMemberAuthor(data: MemberBlockParam) : Result<Unit>
+    suspend fun getInvitationCode(agencyId: Long): Result<InvitationCodeResponse>
+    suspend fun reInvitationCode(agencyId: Long): Result<InvitationCodeResponse>
+    suspend fun getMemberLists(agencyId: Long) : Result<MemberListResponse>
+    suspend fun updateMemberAuthor(agencyId : Long, data : UpdateAuthorRequest) : Result<Unit>
+    suspend fun blockMemberAuthor(agencyId: Long, data: MemberBlockRequest) : Result<Unit>
+    suspend fun deleteAgency(agencyId: Int) :Result<Unit>
+
 }

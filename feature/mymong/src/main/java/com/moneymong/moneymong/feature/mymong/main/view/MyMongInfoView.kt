@@ -21,8 +21,8 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.moneymong.moneymong.design_system.R
+import com.moneymong.moneymong.design_system.component.indicator.LoadingItem
 import com.moneymong.moneymong.design_system.error.ErrorItem
-import com.moneymong.moneymong.design_system.loading.LoadingItem
 import com.moneymong.moneymong.design_system.theme.Blue04
 import com.moneymong.moneymong.design_system.theme.Body2
 import com.moneymong.moneymong.design_system.theme.Body3
@@ -97,7 +97,7 @@ private fun Profile(
         Spacer(modifier = Modifier.width(16.dp))
         Column {
             Text(
-                text = name,
+                text = name + "님",
                 color = Gray10,
                 style = Heading1
             )
@@ -126,6 +126,12 @@ fun UniversityInfo(
     university: String,
     grade: Int
 ) {
+    val universityInfoText = when {
+        university.isEmpty() -> "정보 없음"
+        grade == 5 -> "$university ${grade}학년 이상"
+        else -> "$university ${grade}학년"
+    }
+
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -140,7 +146,9 @@ fun UniversityInfo(
                 style = Body3
             )
             Spacer(modifier = Modifier.height(6.dp))
-            Row {
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
                 Image(
                     modifier = Modifier.size(24.dp),
                     painter = painterResource(id = R.drawable.img_university),
@@ -148,7 +156,7 @@ fun UniversityInfo(
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
-                    text = "$university $grade" + if (grade == 5) "학년 이상" else "학년",
+                    text = universityInfoText,
                     color = Gray08,
                     style = Body4
                 )

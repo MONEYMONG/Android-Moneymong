@@ -1,11 +1,11 @@
 package com.moneymong.moneymong.domain.repository.user
 
-import com.moneymong.moneymong.domain.entity.user.UserEntity
+import com.moneymong.moneymong.model.user.UserResponse
+
 
 interface UserRepository {
-    
 
-    suspend fun getMyInfo(): Result<UserEntity>
+    suspend fun getMyInfo(): Result<UserResponse>
 
     suspend fun withdrawal(): Result<Unit>
 
@@ -14,6 +14,8 @@ interface UserRepository {
     suspend fun saveUserId(userId: Int)
 
     suspend fun fetchUserId(): Int
+
+    suspend fun saveUserInfo()
 
     suspend fun saveUserNickName(nickname: String)
 

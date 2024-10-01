@@ -1,13 +1,14 @@
 package com.moneymong.moneymong.network.api
 
-import com.moneymong.moneymong.network.request.agency.AgencyJoinRequest
-import com.moneymong.moneymong.network.request.agency.AgencyRegisterRequest
-import com.moneymong.moneymong.network.response.agency.AgenciesGetResponse
-import com.moneymong.moneymong.network.response.agency.AgencyJoinResponse
-import com.moneymong.moneymong.network.response.agency.MyAgencyResponse
-import com.moneymong.moneymong.network.response.agency.RegisterAgencyResponse
-import com.moneymong.moneymong.network.response.member.InvitationCodeResponse
+import com.moneymong.moneymong.model.agency.AgencyJoinRequest
+import com.moneymong.moneymong.model.agency.AgencyRegisterRequest
+import com.moneymong.moneymong.model.agency.AgenciesGetResponse
+import com.moneymong.moneymong.model.agency.AgencyJoinResponse
+import com.moneymong.moneymong.model.agency.MyAgencyResponse
+import com.moneymong.moneymong.model.agency.RegisterAgencyResponse
+import com.moneymong.moneymong.model.member.InvitationCodeResponse
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.PATCH
@@ -49,4 +50,10 @@ interface AgencyApi {
     suspend fun reInvitationCode(
         @Path("agencyId") agencyId: Long
     ): Result<InvitationCodeResponse>
+
+    //DELETE
+    @DELETE("api/v1/agencies/{agencyId}")
+    suspend fun deleteAgency(
+        @Path("agencyId") agencyId: Int
+    ) : Result<Unit>
 }

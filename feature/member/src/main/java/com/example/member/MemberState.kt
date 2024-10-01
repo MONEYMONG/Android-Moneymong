@@ -2,7 +2,7 @@ package com.example.member
 
 
 import com.moneymong.moneymong.common.base.State
-import com.moneymong.moneymong.domain.entity.member.AgencyUserEntity
+import com.moneymong.moneymong.model.member.AgencyUser
 
 data class MemberState(
     val onCopyClick: Boolean = false,
@@ -14,15 +14,15 @@ data class MemberState(
     val roleChanged: Boolean = false,
     val showDialog: Boolean = false,
     val invitationCode: String = "",
-    val memberList: List<AgencyUserEntity> = emptyList(),
+    val memberList: List<AgencyUser> = emptyList(),
     val memberMyInfoId: Long = 0,
-    val memberMyInfo: AgencyUserEntity = AgencyUserEntity(
+    val memberMyInfo: AgencyUser = AgencyUser(
         id = 0L,
         userId = 0,
         nickname = "",
         agencyUserRole = ""
     ),
-    val filteredMemberList: List<AgencyUserEntity> = emptyList(),
+    val filteredMemberList: List<AgencyUser> = emptyList(),
     val visibleError : Boolean = false,
     val errorMessage : String = "",
     val visiblePopUpError : Boolean = false,
@@ -31,4 +31,6 @@ data class MemberState(
     val isUserAuthor: String = "",
     val agencyId: Int = 0,
     val isBlockedUser : Boolean = false,
+    val deleteAgency : Boolean = false,
+
 ) : State

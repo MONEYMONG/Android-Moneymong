@@ -39,7 +39,7 @@ import com.moneymong.moneymong.design_system.component.snackbar.MDSSnackbarHost
 import com.moneymong.moneymong.design_system.theme.Black
 import com.moneymong.moneymong.design_system.theme.Blue01
 import com.moneymong.moneymong.design_system.theme.Blue04
-import com.moneymong.moneymong.domain.entity.ocr.DocumentEntity
+import com.moneymong.moneymong.model.ocr.DocumentResponse
 import com.moneymong.moneymong.ocr_result.view.OCRResultBottomView
 import com.moneymong.moneymong.ocr_result.view.OCRResultImageGuideView
 import com.moneymong.moneymong.ocr_result.view.OCRResultTopbarView
@@ -52,7 +52,7 @@ import org.orbitmvi.orbit.compose.collectSideEffect
 fun OCRResultScreen(
     modifier: Modifier = Modifier,
     viewModel: OCRResultViewModel = hiltViewModel(),
-    document: DocumentEntity?,
+    document: DocumentResponse?,
     navigateToLedger: (ledgerPostSuccess: Boolean) -> Unit,
     navigateToOCRDetail: (navOptions: NavOptions?, document: String) -> Unit,
     popBackStack: () -> Unit,

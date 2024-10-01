@@ -5,6 +5,7 @@ import android.content.ClipboardManager
 import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -31,20 +32,23 @@ import com.moneymong.moneymong.design_system.theme.Body4
 import com.moneymong.moneymong.design_system.theme.Gray02
 import com.moneymong.moneymong.design_system.theme.Gray10
 import com.moneymong.moneymong.design_system.theme.Mint03
+import com.moneymong.moneymong.design_system.theme.Red03
 import com.moneymong.moneymong.design_system.theme.White
-import com.moneymong.moneymong.domain.entity.member.AgencyUserEntity
+import com.moneymong.moneymong.model.member.AgencyUser
 
 @Composable
 fun MemberCardView(
     modifier: Modifier = Modifier,
     agencyId: Int,
-    memberList: List<AgencyUserEntity>,
+    memberList: List<AgencyUser>,
     memberMyInfoId: Long,
-    memberMyInfo: AgencyUserEntity,
+    memberMyInfo: AgencyUser,
     memberMyInfoChanged: (Long, Long, String, String) -> Unit,
     invitationCode: String,
     isReInvitationCode: (Long) -> Unit,
     onCopyChange: (Boolean) -> Unit,
+    deleteAgencyBtnClicked : (Boolean) -> Unit
+
 ) {
     val context = LocalContext.current
 
@@ -92,6 +96,27 @@ fun MemberCardView(
                     contentColor = White,
                 )
 
+                if(memberMyInfo.agencyUserRole != "MEMBER"){
+                    Row (
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .noRippleClickable { deleteAgencyBtnClicked(true) },
+                        horizontalArrangement = Arrangement.End,
+                        verticalAlignment = Alignment.CenterVertically
+                    ){
+                        Text(
+                            text = "소속삭제",
+                            color = Red03,
+                            style = Body3
+                        )
+                        Image(
+                            modifier= Modifier.size(18.dp),
+                            painter =painterResource(id = R.drawable.ic_agency_delete),
+                            contentDescription =""
+                        )
+
+                    }
+                }
             }
 
             if (memberMyInfo.agencyUserRole == "STAFF") {

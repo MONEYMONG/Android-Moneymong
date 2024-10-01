@@ -1,9 +1,7 @@
 package com.moneymong.moneymong.feature.sign
 
-import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -75,7 +73,7 @@ fun SignUpScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .background(White)
-                .padding(MMHorizontalSpacing),
+                .padding(horizontal = MMHorizontalSpacing),
             topBar = {
                 Row(
                     modifier = Modifier
@@ -233,7 +231,6 @@ fun SignUpContent(
                             )
                         )
                     },
-                    storeSchoolInfoExist = { viewModel.storeSchoolInfoExist(it) }
                 )
             }
         }

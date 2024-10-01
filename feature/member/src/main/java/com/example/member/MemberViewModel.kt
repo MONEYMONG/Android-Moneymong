@@ -2,16 +2,18 @@ package com.example.member
 
 import android.util.Log
 import com.moneymong.moneymong.common.base.BaseViewModel
-import com.moneymong.moneymong.domain.entity.member.AgencyUserEntity
-import com.moneymong.moneymong.domain.param.member.MemberBlockParam
-import com.moneymong.moneymong.domain.param.member.UpdateAuthorParam
 import com.moneymong.moneymong.domain.usecase.agency.FetchAgencyIdUseCase
+import com.moneymong.moneymong.domain.usecase.member.DeleteAgencyUseCase
 import com.moneymong.moneymong.domain.usecase.member.MemberBlockUseCase
 import com.moneymong.moneymong.domain.usecase.member.MemberInvitationCodeUseCase
 import com.moneymong.moneymong.domain.usecase.member.MemberListUseCase
 import com.moneymong.moneymong.domain.usecase.member.MemberReInvitationCodeUseCase
 import com.moneymong.moneymong.domain.usecase.member.UpdateMemberAuthorUseCase
 import com.moneymong.moneymong.domain.usecase.user.GetMyInfoUseCase
+import com.moneymong.moneymong.model.agency.MyAgencyResponse
+import com.moneymong.moneymong.model.member.AgencyUser
+import com.moneymong.moneymong.model.member.MemberBlockRequest
+import com.moneymong.moneymong.model.member.UpdateAuthorRequest
 import dagger.hilt.android.lifecycle.HiltViewModel
 import org.orbitmvi.orbit.annotation.OrbitExperimental
 import org.orbitmvi.orbit.syntax.simple.blockingIntent
@@ -27,7 +29,8 @@ class MemberViewModel @Inject constructor(
     private val getMyInfoUseCase: GetMyInfoUseCase,
     private val updateMemberAuthorUseCase: UpdateMemberAuthorUseCase,
     private val memberBlockUseCase: MemberBlockUseCase,
-    private val fetchAgencyIdUseCase: FetchAgencyIdUseCase
+    private val fetchAgencyIdUseCase: FetchAgencyIdUseCase,
+    private val deleteAgencyUseCase: DeleteAgencyUseCase
 ) : BaseViewModel<MemberState, MemberSideEffect>(MemberState()) {
 
     init {
@@ -36,7 +39,7 @@ class MemberViewModel @Inject constructor(
 
     @OptIn(OrbitExperimental::class)
     fun fetchAgencyId() = blockingIntent {
-        val agencyId = fetchAgencyIdUseCase(Unit)
+        val agencyId = fetchAgencyIdUseCase()
         reduce { state.copy(agencyId = agencyId) }
     }
 
@@ -112,7 +115,7 @@ class MemberViewModel @Inject constructor(
         intent {
             reduce {
                 state.copy(
-                    memberMyInfo = AgencyUserEntity(id, userId, nickname, agencyUserRole)
+                    memberMyInfo = AgencyUser(id, userId, nickname, agencyUserRole)
                 )
             }
         }
@@ -220,8 +223,8 @@ class MemberViewModel @Inject constructor(
             }
     }
 
-    fun getMyInfo(data: Unit) = intent {
-        getMyInfoUseCase.invoke(Unit)
+    fun getMyInfo() = intent {
+        getMyInfoUseCase.invoke()
             .onSuccess {
                 reduce {
                     state.copy(
@@ -241,7 +244,7 @@ class MemberViewModel @Inject constructor(
     }
 
     fun updateMemberAuthor(agencyId: Long, role: String, userId: Long) = intent {
-        updateMemberAuthorUseCase.invoke(agencyId, UpdateAuthorParam(role, userId))
+        updateMemberAuthorUseCase(agencyId, UpdateAuthorRequest(role, userId))
             .onSuccess {
                 updateFilteredMemberList(userId, role)
                 updateMemberList(userId, role)
@@ -256,20 +259,64 @@ class MemberViewModel @Inject constructor(
             }
     }
 
+
     fun blockMemberAuthor(agencyId: Long, userId: Long) = intent {
-        memberBlockUseCase.invoke(MemberBlockParam(agencyId, userId))
+        memberBlockUseCase(agencyId, MemberBlockRequest(userId))
             .onSuccess {
                 updateFilteredMemberListByBlock(userId)
                 updateMemberListByBlock(userId)
             }
             .onFailure {
-                reduce{
+                reduce {
                     state.copy(
                         visiblePopUpError = true,
                         errorPopUpMessage = it.message.toString()
                     )
                 }
             }
+    }
+
+
+    fun deleteAgency(
+        agencyId: Int,
+        agencyList: List<MyAgencyResponse>,
+        onClickItem: (agencyId: Int) -> Unit,
+        changeAgencyList: (agencyList: List<MyAgencyResponse>) -> Unit
+    ) = intent {
+        deleteAgencyUseCase.invoke(agencyId)
+            .onSuccess {
+                Log.d("deleteAgency${agencyId}", it.toString())
+                val filteredList = agencyList.filter { it.id != agencyId }
+                if (filteredList.isNotEmpty()) {
+                    val randomAgency = filteredList.random()
+                    onClickItem(randomAgency.id)
+                    changeAgencyList(filteredList)
+                } else {
+                    changeAgencyList(emptyList())
+                }
+                reduce {
+                    state.copy(
+                        deleteAgency = false
+                    )
+                }
+            }.onFailure {
+                reduce {
+                    state.copy(
+                        deleteAgency = false,
+                        visiblePopUpError = true,
+                        errorPopUpMessage = it.message.toString()
+                    )
+                }
+            }
+    }
+
+
+    fun deleteAgencyBtnClicked(deleteAgencyBtnClicked : Boolean) = intent {
+        reduce {
+            state.copy(
+                deleteAgency = deleteAgencyBtnClicked
+            )
+        }
     }
 
     private fun updateFilteredMemberListByBlock(userId: Long) = intent {

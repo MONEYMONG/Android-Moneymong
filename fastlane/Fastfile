@@ -16,6 +16,22 @@
 default_platform(:android)
 
 platform :android do
+  desc "Increment the Version Code"
+  lane :increment_code do |options|
+    increment_version_code(
+        gradle_file_path: './app/build.gradle.kts',
+        version_code: options[:new_version_code]
+    )
+
+    git_commit(
+      path: ["./app/build.gradle.kts"],
+      message: "INCREMENT VERSION CODE",
+      allow_nothing_to_commit: true
+    )
+
+    push_to_git_remote
+  end
+
   desc "Runs all the tests"
   lane :test do
     gradle(task: "test")
@@ -30,9 +46,73 @@ platform :android do
     # You can also use other beta testing services here
   end
 
+  desc "Send Slack Message when Deploy to the Firebase Distribution"
+  lane :send_slack_message do |options|
+    slack(
+        message: options[:msg],
+        slack_url: options[:webhook_url]
+    )
+  end
+
   desc "Deploy a new version to the Google Play"
   lane :deploy do
-    gradle(task: "clean assembleRelease")
-    upload_to_play_store
+    gradle(
+        task: 'bundle',
+        flavor: "live",
+        build_type: 'Release',
+        properties: {
+                "android.injected.signing.store.file" => "#{ENV["KEYSTORE_FILE"]}",
+                "android.injected.signing.store.password" => "#{ENV["KEYSTORE_PASSWORD"]}",
+                "android.injected.signing.key.alias" => "#{ENV["KEYSTORE_KEY_ALIAS"]}",
+                "android.injected.signing.key.password" => "#{ENV["KEYSTORE_KEY_PASSWORD"]}",
+              },
+    )
+    upload_to_play_store(
+        skip_upload_metadata: true,
+        skip_upload_images: true,
+        skip_upload_screenshots: true,
+        skip_upload_apk: true
+    )
   end
+
+  desc "Deploy a new version to the Firebase Distribution"
+  lane :distribute do
+    latest_release = firebase_app_distribution_get_latest_release(
+         service_credentials_file: "#{ENV["FIREBASE_CREDENTIALS"]}",
+         app: "#{ENV["APP_ID"]}"
+    )
+    version_name = get_version_name(
+         gradle_file_path:"./app/build.gradle.kts",
+         ext_constant_name:"versionName"
+    )
+    new_version_code = latest_release[:buildVersion].to_i + 1
+    release_note = "머니몽 Android TB [#{version_name} (#{new_version_code})]"
+
+    increment_code(
+            new_version_code: new_version_code
+    )
+
+    gradle(
+        task: 'assemble',
+        flavor: "tb",
+        build_type: 'Debug',
+        properties: {
+                "android.injected.signing.store.file" => "#{ENV["DEBUG_KEYSTORE_FILE"]}",
+                "android.injected.signing.store.password" => "#{ENV["DEBUG_KEYSTORE_PASSWORD"]}",
+                "android.injected.signing.key.alias" => "#{ENV["DEBUG_KEYSTORE_KEY_ALIAS"]}",
+                "android.injected.signing.key.password" => "#{ENV["DEBUG_KEYSTORE_KEY_PASSWORD"]}",
+        }
+    )
+    firebase_app_distribution(
+        service_credentials_file: "#{ENV["FIREBASE_CREDENTIALS"]}",
+        app: "#{ENV["APP_ID"]}",
+        groups_file: "fastlane/tester-groups.txt",
+        release_notes: release_note
+    )
+
+    send_slack_message(
+        msg: "#{release_note} 배포 완료",
+        webhook_url: "#{ENV["WEBHOOK_URL"]}"
+    )
+    end
 end

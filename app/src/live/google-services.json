@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "1091533625653",
-    "project_id": "moneymong-9e794",
-    "storage_bucket": "moneymong-9e794.appspot.com"
+    "project_number": "276339224954",
+    "project_id": "moneymong-ab377",
+    "storage_bucket": "moneymong-ab377.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1091533625653:android:f8c3edecf6f6108fad547c",
+        "mobilesdk_app_id": "1:276339224954:android:62b573a4c614883abe66c3",
         "android_client_info": {
           "package_name": "com.moneymong.moneymong.live"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyAb9dOMs-B-u9YynEWdtV9nrq_VbMpAXtg"
+          "current_key": "AIzaSyDh769AoQo0vRClh1GneOdjzhJE-h7r__4"
         }
       ],
       "services": {
@@ -26,7 +26,7 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1091533625653:android:435637da7f3d4352ad547c",
+        "mobilesdk_app_id": "1:276339224954:android:6e845b0b1d59a02fbe66c3",
         "android_client_info": {
           "package_name": "com.moneymong.moneymong.tb"
         }
@@ -34,7 +34,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyAb9dOMs-B-u9YynEWdtV9nrq_VbMpAXtg"
+          "current_key": "AIzaSyDh769AoQo0vRClh1GneOdjzhJE-h7r__4"
         }
       ],
       "services": {

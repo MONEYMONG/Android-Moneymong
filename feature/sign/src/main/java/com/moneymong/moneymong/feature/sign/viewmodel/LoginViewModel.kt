@@ -1,67 +1,73 @@
 package com.moneymong.moneymong.feature.sign.viewmodel
 
-import androidx.lifecycle.viewModelScope
+import android.util.Log
+import com.kakao.sdk.common.KakaoSdk
 import com.moneymong.moneymong.common.base.BaseViewModel
-import com.moneymong.moneymong.domain.util.LoginCallback
-import com.moneymong.moneymong.domain.usecase.login.LoginUseCase
-import com.moneymong.moneymong.domain.usecase.login.TokenUseCase
-import dagger.hilt.android.lifecycle.HiltViewModel
+import com.moneymong.moneymong.domain.usecase.token.PostAccessTokenUseCase
+import com.moneymong.moneymong.domain.usecase.token.TokenUseCase
 import com.moneymong.moneymong.feature.sign.sideeffect.LoginSideEffect
 import com.moneymong.moneymong.feature.sign.state.LoginState
+import com.moneymong.moneymong.model.sign.LoginType
 import com.moneymong.moneymong.network.util.TokenCallback
-import kotlinx.coroutines.launch
+import dagger.hilt.android.lifecycle.HiltViewModel
 import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.reduce
 import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val loginUseCase: LoginUseCase,
     private val tokenUseCase: TokenUseCase,
+    private val postAccessTokenUseCase: PostAccessTokenUseCase
 ) : BaseViewModel<LoginState, LoginSideEffect>(LoginState()), TokenCallback {
 
-    fun onLoginButtonClicked() = intent {
-        viewModelScope.launch {
-            loginUseCase.invoke(object : LoginCallback {
-                override suspend fun onLoginSuccess() {
-                    tokenUseCase.getSchoolInfo()
-                        .onSuccess {
-                            if(it) {
-                                reduce {
-                                    state.copy(
-                                        isSchoolInfoExist = true
-                                    )
-                                }
-                            }
-                            else{
-                                reduce {
-                                    state.copy(
-                                        isSchoolInfoExist = false
-                                    )
-                                }
-                            }
-                        }.onFailure {
-                            reduce {
-                                state.copy(
-                                    visibleError = true,
-                                    errorMessage = "문제가 발생했습니다.\n다시 시도해주세요"
-                                )
-                            }
-                        }
-                }
-
-                override suspend fun onLoginFailure(exception: Exception) {
-                    // 로그인 실패
-                    reduce {
-                        state.copy(
-                            visibleError = true,
-                            errorMessage = "문제가 발생했습니다.\n다시 시도해주세요"
-                        )
-                    }
-                }
-            })
+    fun onKakaoLoginSuccess(accessToken: String) = intent {
+        postAccessTokenUseCase(type = LoginType.KAKAO, accessToken = accessToken).onSuccess {
+            getSchoolInfo()
+        }.onFailure {
+            reduce {
+                state.copy(
+                    visibleError = true,
+                    errorMessage = "문제가 발생했습니다.\n다시 시도해주세요"
+                )
+            }
         }
     }
+
+    fun onKakaoLoginFailure(throwable: Throwable) = intent {
+        reduce {
+            state.copy(
+                visibleError = true,
+                errorMessage = "문제가 발생했습니다.\n다시 시도해주세요"
+            )
+        }
+    }
+
+
+    private fun getSchoolInfo() = intent {
+        tokenUseCase.getSchoolInfo().onSuccess { result ->
+            if (result) {
+                reduce {
+                    state.copy(
+                        isSchoolInfoProvided = true
+                    )
+                }
+            } else {
+                reduce {
+                    state.copy(
+                        isSchoolInfoProvided = false
+                    )
+                }
+            }
+        }.onFailure {
+            reduce {
+                state.copy(
+                    visibleError = true,
+                    errorMessage = "문제가 발생했습니다.\n다시 시도해주세요"
+                )
+            }
+        }
+    }
+
 
     override suspend fun onTokenFailure() {
         intent {
@@ -81,7 +87,7 @@ class LoginViewModel @Inject constructor(
         }
     }
 
-    fun visibleErrorChanged(isVisibleError: Boolean) = intent{
+    fun visibleErrorChanged(isVisibleError: Boolean) = intent {
         reduce {
             state.copy(
                 visibleError = isVisibleError,
@@ -89,10 +95,10 @@ class LoginViewModel @Inject constructor(
         }
     }
 
-    fun isSchoolInfoExistChanged(isSchoolInfoExist : Boolean?) = intent{
+    fun isSchoolInfoProvidedChanged(isSchoolInfoProvided: Boolean?) = intent {
         reduce {
             state.copy(
-                isSchoolInfoExist = isSchoolInfoExist
+                isSchoolInfoProvided = isSchoolInfoProvided
             )
         }
     }

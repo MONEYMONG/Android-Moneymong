@@ -2,7 +2,7 @@ package com.moneymong.moneymong.feature.sign.viewmodel
 
 import android.util.Log
 import com.moneymong.moneymong.common.base.BaseViewModel
-import com.moneymong.moneymong.domain.usecase.login.TokenUseCase
+import com.moneymong.moneymong.domain.usecase.token.TokenUseCase
 import com.moneymong.moneymong.feature.sign.sideeffect.SplashSideEffect
 import com.moneymong.moneymong.feature.sign.state.SplashState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -28,8 +28,8 @@ class SplashViewModel @Inject constructor(
     fun checkTokenValidity() = intent {
         tokenUseCase.getDataStoreInfo()
             .onSuccess {
-                Log.d("Splash", "${it.accessToken}, ${it.schoolInfoExist}")
-                if (it.accessToken.isNotEmpty() && it.schoolInfoExist) {
+                Log.d("Splash", "${it.accessToken}, ${it.schoolInfoProvided}")
+                if (it.accessToken.isNotEmpty() && it.schoolInfoProvided) {
                     reduce {
                         state.copy(
                             isTokenValid = true

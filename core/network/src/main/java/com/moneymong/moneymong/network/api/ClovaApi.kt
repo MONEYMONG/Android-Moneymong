@@ -1,8 +1,8 @@
 package com.moneymong.moneymong.network.api
 
 import com.moneymong.moneymong.network.BuildConfig
-import com.moneymong.moneymong.network.request.ocr.DocumentRequest
-import com.moneymong.moneymong.network.response.ocr.DocumentResponse
+import com.moneymong.moneymong.model.ocr.DocumentRequest
+import com.moneymong.moneymong.model.ocr.DocumentResponse
 import retrofit2.http.Body
 import retrofit2.http.Header
 import retrofit2.http.POST
