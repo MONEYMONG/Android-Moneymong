@@ -93,9 +93,15 @@ platform :android do
     )
 
     gradle(
-        task: 'clean assemble',
+        task: 'assemble',
         flavor: "tb",
-        build_type: 'Debug'
+        build_type: 'Debug',
+        properties: {
+                "android.injected.signing.store.file" => "#{ENV["DEBUG_KEYSTORE_FILE"]}",
+                "android.injected.signing.store.password" => "#{ENV["DEBUG_KEYSTORE_PASSWORD"]}",
+                "android.injected.signing.key.alias" => "#{ENV["DEBUG_KEYSTORE_KEY_ALIAS"]}",
+                "android.injected.signing.key.password" => "#{ENV["DEBUG_KEYSTORE_KEY_PASSWORD"]}",
+        }
     )
     firebase_app_distribution(
         service_credentials_file: "#{ENV["FIREBASE_CREDENTIALS"]}",

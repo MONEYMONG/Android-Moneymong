@@ -103,6 +103,10 @@ jobs:
         - name: Build & Deploy Distribute
           env:
             FIREBASE_CREDENTIALS: ${{ github.workspace }}/app/firebase_credentials.json
+            DEBUG_KEYSTORE_FILE: ${{ github.workspace }}/app/debug_keystore.jks
+            DEBUG_KEYSTORE_PASSWORD: ${{ secrets.DEBUG_KEYSTORE_PASSWORD }}
+            DEBUG_KEYSTORE_KEY_ALIAS: ${{ secrets.DEBUG_KEYSTORE_KEY_ALIAS }}
+            DEBUG_KEYSTORE_KEY_PASSWORD: ${{ secrets.DEBUG_KEYSTORE_KEY_PASSWORD }}
             APP_ID: ${{ secrets.FIREBASE_TB_APP_ID }}
             WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
             CWD: ${{ github.workspace }}
