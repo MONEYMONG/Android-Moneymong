@@ -95,6 +95,10 @@ jobs:
           run: |
             echo "${{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY }}" | base64 --decode > ./app/firebase_credentials.json
 
+        - name: Decode Keystore File
+          run: |
+            echo "${{ secrets.DEBUG_KEYSTORE_FILE }}" | base64 --decode > ./app/debug_keystore.jks
+
         - name: Install Dependencies
           run: |
             gem install bundler
