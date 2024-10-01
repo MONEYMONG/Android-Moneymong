@@ -21,7 +21,7 @@ android {
         applicationId = "com.moneymong.moneymong"
         minSdk = 24
         targetSdk = 34
-        versionCode = 20
+        versionCode = 24
         versionName = "1.2.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
