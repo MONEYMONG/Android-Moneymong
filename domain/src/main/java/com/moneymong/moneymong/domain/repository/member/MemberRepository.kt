@@ -11,4 +11,6 @@ interface MemberRepository {
     suspend fun getMemberLists(agencyId: Long) : Result<MemberListResponse>
     suspend fun updateMemberAuthor(agencyId : Long, data : UpdateAuthorRequest) : Result<Unit>
     suspend fun blockMemberAuthor(agencyId: Long, data: MemberBlockRequest) : Result<Unit>
+    suspend fun deleteAgency(agencyId: Int) :Result<Unit>
+
 }

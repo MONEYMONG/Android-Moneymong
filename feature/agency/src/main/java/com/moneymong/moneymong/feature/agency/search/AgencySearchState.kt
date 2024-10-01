@@ -8,6 +8,7 @@ data class AgencySearchState(
     val isError: Boolean = false,
     val errorMessage: String = "",
     val visibleWarningDialog: Boolean = false,
+    val isUniversityStudent: Boolean = false
 ) : State {
 
     val joinedAgenciesIds: List<Long>

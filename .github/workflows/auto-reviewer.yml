@@ -1,0 +1,173 @@
+name: Auto Reviewer
+
+on:
+  pull_request:
+    branches:
+      - 'develop'
+    types: [ opened, reopened ]
+
+jobs:
+  assign-reviewer:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+
+    steps:
+      - name: Assign Reviewers
+        uses: kentaro-m/auto-assign-action@v2.0.0
+        with:
+          configuration-path: '.github/reviewer.yml'
+
+      - name: Get PR Labels
+        run: echo "PR_LABELS=${{ github.event.pull_request.labels[0].name }}" >> $GITHUB_ENV
+
+      - name: Get PR URL
+        run: echo "PR_URL=${{ github.event.pull_request.html_url }}" >> $GITHUB_ENV
+
+      - name: Get PR Author
+        run: echo "PR_AUTHOR=${{ github.event.pull_request.user.login }}" >> $GITHUB_ENV
+
+      - name: Get Assigned Reviewer
+        id: assigned_reviewers_id
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const { data: pullRequest } = await github.rest.pulls.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.payload.pull_request.number
+            });
+
+            const reviewers = pullRequest.requested_reviewers.map(reviewer => reviewer.login).join(',');
+            core.setOutput('reviewers', reviewers)
+
+#       highest: until 24hours
+#       high: until 48hours
+#       medium: until 72hours
+#       low: until 120hours
+#       lowest: until 168hours
+      - name: Calculate Review Due Date
+        id: calculate_due_date_id
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const createdAt = new Date(process.env.CREATED_AT);
+            const label = process.env.PR_LABELS;
+            const hour_abs = 60 * 60 * 1000;
+            let dueDate;
+            
+            if (label.includes("highest")) {
+              dueDate = new Date(createdAt.getTime() + (24 * hour_abs));
+            } else if (label.includes("high")) {
+              dueDate = new Date(createdAt.getTime() + (48 * hour_abs));
+            } else if (label.includes("medium")) {
+              dueDate = new Date(createdAt.getTime() + (72 * hour_abs));
+            } else if (label.includes("low")) {
+              dueDate = new Date(createdAt.getTime() + (120 * hour_abs));
+            } else if (label.includes("lowest")) {
+              dueDate = new Date(createdAt.getTime() + (168 * hour_abs));
+            } else {
+              core.setFailed(`Not Matched Labels.`);
+            }
+            
+            const year = dueDate.getFullYear();
+            const month = dueDate.getMonth() + 1;
+            const day = dueDate.getDate();
+            const hours = dueDate.getHours();
+            const period = hours >= 12 ? '오후' : '오전';
+            const formattedHour = hours % 12 || 12;
+            
+            const formattedTime = `${year}년 ${month}월 ${day}일 ${period} ${formattedHour}시`;
+            
+            core.setOutput('due_date', formattedTime);
+        env:
+          PR_LABELS: ${{ env.PR_LABELS }}
+          CREATED_AT: ${{ github.event.pull_request.created_at }}
+
+      - name: Get Slack Member ID
+        id: slack_id
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const reviewer = process.env.PR_REVIEWER
+            let selectedId;
+            
+            if (reviewer === "Heonbyeong") {
+              selectedId = process.env.SLACK_ID_ABH;
+            } else if (reviewer === "jhg3410") {
+              selectedId = process.env.SLACK_ID_JHG;
+            } else if (reviewer === "eunseo0105") {
+              selectedId = process.env.SLACK_ID_KES;
+            } else {
+              core.setFailed(`Not Found Author.`);
+            }
+            
+            core.setOutput('selected_id', selectedId);
+        env:
+          PR_REVIEWER: ${{ steps.assigned_reviewers_id.outputs.reviewers }}
+          SLACK_ID_ABH: ${{ secrets.SLACK_ID_ABH }}
+          SLACK_ID_JHG: ${{ secrets.SLACK_ID_JHG }}
+          SLACK_ID_KES: ${{ secrets.SLACK_ID_KES }}
+
+      - name: Save Slack Member ID to Github ENV
+        run: echo "SLACK_MEMBER_ID=${{ steps.slack_id.outputs.selected_id }}" >> $GITHUB_ENV
+
+      - name: Send custom JSON data to Slack workflow
+        id: slack
+        uses: slackapi/slack-github-action@v1.26.0
+        with:
+          channel-id: ${{ env.SLACK_CHANNEL_ID }}
+          payload: |
+            {
+              "text": "새로운 PR이 등록되었습니다! 👾\n마감일 전까지 늦지 않게 리뷰를 완료하고, 해당 스레드에 공유해주세요!",
+              "blocks": [
+                {
+                  "type": "header",
+                  "text": {
+                    "type": "plain_text",
+                    "text": "새로운 PR이 등록되었습니다! 👾",
+                    "emoji": true
+                  }
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "마감일 전까지 늦지 않게 리뷰를 완료하고, 해당 스레드에 공유해주세요!\n<${{ env.PR_URL }}>"
+                  }
+                },
+                {
+                  "type": "divider"
+                },
+                {
+                  "type": "section",
+                  "fields": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "*PR Author*\n${{ env.PR_AUTHOR }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Reviewer*\n<@${{ env.SLACK_MEMBER_ID }}>"
+                    }
+                  ]
+                },
+                {
+                  "type": "section",
+                  "fields": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Priority*\n${{ env.PR_LABELS }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Due Date*\n${{ env.DUE_DATE }}"
+                    }
+                  ]
+                }
+              ]
+            }
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_PR_BOT_TOKEN }}
+          SLACK_CHANNEL_ID: ${{ secrets.SLACK_ANDROID_CHANNEL_ID }}
+          DUE_DATE: ${{ steps.calculate_due_date_id.outputs.due_date }}

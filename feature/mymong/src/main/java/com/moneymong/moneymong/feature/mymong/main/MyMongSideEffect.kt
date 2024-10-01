@@ -7,4 +7,5 @@ sealed interface MyMongSideEffect : SideEffect {
     data object NavigateToPrivacyPolicy : MyMongSideEffect
     data object NavigateToTermsOfUse : MyMongSideEffect
     data object NavigateToLogin : MyMongSideEffect
+    data object FollowKakaoChannel : MyMongSideEffect
 }

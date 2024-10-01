@@ -2,6 +2,8 @@ package com.moneymong.moneymong.ocr_result
 
 import android.content.SharedPreferences
 import com.moneymong.moneymong.common.base.BaseViewModel
+import com.moneymong.moneymong.common.event.Event
+import com.moneymong.moneymong.common.event.EventTracker
 import com.moneymong.moneymong.common.ext.toMultipart
 import com.moneymong.moneymong.domain.usecase.agency.FetchAgencyIdUseCase
 import com.moneymong.moneymong.domain.usecase.ledger.PostLedgerTransactionUseCase
@@ -21,6 +23,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class OCRResultViewModel @Inject constructor(
+    private val eventTracker: EventTracker,
     private val prefs: SharedPreferences,
     private val postLedgerTransactionUseCase: PostLedgerTransactionUseCase,
     private val postFileUploadUseCase: PostFileUploadUseCase,
@@ -59,6 +62,8 @@ class OCRResultViewModel @Inject constructor(
     }
 
     fun postReceiptImage() = intent {
+        eventTracker.logEvent(Event.OCR_REGISTER_CLICK)
+
         state.receiptFile?.let {
             if (!state.isLoading) {
                 reduce { state.copy(isLoading = true) }
@@ -93,6 +98,7 @@ class OCRResultViewModel @Inject constructor(
 
     // onClick
     fun onClickOCREdit() = intent {
+        eventTracker.logEvent(Event.OCR_MODIFY_CLICK)
         postSideEffect(OCRResultSideEffect.OCRResultNavigateToOCRDetail(state.document))
     }
 }

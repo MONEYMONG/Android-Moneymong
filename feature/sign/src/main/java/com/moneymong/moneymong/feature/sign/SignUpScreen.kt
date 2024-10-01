@@ -73,7 +73,7 @@ fun SignUpScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .background(White)
-                .padding(MMHorizontalSpacing),
+                .padding(horizontal = MMHorizontalSpacing),
             topBar = {
                 Row(
                     modifier = Modifier
@@ -231,7 +231,6 @@ fun SignUpContent(
                             )
                         )
                     },
-                    storeSchoolInfoExist = { viewModel.storeSchoolInfoExist(it) }
                 )
             }
         }
