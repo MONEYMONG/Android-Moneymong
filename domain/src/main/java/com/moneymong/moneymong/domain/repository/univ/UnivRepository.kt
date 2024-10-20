@@ -1,4 +1,4 @@
-package com.moneymong.moneymong.domain.repository
+package com.moneymong.moneymong.domain.repository.univ
 
 import com.moneymong.moneymong.model.sign.SearchQueryRequest
 import com.moneymong.moneymong.model.sign.UnivRequest

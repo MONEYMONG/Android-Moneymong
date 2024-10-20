@@ -1,6 +1,6 @@
 package com.moneymong.moneymong.network.util
 
-import com.moneymong.moneymong.domain.repository.TokenRepository
+import com.moneymong.moneymong.domain.repository.token.TokenRepository
 import com.moneymong.moneymong.network.BuildConfig
 import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor

@@ -2,7 +2,7 @@ package com.moneymong.moneymong.data.repository.token
 
 import com.moneymong.moneymong.data.datasource.login.LoginLocalDataSource
 import com.moneymong.moneymong.data.datasource.login.TokenRemoteDataSource
-import com.moneymong.moneymong.domain.repository.TokenRepository
+import com.moneymong.moneymong.domain.repository.token.TokenRepository
 import com.moneymong.moneymong.model.sign.LoginType
 import com.moneymong.moneymong.model.sign.RefreshTokenRequest
 import com.moneymong.moneymong.model.sign.RefreshTokenResponse

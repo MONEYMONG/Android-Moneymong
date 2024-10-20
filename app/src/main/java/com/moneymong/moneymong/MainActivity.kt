@@ -13,7 +13,7 @@ import androidx.lifecycle.compose.LifecycleStartEffect
 import com.moneymong.moneymong.common.event.EventTracker
 import com.moneymong.moneymong.design_system.error.ErrorDialog
 import com.moneymong.moneymong.design_system.theme.MMTheme
-import com.moneymong.moneymong.domain.repository.TokenRepository
+import com.moneymong.moneymong.domain.repository.token.TokenRepository
 import com.moneymong.moneymong.ui.MoneyMongApp
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
