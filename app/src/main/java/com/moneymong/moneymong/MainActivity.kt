@@ -1,5 +1,7 @@
 package com.moneymong.moneymong
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -9,7 +11,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.LifecycleStartEffect
 import com.moneymong.moneymong.common.event.EventTracker
-import com.moneymong.moneymong.common.packageinfo.getVersionName
+import com.moneymong.moneymong.design_system.error.ErrorDialog
 import com.moneymong.moneymong.design_system.theme.MMTheme
 import com.moneymong.moneymong.domain.repository.TokenRepository
 import com.moneymong.moneymong.ui.MoneyMongApp
@@ -38,21 +40,30 @@ class MainActivity : ComponentActivity() {
         setContent {
             val context = LocalContext.current
             val state by viewModel.collectAsState()
+
             val shouldUpdate = state.shouldUpdate
-            val currentVersion =
-                with(getVersionName(context).split(".").map { element -> element.toInt() }) {
-                    KotlinVersion(
-                        major = this[0],
-                        minor = this[1],
-                        patch = this[2]
-                    )
-                }
-            LifecycleStartEffect(key1 = Unit) {
-                viewModel.checkShouldUpdate(currentVersion = currentVersion)
-                onStopOrDispose {}
-            }
+            LifecycleStartEffect(key1 = Unit, effects = {
+                viewModel.checkShouldUpdate(version = BuildConfig.VERSION_NAME)
+                onStopOrDispose { }
+            })
 
             MMTheme {
+                if (shouldUpdate) {
+                    ErrorDialog(
+                        message = "안정적인 머니몽 사용을 위해\n최신 버전으로 업데이트가 필요해요!",
+                        confirmText = "업데이트",
+                        onConfirm = {
+                            val playStoreUrl =
+                                "https://play.google.com/store/apps/details?id=${BuildConfig.APPLICATION_ID}"
+                            val intent = Intent(Intent.ACTION_VIEW).apply {
+                                data = Uri.parse(playStoreUrl)
+                                setPackage("com.android.vending")
+                            }
+                            context.startActivity(intent)
+                        }
+                    )
+                }
+
                 MoneyMongApp(expired.value) {
                     expired.value = false
                 }
