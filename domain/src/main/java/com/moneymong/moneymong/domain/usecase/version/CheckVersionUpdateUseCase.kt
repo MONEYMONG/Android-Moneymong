@@ -7,7 +7,7 @@ class CheckVersionUpdateUseCase @Inject constructor(
     private val versionRepository: VersionRepository
 ) {
 
-    suspend operator fun invoke(version: String): Result<String> {
+    suspend operator fun invoke(version: String): Result<Unit> {
         return versionRepository.checkUpdate(version = version)
     }
 }

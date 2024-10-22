@@ -8,7 +8,7 @@ class VersionRepositoryImpl @Inject constructor(
     private val versionRemoteDataSource: VersionRemoteDataSource
 ) : VersionRepository {
 
-    override suspend fun checkUpdate(version: String): Result<String> {
+    override suspend fun checkUpdate(version: String): Result<Unit> {
         return versionRemoteDataSource.checkUpdate(version = version)
     }
 }

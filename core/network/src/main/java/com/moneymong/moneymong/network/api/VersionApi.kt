@@ -9,5 +9,5 @@ interface VersionApi {
     @POST("api/v1/version")
     suspend fun checkUpdate(
         @Body version: VersionRequest
-    ): Result<String>
+    ): Result<Unit>
 }
