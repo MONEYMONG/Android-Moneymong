@@ -24,9 +24,11 @@ class AuthInterceptor @Inject constructor(
             tokenRepository.getAccessToken()
         }
 
-        val newRequest = originalRequest.newBuilder()
-            .addHeader("Authorization", "Bearer ${accessToken.getOrNull()}")
-            .build()
+        val newRequest = originalRequest.newBuilder().apply {
+            accessToken.getOrNull()?.let {
+                addHeader("Authorization", "Bearer $it")
+            } ?: addHeader("Authorization", "null")
+        }.build()
 
         return chain.proceed(newRequest)
     }
