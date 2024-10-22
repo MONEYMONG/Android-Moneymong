@@ -302,6 +302,24 @@ fun LedgerManualScreen(
                     keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
                 )
+                Spacer(modifier = Modifier.height(24.dp))
+                var isMemoFilled by remember { mutableStateOf(false) }
+                MDSTextField(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .onFocusChanged { isMemoFilled = !it.isFocused },
+                    value = state.memoValue,
+                    onValueChange = viewModel::onChangeMemoValue,
+                    title = "메모",
+                    placeholder = "메모할 내용을 입력하세요",
+                    helperText = "300자 이하로 입력해주세요",
+                    maxCount = 300,
+                    singleLine = false,
+                    isFilled = isMemoFilled,
+                    isError = state.isMemoError,
+                    keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() })
+                )
+                Spacer(modifier = Modifier.height(24.dp))
                 Text(
                     text = buildAnnotatedString {
                         append("영수증 (최대 12장)\n")
@@ -437,23 +455,6 @@ fun LedgerManualScreen(
                     }
                 }
                 Spacer(modifier = Modifier.height(24.dp))
-                var isMemoFilled by remember { mutableStateOf(false) }
-                MDSTextField(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .onFocusChanged { isMemoFilled = !it.isFocused },
-                    value = state.memoValue,
-                    onValueChange = viewModel::onChangeMemoValue,
-                    title = "메모",
-                    placeholder = "메모할 내용을 입력하세요",
-                    helperText = "300자 이하로 입력해주세요",
-                    maxCount = 300,
-                    singleLine = false,
-                    isFilled = isMemoFilled,
-                    isError = state.isMemoError,
-                    keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() })
-                )
-                Spacer(modifier = Modifier.height(28.dp))
                 Text(
                     text = "작성자",
                     style = Body2,
@@ -465,7 +466,7 @@ fun LedgerManualScreen(
                     style = Body3,
                     color = Gray10
                 )
-                Spacer(modifier = Modifier.height(64.dp))
+                Spacer(modifier = Modifier.height(20.dp))
                 MDSButton(
                     modifier = Modifier
                         .fillMaxWidth(),
