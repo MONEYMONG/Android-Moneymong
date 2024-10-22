@@ -1,6 +1,7 @@
 package com.moneymong.moneymong.ledger.view
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -20,6 +21,7 @@ import com.moneymong.moneymong.design_system.component.button.MDSButtonSize
 import com.moneymong.moneymong.design_system.component.button.MDSButtonType
 import com.moneymong.moneymong.design_system.theme.Body4
 import com.moneymong.moneymong.design_system.theme.Gray08
+import com.moneymong.moneymong.design_system.theme.White
 import com.moneymong.moneymong.ledger.R
 
 @Composable
@@ -28,7 +30,9 @@ fun LedgerAgencyEmptyView(
     onClickFindAgency: () -> Unit
 ) {
     Column(
-        modifier = modifier.fillMaxSize(),
+        modifier = modifier
+            .fillMaxSize()
+            .background(color = White),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {

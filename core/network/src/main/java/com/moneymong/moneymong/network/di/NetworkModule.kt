@@ -17,6 +17,7 @@ import com.moneymong.moneymong.network.api.MemberApi
 import com.moneymong.moneymong.network.api.MoneyMongApi
 import com.moneymong.moneymong.network.api.UniversityApi
 import com.moneymong.moneymong.network.api.UserApi
+import com.moneymong.moneymong.network.api.VersionApi
 import com.moneymong.moneymong.network.util.AuthInterceptor
 import com.moneymong.moneymong.network.util.MoneyMongTokenAuthenticator
 import dagger.Module
@@ -142,6 +143,10 @@ object NetworkModule {
     @Provides
     fun provideMemberApi(@MoneyMongRetrofit retrofit: Retrofit): MemberApi =
         retrofit.create(MemberApi::class.java)
+
+    @Provides
+    fun provideVersionApi(@MoneyMongRetrofit retrofit: Retrofit): VersionApi =
+        retrofit.create(VersionApi::class.java)
 
     @Provides
     fun provideClovaApi(@ClovaRetrofit retrofit: Retrofit): ClovaApi =

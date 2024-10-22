@@ -1,7 +1,7 @@
 package com.moneymong.moneymong.data.repository.signup
 
 import com.moneymong.moneymong.data.datasource.signup.UnivRemoteDataSource
-import com.moneymong.moneymong.domain.repository.UnivRepository
+import com.moneymong.moneymong.domain.repository.univ.UnivRepository
 import com.moneymong.moneymong.model.sign.SearchQueryRequest
 import com.moneymong.moneymong.model.sign.UnivRequest
 import com.moneymong.moneymong.model.sign.UnivResponse

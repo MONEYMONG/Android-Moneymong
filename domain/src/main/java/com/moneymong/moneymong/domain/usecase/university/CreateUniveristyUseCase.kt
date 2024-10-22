@@ -1,6 +1,6 @@
 package com.moneymong.moneymong.domain.usecase.university
 
-import com.moneymong.moneymong.domain.repository.UnivRepository
+import com.moneymong.moneymong.domain.repository.univ.UnivRepository
 import com.moneymong.moneymong.model.sign.UnivRequest
 import javax.inject.Inject
 

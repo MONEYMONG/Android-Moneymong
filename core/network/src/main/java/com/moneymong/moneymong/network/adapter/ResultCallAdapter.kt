@@ -48,12 +48,16 @@ private class ResultCall<T>(
                     return Result.failure(MoneyMongError.UnExpectedError)
                 }
 
-                val errorResponse = fromJsonToErrorResponse(errorBody)
-                val httpError = getErrorByStatusCode(
-                    statusCode = errorResponse.status,
-                    message = errorResponse.message
-                )
-                return Result.failure(httpError)
+                return try {
+                    val errorResponse = fromJsonToErrorResponse(errorBody)
+                    val httpError = getErrorByStatusCode(
+                        statusCode = errorResponse.status,
+                        message = errorResponse.message
+                    )
+                    Result.failure(httpError)
+                } catch (e: Exception) {
+                    Result.failure(MoneyMongError.UnExpectedError)
+                }
             }
 
             override fun onFailure(call: Call<T>, t: Throwable) {

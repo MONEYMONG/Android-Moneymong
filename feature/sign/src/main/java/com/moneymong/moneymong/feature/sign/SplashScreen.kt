@@ -1,6 +1,5 @@
 package com.moneymong.moneymong.feature.sign
 
-import android.util.Log
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
@@ -34,9 +33,9 @@ fun SplashScreen(
     val state = viewModel.collectAsState().value
 
     LaunchedEffect(key1 = state.isTokenValid) {
-        if (state.isTokenValid == true ) {
+        if (state.isTokenValid == true) {
             navigateToLedger()
-        } else if(state.isTokenValid == false ) {
+        } else if (state.isTokenValid == false) {
             navigateToLogin()
         }
     }

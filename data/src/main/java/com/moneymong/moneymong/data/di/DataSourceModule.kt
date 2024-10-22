@@ -24,6 +24,8 @@ import com.moneymong.moneymong.data.datasource.user.UserLocalDataSource
 import com.moneymong.moneymong.data.datasource.user.UserLocalDataSourceImpl
 import com.moneymong.moneymong.data.datasource.user.UserRemoteDataSource
 import com.moneymong.moneymong.data.datasource.user.UserRemoteDataSourceImpl
+import com.moneymong.moneymong.data.datasource.version.VersionRemoteDataSource
+import com.moneymong.moneymong.data.datasource.version.VersionRemoteDataSourceImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -92,4 +94,9 @@ interface DataSourceModule {
     fun bindLedgerDetailRemoteDataSource(
         ledgerDetailRemoteDataSourceImpl: LedgerDetailRemoteDataSourceImpl
     ): LedgerDetailRemoteDataSource
+
+    @Binds
+    fun bindVersionRemoteDataSource(
+        versionRemoteDataSourceImpl: VersionRemoteDataSourceImpl
+    ): VersionRemoteDataSource
 }

@@ -1,6 +1,4 @@
 import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
-import java.io.FileInputStream
-import java.util.Properties
 
 @Suppress("DSL_SCOPE_VIOLATION")
 plugins {
@@ -30,7 +28,7 @@ android {
         }
         buildConfigField("String", "NATIVE_APP_KEY", getApiKey("native_app_key"))
     }
-    buildFeatures{
+    buildFeatures {
         buildConfig = true
     }
 
@@ -74,6 +72,7 @@ dependencies {
 
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.compose.material3)
+    implementation(libs.lifecycle.runtime.compose)
     implementation(libs.orbit.core)
     implementation(libs.orbit.compose)
     implementation(libs.orbit.viewModel)
@@ -85,6 +84,6 @@ dependencies {
     androidTestImplementation(libs.androidx.test.espresso.core)
 }
 
-fun getApiKey(propertyKey : String): String {
+fun getApiKey(propertyKey: String): String {
     return gradleLocalProperties(rootDir).getProperty(propertyKey)
 }

@@ -44,7 +44,8 @@ fun ErrorDialog(
     modifier: Modifier = Modifier,
     message: String,
     description: String = "",
-    onConfirm: () -> Unit
+    confirmText: String = "확인",
+    onConfirm: () -> Unit,
 ) {
     val horizontalPadding = 22.dp
     val buttonWidth = 276.dp
@@ -93,7 +94,7 @@ fun ErrorDialog(
             MDSButton(
                 modifier = Modifier.width(buttonWidth),
                 onClick = onConfirm,
-                text = "확인",
+                text = confirmText,
                 type = MDSButtonType.PRIMARY,
                 size = MDSButtonSize.LARGE,
             )

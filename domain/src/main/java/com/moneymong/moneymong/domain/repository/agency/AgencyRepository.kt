@@ -1,4 +1,4 @@
-package com.moneymong.moneymong.domain.repository
+package com.moneymong.moneymong.domain.repository.agency
 
 import androidx.paging.PagingData
 import com.moneymong.moneymong.model.agency.AgencyGetResponse

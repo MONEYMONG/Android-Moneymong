@@ -1,6 +1,6 @@
 package com.moneymong.moneymong.network.util
 
-import com.moneymong.moneymong.domain.repository.TokenRepository
+import com.moneymong.moneymong.domain.repository.token.TokenRepository
 import com.moneymong.moneymong.network.BuildConfig
 import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor
@@ -24,9 +24,11 @@ class AuthInterceptor @Inject constructor(
             tokenRepository.getAccessToken()
         }
 
-        val newRequest = originalRequest.newBuilder()
-            .addHeader("Authorization", "Bearer ${accessToken.getOrNull()}")
-            .build()
+        val newRequest = originalRequest.newBuilder().apply {
+            accessToken.getOrNull()?.let {
+                addHeader("Authorization", "Bearer $it")
+            } ?: addHeader("Authorization", "null")
+        }.build()
 
         return chain.proceed(newRequest)
     }

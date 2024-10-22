@@ -1,6 +1,6 @@
 package com.moneymong.moneymong.domain.usecase.signup
 
-import com.moneymong.moneymong.domain.repository.TokenRepository
+import com.moneymong.moneymong.domain.repository.token.TokenRepository
 import javax.inject.Inject
 
 class SchoolInfoUseCase @Inject constructor(

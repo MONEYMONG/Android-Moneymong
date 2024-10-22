@@ -7,7 +7,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.ripple.LocalRippleTheme
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.LocalRippleConfiguration
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
@@ -18,9 +19,9 @@ import androidx.compose.ui.unit.dp
 import com.moneymong.moneymong.design_system.R
 import com.moneymong.moneymong.design_system.component.button.MDSFloatingActionButton
 import com.moneymong.moneymong.design_system.theme.Mint03
-import com.moneymong.moneymong.ui.NoRippleTheme
 import com.moneymong.moneymong.ui.pxToDp
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun LedgerOnboardingAddPage(
     modifier: Modifier = Modifier,
@@ -48,7 +49,7 @@ internal fun LedgerOnboardingAddPage(
             horizontalArrowPosition = HorizontalArrowPosition.END
         )
 
-        CompositionLocalProvider(LocalRippleTheme provides NoRippleTheme) {
+        CompositionLocalProvider(LocalRippleConfiguration provides null) {
             MDSFloatingActionButton(
                 modifier = Modifier
                     .size(
