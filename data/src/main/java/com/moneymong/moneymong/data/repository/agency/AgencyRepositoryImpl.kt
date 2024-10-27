@@ -6,7 +6,7 @@ import androidx.paging.PagingData
 import com.moneymong.moneymong.data.datasource.agency.AgencyLocalDataSource
 import com.moneymong.moneymong.data.datasource.agency.AgencyRemoteDataSource
 import com.moneymong.moneymong.data.pagingsource.AgencyPagingSource
-import com.moneymong.moneymong.domain.repository.AgencyRepository
+import com.moneymong.moneymong.domain.repository.agency.AgencyRepository
 import com.moneymong.moneymong.model.agency.AgencyGetResponse
 import com.moneymong.moneymong.model.agency.AgencyJoinRequest
 import com.moneymong.moneymong.model.agency.AgencyJoinResponse
