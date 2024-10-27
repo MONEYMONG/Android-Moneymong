@@ -1,6 +1,6 @@
 package com.moneymong.moneymong.domain.usecase.token
 
-import com.moneymong.moneymong.domain.repository.TokenRepository
+import com.moneymong.moneymong.domain.repository.token.TokenRepository
 import com.moneymong.moneymong.domain.repository.user.UserRepository
 import com.moneymong.moneymong.model.sign.LoginType
 import com.moneymong.moneymong.model.sign.TokenResponse

@@ -1,4 +1,4 @@
-package com.moneymong.moneymong.domain.repository
+package com.moneymong.moneymong.domain.repository.token
 
 import com.moneymong.moneymong.model.sign.LoginType
 import com.moneymong.moneymong.model.sign.RefreshTokenRequest

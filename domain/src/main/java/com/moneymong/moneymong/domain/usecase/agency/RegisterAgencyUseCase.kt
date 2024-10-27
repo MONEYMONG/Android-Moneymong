@@ -1,6 +1,6 @@
 package com.moneymong.moneymong.domain.usecase.agency
 
-import com.moneymong.moneymong.domain.repository.AgencyRepository
+import com.moneymong.moneymong.domain.repository.agency.AgencyRepository
 import com.moneymong.moneymong.model.agency.AgencyRegisterRequest
 import com.moneymong.moneymong.model.agency.RegisterAgencyResponse
 import javax.inject.Inject
