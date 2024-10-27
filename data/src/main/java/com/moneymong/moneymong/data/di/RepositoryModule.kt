@@ -8,14 +8,16 @@ import com.moneymong.moneymong.data.repository.ocr.OCRRepositoryImpl
 import com.moneymong.moneymong.data.repository.signup.UnivRepositoryImpl
 import com.moneymong.moneymong.data.repository.token.TokenRepositoryImpl
 import com.moneymong.moneymong.data.repository.user.UserRepositoryImpl
-import com.moneymong.moneymong.domain.repository.AgencyRepository
-import com.moneymong.moneymong.domain.repository.TokenRepository
-import com.moneymong.moneymong.domain.repository.UnivRepository
+import com.moneymong.moneymong.data.repository.version.VersionRepositoryImpl
+import com.moneymong.moneymong.domain.repository.agency.AgencyRepository
 import com.moneymong.moneymong.domain.repository.ledger.LedgerRepository
 import com.moneymong.moneymong.domain.repository.ledgerdetail.LedgerDetailRepository
 import com.moneymong.moneymong.domain.repository.member.MemberRepository
 import com.moneymong.moneymong.domain.repository.ocr.OCRRepository
+import com.moneymong.moneymong.domain.repository.token.TokenRepository
+import com.moneymong.moneymong.domain.repository.univ.UnivRepository
 import com.moneymong.moneymong.domain.repository.user.UserRepository
+import com.moneymong.moneymong.domain.repository.version.VersionRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -48,22 +50,27 @@ interface RepositoryModule {
     ): UserRepository
 
     @Binds
-    fun provideOCRRepository(
+    fun bindOCRRepository(
         ocrRepositoryImpl: OCRRepositoryImpl
     ): OCRRepository
 
     @Binds
-    fun provideLedgerRepository(
+    fun bindLedgerRepository(
         ledgerRepositoryImpl: LedgerRepositoryImpl
     ): LedgerRepository
 
     @Binds
-    fun provideLedgerDetailRepository(
+    fun bindLedgerDetailRepository(
         ledgerDetailRepositoryImpl: LedgerDetailRepositoryImpl
     ): LedgerDetailRepository
 
     @Binds
-    fun provideMemberRepository(
+    fun bindMemberRepository(
         memberRepositoryImpl: MemberRepositoryImpl
     ): MemberRepository
+
+    @Binds
+    fun bindVersionRepository(
+        versionRepositoryImpl: VersionRepositoryImpl
+    ): VersionRepository
 }
