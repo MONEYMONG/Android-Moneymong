@@ -9,7 +9,7 @@ import com.moneymong.moneymong.domain.usecase.member.MemberInvitationCodeUseCase
 import com.moneymong.moneymong.domain.usecase.member.MemberListUseCase
 import com.moneymong.moneymong.domain.usecase.member.MemberReInvitationCodeUseCase
 import com.moneymong.moneymong.domain.usecase.member.UpdateMemberAuthorUseCase
-import com.moneymong.moneymong.domain.usecase.user.GetMyInfoUseCase
+import com.moneymong.moneymong.domain.usecase.user.FetchMyInfoUseCase
 import com.moneymong.moneymong.model.agency.MyAgencyResponse
 import com.moneymong.moneymong.model.member.AgencyUser
 import com.moneymong.moneymong.model.member.MemberBlockRequest
@@ -26,7 +26,7 @@ class MemberViewModel @Inject constructor(
     private val memberInvitationCodeUseCase: MemberInvitationCodeUseCase,
     private val memberReInvitationCodeUseCase: MemberReInvitationCodeUseCase,
     private val memberListUseCase: MemberListUseCase,
-    private val getMyInfoUseCase: GetMyInfoUseCase,
+    private val fetchMyInfoUseCase: FetchMyInfoUseCase,
     private val updateMemberAuthorUseCase: UpdateMemberAuthorUseCase,
     private val memberBlockUseCase: MemberBlockUseCase,
     private val fetchAgencyIdUseCase: FetchAgencyIdUseCase,
@@ -224,7 +224,7 @@ class MemberViewModel @Inject constructor(
     }
 
     fun getMyInfo() = intent {
-        getMyInfoUseCase.invoke()
+        fetchMyInfoUseCase.invoke()
             .onSuccess {
                 reduce {
                     state.copy(

@@ -5,8 +5,9 @@ import androidx.paging.cachedIn
 import androidx.paging.map
 import com.moneymong.moneymong.common.base.BaseViewModel
 import com.moneymong.moneymong.common.error.MoneyMongError
+import com.moneymong.moneymong.domain.usecase.agency.FetchAgenciesUseCase
+import com.moneymong.moneymong.domain.usecase.agency.FetchAgencyByNameUseCase
 import com.moneymong.moneymong.domain.usecase.agency.FetchMyAgencyListUseCase
-import com.moneymong.moneymong.domain.usecase.agency.GetAgenciesUseCase
 import com.moneymong.moneymong.domain.usecase.university.FetchMyUniversityUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
@@ -19,9 +20,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AgencySearchViewModel @Inject constructor(
-    getAgenciesUseCase: GetAgenciesUseCase,
+    fetchAgenciesUseCase: FetchAgenciesUseCase,
     private val fetchMyAgencyListUseCase: FetchMyAgencyListUseCase,
-    private val fetchMyUniversityUseCase: FetchMyUniversityUseCase
+    private val fetchMyUniversityUseCase: FetchMyUniversityUseCase,
+    private val fetchAgencyByNameUseCase: FetchAgencyByNameUseCase,
 ) : BaseViewModel<AgencySearchState, AgencySearchSideEffect>(AgencySearchState()) {
 
     fun navigateToRegister() = intent {
@@ -31,7 +33,7 @@ class AgencySearchViewModel @Inject constructor(
     fun navigateToJoin(agencyId: Long) =
         eventEmit(sideEffect = AgencySearchSideEffect.NavigateToAgencyJoin(agencyId))
 
-    val agencies = getAgenciesUseCase().map { pagingData ->
+    val agencies = fetchAgenciesUseCase().map { pagingData ->
         pagingData.map {
             it.toAgency()
         }
