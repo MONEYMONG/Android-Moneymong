@@ -98,7 +98,9 @@ fun AgencySearchScreen(
             modifier = Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            AgencySearchTopBar()
+            AgencySearchTopBar(
+                onSearchIconClick = {}
+            )
             AgencySearchContentView(
                 modifier = Modifier.weight(1f),
                 pagingItems = pagingItems,
