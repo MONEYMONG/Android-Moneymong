@@ -85,6 +85,12 @@ class AgencySearchViewModel @Inject constructor(
         }
     }
 
+    fun toggleVisibilitySearchBar() = intent {
+        reduce {
+            state.copy(visibleSearchBar = state.visibleSearchBar.not())
+        }
+    }
+
     fun clearSearchTextField() = intent {
         state.searchTextFieldState.clearText()
     }

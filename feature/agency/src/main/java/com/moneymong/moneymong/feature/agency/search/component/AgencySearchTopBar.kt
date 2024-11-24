@@ -13,6 +13,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.moneymong.moneymong.common.ui.noRippleClickable
 import com.moneymong.moneymong.design_system.theme.Gray10
 import com.moneymong.moneymong.design_system.theme.Heading1
 import com.moneymong.moneymong.design_system.R as MDSR
@@ -36,7 +37,8 @@ internal fun AgencySearchTopBar(
         Icon(
             modifier = Modifier
                 .size(24.dp)
-                .align(Alignment.CenterEnd),
+                .align(Alignment.CenterEnd)
+                .noRippleClickable { onSearchIconClick() },
             imageVector = ImageVector.vectorResource(id = MDSR.drawable.ic_search),
             contentDescription = "검색",
         )

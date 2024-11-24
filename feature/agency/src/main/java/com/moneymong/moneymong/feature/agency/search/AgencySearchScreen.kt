@@ -100,14 +100,16 @@ fun AgencySearchScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             AgencySearchTopBar(
-                onSearchIconClick = {}
+                onSearchIconClick = viewModel::toggleVisibilitySearchBar
             )
-            AgencySearchBar(
-                state = state.searchTextFieldState,
-                onSearch = {},
-                onClear = viewModel::clearSearchTextField,
-                onCancel = {},
-            )
+            if (state.visibleSearchBar) {
+                AgencySearchBar(
+                    state = state.searchTextFieldState,
+                    onSearch = {},
+                    onClear = viewModel::clearSearchTextField,
+                    onCancel = viewModel::toggleVisibilitySearchBar,
+                )
+            }
             Spacer(modifier = Modifier.height(16.dp))
             AgencySearchContentView(
                 modifier = Modifier.weight(1f),
