@@ -1,5 +1,10 @@
 package com.moneymong.moneymong.feature.agency.search.component
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -21,32 +26,52 @@ import com.moneymong.moneymong.design_system.R as MDSR
 @Composable
 internal fun AgencySearchTopBar(
     modifier: Modifier = Modifier,
-    onSearchIconClick: () -> Unit
+    onSearchIconClick: () -> Unit,
+    visibleSearchIcon: Boolean,
 ) {
     Box(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(vertical = 16.dp),
+        modifier = modifier.fillMaxWidth()
     ) {
         Text(
-            modifier = Modifier.align(Alignment.Center),
+            modifier = Modifier
+                .align(Alignment.Center)
+                .padding(vertical = 16.dp),
             text = "소속 찾기",
             color = Gray10,
             style = Heading1
         )
-        Icon(
-            modifier = Modifier
-                .size(24.dp)
-                .align(Alignment.CenterEnd)
-                .noRippleClickable { onSearchIconClick() },
-            imageVector = ImageVector.vectorResource(id = MDSR.drawable.ic_search),
-            contentDescription = "검색",
-        )
+        AnimatedVisibility(
+            modifier = Modifier.align(Alignment.CenterEnd),
+            visible = visibleSearchIcon,
+            enter = fadeIn(
+                animationSpec = tween(
+                    durationMillis = 300,
+                    easing = FastOutSlowInEasing
+                )
+            ),
+            exit = fadeOut(
+                animationSpec = tween(
+                    durationMillis = 300,
+                    easing = FastOutSlowInEasing
+                )
+            )
+        ) {
+            Icon(
+                modifier = Modifier
+                    .size(24.dp)
+                    .noRippleClickable { onSearchIconClick() },
+                imageVector = ImageVector.vectorResource(id = MDSR.drawable.ic_search),
+                contentDescription = "검색",
+            )
+        }
     }
 }
 
 @Preview
 @Composable
 private fun AgencySearchTopBarPreview() {
-    AgencySearchTopBar(onSearchIconClick = {})
+    AgencySearchTopBar(
+        onSearchIconClick = {},
+        visibleSearchIcon = true
+    )
 }

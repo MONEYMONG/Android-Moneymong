@@ -100,7 +100,8 @@ fun AgencySearchScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             AgencySearchTopBar(
-                onSearchIconClick = viewModel::toggleVisibilitySearchBar
+                onSearchIconClick = viewModel::toggleVisibilitySearchBar,
+                visibleSearchIcon = state.visibleSearchBar.not()
             )
             if (state.visibleSearchBar) {
                 AgencySearchBar(
