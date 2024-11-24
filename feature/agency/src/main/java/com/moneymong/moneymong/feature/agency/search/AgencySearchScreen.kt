@@ -45,6 +45,7 @@ import com.moneymong.moneymong.design_system.theme.Gray07
 import com.moneymong.moneymong.design_system.theme.MMHorizontalSpacing
 import com.moneymong.moneymong.design_system.theme.Red03
 import com.moneymong.moneymong.feature.agency.search.component.AgencySearchTopBar
+import com.moneymong.moneymong.feature.agency.search.component.searchbar.AgencySearchBar
 import com.moneymong.moneymong.feature.agency.search.item.AgencyFeedbackItem
 import com.moneymong.moneymong.feature.agency.search.item.AgencyItem
 import org.orbitmvi.orbit.compose.collectAsState
@@ -101,6 +102,13 @@ fun AgencySearchScreen(
             AgencySearchTopBar(
                 onSearchIconClick = {}
             )
+            AgencySearchBar(
+                state = state.searchTextFieldState,
+                onSearch = {},
+                onClear = viewModel::clearSearchTextField,
+                onCancel = {},
+            )
+            Spacer(modifier = Modifier.height(16.dp))
             AgencySearchContentView(
                 modifier = Modifier.weight(1f),
                 pagingItems = pagingItems,

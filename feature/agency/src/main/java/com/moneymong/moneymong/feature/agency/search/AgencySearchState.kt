@@ -1,5 +1,6 @@
 package com.moneymong.moneymong.feature.agency.search
 
+import androidx.compose.foundation.text.input.TextFieldState
 import com.moneymong.moneymong.common.base.State
 
 data class AgencySearchState(
@@ -8,7 +9,8 @@ data class AgencySearchState(
     val isError: Boolean = false,
     val errorMessage: String = "",
     val visibleWarningDialog: Boolean = false,
-    val isUniversityStudent: Boolean = false
+    val isUniversityStudent: Boolean = false,
+    val searchTextFieldState: TextFieldState = TextFieldState()
 ) : State {
 
     val joinedAgenciesIds: List<Long>

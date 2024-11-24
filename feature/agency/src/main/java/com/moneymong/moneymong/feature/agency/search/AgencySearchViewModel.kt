@@ -1,5 +1,6 @@
 package com.moneymong.moneymong.feature.agency.search
 
+import androidx.compose.foundation.text.input.clearText
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
 import androidx.paging.map
@@ -82,6 +83,10 @@ class AgencySearchViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    fun clearSearchTextField() = intent {
+        state.searchTextFieldState.clearText()
     }
 
     fun changeVisibleWarningDialog(visible: Boolean) = intent {
