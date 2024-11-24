@@ -103,14 +103,13 @@ fun AgencySearchScreen(
                 onSearchIconClick = viewModel::toggleVisibilitySearchBar,
                 visibleSearchIcon = state.visibleSearchBar.not()
             )
-            if (state.visibleSearchBar) {
-                AgencySearchBar(
-                    state = state.searchTextFieldState,
-                    onSearch = {},
-                    onClear = viewModel::clearSearchTextField,
-                    onCancel = viewModel::toggleVisibilitySearchBar,
-                )
-            }
+            AgencySearchBar(
+                state = state.searchTextFieldState,
+                visible = state.visibleSearchBar,
+                onSearch = {},
+                onClear = viewModel::clearSearchTextField,
+                onCancel = viewModel::toggleVisibilitySearchBar,
+            )
             Spacer(modifier = Modifier.height(16.dp))
             AgencySearchContentView(
                 modifier = Modifier.weight(1f),

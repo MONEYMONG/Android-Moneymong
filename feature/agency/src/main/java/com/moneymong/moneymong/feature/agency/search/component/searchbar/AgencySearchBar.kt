@@ -1,5 +1,10 @@
 package com.moneymong.moneymong.feature.agency.search.component.searchbar
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.width
@@ -20,27 +25,38 @@ import com.moneymong.moneymong.design_system.theme.MMTheme
 internal fun AgencySearchBar(
     modifier: Modifier = Modifier,
     state: TextFieldState,
+    visible: Boolean,
     onSearch: () -> Unit,
     onCancel: () -> Unit,
     onClear: () -> Unit
 ) {
-    Row(
+    val animationSpec = tween<Float>(
+        durationMillis = 300,
+        easing = FastOutSlowInEasing
+    )
+    AnimatedVisibility(
         modifier = modifier,
-        verticalAlignment = Alignment.CenterVertically
+        visible = visible,
+        enter = fadeIn(animationSpec = animationSpec),
+        exit = fadeOut(animationSpec = animationSpec)
     ) {
-        AgencySearchTextField(
-            modifier = Modifier.weight(1f),
-            state = state,
-            onSearch = onSearch,
-            onClear = onClear
-        )
-        Spacer(modifier = Modifier.width(10.dp))
-        Text(
-            modifier = Modifier.noRippleClickable { onCancel() },
-            text = "취소",
-            style = Body2,
-            color = Gray08
-        )
+        Row(
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            AgencySearchTextField(
+                modifier = Modifier.weight(1f),
+                state = state,
+                onSearch = onSearch,
+                onClear = onClear
+            )
+            Spacer(modifier = Modifier.width(10.dp))
+            Text(
+                modifier = Modifier.noRippleClickable { onCancel() },
+                text = "취소",
+                style = Body2,
+                color = Gray08
+            )
+        }
     }
 }
 
@@ -50,6 +66,7 @@ private fun SearchBarPreview() {
     MMTheme {
         AgencySearchBar(
             state = rememberTextFieldState(),
+            visible = true,
             onSearch = {},
             onClear = {},
             onCancel = {},

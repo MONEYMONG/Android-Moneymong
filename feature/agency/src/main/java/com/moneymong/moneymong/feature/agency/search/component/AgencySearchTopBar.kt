@@ -29,6 +29,9 @@ internal fun AgencySearchTopBar(
     onSearchIconClick: () -> Unit,
     visibleSearchIcon: Boolean,
 ) {
+    val animationSpec = tween<Float>(
+        durationMillis = 300, easing = FastOutSlowInEasing
+    )
     Box(
         modifier = modifier.fillMaxWidth()
     ) {
@@ -43,18 +46,8 @@ internal fun AgencySearchTopBar(
         AnimatedVisibility(
             modifier = Modifier.align(Alignment.CenterEnd),
             visible = visibleSearchIcon,
-            enter = fadeIn(
-                animationSpec = tween(
-                    durationMillis = 300,
-                    easing = FastOutSlowInEasing
-                )
-            ),
-            exit = fadeOut(
-                animationSpec = tween(
-                    durationMillis = 300,
-                    easing = FastOutSlowInEasing
-                )
-            )
+            enter = fadeIn(animationSpec = animationSpec),
+            exit = fadeOut(animationSpec = animationSpec)
         ) {
             Icon(
                 modifier = Modifier
