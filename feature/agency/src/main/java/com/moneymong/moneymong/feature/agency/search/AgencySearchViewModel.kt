@@ -85,9 +85,46 @@ class AgencySearchViewModel @Inject constructor(
         }
     }
 
-    fun toggleVisibilitySearchBar() = intent {
+    fun searchAgency() = intent {
         reduce {
-            state.copy(visibleSearchBar = state.visibleSearchBar.not())
+            state.copy(
+                isLoading = true,
+                isError = false
+            )
+        }
+        fetchAgencyByNameUseCase(agencyName = state.searchTextFieldState.text.toString())
+            .onSuccess { agencies ->
+                reduce {
+                    state.copy(
+                        isLoading = false,
+                        searchedAgencies = agencies.map { agencyResponse -> agencyResponse.toAgency() }
+                    )
+                }
+            }.onFailure {
+                reduce {
+                    state.copy(
+                        isLoading = false,
+                        isError = true,
+                        errorMessage = it.message ?: MoneyMongError.UnExpectedError.message
+                    )
+                }
+            }
+    }
+
+    fun toggleVisibilitySearchBar() = intent {
+        if (state.visibleSearchBar) {
+            reduce {
+                state.copy(
+                    visibleSearchBar = state.visibleSearchBar.not(),
+                    searchedAgencies = emptyList()
+                ).also {
+                    clearSearchTextField()
+                }
+            }
+        } else {
+            reduce {
+                state.copy(visibleSearchBar = state.visibleSearchBar.not())
+            }
         }
     }
 

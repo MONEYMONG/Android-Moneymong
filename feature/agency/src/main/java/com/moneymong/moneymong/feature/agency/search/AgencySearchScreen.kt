@@ -128,13 +128,14 @@ fun AgencySearchScreen(
                     modifier = Modifier.onSizeChanged { searchBarHeight = it.height },
                     state = state.searchTextFieldState,
                     visible = state.visibleSearchBar,
-                    onSearch = {},
+                    onSearch = viewModel::searchAgency,
                     onClear = viewModel::clearSearchTextField,
                     onCancel = viewModel::toggleVisibilitySearchBar,
                 )
                 AgencySearchContentView(
                     modifier = Modifier.offset { IntOffset(x = 0, y = offsetY) },
                     pagingItems = pagingItems,
+                    searchedAgencies = state.searchedAgencies,
                     onClickItem = { agencyId ->
                         if (agencyId in state.joinedAgenciesIds) {
                             viewModel.changeVisibleWarningDialog(true)
@@ -176,6 +177,7 @@ fun AgencySearchScreen(
 private fun AgencySearchContentView(
     modifier: Modifier = Modifier,
     pagingItems: LazyPagingItems<Agency>,
+    searchedAgencies: List<Agency>,
     onClickItem: (agencyId: Long) -> Unit,
     onClickFeedbackItem: () -> Unit,
     isLoading: Boolean,
@@ -190,35 +192,69 @@ private fun AgencySearchContentView(
             ?: MoneyMongError.UnExpectedError.message
     }
 
-    if (contentLoading) {
-        LoadingScreen(modifier = modifier.fillMaxSize())
-    } else if (contentError) {
-        ErrorScreen(
-            modifier = modifier.fillMaxSize(),
-            message = contentErrorMessage,
-            onRetry = {
-                pagingItems.retry()
-                onRetry()
-            },
-        )
-    } else {
-        if (pagingItems.itemCount == 0) {
+    when {
+        contentLoading -> LoadingScreen(modifier = modifier.fillMaxSize())
+
+        contentError ->
+            ErrorScreen(
+                modifier = modifier.fillMaxSize(),
+                message = contentErrorMessage,
+                onRetry = {
+                    pagingItems.retry()
+                    onRetry()
+                },
+            )
+
+        searchedAgencies.isNotEmpty() ->
+            ContentViewWithAgencies(
+                modifier = modifier,
+                agencies = searchedAgencies,
+                onClickItem = onClickItem,
+                onClickFeedbackItem = onClickFeedbackItem
+            )
+
+        pagingItems.itemCount == 0 ->
             ContentViewWithoutAgencies(
                 modifier = modifier,
                 pagingItems = pagingItems,
                 onClickFeedbackItem = onClickFeedbackItem
             )
-        } else {
+
+
+        else ->
             ContentViewWithAgencies(
                 modifier = modifier,
                 pagingItems = pagingItems,
                 onClickItem = onClickItem,
                 onClickFeedbackItem = onClickFeedbackItem
             )
-        }
     }
 }
 
+
+@Composable
+private fun ContentViewWithAgencies(
+    modifier: Modifier = Modifier,
+    agencies: List<Agency>,
+    onClickItem: (agencyId: Long) -> Unit,
+    onClickFeedbackItem: () -> Unit
+) {
+    LazyColumn(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(12.dp),
+        contentPadding = PaddingValues(bottom = 4.dp)
+    ) {
+        item {
+            AgencyFeedbackItem(onClick = onClickFeedbackItem)
+        }
+        items(count = agencies.size, key = { agencies[it].id }) {
+            AgencyItem(
+                agency = agencies[it],
+                onClick = { onClickItem(agencies[it].id) }
+            )
+        }
+    }
+}
 
 @Composable
 private fun ContentViewWithAgencies(
