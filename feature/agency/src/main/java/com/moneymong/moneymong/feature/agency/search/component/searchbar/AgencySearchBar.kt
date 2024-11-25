@@ -14,8 +14,12 @@ import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.moneymong.moneymong.common.ui.noRippleClickable
@@ -32,12 +36,20 @@ internal fun AgencySearchBar(
     onCancel: () -> Unit,
     onClear: () -> Unit
 ) {
+    val focusRequester = remember { FocusRequester() }
     val animationSpec = tween<Float>(
         durationMillis = 300,
         easing = FastOutSlowInEasing
     )
+
+    LaunchedEffect(key1 = visible) {
+        if (visible) {
+            focusRequester.requestFocus()
+        }
+    }
+
     AnimatedVisibility(
-        modifier = modifier,
+        modifier = modifier.focusRequester(focusRequester),
         visible = visible,
         enter = fadeIn(animationSpec = animationSpec),
         exit = fadeOut(animationSpec = animationSpec)
