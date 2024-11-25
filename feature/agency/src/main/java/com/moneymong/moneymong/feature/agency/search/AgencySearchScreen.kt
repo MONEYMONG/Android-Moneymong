@@ -2,6 +2,9 @@ package com.moneymong.moneymong.feature.agency.search
 
 import android.content.Intent
 import android.net.Uri
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.animateIntAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -12,17 +15,23 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.LoadState
@@ -89,6 +98,16 @@ fun AgencySearchScreen(
         )
     }
 
+    var searchBarHeight by remember { mutableIntStateOf(0) }
+    val offsetY by animateIntAsState(
+        targetValue = if (state.visibleSearchBar) searchBarHeight else 0,
+        animationSpec = tween(
+            durationMillis = 300,
+            easing = LinearEasing
+        ),
+        label = "Content Offset Y"
+    )
+
     Box(
         modifier = modifier
             .fillMaxSize()
@@ -103,30 +122,33 @@ fun AgencySearchScreen(
                 onSearchIconClick = viewModel::toggleVisibilitySearchBar,
                 visibleSearchIcon = state.visibleSearchBar.not()
             )
-            AgencySearchBar(
-                state = state.searchTextFieldState,
-                visible = state.visibleSearchBar,
-                onSearch = {},
-                onClear = viewModel::clearSearchTextField,
-                onCancel = viewModel::toggleVisibilitySearchBar,
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-            AgencySearchContentView(
-                modifier = Modifier.weight(1f),
-                pagingItems = pagingItems,
-                onClickItem = { agencyId ->
-                    if (agencyId in state.joinedAgenciesIds) {
-                        viewModel.changeVisibleWarningDialog(true)
-                    } else {
-                        viewModel.navigateToJoin(agencyId)
-                    }
-                },
-                onClickFeedbackItem = viewModel::onClickAskFeedback,
-                isLoading = state.isLoading,
-                isError = state.isError,
-                errorMessage = state.errorMessage,
-                onRetry = viewModel::getInitialData,
-            )
+            Spacer(modifier = Modifier.height(4.dp))
+            Box(modifier = Modifier.fillMaxSize()) {
+                AgencySearchBar(
+                    modifier = Modifier.onSizeChanged { searchBarHeight = it.height },
+                    state = state.searchTextFieldState,
+                    visible = state.visibleSearchBar,
+                    onSearch = {},
+                    onClear = viewModel::clearSearchTextField,
+                    onCancel = viewModel::toggleVisibilitySearchBar,
+                )
+                AgencySearchContentView(
+                    modifier = Modifier.offset { IntOffset(x = 0, y = offsetY) },
+                    pagingItems = pagingItems,
+                    onClickItem = { agencyId ->
+                        if (agencyId in state.joinedAgenciesIds) {
+                            viewModel.changeVisibleWarningDialog(true)
+                        } else {
+                            viewModel.navigateToJoin(agencyId)
+                        }
+                    },
+                    onClickFeedbackItem = viewModel::onClickAskFeedback,
+                    isLoading = state.isLoading,
+                    isError = state.isError,
+                    errorMessage = state.errorMessage,
+                    onRetry = viewModel::getInitialData,
+                )
+            }
         }
         Column(
             modifier = Modifier
@@ -208,7 +230,7 @@ private fun ContentViewWithAgencies(
     LazyColumn(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(12.dp),
-        contentPadding = PaddingValues(vertical = 4.dp)
+        contentPadding = PaddingValues(bottom = 4.dp)
     ) {
         item {
             AgencyFeedbackItem(
