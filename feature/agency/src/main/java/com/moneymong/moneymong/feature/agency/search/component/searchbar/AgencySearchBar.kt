@@ -20,6 +20,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.moneymong.moneymong.common.ui.noRippleClickable
@@ -37,6 +38,7 @@ internal fun AgencySearchBar(
     onClear: () -> Unit
 ) {
     val focusRequester = remember { FocusRequester() }
+    val focusManager = LocalFocusManager.current
     val animationSpec = tween<Float>(
         durationMillis = 300,
         easing = FastOutSlowInEasing
@@ -49,7 +51,7 @@ internal fun AgencySearchBar(
     }
 
     AnimatedVisibility(
-        modifier = modifier.focusRequester(focusRequester),
+        modifier = modifier,
         visible = visible,
         enter = fadeIn(animationSpec = animationSpec),
         exit = fadeOut(animationSpec = animationSpec)
@@ -57,9 +59,14 @@ internal fun AgencySearchBar(
         Column {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 AgencySearchTextField(
-                    modifier = Modifier.weight(1f),
+                    modifier = Modifier
+                        .weight(1f)
+                        .focusRequester(focusRequester),
                     state = state,
-                    onSearch = onSearch,
+                    onSearch = {
+                        onSearch()
+                        focusManager.clearFocus()
+                    },
                     onClear = onClear
                 )
                 Spacer(modifier = Modifier.width(10.dp))
