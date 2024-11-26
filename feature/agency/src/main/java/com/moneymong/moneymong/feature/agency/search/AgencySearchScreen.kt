@@ -37,6 +37,7 @@ import com.moneymong.moneymong.design_system.theme.MMHorizontalSpacing
 import com.moneymong.moneymong.design_system.theme.Red03
 import com.moneymong.moneymong.feature.agency.search.component.AgencySearchTopBar
 import com.moneymong.moneymong.feature.agency.search.component.searchbar.AgencySearchBar
+import com.moneymong.moneymong.ui.pxToDp
 import org.orbitmvi.orbit.compose.collectAsState
 import org.orbitmvi.orbit.compose.collectSideEffect
 
@@ -112,7 +113,9 @@ fun AgencySearchScreen(
                     onCancel = viewModel::toggleVisibilitySearchBar,
                 )
                 AgencySearchContentView(
-                    modifier = Modifier.offset { IntOffset(x = 0, y = offsetY) },
+                    modifier = Modifier
+                        .offset { IntOffset(x = 0, y = offsetY) }
+                        .padding(bottom = offsetY.pxToDp),
                     pagingItems = pagingItems,
                     searchedAgencies = state.searchedAgencies,
                     onClickItem = { agencyId ->
