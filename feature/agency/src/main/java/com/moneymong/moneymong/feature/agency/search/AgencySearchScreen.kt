@@ -122,7 +122,6 @@ fun AgencySearchScreen(
                 onSearchIconClick = viewModel::toggleVisibilitySearchBar,
                 visibleSearchIcon = state.visibleSearchBar.not()
             )
-            Spacer(modifier = Modifier.height(4.dp))
             Box(modifier = Modifier.fillMaxSize()) {
                 AgencySearchBar(
                     modifier = Modifier.onSizeChanged { searchBarHeight = it.height },
@@ -242,7 +241,7 @@ private fun ContentViewWithAgencies(
     LazyColumn(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(12.dp),
-        contentPadding = PaddingValues(bottom = 4.dp)
+        contentPadding = PaddingValues(vertical = 6.dp)
     ) {
         item {
             AgencyFeedbackItem(onClick = onClickFeedbackItem)

@@ -5,10 +5,9 @@ import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.rememberTextFieldState
@@ -56,28 +55,28 @@ internal fun AgencySearchBar(
         enter = fadeIn(animationSpec = animationSpec),
         exit = fadeOut(animationSpec = animationSpec)
     ) {
-        Column {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                AgencySearchTextField(
-                    modifier = Modifier
-                        .weight(1f)
-                        .focusRequester(focusRequester),
-                    state = state,
-                    onSearch = {
-                        onSearch()
-                        focusManager.clearFocus()
-                    },
-                    onClear = onClear
-                )
-                Spacer(modifier = Modifier.width(10.dp))
-                Text(
-                    modifier = Modifier.noRippleClickable { onCancel() },
-                    text = "취소",
-                    style = Body2,
-                    color = Gray08
-                )
-            }
-            Spacer(modifier = Modifier.height(16.dp))
+        Row(
+            modifier = Modifier.padding(vertical = 10.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            AgencySearchTextField(
+                modifier = Modifier
+                    .weight(1f)
+                    .focusRequester(focusRequester),
+                state = state,
+                onSearch = {
+                    onSearch()
+                    focusManager.clearFocus()
+                },
+                onClear = onClear
+            )
+            Spacer(modifier = Modifier.width(10.dp))
+            Text(
+                modifier = Modifier.noRippleClickable { onCancel() },
+                text = "취소",
+                style = Body2,
+                color = Gray08
+            )
         }
     }
 }
