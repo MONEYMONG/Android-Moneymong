@@ -68,7 +68,10 @@ internal fun AgencySearchBar(
                     onSearch()
                     focusManager.clearFocus()
                 },
-                onClear = onClear
+                onClear = {
+                    onClear()
+                    focusRequester.requestFocus()
+                }
             )
             Spacer(modifier = Modifier.width(10.dp))
             Text(
