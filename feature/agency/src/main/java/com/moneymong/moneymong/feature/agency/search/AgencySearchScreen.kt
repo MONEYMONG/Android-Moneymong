@@ -131,6 +131,7 @@ fun AgencySearchScreen(
                         }
                     },
                     onClickFeedbackItem = viewModel::onClickAskFeedback,
+                    isSearched = state.isSearched,
                     isLoading = state.isLoading,
                     isError = state.isError,
                     errorMessage = state.errorMessage,

@@ -108,6 +108,10 @@ class AgencySearchViewModel @Inject constructor(
                         errorMessage = it.message ?: MoneyMongError.UnExpectedError.message
                     )
                 }
+            }.also {
+                reduce {
+                    state.copy(isSearched = true)
+                }
             }
     }
 
@@ -115,15 +119,16 @@ class AgencySearchViewModel @Inject constructor(
         if (state.visibleSearchBar) {
             reduce {
                 state.copy(
-                    visibleSearchBar = state.visibleSearchBar.not(),
-                    searchedAgencies = emptyList()
+                    visibleSearchBar = false,
+                    searchedAgencies = emptyList(),
+                    isSearched = false
                 ).also {
                     clearSearchTextField()
                 }
             }
         } else {
             reduce {
-                state.copy(visibleSearchBar = state.visibleSearchBar.not())
+                state.copy(visibleSearchBar = true)
             }
         }
     }

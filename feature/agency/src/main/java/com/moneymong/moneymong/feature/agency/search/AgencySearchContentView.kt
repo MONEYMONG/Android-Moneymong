@@ -38,6 +38,7 @@ internal fun AgencySearchContentView(
     searchedAgencies: List<Agency>,
     onClickItem: (agencyId: Long) -> Unit,
     onClickFeedbackItem: () -> Unit,
+    isSearched: Boolean,
     isLoading: Boolean,
     isError: Boolean,
     errorMessage: String,
@@ -63,7 +64,7 @@ internal fun AgencySearchContentView(
                 },
             )
 
-        searchedAgencies.isNotEmpty() ->
+        isSearched ->
             ContentViewWithAgencies(
                 modifier = modifier,
                 agencies = searchedAgencies,
@@ -124,7 +125,7 @@ private fun ContentViewWithAgencies(
     LazyColumn(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(12.dp),
-        contentPadding = PaddingValues(bottom = 4.dp)
+        contentPadding = PaddingValues(vertical = 6.dp)
     ) {
         item {
             AgencyFeedbackItem(

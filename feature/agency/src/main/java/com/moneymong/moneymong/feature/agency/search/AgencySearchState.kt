@@ -6,6 +6,7 @@ import com.moneymong.moneymong.common.base.State
 data class AgencySearchState(
     val joinedAgencies: List<Agency> = emptyList(),
     val searchedAgencies: List<Agency> = emptyList(),
+    val isSearched: Boolean = false,
     val isLoading: Boolean = false,
     val isError: Boolean = false,
     val errorMessage: String = "",
