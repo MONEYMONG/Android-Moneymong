@@ -2,6 +2,7 @@ package com.moneymong.moneymong.feature.agency.search
 
 import android.content.Intent
 import android.net.Uri
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.animateIntAsState
 import androidx.compose.animation.core.tween
@@ -51,6 +52,10 @@ fun AgencySearchScreen(
     val state by viewModel.collectAsState()
     val context = LocalContext.current
     val pagingItems = viewModel.agencies.collectAsLazyPagingItems()
+
+    BackHandler(enabled = state.visibleSearchBar) {
+        viewModel.toggleVisibilitySearchBar()
+    }
 
     viewModel.collectSideEffect {
         when (it) {
