@@ -13,10 +13,8 @@ class MainViewModel @Inject constructor(
 ) : BaseViewModel<MainState, MainSideEffect>(MainState()) {
 
     fun checkShouldUpdate(version: String) = intent {
-        val shouldUpdate =
-            checkVersionUpdateUseCase(version = version).isFailure
-        reduce {
-            state.copy(shouldUpdate = shouldUpdate)
-        }
+        checkVersionUpdateUseCase(version = version)
+            .onSuccess { reduce { state.copy(shouldUpdate = false) } }
+            .onFailure { reduce { state.copy(shouldUpdate = it.message?.contains("업데이트") == true) } }
     }
 }

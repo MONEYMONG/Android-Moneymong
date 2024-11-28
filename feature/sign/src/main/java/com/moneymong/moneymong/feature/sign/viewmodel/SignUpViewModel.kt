@@ -11,8 +11,6 @@ import com.moneymong.moneymong.feature.sign.state.SignUpState
 import com.moneymong.moneymong.feature.sign.util.Grade
 import com.moneymong.moneymong.model.sign.UnivRequest
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.annotation.OrbitExperimental
 import org.orbitmvi.orbit.syntax.simple.blockingIntent
@@ -65,7 +63,7 @@ class SignUpViewModel @Inject constructor(
             }
     }
 
-    fun storeSchoolInfoProvided(infoExist : Boolean ){
+    fun storeSchoolInfoProvided(infoExist: Boolean) {
         viewModelScope.launch {
             schoolInfoUseCase.invoke(infoExist)
         }
@@ -177,5 +175,4 @@ class SignUpViewModel @Inject constructor(
             )
         }
     }
-
 }
