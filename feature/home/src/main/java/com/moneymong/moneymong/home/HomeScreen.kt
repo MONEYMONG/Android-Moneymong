@@ -29,8 +29,10 @@ import com.moneymong.moneymong.feature.sign.navigation.loginScreen
 import com.moneymong.moneymong.feature.sign.navigation.navigateLogin
 import com.moneymong.moneymong.feature.sign.navigation.navigateSignComplete
 import com.moneymong.moneymong.feature.sign.navigation.navigateSignUp
+import com.moneymong.moneymong.feature.sign.navigation.navigateSignUpUniversity
 import com.moneymong.moneymong.feature.sign.navigation.signCompleteScreen
 import com.moneymong.moneymong.feature.sign.navigation.signUpScreen
+import com.moneymong.moneymong.feature.sign.navigation.signUpUniversity
 import com.moneymong.moneymong.feature.sign.navigation.splashRoute
 import com.moneymong.moneymong.feature.sign.navigation.splashScreen
 import com.moneymong.moneymong.home.navigation.rememberHomeNavigator
@@ -99,7 +101,15 @@ fun HomeScreen(
             )
 
             signUpScreen(
-                navigateToSignComplete = homeNavController::navigateSignComplete,
+                navigateToLedger = homeNavController::navigateLedger,
+                navigateToSignUniversity = homeNavController::navigateSignUpUniversity,
+                navigateToAgency = homeNavController::navigateAgency,
+                navigateUp = homeNavController::navigateUp
+            )
+
+            signUpUniversity(
+                navigateToLedger = homeNavController::navigateLedger,
+                navigateToAgency = homeNavController::navigateAgency,
                 navigateUp = homeNavController::navigateUp
             )
 

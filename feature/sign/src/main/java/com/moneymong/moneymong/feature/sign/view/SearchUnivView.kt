@@ -49,6 +49,7 @@ fun SearchUnivView(
     universityResponse: UniversitiesResponse?,
     value: TextFieldValue,
     isButtonVisibleChanged: (Boolean) -> Unit,
+    selectedUniv : String
 ) {
 
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -122,7 +123,8 @@ fun SearchUnivView(
                     isItemSelectedChanged = isItemSelectedChanged,
                     univs = universityResponse.universities,
                     onClick = onClick,
-                    isButtonVisibleChanged = isButtonVisibleChanged
+                    isButtonVisibleChanged = isButtonVisibleChanged,
+                    selectedUniv = selectedUniv
                 )
             } else {
                 Column(
@@ -148,7 +150,8 @@ fun UnivList(
     isItemSelectedChanged: (Boolean) -> Unit,
     univs: List<University>,
     onClick: (String) -> Unit,
-    isButtonVisibleChanged: (Boolean) -> Unit
+    isButtonVisibleChanged: (Boolean) -> Unit,
+    selectedUniv: String
 ) {
     LazyColumn {
         items(univs) { univ ->
@@ -157,7 +160,8 @@ fun UnivList(
                 isItemSelectedChanged = isItemSelectedChanged,
                 univs = univ,
                 onClick = onClick,
-                isButtonVisibleChanged = isButtonVisibleChanged
+                isButtonVisibleChanged = isButtonVisibleChanged,
+                selectedUniv = selectedUniv
             )
         }
     }
