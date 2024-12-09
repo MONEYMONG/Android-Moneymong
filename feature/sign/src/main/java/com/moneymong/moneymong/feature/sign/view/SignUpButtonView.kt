@@ -16,6 +16,7 @@ import com.moneymong.moneymong.design_system.component.button.MDSButtonType
 import com.moneymong.moneymong.design_system.error.ErrorDialog
 import com.moneymong.moneymong.design_system.theme.Blue04
 import com.moneymong.moneymong.design_system.theme.Body3
+import com.moneymong.moneymong.feature.sign.util.AgencyType
 
 @Composable
 fun SignUpButtonView(
@@ -25,6 +26,10 @@ fun SignUpButtonView(
     popUpErrorMessage: String,
     visiblePopUpErrorChanged: (Boolean) -> Unit,
     onCreateUniversity: () -> Unit,
+    navigateToSignUpUniversity : (String, AgencyType?) -> Unit,
+    agencyName: String,
+    agencyType: AgencyType?,
+    pageType : Int
 ) {
     if (visiblePopUpError) {
         ErrorDialog(
@@ -38,30 +43,16 @@ fun SignUpButtonView(
             modifier = modifier
         ) {
             MDSButton(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth()
+                    .height(56.dp),
                 onClick = {
-                    onCreateUniversity()
+                    if(agencyType == AgencyType.GENERAL || pageType == 2) onCreateUniversity() else if (agencyType != AgencyType.GENERAL && pageType == 1) navigateToSignUpUniversity(agencyName, agencyType)
                 },
-                text = "가입하기",
+                text = if(agencyType == AgencyType.GENERAL || pageType == 2) "등록하기" else "다음으로",
                 type = MDSButtonType.PRIMARY,
                 size = MDSButtonSize.LARGE,
                 enabled = isEnabled
             )
-            Spacer(modifier = Modifier.height(16.dp))
-            Text(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .noRippleClickable {
-                        onCreateUniversity()
-                    },
-                textAlign = TextAlign.Center,
-                text = "입력할 대학 정보가 없어요",
-                color = Blue04,
-                style = Body3
-            )
-
-            Spacer(modifier = Modifier.height(28.dp))
-
 
         }
     }

@@ -5,6 +5,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import com.moneymong.moneymong.feature.sign.SignUpScreen
+import com.moneymong.moneymong.feature.sign.util.AgencyType
 
 const val signUpRoute = "signup_route"
 
@@ -13,12 +14,16 @@ fun NavController.navigateSignUp(navOptions: NavOptions? = null) {
 }
 
 fun NavGraphBuilder.signUpScreen(
-    navigateToSignComplete: () -> Unit,
+    navigateToLedger: () -> Unit,
+    navigateToSignUniversity : (String, AgencyType?) -> Unit,
+    navigateToAgency : () -> Unit,
     navigateUp: () -> Unit
 ) {
     composable(route = signUpRoute) {
         SignUpScreen(
-            navigateToSignComplete = navigateToSignComplete,
+            navigateToLedger = navigateToLedger,
+            navigateToSignUpUniversity = navigateToSignUniversity,
+            navigateToAgency = navigateToAgency,
             navigateUp = navigateUp
         )
     }
