@@ -1,6 +1,8 @@
 package com.moneymong.moneymong.feature.sign.state
 
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import com.moneymong.moneymong.common.base.State
 import com.moneymong.moneymong.feature.sign.util.AgencyType
 import com.moneymong.moneymong.feature.sign.util.Grade
@@ -14,6 +16,8 @@ data class SignUpState(
     val isEnabled: Boolean = false,
     val subTitleState: Boolean = false,
     val gradeInfor: Int = 0,
+    val isInvited : Boolean = false,
+    val buttonCornerShape : Dp = 10.dp,
     //view
     val isListVisible: Boolean = false,
     val isFilled: Boolean = false,

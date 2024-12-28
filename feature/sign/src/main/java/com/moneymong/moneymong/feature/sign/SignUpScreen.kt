@@ -116,7 +116,9 @@ fun SignUpScreen(
                 }
             },
             content = {
+                    paddingValues ->
                 SignUpContent(
+                    modifier = Modifier.padding(paddingValues),
                     navigateToLedger = navigateToLedger,
                     navigateToSignUpUniversity = navigateToSignUpUniversity,
                     navigateToAgency = navigateToAgency,
@@ -131,6 +133,7 @@ fun SignUpScreen(
 
 @Composable
 fun SignUpContent(
+    modifier: Modifier,
     navigateToLedger: () -> Unit,
     navigateToSignUpUniversity : (String, AgencyType?) -> Unit,
     navigateToAgency : () -> Unit,
@@ -142,7 +145,11 @@ fun SignUpContent(
 
     LaunchedEffect(key1 = state.isUnivCreated) {
         if (state.isUnivCreated) {
-            viewModel.registerAgency()
+            if(state.isInvited){
+                navigateToAgency()
+            }else {
+                viewModel.registerAgency()
+            }
         }
     }
 
@@ -150,6 +157,10 @@ fun SignUpContent(
         if (state.isAgencyCreated) {
             navigateToLedger()
         }
+    }
+
+    LaunchedEffect(key1 = state.isUnivCreated) {
+
     }
 
     viewModel.collectSideEffect {
@@ -162,12 +173,13 @@ fun SignUpContent(
     }
 
     Box(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .background(color = White)
     ) {
         Column(
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .fillMaxSize()
                 .padding(horizontal = MMHorizontalSpacing),
             horizontalAlignment = Alignment.Start
         ) {
@@ -180,7 +192,8 @@ fun SignUpContent(
 
             Column(
                 modifier = Modifier
-                    .padding(top = 28.dp, end = 28.dp)
+                    .padding(vertical = 28.dp)
+//                    .padding(top = 28.dp, end = 28.dp)
                     .fillMaxWidth()
             ) {
                 Text(
@@ -233,6 +246,7 @@ fun SignUpContent(
                             .onFocusChanged { focusState ->
                                 if (focusState.isFocused) {
                                     viewModel.updateEdittextFocused(true)
+                                    viewModel.changeButtonCornerShape(0.dp)
                                 } else {
                                     viewModel.updateEdittextFocused(false)
                                 }
@@ -246,7 +260,12 @@ fun SignUpContent(
                         placeholder = "",
                         icon = MDSTextFieldIcons.Clear,
                         onIconClick = { viewModel.updateAgencyName(TextFieldValue()) },
-                        keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
+                        keyboardActions = KeyboardActions(
+                            onDone = {
+                            focusManager.clearFocus()
+                            viewModel.changeButtonCornerShape(10.dp)
+                        }
+                        ),
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
                     )
                 }
@@ -259,7 +278,8 @@ fun SignUpContent(
                 .align(Alignment.BottomCenter)
         ) {
             SignUpButtonView(
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
                     .padding(horizontal = if (state.editTextFocused) 0.dp else MMHorizontalSpacing),
                 isEnabled = state.isButtonVisible,
                 visiblePopUpError = state.visiblePopUpError,
@@ -280,7 +300,8 @@ fun SignUpContent(
                 },
                 agencyName = state.agencyName.text,
                 agencyType = state.agencyType,
-                pageType = 1
+                pageType = 1,
+                cornerShape = state.buttonCornerShape
             )
 
             if (!state.editTextFocused){
@@ -307,7 +328,8 @@ fun SignUpContent(
                                     state.gradeInfor
                                 )
                             )
-                            navigateToAgency()
+                            viewModel.changeInvitedType(true)
+//                            navigateToAgency()
                         },
                     textAlign = TextAlign.Center,
                     text = "총무에게 초대받았어요",

@@ -19,6 +19,7 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.moneymong.moneymong.design_system.component.textfield.MDSTextField
 import com.moneymong.moneymong.design_system.component.textfield.util.MDSTextFieldIcons
@@ -49,7 +50,9 @@ fun SearchUnivView(
     universityResponse: UniversitiesResponse?,
     value: TextFieldValue,
     isButtonVisibleChanged: (Boolean) -> Unit,
-    selectedUniv : String
+    selectedUniv : String,
+    changeButtonCornerShape : (Dp) -> Unit,
+    changeEditTextFocus : (Boolean) -> Unit
 ) {
 
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -82,6 +85,10 @@ fun SearchUnivView(
                 .onFocusChanged { focusState ->
                     if (focusState.isFocused) {
                         isButtonVisibleChanged(false)
+                        changeButtonCornerShape(0.dp)
+                        changeEditTextFocus(true)
+                    }else{
+                        changeEditTextFocus(false)
                     }
                 },
             value = value,
@@ -111,6 +118,8 @@ fun SearchUnivView(
                 onDone = {
                     isFilledChanged(true)
                     keyboardController?.hide()
+                    changeButtonCornerShape(10.dp)
+                    changeEditTextFocus(false)
                 }
             )
         )

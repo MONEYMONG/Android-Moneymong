@@ -19,7 +19,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -31,19 +30,13 @@ import com.moneymong.moneymong.design_system.theme.Black
 import com.moneymong.moneymong.design_system.theme.Body3
 import com.moneymong.moneymong.design_system.theme.Gray06
 import com.moneymong.moneymong.design_system.theme.Gray07
-import com.moneymong.moneymong.design_system.theme.Gray08
 import com.moneymong.moneymong.design_system.theme.Heading2
 import com.moneymong.moneymong.design_system.theme.MMHorizontalSpacing
 import com.moneymong.moneymong.design_system.theme.White
-import com.moneymong.moneymong.feature.sign.SignUpContent
-import com.moneymong.moneymong.feature.sign.sideeffect.SignUpSideEffect
-import com.moneymong.moneymong.feature.sign.sideeffect.SignUpUniversitySideEffect
 import com.moneymong.moneymong.feature.sign.state.SignUpUniversityState
 import com.moneymong.moneymong.feature.sign.util.AgencyType
 import com.moneymong.moneymong.feature.sign.viewmodel.SignUpUniversityViewModel
-import com.moneymong.moneymong.feature.sign.viewmodel.SignUpViewModel
 import org.orbitmvi.orbit.compose.collectAsState
-import org.orbitmvi.orbit.compose.collectSideEffect
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
@@ -82,14 +75,14 @@ fun SignUpUniversity(
         Scaffold(
             modifier = Modifier
                 .fillMaxSize()
-                .background(White)
-                .padding(horizontal = MMHorizontalSpacing),
+                .background(White),
             topBar = {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(44.dp)
-                        .background(White),
+                        .background(White)
+                        .padding(horizontal = MMHorizontalSpacing),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.Start
                 ) {
@@ -107,7 +100,9 @@ fun SignUpUniversity(
                 }
             },
             content = {
+                    paddingValues ->
                 SignUpUniversityContent(
+                    modifier = Modifier.padding(paddingValues),
                     navigateToLedger = navigateToLedger,
                     agencyName = agencyName,
                     agencyType = agencyType,
@@ -121,6 +116,7 @@ fun SignUpUniversity(
 
 @Composable
 fun SignUpUniversityContent (
+    modifier : Modifier,
     navigateToLedger: () -> Unit,
     agencyName: String,
     agencyType: AgencyType,
@@ -141,21 +137,26 @@ fun SignUpUniversityContent (
         }
     }
 
-    Column(
-        modifier = Modifier.background(White)
-    ) {
-        Text(
-            modifier = Modifier.padding(top = 12.dp, bottom = 8.dp),
-            text = "어디 학교 교내 동아리인가요?",
-            style = Heading2,
-            color = Black
-        )
-        Text(
-            modifier = Modifier.padding(bottom = 12.dp),
-            text = "소속 대학교를 알려주세요",
-            style = Body3,
-            color = Gray06
-        )
+    Box(modifier = Modifier.fillMaxSize()) {
+
+        Column(
+            modifier = modifier
+                .background(White)
+                .padding(horizontal = MMHorizontalSpacing),
+
+            ) {
+            Text(
+                modifier = Modifier.padding(top = 12.dp, bottom = 8.dp),
+                text = "어디 학교 교내 동아리인가요?",
+                style = Heading2,
+                color = Black
+            )
+            Text(
+                modifier = Modifier.padding(bottom = 12.dp),
+                text = "소속 대학교를 알려주세요",
+                style = Body3,
+                color = Gray06
+            )
 
             SearchUnivView(
                 modifier = Modifier
@@ -193,17 +194,26 @@ fun SignUpUniversityContent (
                         isButtonVisible
                     )
                 },
-                selectedUniv = state.selectedUniv
+                selectedUniv = state.selectedUniv,
+                changeButtonCornerShape = { cornerShape ->
+                    viewModel.changeButtonCornerShape(
+                        cornerShape
+                    )
+                },
+                changeEditTextFocus = { editTextFocused -> viewModel.changeEditTextFocus(editTextFocused) }
             )
+
+        }
 
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .align(Alignment.CenterHorizontally),
+                .align(Alignment.BottomCenter) ,
             verticalArrangement = Arrangement.Bottom
         ) {
             SignUpButtonView(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth()
+                    .padding(horizontal = if (state.editTextFocused) 0.dp else MMHorizontalSpacing),
                 isEnabled = state.isItemSelected,
                 visiblePopUpError = state.visiblePopUpError,
                 popUpErrorMessage = state.popUpErrorMessage,
@@ -213,10 +223,11 @@ fun SignUpUniversityContent (
                 onCreateUniversity = {
                     viewModel.createUniv(state.selectedUniv, state.gradeInfor)
                 },
-                navigateToSignUpUniversity =  { agencyName, agencyType -> },
+                navigateToSignUpUniversity = { agencyName, agencyType -> },
                 agencyName = agencyName,
                 agencyType = agencyType,
-                pageType = 2
+                pageType = 2,
+                cornerShape = state.buttonCornerShape
             )
         }
     }

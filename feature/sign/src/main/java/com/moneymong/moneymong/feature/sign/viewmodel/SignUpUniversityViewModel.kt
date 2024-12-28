@@ -2,6 +2,7 @@ package com.moneymong.moneymong.feature.sign.viewmodel
 
 import android.view.View
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.unit.Dp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.moneymong.moneymong.common.base.BaseViewModel
@@ -165,6 +166,22 @@ class SignUpUniversityViewModel @Inject constructor(
         reduce {
             state.copy(
                 visibleError = visibleError,
+            )
+        }
+    }
+
+    fun changeButtonCornerShape(cornerShape : Dp) = intent{
+        reduce{
+            state.copy(
+                buttonCornerShape = cornerShape
+            )
+        }
+    }
+
+    fun changeEditTextFocus(isFocused : Boolean) = intent {
+        reduce {
+            state.copy(
+                editTextFocused = isFocused
             )
         }
     }
