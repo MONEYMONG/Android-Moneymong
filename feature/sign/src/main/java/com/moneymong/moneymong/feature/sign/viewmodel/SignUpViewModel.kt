@@ -1,6 +1,7 @@
 package com.moneymong.moneymong.feature.sign.viewmodel
 
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.unit.Dp
 import androidx.lifecycle.viewModelScope
 import com.moneymong.moneymong.common.base.BaseViewModel
 import com.moneymong.moneymong.domain.usecase.agency.AgencyJoinUseCase
@@ -115,6 +116,22 @@ class SignUpViewModel @Inject constructor(
         reduce {
             state.copy(
                 editTextFocused = focusState
+            )
+        }
+    }
+
+    fun changeInvitedType(invited : Boolean) = intent {
+        reduce {
+            state.copy(
+                isInvited = invited
+            )
+        }
+    }
+
+    fun changeButtonCornerShape (cornerShape: Dp)  = intent {
+        reduce {
+            state.copy(
+                buttonCornerShape = cornerShape
             )
         }
     }

@@ -37,7 +37,7 @@ fun UnivItem(
             .background(White)
             .fillMaxWidth()
             .noRippleClickable {
-                isItemSelectedChanged(!isItemSelected)
+                isItemSelectedChanged(true)
                 onClick(univs.schoolName)
                 isButtonVisibleChanged(true)
             }
