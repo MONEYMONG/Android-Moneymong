@@ -143,8 +143,7 @@ fun SignUpUniversityContent(
             modifier = modifier
                 .background(White)
                 .padding(horizontal = MMHorizontalSpacing),
-
-            ) {
+        ) {
             Text(
                 modifier = Modifier.padding(top = 12.dp, bottom = 8.dp),
                 text = "어디 학교 교내 동아리인가요?",
