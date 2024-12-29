@@ -159,9 +159,8 @@ fun SignUpUniversityContent(
 
             SearchUnivView(
                 modifier = Modifier
-                    .padding(top = 28.dp, bottom = 28.dp)
                     .fillMaxWidth()
-                    .height(0.dp)
+                    .padding(top = 28.dp, bottom = 28.dp)
                     .weight(1.0F),
                 isFilled = state.isFilled,
                 isFilledChanged = { isFilled -> viewModel.isFilledChanged(isFilled) },

@@ -225,10 +225,7 @@ fun SignUpContent(
                 }
             }
             AnimatedVisibility(visible = state.MDSSelected) {
-                Column(
-                    modifier = Modifier
-                        .padding(top = 28.dp),
-                ) {
+                Column {
                     Text(
                         text = "소속 이름",
                         style = Body2,
