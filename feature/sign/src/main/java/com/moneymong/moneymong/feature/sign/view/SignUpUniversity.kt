@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -20,6 +21,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.moneymong.moneymong.common.ui.noRippleClickable
@@ -27,6 +29,7 @@ import com.moneymong.moneymong.design_system.R
 import com.moneymong.moneymong.design_system.error.ErrorDialog
 import com.moneymong.moneymong.design_system.error.ErrorScreen
 import com.moneymong.moneymong.design_system.theme.Black
+import com.moneymong.moneymong.design_system.theme.Blue04
 import com.moneymong.moneymong.design_system.theme.Body3
 import com.moneymong.moneymong.design_system.theme.Gray06
 import com.moneymong.moneymong.design_system.theme.Gray07
@@ -231,6 +234,21 @@ fun SignUpUniversityContent(
                 pageType = 2,
                 cornerShape = state.buttonCornerShape
             )
+            if (!state.editTextFocused) {
+                Spacer(modifier = Modifier.height(16.dp))
+                Text(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .noRippleClickable {
+                            viewModel.createUniv(state.selectedUniv, state.gradeInfor)
+                        },
+                    textAlign = TextAlign.Center,
+                    text = "총무에게 초대받았어요",
+                    style = Body3,
+                    color = Blue04
+                )
+                Spacer(modifier = Modifier.height(24.dp))
+            }
         }
     }
 }
