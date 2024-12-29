@@ -41,20 +41,20 @@ import org.orbitmvi.orbit.compose.collectAsState
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun SignUpUniversity(
-    navigateToLedger : () -> Unit,
-    navigateToAgency : () -> Unit,
-    navigateUp : () -> Unit,
-    agencyName : String,
+    navigateToLedger: () -> Unit,
+    navigateToAgency: () -> Unit,
+    navigateUp: () -> Unit,
+    agencyName: String,
     agencyType: AgencyType,
     viewModel: SignUpUniversityViewModel = hiltViewModel()
-){
+) {
     val state = viewModel.collectAsState().value
 
     BackHandler {
         navigateUp()
     }
 
-    if(state.visibleError){
+    if (state.visibleError) {
         ErrorScreen(
             modifier = Modifier.fillMaxSize(),
             message = state.errorMessage,
@@ -62,16 +62,14 @@ fun SignUpUniversity(
                 viewModel.visibleErrorChanged(false)
             }
         )
-    }
-    else if(state.visiblePopUpError){
+    } else if (state.visiblePopUpError) {
         ErrorDialog(
             message = state.popUpErrorMessage,
             onConfirm = {
                 viewModel.visiblePopUpErrorChanged(false)
             }
         )
-    }
-    else {
+    } else {
         Scaffold(
             modifier = Modifier
                 .fillMaxSize()
@@ -99,8 +97,7 @@ fun SignUpUniversity(
                     )
                 }
             },
-            content = {
-                    paddingValues ->
+            content = { paddingValues ->
                 SignUpUniversityContent(
                     modifier = Modifier.padding(paddingValues),
                     navigateToLedger = navigateToLedger,
@@ -115,8 +112,8 @@ fun SignUpUniversity(
 }
 
 @Composable
-fun SignUpUniversityContent (
-    modifier : Modifier,
+fun SignUpUniversityContent(
+    modifier: Modifier,
     navigateToLedger: () -> Unit,
     agencyName: String,
     agencyType: AgencyType,
@@ -160,7 +157,7 @@ fun SignUpUniversityContent (
 
             SearchUnivView(
                 modifier = Modifier
-                    .padding(top = 28.dp, bottom = 28.dp,)
+                    .padding(top = 28.dp, bottom = 28.dp)
                     .fillMaxWidth()
                     .height(0.dp)
                     .weight(1.0F),
@@ -200,7 +197,11 @@ fun SignUpUniversityContent (
                         cornerShape
                     )
                 },
-                changeEditTextFocus = { editTextFocused -> viewModel.changeEditTextFocus(editTextFocused) }
+                changeEditTextFocus = { editTextFocused ->
+                    viewModel.changeEditTextFocus(
+                        editTextFocused
+                    )
+                }
             )
 
         }
@@ -208,11 +209,12 @@ fun SignUpUniversityContent (
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .align(Alignment.BottomCenter) ,
+                .align(Alignment.BottomCenter),
             verticalArrangement = Arrangement.Bottom
         ) {
             SignUpButtonView(
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
                     .padding(horizontal = if (state.editTextFocused) 0.dp else MMHorizontalSpacing),
                 isEnabled = state.isItemSelected,
                 visiblePopUpError = state.visiblePopUpError,

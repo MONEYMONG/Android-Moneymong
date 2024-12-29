@@ -20,11 +20,11 @@ fun SignUpButtonView(
     popUpErrorMessage: String,
     visiblePopUpErrorChanged: (Boolean) -> Unit,
     onCreateUniversity: () -> Unit,
-    navigateToSignUpUniversity : (String, AgencyType?) -> Unit,
+    navigateToSignUpUniversity: (String, AgencyType?) -> Unit,
     agencyName: String,
     agencyType: AgencyType?,
-    pageType : Int,
-    cornerShape : Dp = 10.dp
+    pageType: Int,
+    cornerShape: Dp = 10.dp
 ) {
     if (visiblePopUpError) {
         ErrorDialog(
@@ -41,9 +41,12 @@ fun SignUpButtonView(
                 modifier = Modifier.fillMaxWidth(),
 //                    .height(56.dp),
                 onClick = {
-                    if(agencyType == AgencyType.GENERAL || pageType == 2) onCreateUniversity() else if (agencyType != AgencyType.GENERAL && pageType == 1) navigateToSignUpUniversity(agencyName, agencyType)
+                    if (agencyType == AgencyType.GENERAL || pageType == 2) onCreateUniversity() else if (agencyType != AgencyType.GENERAL && pageType == 1) navigateToSignUpUniversity(
+                        agencyName,
+                        agencyType
+                    )
                 },
-                text = if(agencyType == AgencyType.GENERAL || pageType == 2) "등록하기" else "다음으로",
+                text = if (agencyType == AgencyType.GENERAL || pageType == 2) "등록하기" else "다음으로",
                 type = MDSButtonType.PRIMARY,
                 size = MDSButtonSize.LARGE,
                 enabled = isEnabled,

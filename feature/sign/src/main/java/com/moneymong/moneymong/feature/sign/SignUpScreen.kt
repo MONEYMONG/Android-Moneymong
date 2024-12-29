@@ -30,7 +30,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.moneymong.moneymong.common.ui.noRippleClickable
@@ -59,8 +58,8 @@ import org.orbitmvi.orbit.compose.collectSideEffect
 @Composable
 fun SignUpScreen(
     navigateToLedger: () -> Unit,
-    navigateToSignUpUniversity : (String, AgencyType?) -> Unit,
-    navigateToAgency : () -> Unit,
+    navigateToSignUpUniversity: (String, AgencyType?) -> Unit,
+    navigateToAgency: () -> Unit,
     navigateUp: () -> Unit,
     viewModel: SignUpViewModel = hiltViewModel()
 ) {
@@ -70,7 +69,7 @@ fun SignUpScreen(
         navigateUp()
     }
 
-    if(state.visibleError){
+    if (state.visibleError) {
         ErrorScreen(
             modifier = Modifier.fillMaxSize(),
             message = state.errorMessage,
@@ -78,16 +77,14 @@ fun SignUpScreen(
                 viewModel.visibleErrorChanged(false)
             }
         )
-    }
-    else if(state.visiblePopUpError){
+    } else if (state.visiblePopUpError) {
         ErrorDialog(
             message = state.popUpErrorMessage,
             onConfirm = {
                 viewModel.visiblePopUpErrorChanged(false)
             }
         )
-    }
-    else{
+    } else {
         Scaffold(
             modifier = Modifier
                 .fillMaxSize()
@@ -115,8 +112,7 @@ fun SignUpScreen(
                     )
                 }
             },
-            content = {
-                    paddingValues ->
+            content = { paddingValues ->
                 SignUpContent(
                     modifier = Modifier.padding(paddingValues),
                     navigateToLedger = navigateToLedger,
@@ -135,8 +131,8 @@ fun SignUpScreen(
 fun SignUpContent(
     modifier: Modifier,
     navigateToLedger: () -> Unit,
-    navigateToSignUpUniversity : (String, AgencyType?) -> Unit,
-    navigateToAgency : () -> Unit,
+    navigateToSignUpUniversity: (String, AgencyType?) -> Unit,
+    navigateToAgency: () -> Unit,
     viewModel: SignUpViewModel,
     state: SignUpState
 ) {
@@ -145,9 +141,9 @@ fun SignUpContent(
 
     LaunchedEffect(key1 = state.isUnivCreated) {
         if (state.isUnivCreated) {
-            if(state.isInvited){
+            if (state.isInvited) {
                 navigateToAgency()
-            }else {
+            } else {
                 viewModel.registerAgency()
             }
         }
@@ -168,7 +164,6 @@ fun SignUpContent(
             is SignUpSideEffect.CreateUniversityApi -> {
                 viewModel.createUniv(it.universityName, it.grade)
             }
-            else -> {}
         }
     }
 
@@ -186,8 +181,7 @@ fun SignUpContent(
             SignUpTitleView(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(89.dp)
-                    .padding(top = 12.dp, bottom = 12.dp),
+                    .padding(vertical = 12.dp),
             )
 
             Column(
@@ -233,8 +227,8 @@ fun SignUpContent(
             AnimatedVisibility(visible = state.MDSSelected) {
                 Column(
                     modifier = Modifier
-                    .padding(top = 28.dp),
-                    ) {
+                        .padding(top = 28.dp),
+                ) {
                     Text(
                         text = "소속 이름",
                         style = Body2,
@@ -262,9 +256,9 @@ fun SignUpContent(
                         onIconClick = { viewModel.updateAgencyName(TextFieldValue()) },
                         keyboardActions = KeyboardActions(
                             onDone = {
-                            focusManager.clearFocus()
-                            viewModel.changeButtonCornerShape(10.dp)
-                        }
+                                focusManager.clearFocus()
+                                viewModel.changeButtonCornerShape(10.dp)
+                            }
                         ),
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
                     )
@@ -304,7 +298,7 @@ fun SignUpContent(
                 cornerShape = state.buttonCornerShape
             )
 
-            if (!state.editTextFocused){
+            if (!state.editTextFocused) {
                 Spacer(modifier = Modifier.height(60.dp))
             }
 

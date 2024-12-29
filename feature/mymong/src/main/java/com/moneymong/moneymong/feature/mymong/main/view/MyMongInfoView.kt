@@ -43,7 +43,6 @@ internal fun MyMongInfoView(
     name: String,
     email: String,
     university: String,
-    grade: Int,
     getInfo: () -> Unit
 ) {
     Box(
@@ -66,10 +65,7 @@ internal fun MyMongInfoView(
                 email = email
             )
             Spacer(modifier = Modifier.height(20.dp))
-            UniversityInfo(
-                university = university,
-                grade = grade
-            )
+            UniversityInfo(university = university)
         }
     }
 }
@@ -123,14 +119,10 @@ private fun Profile(
 
 @Composable
 fun UniversityInfo(
-    university: String,
-    grade: Int
+    university: String
 ) {
-    val universityInfoText = when {
-        university.isEmpty() -> "정보 없음"
-        grade == 5 -> "$university ${grade}학년 이상"
-        else -> "$university ${grade}학년"
-    }
+
+    val universityInfoText = university.ifEmpty { "정보 없음" }
 
     Box(
         modifier = Modifier

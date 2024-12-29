@@ -4,23 +4,16 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.Dp
 import androidx.lifecycle.viewModelScope
 import com.moneymong.moneymong.common.base.BaseViewModel
-import com.moneymong.moneymong.domain.usecase.agency.AgencyJoinUseCase
 import com.moneymong.moneymong.domain.usecase.agency.RegisterAgencyUseCase
 import com.moneymong.moneymong.domain.usecase.signup.SchoolInfoUseCase
 import com.moneymong.moneymong.domain.usecase.university.CreateUniversityUseCase
-import com.moneymong.moneymong.domain.usecase.university.SearchUniversityUseCase
 import com.moneymong.moneymong.feature.sign.sideeffect.SignUpSideEffect
 import com.moneymong.moneymong.feature.sign.state.SignUpState
 import com.moneymong.moneymong.feature.sign.util.AgencyType
-import com.moneymong.moneymong.feature.sign.util.Grade
 import com.moneymong.moneymong.model.agency.AgencyRegisterRequest
 import com.moneymong.moneymong.model.sign.UnivRequest
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import org.orbitmvi.orbit.annotation.OrbitExperimental
-import org.orbitmvi.orbit.syntax.simple.blockingIntent
 import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.reduce
 import javax.inject.Inject
@@ -52,7 +45,7 @@ class SignUpViewModel @Inject constructor(
             }
     }
 
-    fun registerAgency() = intent{
+    fun registerAgency() = intent {
         registerAgencyUseCase(AgencyRegisterRequest(state.agencyName.text, AgencyType.GENERAL.text))
             .onSuccess {
                 reduce {
@@ -72,7 +65,7 @@ class SignUpViewModel @Inject constructor(
 
     }
 
-    private fun storeSchoolInfoProvided(infoExist : Boolean ){
+    private fun storeSchoolInfoProvided(infoExist: Boolean) {
         viewModelScope.launch {
             schoolInfoUseCase.invoke(infoExist)
         }
@@ -94,8 +87,8 @@ class SignUpViewModel @Inject constructor(
         }
     }
 
-    fun onChangeAgencyType(agencyType: AgencyType) = intent{
-        reduce{
+    fun onChangeAgencyType(agencyType: AgencyType) = intent {
+        reduce {
             state.copy(
                 agencyType = agencyType,
                 MDSSelected = true,
@@ -103,7 +96,7 @@ class SignUpViewModel @Inject constructor(
         }
     }
 
-    fun updateAgencyName(agencyName: TextFieldValue)= intent{
+    fun updateAgencyName(agencyName: TextFieldValue) = intent {
         reduce {
             state.copy(
                 agencyName = agencyName,
@@ -112,7 +105,7 @@ class SignUpViewModel @Inject constructor(
         }
     }
 
-    fun updateEdittextFocused(focusState : Boolean) = intent {
+    fun updateEdittextFocused(focusState: Boolean) = intent {
         reduce {
             state.copy(
                 editTextFocused = focusState
@@ -120,7 +113,7 @@ class SignUpViewModel @Inject constructor(
         }
     }
 
-    fun changeInvitedType(invited : Boolean) = intent {
+    fun changeInvitedType(invited: Boolean) = intent {
         reduce {
             state.copy(
                 isInvited = invited
@@ -128,7 +121,7 @@ class SignUpViewModel @Inject constructor(
         }
     }
 
-    fun changeButtonCornerShape (cornerShape: Dp)  = intent {
+    fun changeButtonCornerShape(cornerShape: Dp) = intent {
         reduce {
             state.copy(
                 buttonCornerShape = cornerShape
