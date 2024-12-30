@@ -104,7 +104,7 @@ fun SearchUnivView(
                 if (value.text.isEmpty()) {
                     isListVisibleChanged(false)
                 } else {
-                    onSearchIconClicked(textValue.toString())
+                    onSearchIconClicked(textValue.text)
                     isFilledChanged(true)
                     isListVisibleChanged(true)
                 }

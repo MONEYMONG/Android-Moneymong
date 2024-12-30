@@ -25,15 +25,19 @@ class TokenRepositoryImpl @Inject constructor(
         return loginLocalDataSource.getRefreshToken()
     }
 
-    override suspend fun postAccessToken(type: LoginType, accessToken: String): Result<TokenResponse> {
-        return tokenRemoteDataSource.postAccessToken(type = type, accessToken = accessToken).onSuccess {
-            loginLocalDataSource.setDataStore(
-                it.accessToken,
-                it.refreshToken,
-                it.loginSuccess,
-                it.schoolInfoProvided
-            )
-        }
+    override suspend fun postAccessToken(
+        type: LoginType,
+        accessToken: String
+    ): Result<TokenResponse> {
+        return tokenRemoteDataSource.postAccessToken(type = type, accessToken = accessToken)
+            .onSuccess {
+                loginLocalDataSource.setDataStore(
+                    it.accessToken,
+                    it.refreshToken,
+                    it.loginSuccess,
+                    it.schoolInfoProvided
+                )
+            }
     }
 
     override suspend fun getAccessToken(): Result<String> {

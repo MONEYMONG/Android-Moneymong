@@ -37,14 +37,10 @@ class MoneyMongTokenAuthenticator @Inject constructor(
                             }
                         }
                         .onFailure {
-                            runBlocking {
-                                tokenRepository.notifyTokenUpdateFailed(true)
-                            }
+                            tokenRepository.notifyTokenUpdateFailed(true)
                         }
                 }.onFailure {
-                    runBlocking {
-                        tokenRepository.notifyTokenUpdateFailed(true)
-                    }
+                    tokenRepository.notifyTokenUpdateFailed(true)
                 }
                 newRequest
             }

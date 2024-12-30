@@ -65,6 +65,7 @@ class SignUpViewModel @Inject constructor(
 
     }
 
+
     private fun storeSchoolInfoProvided(infoExist: Boolean) {
         viewModelScope.launch {
             schoolInfoUseCase.invoke(infoExist)
@@ -128,5 +129,4 @@ class SignUpViewModel @Inject constructor(
             )
         }
     }
-
 }

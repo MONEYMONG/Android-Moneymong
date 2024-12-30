@@ -1,12 +1,14 @@
 package com.moneymong.moneymong.feature.agency.search
 
+import androidx.compose.foundation.text.input.clearText
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
 import androidx.paging.map
 import com.moneymong.moneymong.common.base.BaseViewModel
 import com.moneymong.moneymong.common.error.MoneyMongError
+import com.moneymong.moneymong.domain.usecase.agency.FetchAgenciesUseCase
+import com.moneymong.moneymong.domain.usecase.agency.FetchAgencyByNameUseCase
 import com.moneymong.moneymong.domain.usecase.agency.FetchMyAgencyListUseCase
-import com.moneymong.moneymong.domain.usecase.agency.GetAgenciesUseCase
 import com.moneymong.moneymong.domain.usecase.university.FetchMyUniversityUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
@@ -19,9 +21,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AgencySearchViewModel @Inject constructor(
-    getAgenciesUseCase: GetAgenciesUseCase,
+    fetchAgenciesUseCase: FetchAgenciesUseCase,
     private val fetchMyAgencyListUseCase: FetchMyAgencyListUseCase,
-    private val fetchMyUniversityUseCase: FetchMyUniversityUseCase
+    private val fetchMyUniversityUseCase: FetchMyUniversityUseCase,
+    private val fetchAgencyByNameUseCase: FetchAgencyByNameUseCase,
 ) : BaseViewModel<AgencySearchState, AgencySearchSideEffect>(AgencySearchState()) {
 
     fun navigateToRegister() = intent {
@@ -31,7 +34,7 @@ class AgencySearchViewModel @Inject constructor(
     fun navigateToJoin(agencyId: Long) =
         eventEmit(sideEffect = AgencySearchSideEffect.NavigateToAgencyJoin(agencyId))
 
-    val agencies = getAgenciesUseCase().map { pagingData ->
+    val agencies = fetchAgenciesUseCase().map { pagingData ->
         pagingData.map {
             it.toAgency()
         }
@@ -80,6 +83,58 @@ class AgencySearchViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    fun searchAgency() = intent {
+        reduce {
+            state.copy(
+                isLoading = true,
+                isError = false
+            )
+        }
+        fetchAgencyByNameUseCase(agencyName = state.searchTextFieldState.text.toString())
+            .onSuccess { agencies ->
+                reduce {
+                    state.copy(
+                        isLoading = false,
+                        searchedAgencies = agencies.map { agencyResponse -> agencyResponse.toAgency() }
+                    )
+                }
+            }.onFailure {
+                reduce {
+                    state.copy(
+                        isLoading = false,
+                        isError = true,
+                        errorMessage = it.message ?: MoneyMongError.UnExpectedError.message
+                    )
+                }
+            }.also {
+                reduce {
+                    state.copy(isSearched = true)
+                }
+            }
+    }
+
+    fun toggleVisibilitySearchBar() = intent {
+        if (state.visibleSearchBar) {
+            reduce {
+                state.copy(
+                    visibleSearchBar = false,
+                    searchedAgencies = emptyList(),
+                    isSearched = false
+                ).also {
+                    clearSearchTextField()
+                }
+            }
+        } else {
+            reduce {
+                state.copy(visibleSearchBar = true)
+            }
+        }
+    }
+
+    fun clearSearchTextField() = intent {
+        state.searchTextFieldState.clearText()
     }
 
     fun changeVisibleWarningDialog(visible: Boolean) = intent {
