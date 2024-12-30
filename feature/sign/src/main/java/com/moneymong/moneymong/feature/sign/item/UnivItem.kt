@@ -29,14 +29,15 @@ fun UnivItem(
     isItemSelectedChanged: (Boolean) -> Unit,
     univs: University,
     onClick: (String) -> Unit,
-    isButtonVisibleChanged : (Boolean) -> Unit
+    isButtonVisibleChanged : (Boolean) -> Unit,
+    selectedUniv : String
 ) {
     Row(
         modifier = Modifier
             .background(White)
             .fillMaxWidth()
             .noRippleClickable {
-                isItemSelectedChanged(!isItemSelected)
+                isItemSelectedChanged(true)
                 onClick(univs.schoolName)
                 isButtonVisibleChanged(true)
             }
@@ -50,7 +51,7 @@ fun UnivItem(
         )
         Text(
             text = univs.schoolName,
-            color = if (isItemSelected) Blue04 else Black,
+            color = if (selectedUniv == univs.schoolName) Blue04 else Black,
             style = Body4,
             modifier = Modifier
                 .weight(1f)
@@ -62,7 +63,7 @@ fun UnivItem(
             painter = painterResource(id = R.drawable.ic_check),
             contentDescription = null,
             modifier = Modifier.size(24.dp),
-            tint = if (isItemSelected) Blue04 else Gray03
+            tint = if (selectedUniv == univs.schoolName) Blue04 else Gray03
         )
     }
 }

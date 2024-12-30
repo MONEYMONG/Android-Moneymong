@@ -53,7 +53,6 @@ class MyMongViewModel @Inject constructor(
                         name = it.name,
                         email = it.email,
                         university = it.university.orEmpty(),
-                        grade = it.grade
                     )
                 }
             }.onFailure {

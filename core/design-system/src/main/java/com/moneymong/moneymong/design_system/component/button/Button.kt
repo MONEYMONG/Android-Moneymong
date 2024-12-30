@@ -30,6 +30,7 @@ fun MDSButton(
     @DrawableRes iconResource: Int? = null,
     enabled: Boolean = true,
     contentHorizontalPadding: Dp = 0.dp,
+    cornerShape : Dp = 10.dp,
 ) {
     val backgroundColor = if (enabled) type.backgroundColor else disabledBackgroundColor
     val contentColor = if (enabled) type.contentColor else disabledContentColor
@@ -38,10 +39,10 @@ fun MDSButton(
         modifier = modifier
             .background(
                 color = backgroundColor,
-                shape = RoundedCornerShape(10.dp)
+                shape = RoundedCornerShape(cornerShape)
             )
             .clip(
-                RoundedCornerShape(10.dp)
+                RoundedCornerShape(cornerShape)
             )
             .clickable(
                 onClick = onClick,

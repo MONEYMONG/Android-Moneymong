@@ -6,7 +6,6 @@ data class MyMongState(
     val name: String = "",
     val email: String = "",
     val university: String = "",
-    val grade: Int = 0,
     val infoErrorMessage: String = "",
     val logoutErrorMessage: String = "",
     val isInfoLoading: Boolean = true,
