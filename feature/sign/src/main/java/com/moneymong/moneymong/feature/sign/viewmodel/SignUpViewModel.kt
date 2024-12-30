@@ -1,21 +1,19 @@
 package com.moneymong.moneymong.feature.sign.viewmodel
 
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.unit.Dp
 import androidx.lifecycle.viewModelScope
 import com.moneymong.moneymong.common.base.BaseViewModel
+import com.moneymong.moneymong.domain.usecase.agency.RegisterAgencyUseCase
 import com.moneymong.moneymong.domain.usecase.signup.SchoolInfoUseCase
 import com.moneymong.moneymong.domain.usecase.university.CreateUniversityUseCase
-import com.moneymong.moneymong.domain.usecase.university.SearchUniversityUseCase
 import com.moneymong.moneymong.feature.sign.sideeffect.SignUpSideEffect
 import com.moneymong.moneymong.feature.sign.state.SignUpState
-import com.moneymong.moneymong.feature.sign.util.Grade
+import com.moneymong.moneymong.feature.sign.util.AgencyType
+import com.moneymong.moneymong.model.agency.AgencyRegisterRequest
 import com.moneymong.moneymong.model.sign.UnivRequest
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import org.orbitmvi.orbit.annotation.OrbitExperimental
-import org.orbitmvi.orbit.syntax.simple.blockingIntent
 import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.reduce
 import javax.inject.Inject
@@ -23,10 +21,10 @@ import javax.inject.Inject
 @HiltViewModel
 class SignUpViewModel @Inject constructor(
     private val createUniversityUseCase: CreateUniversityUseCase,
-    private val searchUniversityUseCase: SearchUniversityUseCase,
+    private val registerAgencyUseCase: RegisterAgencyUseCase,
     private val schoolInfoUseCase: SchoolInfoUseCase,
 ) : BaseViewModel<SignUpState, SignUpSideEffect>(SignUpState()) {
-    fun createUniv(universityName: String?, grade: Int?) = intent {
+    fun createUniv(universityName: String, grade: Int) = intent {
         val body = UnivRequest(universityName, grade)
         createUniversityUseCase(body)
             .onSuccess {
@@ -47,109 +45,30 @@ class SignUpViewModel @Inject constructor(
             }
     }
 
-    fun searchUniv(searchQuery: String) = intent {
-        searchUniversityUseCase(searchQuery)
+    fun registerAgency() = intent {
+        registerAgencyUseCase(AgencyRegisterRequest(state.agencyName.text, AgencyType.GENERAL.text))
             .onSuccess {
                 reduce {
                     state.copy(
-                        universityResponse = it
-                    )
-                }
-            }.onFailure {
-                reduce {
-                    state.copy(
-                        visibleError = true,
-                        errorMessage = it.message.toString()
+                        isAgencyCreated = true
                     )
                 }
             }
+            .onFailure {
+                reduce {
+                    state.copy(
+                        visiblePopUpError = true,
+                        popUpErrorMessage = it.message.toString()
+                    )
+                }
+            }
+
     }
 
-    fun storeSchoolInfoProvided(infoExist : Boolean ){
+
+    private fun storeSchoolInfoProvided(infoExist: Boolean) {
         viewModelScope.launch {
             schoolInfoUseCase.invoke(infoExist)
-        }
-    }
-
-    fun isSelectedChanged(isSelected: Boolean) = intent {
-        reduce {
-            state.copy(
-                isSelected = isSelected
-            )
-        }
-    }
-
-    fun selectedUnivChanged(selectedUniv: String) = intent {
-        reduce {
-            state.copy(
-                selectedUniv = selectedUniv
-            )
-        }
-    }
-
-    @OptIn(OrbitExperimental::class)
-    fun textValueChanged(textValue: TextFieldValue) = blockingIntent {
-        reduce {
-            state.copy(
-                textValue = textValue
-            )
-        }
-    }
-
-    fun isEnabledChanged(isEnable: Boolean) = intent {
-        reduce {
-            state.copy(
-                isEnabled = isEnable
-            )
-        }
-    }
-
-    fun subTitleStateChanged(subTitleState: Boolean) = intent {
-        reduce {
-            state.copy(
-                subTitleState = subTitleState
-            )
-        }
-    }
-
-    fun gradeInforChanged(gradeInfor: Int) = intent {
-        reduce {
-            state.copy(
-                gradeInfor = gradeInfor
-            )
-        }
-    }
-
-
-    fun isFilledChanged(isFilled: Boolean) = intent {
-        reduce {
-            state.copy(
-                isFilled = isFilled
-            )
-        }
-    }
-
-    fun isListVisibleChanged(isListVisible: Boolean) = intent {
-        reduce {
-            state.copy(
-                isListVisible = isListVisible
-            )
-        }
-    }
-
-    fun isItemSelectedChanged(isItemSelected: Boolean) = intent {
-        reduce {
-            state.copy(
-                isItemSelected = isItemSelected
-            )
-        }
-    }
-
-    fun selectedGradeChange(selectedGrade: Grade?) = intent {
-        reduce {
-            state.copy(
-                selectedGrade = selectedGrade
-            )
         }
     }
 
@@ -169,13 +88,45 @@ class SignUpViewModel @Inject constructor(
         }
     }
 
-
-    fun isButtonVisibleChanged(isButtonVisible: Boolean) = intent {
+    fun onChangeAgencyType(agencyType: AgencyType) = intent {
         reduce {
             state.copy(
-                isButtonVisible = isButtonVisible
+                agencyType = agencyType,
+                MDSSelected = true,
             )
         }
     }
 
+    fun updateAgencyName(agencyName: TextFieldValue) = intent {
+        reduce {
+            state.copy(
+                agencyName = agencyName,
+                isButtonVisible = agencyName.text != "" && state.agencyType != null
+            )
+        }
+    }
+
+    fun updateEdittextFocused(focusState: Boolean) = intent {
+        reduce {
+            state.copy(
+                editTextFocused = focusState
+            )
+        }
+    }
+
+    fun changeInvitedType(invited: Boolean) = intent {
+        reduce {
+            state.copy(
+                isInvited = invited
+            )
+        }
+    }
+
+    fun changeButtonCornerShape(cornerShape: Dp) = intent {
+        reduce {
+            state.copy(
+                buttonCornerShape = cornerShape
+            )
+        }
+    }
 }

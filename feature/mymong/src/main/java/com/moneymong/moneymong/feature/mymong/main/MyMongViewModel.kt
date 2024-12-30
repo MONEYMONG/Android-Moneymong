@@ -3,7 +3,7 @@ package com.moneymong.moneymong.feature.mymong.main
 import com.moneymong.moneymong.common.base.BaseViewModel
 import com.moneymong.moneymong.common.error.MoneyMongError
 import com.moneymong.moneymong.domain.usecase.agency.SaveAgencyIdUseCase
-import com.moneymong.moneymong.domain.usecase.user.GetMyInfoUseCase
+import com.moneymong.moneymong.domain.usecase.user.FetchMyInfoUseCase
 import com.moneymong.moneymong.domain.usecase.user.LogoutUseCase
 import com.moneymong.moneymong.domain.usecase.user.SaveDeniedCameraPermissionUseCase
 import com.moneymong.moneymong.domain.usecase.user.SaveUserIdUseCase
@@ -15,7 +15,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MyMongViewModel @Inject constructor(
-    private val getMyInfoUseCase: GetMyInfoUseCase,
+    private val fetchMyInfoUseCase: FetchMyInfoUseCase,
     private val logoutUseCase: LogoutUseCase,
     private val saveAgencyIdUseCase: SaveAgencyIdUseCase,
     private val saveUserIdUseCase: SaveUserIdUseCase,
@@ -42,7 +42,7 @@ class MyMongViewModel @Inject constructor(
                 isInfoError = false,
             )
         }
-        getMyInfoUseCase()
+        fetchMyInfoUseCase()
             .also {
                 reduce {
                     state.copy(isInfoLoading = false)
@@ -53,7 +53,6 @@ class MyMongViewModel @Inject constructor(
                         name = it.name,
                         email = it.email,
                         university = it.university.orEmpty(),
-                        grade = it.grade
                     )
                 }
             }.onFailure {

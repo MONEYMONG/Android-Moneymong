@@ -35,6 +35,9 @@ class AgencyRepositoryImpl @Inject constructor(
     override suspend fun fetchMyAgencyList(): Result<List<MyAgencyResponse>> =
         agencyRemoteDataSource.fetchMyAgencyList()
 
+    override suspend fun fetchAgencyByName(agencyName: String): Result<List<AgencyGetResponse>> =
+        agencyRemoteDataSource.fetchAgencyByName(agencyName)
+
     override suspend fun agencyCodeNumbers(
         agencyId: Long,
         data: AgencyJoinRequest
