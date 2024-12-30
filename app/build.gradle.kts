@@ -19,8 +19,8 @@ android {
         applicationId = "com.moneymong.moneymong"
         minSdk = 24
         targetSdk = 34
-        versionCode = 28
-        versionName = "1.2.2"
+        versionCode = 29
+        versionName = "1.4.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
