@@ -1,0 +1,2 @@
+ninja: Entering directory `/Users/heon/Git/Android-Moneymong/opencv/.cxx/Debug/37691c3j/x86'
+ninja: no work to do.

@@ -27,6 +27,11 @@ android {
             useSupportLibrary = true
         }
         buildConfigField("String", "NATIVE_APP_KEY", getApiKey("native_app_key"))
+
+        ndk {
+            abiFilters.add("arm64-v8a")
+            abiFilters.add("armeabi-v7a")
+        }
     }
     buildFeatures {
         buildConfig = true
@@ -69,6 +74,8 @@ dependencies {
     implementation(projects.feature.agency)
     implementation(projects.feature.home)
     implementation(projects.feature.mymong)
+
+    implementation(projects.opencv)
 
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.compose.material3)

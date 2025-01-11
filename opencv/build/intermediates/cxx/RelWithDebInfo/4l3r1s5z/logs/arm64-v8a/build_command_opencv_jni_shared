@@ -1,0 +1,4 @@
+/Users/heon/Library/Android/sdk/cmake/3.22.1/bin/ninja \
+  -C \
+  /Users/heon/Git/Android-Moneymong/opencv/.cxx/RelWithDebInfo/4l3r1s5z/arm64-v8a \
+  opencv_jni_shared

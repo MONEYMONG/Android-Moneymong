@@ -13,6 +13,7 @@ dependencies {
     implementation(projects.core.common)
     implementation(projects.core.model)
     implementation(projects.domain)
+    implementation(projects.opencv)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.appcompat)
