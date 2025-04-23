@@ -32,6 +32,7 @@ import com.moneymong.moneymong.design_system.theme.Gray02
 import com.moneymong.moneymong.design_system.theme.Gray03
 import com.moneymong.moneymong.design_system.theme.Gray05
 import com.moneymong.moneymong.design_system.theme.Gray09
+import com.moneymong.moneymong.design_system.theme.MMHorizontalSpacing
 import com.moneymong.moneymong.design_system.theme.SkyBlue01
 import com.moneymong.moneymong.design_system.theme.White
 import com.moneymong.moneymong.model.agency.MyAgencyResponse
@@ -55,7 +56,7 @@ fun LedgerAgencySelectItem(
             .clickable { onClick(agencyResponse.id) }
             .border(width = 1.dp, color = borderColor, shape = RoundedCornerShape(16.dp)) // TODO
             .background(color = backgroundColor)
-            .padding(16.dp),
+            .padding(vertical = 12.dp, horizontal = MMHorizontalSpacing),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Box(

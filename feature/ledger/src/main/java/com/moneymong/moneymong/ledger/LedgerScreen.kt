@@ -52,6 +52,7 @@ import com.moneymong.moneymong.design_system.component.datepicker.MDSWheelDatePi
 import com.moneymong.moneymong.design_system.component.indicator.MDSRefreshIndicator
 import com.moneymong.moneymong.design_system.component.snackbar.MDSSnackbarHost
 import com.moneymong.moneymong.design_system.error.ErrorDialog
+import com.moneymong.moneymong.design_system.theme.MMHorizontalSpacing
 import com.moneymong.moneymong.design_system.theme.Mint02
 import com.moneymong.moneymong.design_system.theme.Mint03
 import com.moneymong.moneymong.design_system.theme.White
@@ -170,9 +171,9 @@ fun LedgerScreen(
         snackbarHost = {
             MDSSnackbarHost(
                 modifier = Modifier.padding(
-                    start = 20.dp,
+                    start = MMHorizontalSpacing,
                     bottom = 12.dp + padding.calculateBottomPadding(),
-                    end = 20.dp
+                    end = MMHorizontalSpacing
                 ),
                 hostState = snackbarHostState
             )

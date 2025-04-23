@@ -9,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.moneymong.moneymong.design_system.theme.MMHorizontalSpacing
 import com.moneymong.moneymong.ledger.view.item.LedgerAgencySelectItem
 import com.moneymong.moneymong.model.agency.MyAgencyResponse
 
@@ -24,7 +25,7 @@ fun LedgerAgencySelectBottomSheet(
     Column(
         modifier = modifier
             .verticalScroll(scrollState)
-            .padding(vertical = 24.dp, horizontal = 20.dp),
+            .padding(vertical = 24.dp, horizontal = MMHorizontalSpacing),
         verticalArrangement = Arrangement.spacedBy(space = 12.dp)
     ) {
         agencyList.forEachIndexed { index, item ->
