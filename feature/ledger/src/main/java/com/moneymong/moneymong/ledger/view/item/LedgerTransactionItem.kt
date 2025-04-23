@@ -27,10 +27,9 @@ import com.moneymong.moneymong.design_system.theme.Blue04
 import com.moneymong.moneymong.design_system.theme.Body1
 import com.moneymong.moneymong.design_system.theme.Body2
 import com.moneymong.moneymong.design_system.theme.Body3
-import com.moneymong.moneymong.design_system.theme.Body4
 import com.moneymong.moneymong.design_system.theme.Gray04
-import com.moneymong.moneymong.design_system.theme.Gray06
-import com.moneymong.moneymong.design_system.theme.Gray10
+import com.moneymong.moneymong.design_system.theme.Gray07
+import com.moneymong.moneymong.design_system.theme.Heading1
 import com.moneymong.moneymong.design_system.theme.Red03
 import com.moneymong.moneymong.model.ledger.FundType
 import com.moneymong.moneymong.model.ledger.LedgerDetail
@@ -66,8 +65,8 @@ fun LedgerTransactionItem(
         Column(modifier = Modifier.weight(1f)) {
             Text(
                 text = ledgerDetail.storeInfo,
-                style = Body4,
-                color = Gray10
+                style = Heading1,
+                color = Gray07
             )
             Spacer(modifier = Modifier.height(2.dp))
             Text(
@@ -77,7 +76,7 @@ fun LedgerTransactionItem(
             )
         }
         Column(horizontalAlignment = Alignment.End) {
-            val amountColor = if (ledgerDetail.fundType == FundType.INCOME.name) Gray10 else Red03
+            val amountColor = if (ledgerDetail.fundType == FundType.INCOME.name) Gray07 else Red03
             val sign = if (ledgerDetail.amount == 0) {
                 FundType.NONE.sign
             } else {
@@ -89,14 +88,14 @@ fun LedgerTransactionItem(
             }
             Text(
                 text = "${sign}${ledgerDetail.amount.toString().toWonFormat()}원",
-                style = Body4,
+                style = Heading1,
                 color = amountColor
             )
             Spacer(modifier = Modifier.height(2.dp))
             Text(
                 text = "잔액 ${ledgerDetail.balance.toString().toWonFormat()}원",
                 style = Body2,
-                color = Gray06
+                color = Gray04
             )
         }
     }
