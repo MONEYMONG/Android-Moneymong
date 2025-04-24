@@ -25,17 +25,20 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.moneymong.moneymong.design_system.R.*
 import com.moneymong.moneymong.design_system.theme.Blue01
+import com.moneymong.moneymong.design_system.theme.Blue03
 import com.moneymong.moneymong.design_system.theme.Blue04
 import com.moneymong.moneymong.design_system.theme.Body2
 import com.moneymong.moneymong.design_system.theme.Body3
 import com.moneymong.moneymong.design_system.theme.Gray02
 import com.moneymong.moneymong.design_system.theme.Gray03
 import com.moneymong.moneymong.design_system.theme.Gray05
+import com.moneymong.moneymong.design_system.theme.Gray08
 import com.moneymong.moneymong.design_system.theme.Gray09
 import com.moneymong.moneymong.design_system.theme.MMHorizontalSpacing
 import com.moneymong.moneymong.design_system.theme.SkyBlue01
 import com.moneymong.moneymong.design_system.theme.White
 import com.moneymong.moneymong.model.agency.MyAgencyResponse
+import java.text.DecimalFormat
 
 @Composable
 fun LedgerAgencySelectItem(
@@ -46,8 +49,11 @@ fun LedgerAgencySelectItem(
 ) {
     val backgroundColor = if (currentAgency) Blue01 else White
     val borderColor = if (currentAgency) Blue04 else Gray02
-    val textColor = if (currentAgency) Blue04 else Gray09
-    val iconColor = if (currentAgency) Blue04 else Gray03
+    val textColor = if (currentAgency) Blue04 else Gray08
+    val leftIconColor = if (currentAgency) Blue03 else SkyBlue01
+    val rightIconColor = if (currentAgency) Blue04 else Gray03
+
+    val memberFormat = DecimalFormat("00")
 
     Row(
         modifier = modifier
@@ -63,12 +69,12 @@ fun LedgerAgencySelectItem(
             modifier = Modifier
                 .size(48.dp)
                 .clip(RoundedCornerShape(100))
-                .background(SkyBlue01),
+                .background(leftIconColor),
             contentAlignment = Alignment.Center
         ) {
             Image(
-                modifier = Modifier.size(36.dp),
-                painter = painterResource(id = drawable.img_club),
+                modifier = Modifier.size(28.dp),
+                painter = painterResource(id = drawable.ic_study),
                 contentDescription = null
             )
         }
@@ -83,7 +89,7 @@ fun LedgerAgencySelectItem(
             )
             Spacer(modifier = Modifier.width(4.dp))
             Text(
-                text = "멤버수 ${agencyResponse.headCount}",
+                text = "멤버수 ${memberFormat.format(agencyResponse.headCount)}",
                 style = Body2,
                 color = Gray05
             )
@@ -92,7 +98,7 @@ fun LedgerAgencySelectItem(
         Icon(
             painter = painterResource(id = drawable.ic_check),
             contentDescription = null,
-            tint = iconColor
+            tint = rightIconColor
         )
     }
 }
