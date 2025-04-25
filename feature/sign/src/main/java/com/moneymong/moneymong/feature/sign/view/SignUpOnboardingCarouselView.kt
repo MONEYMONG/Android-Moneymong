@@ -96,6 +96,7 @@ fun SignUpOnboardingCarouselItem(
             style = Heading4,
             color = Gray08,
         )
+        Spacer(Modifier.height(14.dp))
         Image(
             modifier = Modifier
                 .fillMaxWidth(),
