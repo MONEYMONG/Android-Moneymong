@@ -51,8 +51,8 @@ val Heading2 = TextStyle(
 val Heading1 = TextStyle(
     fontFamily = SpoqaHanSansNeo,
     fontWeight = FontWeight.Bold,
-    fontSize = 18.sp,
-    lineHeight = 28.sp,
+    fontSize = 16.sp,
+    lineHeight = 24.sp,
     letterSpacing = MMLetterSpacing,
 )
 
