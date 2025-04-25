@@ -96,8 +96,6 @@ jobs:
               selectedId = process.env.SLACK_ID_ABH;
             } else if (reviewer === "jhg3410") {
               selectedId = process.env.SLACK_ID_JHG;
-            } else if (reviewer === "eunseo0105") {
-              selectedId = process.env.SLACK_ID_KES;
             } else {
               core.setFailed(`Not Found Author.`);
             }
@@ -107,7 +105,6 @@ jobs:
           PR_REVIEWER: ${{ steps.assigned_reviewers_id.outputs.reviewers }}
           SLACK_ID_ABH: ${{ secrets.SLACK_ID_ABH }}
           SLACK_ID_JHG: ${{ secrets.SLACK_ID_JHG }}
-          SLACK_ID_KES: ${{ secrets.SLACK_ID_KES }}
 
       - name: Save Slack Member ID to Github ENV
         run: echo "SLACK_MEMBER_ID=${{ steps.slack_id.outputs.selected_id }}" >> $GITHUB_ENV
