@@ -7,7 +7,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.material.Text
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
@@ -25,10 +25,13 @@ import androidx.compose.ui.unit.dp
 import com.moneymong.moneymong.design_system.component.selection.MDSSelection
 import com.moneymong.moneymong.design_system.component.textfield.MDSTextField
 import com.moneymong.moneymong.design_system.component.textfield.util.MDSTextFieldIcons
+import com.moneymong.moneymong.design_system.component.textfield.util.withRequiredMark
 import com.moneymong.moneymong.design_system.theme.Body2
+import com.moneymong.moneymong.design_system.theme.Body3
+import com.moneymong.moneymong.design_system.theme.Gray05
 import com.moneymong.moneymong.design_system.theme.Gray06
 import com.moneymong.moneymong.design_system.theme.Gray10
-import com.moneymong.moneymong.design_system.theme.Heading2
+import com.moneymong.moneymong.design_system.theme.Heading5
 import com.moneymong.moneymong.feature.agency.search.AgencyType
 
 @Composable
@@ -43,13 +46,7 @@ internal fun AgencyResisterContentView(
 ) {
     Column(modifier = modifier) {
         TitleView()
-        Spacer(modifier = Modifier.height(44.dp))
-        SelectTypeView(
-            agencyType = agencyType,
-            onAgencyTypeChange = onAgencyTypeChange,
-            registrableClubOrCouncil = registrableClubOrCouncil
-        )
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(28.dp))
         InputNameView(
             agencyName = agencyName,
             onAgencyNameChange = onAgencyNameChange,
@@ -62,10 +59,17 @@ internal fun AgencyResisterContentView(
 @Composable
 private fun TitleView() {
     Text(
-        text = "회비 관리가 필요한\n소속 정보를 알려주세요!",
+        text = "장부 생성하기",
         color = Gray10,
-        style = Heading2
+        style = Heading5
     )
+    Spacer(modifier = Modifier.height(4.dp))
+    Text(
+        text = "사용할 장부는 언제든지 추가로 만들 수 있어요",
+        color = Gray05,
+        style = Body3
+    )
+    Spacer(modifier = Modifier.height(16.dp))
 }
 
 
@@ -143,7 +147,7 @@ private fun InputNameView(
             .onFocusChanged { isFilled = !it.isFocused },
         value = agencyNameValue,
         onValueChange = { onAgencyNameChange(it.copy(text = filterText(it.text))) },
-        title = "소속 이름",
+        title = withRequiredMark("장부"),
         placeholder = "소속 이름을 입력해주세요",
         isFilled = isFilled,
         isError = isError,
@@ -159,7 +163,7 @@ private fun InputNameView(
 }
 
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 private fun AgencyResisterContentViewPreview() {
     AgencyResisterContentView(
