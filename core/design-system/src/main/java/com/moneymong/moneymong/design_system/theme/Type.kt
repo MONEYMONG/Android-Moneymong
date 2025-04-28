@@ -16,7 +16,7 @@ private val SpoqaHanSansNeo = FontFamily(
 
 private val MMLetterSpacing = (-0.6).sp
 
-val Heading5 = TextStyle(
+val Heading6 = TextStyle(
     fontFamily = SpoqaHanSansNeo,
     fontWeight = FontWeight.Bold,
     fontSize = 28.sp,
@@ -24,7 +24,7 @@ val Heading5 = TextStyle(
     letterSpacing = MMLetterSpacing,
 )
 
-val Heading4 = TextStyle(
+val Heading5 = TextStyle(
     fontFamily = SpoqaHanSansNeo,
     fontWeight = FontWeight.Bold,
     fontSize = 24.sp,
@@ -32,18 +32,26 @@ val Heading4 = TextStyle(
     letterSpacing = MMLetterSpacing,
 )
 
+val Heading4 = TextStyle(
+    fontFamily = SpoqaHanSansNeo,
+    fontWeight = FontWeight.Bold,
+    fontSize = 20.sp,
+    lineHeight = 30.sp,
+    letterSpacing = MMLetterSpacing,
+)
+
 val Heading3 = TextStyle(
     fontFamily = SpoqaHanSansNeo,
     fontWeight = FontWeight.Bold,
-    fontSize = 22.sp,
-    lineHeight = 30.sp,
+    fontSize = 18.sp,
+    lineHeight = 28.sp,
     letterSpacing = MMLetterSpacing,
 )
 
 val Heading2 = TextStyle(
     fontFamily = SpoqaHanSansNeo,
     fontWeight = FontWeight.Bold,
-    fontSize = 20.sp,
+    fontSize = 18.sp,
     lineHeight = 28.sp,
     letterSpacing = MMLetterSpacing,
 )
@@ -51,8 +59,8 @@ val Heading2 = TextStyle(
 val Heading1 = TextStyle(
     fontFamily = SpoqaHanSansNeo,
     fontWeight = FontWeight.Bold,
-    fontSize = 18.sp,
-    lineHeight = 28.sp,
+    fontSize = 16.sp,
+    lineHeight = 24.sp,
     letterSpacing = MMLetterSpacing,
 )
 

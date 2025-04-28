@@ -57,6 +57,7 @@ import com.moneymong.moneymong.design_system.theme.Gray03
 import com.moneymong.moneymong.design_system.theme.Gray05
 import com.moneymong.moneymong.design_system.theme.Gray09
 import com.moneymong.moneymong.design_system.theme.Heading2
+import com.moneymong.moneymong.design_system.theme.MMHorizontalSpacing
 import com.moneymong.moneymong.design_system.theme.Red01
 import com.moneymong.moneymong.design_system.theme.Red02
 import com.moneymong.moneymong.design_system.theme.Red03
@@ -158,11 +159,10 @@ fun MDSWheelDatePicker(
         modifier = modifier
             .fillMaxWidth()
     ) {
-
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = 20.dp, top = 20.dp, end = 20.dp, bottom = 16.dp),
+                .padding(start = MMHorizontalSpacing, top = 20.dp, end = MMHorizontalSpacing, bottom = 12.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Box(modifier = Modifier.fillMaxWidth()) {

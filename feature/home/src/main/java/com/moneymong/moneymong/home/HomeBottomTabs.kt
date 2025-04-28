@@ -11,11 +11,6 @@ enum class HomeBottomTabs(
     @DrawableRes val icon: Int,
     val route: String
 ) {
-    AGENCY(
-        labelText = R.string.home_bottom_tabs_label_agency,
-        icon = com.moneymong.moneymong.design_system.R.drawable.ic_party,
-        route = agencyRoute
-    ),
     LEDGER(
         labelText = R.string.home_bottom_tabs_label_ledger,
         icon = com.moneymong.moneymong.design_system.R.drawable.ic_record,

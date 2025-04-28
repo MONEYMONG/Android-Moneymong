@@ -83,7 +83,6 @@ internal class HomeNavigator(
             restoreState = route != agencyRoute
         }
         when (route) {
-            HomeBottomTabs.AGENCY.route -> navHostController.navigateAgency(navOptions = navOptions)
             HomeBottomTabs.LEDGER.route -> navHostController.navigateLedger(navOptions = navOptions)
             HomeBottomTabs.MYMONG.route -> navHostController.navigateMyMong(navOptions = navOptions)
         }
