@@ -1,28 +1,25 @@
 package com.moneymong.moneymong.feature.sign
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.moneymong.moneymong.design_system.R
 import com.moneymong.moneymong.design_system.error.ErrorScreen
-import com.moneymong.moneymong.design_system.theme.Blue04
+import com.moneymong.moneymong.design_system.theme.Gray01
 import com.moneymong.moneymong.design_system.theme.MMHorizontalSpacing
 import com.moneymong.moneymong.feature.sign.util.KakaoLogin
 import com.moneymong.moneymong.feature.sign.view.KakaoLoginView
-import com.moneymong.moneymong.feature.sign.view.TitleView
+import com.moneymong.moneymong.feature.sign.view.SignUpOnboardingCarouselView
 import com.moneymong.moneymong.feature.sign.viewmodel.LoginViewModel
 import org.orbitmvi.orbit.compose.collectAsState
 
@@ -63,40 +60,23 @@ fun LoginScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(color = Blue04)
-                .padding(start = MMHorizontalSpacing, end = MMHorizontalSpacing, bottom = 28.dp)
+                .background(color = Gray01)
+                .padding(start = MMHorizontalSpacing, end = MMHorizontalSpacing, bottom = 28.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Column(
-                modifier = Modifier
-                    .weight(1f),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
-            ) {
-                Image(
-                    modifier = Modifier.size(320.dp, 162.dp),
-                    painter = painterResource(id = R.drawable.img_login_mymong),
-                    contentDescription = null
-                )
-                TitleView("교내 회계관리를 편리하게", "수기 기록은 이제 그만! 간단하게 기록해요.")
-            }
-
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Bottom
-            ) {
-                KakaoLoginView(
-                    modifier = Modifier.fillMaxWidth(),
-                    loginByKaKao = {
-                        KakaoLogin(
-                            context = context,
-                            onSuccess = viewModel::onKakaoLoginSuccess,
-                            onFailure = viewModel::onKakaoLoginFailure
-                        )
-                    }
-                )
-            }
+            Spacer(Modifier.height(36.dp))
+            SignUpOnboardingCarouselView()
+            Spacer(Modifier.weight(1f))
+            KakaoLoginView(
+                modifier = Modifier.fillMaxWidth(),
+                loginByKaKao = {
+                    KakaoLogin(
+                        context = context,
+                        onSuccess = viewModel::onKakaoLoginSuccess,
+                        onFailure = viewModel::onKakaoLoginFailure
+                    )
+                }
+            )
         }
     }
 }
