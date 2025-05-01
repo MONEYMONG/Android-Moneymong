@@ -29,7 +29,7 @@ class SplashViewModel @Inject constructor(
         tokenUseCase.getDataStoreInfo()
             .onSuccess {
                 Log.d("Splash", "${it.accessToken}, ${it.schoolInfoProvided}")
-                if (it.accessToken.isNotEmpty() && it.schoolInfoProvided) {
+                if (it.accessToken.isNotEmpty()) {
                     reduce {
                         state.copy(
                             isTokenValid = true
