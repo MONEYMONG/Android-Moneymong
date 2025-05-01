@@ -68,7 +68,6 @@ import org.orbitmvi.orbit.compose.collectAsState
 import org.orbitmvi.orbit.compose.collectSideEffect
 
 @OptIn(
-    ExperimentalFoundationApi::class,
     ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class
 )
 @Composable
@@ -76,7 +75,7 @@ fun LedgerScreen(
     modifier: Modifier = Modifier,
     viewModel: LedgerViewModel = hiltViewModel(),
     padding: PaddingValues,
-    navigateToAgency: () -> Unit,
+    navigateToAgencyRegister: () -> Unit,
     navigateToOCR: (NavOptions?) -> Unit,
     navigateToLedgerDetail: (NavOptions?, Int, Boolean) -> Unit,
     navigateToLedgerManual: (NavOptions?) -> Unit
@@ -218,7 +217,7 @@ fun LedgerScreen(
                 .padding(it + padding)
         ) {
             if (!state.existAgency) {
-                LedgerAgencyEmptyView(onClickFindAgency = navigateToAgency)
+                LedgerAgencyEmptyView(onClickAgencyRegister = navigateToAgencyRegister)
             } else {
                 LedgerTabRowView(
                     tabs = tabs,
@@ -364,7 +363,7 @@ fun LedgerScreen(
 fun LedgerScreenPreview() {
     LedgerScreen(
         padding = PaddingValues(),
-        navigateToAgency = {},
+        navigateToAgencyRegister = {},
         navigateToOCR = {},
         navigateToLedgerDetail = { navOptions, i, b -> },
         navigateToLedgerManual = {}

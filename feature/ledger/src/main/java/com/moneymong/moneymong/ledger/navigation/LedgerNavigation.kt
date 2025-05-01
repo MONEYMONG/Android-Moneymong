@@ -33,10 +33,10 @@ fun NavController.navigateLedger(
 
 fun NavGraphBuilder.ledgerScreen(
     padding: PaddingValues,
-    navigateToAgency: () -> Unit,
+    navigateToAgencyRegister: () -> Unit,
     navigateToOCR: (NavOptions?) -> Unit,
     navigateToLedgerDetail: (NavOptions?, Int, Boolean) -> Unit,
-    navigateToLedgerManual: (NavOptions?) -> Unit
+    navigateToLedgerManual: (NavOptions?) -> Unit,
 ) {
     composable(
         route = ledgerRouteWithArgs,
@@ -44,7 +44,7 @@ fun NavGraphBuilder.ledgerScreen(
     ) {
         LedgerScreen(
             padding = padding,
-            navigateToAgency = navigateToAgency,
+            navigateToAgencyRegister = navigateToAgencyRegister,
             navigateToOCR = navigateToOCR,
             navigateToLedgerDetail = navigateToLedgerDetail,
             navigateToLedgerManual = navigateToLedgerManual
