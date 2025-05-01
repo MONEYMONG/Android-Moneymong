@@ -1,8 +1,6 @@
 package com.moneymong.moneymong.feature.agency.register.view
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -22,27 +20,20 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.moneymong.moneymong.design_system.component.selection.MDSSelection
 import com.moneymong.moneymong.design_system.component.textfield.MDSTextField
 import com.moneymong.moneymong.design_system.component.textfield.util.MDSTextFieldIcons
 import com.moneymong.moneymong.design_system.component.textfield.util.withRequiredMark
-import com.moneymong.moneymong.design_system.theme.Body2
 import com.moneymong.moneymong.design_system.theme.Body3
 import com.moneymong.moneymong.design_system.theme.Gray05
-import com.moneymong.moneymong.design_system.theme.Gray06
 import com.moneymong.moneymong.design_system.theme.Gray10
 import com.moneymong.moneymong.design_system.theme.Heading5
-import com.moneymong.moneymong.feature.agency.search.AgencyType
 
 @Composable
 internal fun AgencyResisterContentView(
     modifier: Modifier = Modifier,
-    agencyType: AgencyType?,
-    onAgencyTypeChange: (AgencyType) -> Unit,
     agencyName: TextFieldValue,
     onAgencyNameChange: (TextFieldValue) -> Unit,
     changeNameTextFieldIsError: (Boolean) -> Unit,
-    registrableClubOrCouncil: Boolean
 ) {
     Column(modifier = modifier) {
         TitleView()
@@ -71,48 +62,6 @@ private fun TitleView() {
     )
     Spacer(modifier = Modifier.height(16.dp))
 }
-
-
-@Composable
-private fun SelectTypeView(
-    agencyType: AgencyType?,
-    onAgencyTypeChange: (AgencyType) -> Unit,
-    registrableClubOrCouncil: Boolean
-) {
-    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        Text(
-            text = "소속 유형",
-            color = Gray06,
-            style = Body2
-        )
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(10.dp)
-        ) {
-            MDSSelection(
-                modifier = Modifier.weight(1f),
-                text = AgencyType.CLUB.text,
-                enabled = registrableClubOrCouncil,
-                isSelected = agencyType == AgencyType.CLUB,
-                onClick = { onAgencyTypeChange(AgencyType.CLUB) }
-            )
-            MDSSelection(
-                modifier = Modifier.weight(1f),
-                text = AgencyType.COUNCIL.text,
-                enabled = registrableClubOrCouncil,
-                isSelected = agencyType == AgencyType.COUNCIL,
-                onClick = { onAgencyTypeChange(AgencyType.COUNCIL) }
-            )
-            MDSSelection(
-                modifier = Modifier.weight(1f),
-                text = AgencyType.GENERAL.text,
-                isSelected = agencyType == AgencyType.GENERAL || registrableClubOrCouncil.not(),
-                onClick = { onAgencyTypeChange(AgencyType.GENERAL) }
-            )
-        }
-    }
-}
-
 
 @Composable
 private fun InputNameView(
@@ -148,7 +97,7 @@ private fun InputNameView(
         value = agencyNameValue,
         onValueChange = { onAgencyNameChange(it.copy(text = filterText(it.text))) },
         title = withRequiredMark("장부"),
-        placeholder = "소속 이름을 입력해주세요",
+        placeholder = "ex) 제주도 여행",
         isFilled = isFilled,
         isError = isError,
         helperText = "${maxCount}자 이하로 입력해주세요",
@@ -167,11 +116,8 @@ private fun InputNameView(
 @Composable
 private fun AgencyResisterContentViewPreview() {
     AgencyResisterContentView(
-        agencyType = AgencyType.GENERAL,
-        onAgencyTypeChange = {},
         agencyName = TextFieldValue("동아리"),
         onAgencyNameChange = {},
         changeNameTextFieldIsError = {},
-        registrableClubOrCouncil = true
     )
 }

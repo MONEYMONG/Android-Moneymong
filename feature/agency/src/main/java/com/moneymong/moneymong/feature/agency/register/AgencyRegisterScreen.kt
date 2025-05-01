@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -35,7 +34,6 @@ import com.moneymong.moneymong.design_system.theme.Gray07
 import com.moneymong.moneymong.design_system.theme.MMHorizontalSpacing
 import com.moneymong.moneymong.design_system.theme.White
 import com.moneymong.moneymong.feature.agency.register.view.AgencyResisterContentView
-import com.moneymong.moneymong.feature.agency.search.AgencyType
 import org.orbitmvi.orbit.compose.collectAsState
 import org.orbitmvi.orbit.compose.collectSideEffect
 
@@ -43,9 +41,7 @@ import org.orbitmvi.orbit.compose.collectSideEffect
 fun AgencyRegisterScreen(
     modifier: Modifier = Modifier,
     viewModel: AgencyRegisterViewModel = hiltViewModel(),
-    navigateToComplete: () -> Unit,
-    navigateUp: () -> Unit,
-    registrableClubOrCouncil: Boolean
+    navigateToLedger: () -> Unit,
 ) {
     val state by viewModel.collectAsState()
     val focusManager = LocalFocusManager.current
@@ -53,19 +49,10 @@ fun AgencyRegisterScreen(
 
     viewModel.collectSideEffect {
         when (it) {
-            is AgencyRegisterSideEffect.NavigateToComplete -> {
-                navigateToComplete()
+            is AgencyRegisterSideEffect.NavigateToLedger -> {
+                focusManager.clearFocus()
+                navigateToLedger()
             }
-
-            is AgencyRegisterSideEffect.NavigateUp -> {
-                navigateUp()
-            }
-        }
-    }
-
-    LaunchedEffect(key1 = registrableClubOrCouncil) {
-        if (registrableClubOrCouncil.not()) {
-            viewModel.changeAgencyType(AgencyType.GENERAL)
         }
     }
 
@@ -77,7 +64,7 @@ fun AgencyRegisterScreen(
             negativeBtnText = "취소",
             positiveBtnText = "확인",
             onClickNegative = { viewModel.changeOutDialogVisibility(false) },
-            onClickPositive = viewModel::navigateUp
+            onClickPositive = viewModel::navigateToLedger
         )
     }
 
@@ -126,12 +113,9 @@ fun AgencyRegisterScreen(
                         }
                     }
                     .height(contentHeight),
-                agencyType = state.agencyType,
-                onAgencyTypeChange = viewModel::changeAgencyType,
                 agencyName = state.agencyName,
                 onAgencyNameChange = viewModel::changeAgencyName,
                 changeNameTextFieldIsError = viewModel::changeNameTextFieldIsError,
-                registrableClubOrCouncil = registrableClubOrCouncil
             )
         }
         val canRegister = state.agencyName.text.isNotEmpty() && state.nameTextFieldIsError.not()
@@ -150,8 +134,6 @@ fun AgencyRegisterScreen(
 @Composable
 fun AgencyRegisterScreenPreview() {
     AgencyRegisterScreen(
-        navigateToComplete = {},
-        navigateUp = {},
-        registrableClubOrCouncil = false
+        navigateToLedger = {},
     )
 }
