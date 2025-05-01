@@ -1,29 +1,30 @@
 package com.moneymong.moneymong.feature.sign.viewmodel
 
-import android.util.Log
-import com.kakao.sdk.common.KakaoSdk
+import androidx.lifecycle.viewModelScope
 import com.moneymong.moneymong.common.base.BaseViewModel
+import com.moneymong.moneymong.domain.usecase.agency.FetchMyAgencyListUseCase
 import com.moneymong.moneymong.domain.usecase.token.PostAccessTokenUseCase
-import com.moneymong.moneymong.domain.usecase.token.TokenUseCase
 import com.moneymong.moneymong.feature.sign.sideeffect.LoginSideEffect
 import com.moneymong.moneymong.feature.sign.state.LoginState
 import com.moneymong.moneymong.model.sign.LoginType
 import com.moneymong.moneymong.network.util.TokenCallback
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.reduce
 import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val tokenUseCase: TokenUseCase,
-    private val postAccessTokenUseCase: PostAccessTokenUseCase
+    private val postAccessTokenUseCase: PostAccessTokenUseCase,
+    private val fetchMyAgencyListUseCase: FetchMyAgencyListUseCase,
 ) : BaseViewModel<LoginState, LoginSideEffect>(LoginState()), TokenCallback {
 
     fun onKakaoLoginSuccess(accessToken: String) = intent {
         postAccessTokenUseCase(type = LoginType.KAKAO, accessToken = accessToken).onSuccess {
-            getSchoolInfo()
+            checkAgencyExists()
         }.onFailure {
+            visibleErrorChanged(isVisibleError = true)
             reduce {
                 state.copy(
                     visibleError = true,
@@ -33,41 +34,7 @@ class LoginViewModel @Inject constructor(
         }
     }
 
-    fun onKakaoLoginFailure(throwable: Throwable) = intent {
-        reduce {
-            state.copy(
-                visibleError = true,
-                errorMessage = "문제가 발생했습니다.\n다시 시도해주세요"
-            )
-        }
-    }
-
-
-    private fun getSchoolInfo() = intent {
-        tokenUseCase.getSchoolInfo().onSuccess { result ->
-            if (result) {
-                reduce {
-                    state.copy(
-                        isSchoolInfoProvided = true
-                    )
-                }
-            } else {
-                reduce {
-                    state.copy(
-                        isSchoolInfoProvided = false
-                    )
-                }
-            }
-        }.onFailure {
-            reduce {
-                state.copy(
-                    visibleError = true,
-                    errorMessage = "문제가 발생했습니다.\n다시 시도해주세요"
-                )
-            }
-        }
-    }
-
+    fun onKakaoLoginFailure(throwable: Throwable) = visibleErrorChanged(isVisibleError = true)
 
     override suspend fun onTokenFailure() {
         intent {
@@ -77,6 +44,16 @@ class LoginViewModel @Inject constructor(
                 )
             }
         }
+    }
+
+    fun checkAgencyExists() = viewModelScope.launch {
+        fetchMyAgencyListUseCase()
+            .onSuccess {
+                val hasAnyAgency = it.isNotEmpty()
+                intent { reduce { state.copy(hasAnyAgency = hasAnyAgency) } }
+            }.onFailure {
+                visibleErrorChanged(true)
+            }
     }
 
     fun isLoginRequiredChanged(boolean: Boolean) = intent {
@@ -91,14 +68,7 @@ class LoginViewModel @Inject constructor(
         reduce {
             state.copy(
                 visibleError = isVisibleError,
-            )
-        }
-    }
-
-    fun isSchoolInfoProvidedChanged(isSchoolInfoProvided: Boolean?) = intent {
-        reduce {
-            state.copy(
-                isSchoolInfoProvided = isSchoolInfoProvided
+                errorMessage = "문제가 발생했습니다.\n다시 시도해주세요",
             )
         }
     }
