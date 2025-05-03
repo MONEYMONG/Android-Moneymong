@@ -74,6 +74,8 @@ enum class MDSDateType(val description: String) {
     END(description = "종료일")
 }
 
+private const val START_DATE_OF_LOCAL_DATE = 1
+
 @Composable
 fun MDSWheelDatePicker(
     modifier: Modifier = Modifier,
@@ -136,7 +138,10 @@ fun MDSWheelDatePicker(
         snappedEndYear,
         snappedEndMonth
     ) {
-        isValidValue = snappedStartYear <= snappedEndYear && snappedStartMonth <= snappedEndMonth
+        val startLocalDate = LocalDate.of(snappedStartYear, snappedStartMonth, START_DATE_OF_LOCAL_DATE)
+        val endLocalDate = LocalDate.of(snappedEndYear, snappedEndMonth, START_DATE_OF_LOCAL_DATE)
+
+        isValidValue = startLocalDate.isBefore(endLocalDate) || startLocalDate.isEqual(endLocalDate)
         confirmValidValue(isValidValue)
     }
 
