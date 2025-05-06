@@ -6,6 +6,5 @@ data class LedgerTransactionRequest(
     val amount: Int,
     val description: String,
     val paymentDate: String,
-    val receiptImageUrls: List<String>,
     val documentImageUrls: List<String> = emptyList()
 )

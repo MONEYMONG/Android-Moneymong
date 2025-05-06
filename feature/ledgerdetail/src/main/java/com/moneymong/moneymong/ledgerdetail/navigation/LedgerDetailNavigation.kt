@@ -12,7 +12,6 @@ import com.moneymong.moneymong.ledgerdetail.LedgerDetailScreen
 const val LEDGER_TRANSACTION_ID = "ledgerTransactionId"
 const val LEDGER_DETAIL_IS_STAFF = "LedgerDetailIsStaff"
 const val ledgerDetailRoute = "ledgerDetail_route/{${LEDGER_TRANSACTION_ID}}/{${LEDGER_DETAIL_IS_STAFF}}"
-//const val ledgerDetailRouteWithArgs = "${ledgerDetailRoute}/{${LEDGER_DETAIL_IS_STAFF}}"
 
 fun NavController.navigateLedgerDetail(
     navOptions: NavOptions? = null,
@@ -23,8 +22,7 @@ fun NavController.navigateLedgerDetail(
 }
 
 fun NavGraphBuilder.ledgerDetailScreen(
-    navigateToLedger: (ledgerPostSuccess: Boolean) -> Unit,
-    popBackStack: () -> Unit
+    navigateToLedger: () -> Unit,
 ) {
     composable(
         route = ledgerDetailRoute,
@@ -40,7 +38,6 @@ fun NavGraphBuilder.ledgerDetailScreen(
         LedgerDetailScreen(
             ledgerTransactionId = ledgerTransactionId,
             navigateToLedger = navigateToLedger,
-            popBackStack = popBackStack
         )
     }
 }

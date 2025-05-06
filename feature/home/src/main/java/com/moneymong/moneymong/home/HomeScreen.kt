@@ -162,10 +162,7 @@ fun HomeScreen(
                 navigateToLedgerManual = homeNavController::navigateLedgerManual,
             )
 
-            ledgerDetailScreen(
-                navigateToLedger = homeNavController::navigateLedger,
-                popBackStack = homeNavController::popBackStack
-            )
+            ledgerDetailScreen(navigateToLedger = homeNavController::navigateLedger)
 
             ledgerManualScreen(
                 navigateToLedger = homeNavController::navigateLedger,

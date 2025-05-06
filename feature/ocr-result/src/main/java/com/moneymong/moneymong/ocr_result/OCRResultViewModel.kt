@@ -50,7 +50,7 @@ class OCRResultViewModel @Inject constructor(
                 amount = state.receipt?.totalPrice?.price?.formatted?.value.orEmpty().toInt(),
                 description = state.memo,
                 paymentDate = state.postPaymentDate,
-                receiptImageUrls = listOf(s3Url)
+                documentImageUrls = listOf(s3Url)
             )
             postLedgerTransactionUseCase(state.agencyId, ledgerTransactionRequest)
                 .onSuccess {

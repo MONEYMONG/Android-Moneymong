@@ -29,7 +29,7 @@ interface LedgerApi {
     ): Result<Boolean>
 
     // POST
-    @POST("api/v1/ledger/{id}")
+    @POST("api/v2/ledger/{id}")
     suspend fun postLedgerTransaction(
         @Path("id") id: Int,
         @Body body: LedgerTransactionRequest
