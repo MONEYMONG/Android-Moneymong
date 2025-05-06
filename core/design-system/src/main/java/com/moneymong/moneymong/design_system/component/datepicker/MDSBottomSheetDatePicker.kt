@@ -19,7 +19,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyItemScope
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Divider
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.SnackbarHostState
@@ -56,6 +55,7 @@ import com.moneymong.moneymong.design_system.theme.Gray03
 import com.moneymong.moneymong.design_system.theme.Gray05
 import com.moneymong.moneymong.design_system.theme.Gray09
 import com.moneymong.moneymong.design_system.theme.Heading2
+import com.moneymong.moneymong.design_system.theme.Heading3
 import com.moneymong.moneymong.design_system.theme.MMHorizontalSpacing
 import com.moneymong.moneymong.design_system.theme.Red01
 import com.moneymong.moneymong.design_system.theme.Red02
@@ -79,7 +79,7 @@ fun MDSWheelDatePicker(
     modifier: Modifier = Modifier,
     startDate: LocalDate = LocalDate.now().minusMonths(6),
     endDate: LocalDate = LocalDate.now(),
-    yearRange: IntProgression = IntProgression.fromClosedRange(LocalDate.now().year + 1, 2017, -1), // empty string 표시를 위해 1씩 추가함
+    yearRange: IntProgression = IntProgression.fromClosedRange(LocalDate.now().year, 2017, -1),
     confirmDateChange: (startDate: LocalDate, endDate: LocalDate) -> Unit,
     confirmValidValue: (Boolean) -> Unit = {},
     onDismissRequest: () -> Unit,
@@ -90,8 +90,8 @@ fun MDSWheelDatePicker(
     var snappedEndMonth by remember { mutableIntStateOf(endDate.monthValue) }
     var dateType: MDSDateType by remember { mutableStateOf(MDSDateType.END) }
     var isValidValue by remember { mutableStateOf(true) }
-    val months by remember { mutableStateOf(MONTH_RANGE.toList()) }
     val years by remember { mutableStateOf(yearRange.toList()) }
+    val months by remember { mutableStateOf(MONTH_RANGE.toList()) }
 
     var startYearIndex by remember { mutableIntStateOf(years.indexOf(startDate.year).coerceIn(0, years.size - 1)) }
     var startMonthIndex by remember { mutableIntStateOf(months.indexOf(startDate.monthValue).coerceIn(0, months.size - 1)) }
@@ -201,9 +201,10 @@ fun MDSWheelDatePicker(
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
+                horizontalArrangement = Arrangement.spacedBy(40.dp),
             ) {
                 MDSDatePickerDateView(
+                    modifier = Modifier.weight(1f),
                     dateType = MDSDateType.START,
                     year = snappedStartYear,
                     month = snappedStartMonth,
@@ -212,6 +213,7 @@ fun MDSWheelDatePicker(
                     onClick = onChangeDateType
                 )
                 MDSDatePickerDateView(
+                    modifier = Modifier.weight(1f),
                     dateType = MDSDateType.END,
                     year = snappedEndYear,
                     month = snappedEndMonth,
@@ -221,7 +223,7 @@ fun MDSWheelDatePicker(
                 )
             }
             Spacer(modifier = Modifier.height(16.dp))
-            Divider(
+            HorizontalDivider(
                 modifier = Modifier.fillMaxWidth(),
                 thickness = 1.dp,
                 color = Gray02
@@ -273,11 +275,10 @@ fun MDSWheelDatePicker(
                     )
                 }
             )
-            Spacer(modifier = Modifier.height(16.dp))
         }
         MDSSnackbarHost(
             modifier = Modifier
-                .padding(start = 20.dp, bottom = 100.dp, end = 20.dp)
+                .padding(start = 20.dp, bottom = 76.dp, end = 20.dp)
                 .align(Alignment.BottomCenter),
             hostState = snackbarHostState
         )
@@ -306,7 +307,7 @@ internal fun MDSDatePickerDateView(
         Column(
             modifier = Modifier
                 .wrapContentSize()
-                .padding(start = 12.dp, top = 10.dp, end = 19.dp, bottom = 10.dp)
+                .padding(vertical = 10.dp, horizontal = 12.dp),
         ) {
             Text(
                 text = dateType.description,
@@ -316,7 +317,7 @@ internal fun MDSDatePickerDateView(
             Spacer(modifier = Modifier.height(2.dp))
             Text(
                 text = "${year}년 ${month}월",
-                style = Heading2,
+                style = Heading3,
                 color = if (!isValidValue && selected) Red03 else Blue04
             )
         }
@@ -358,7 +359,7 @@ internal fun <T> WheelPicker(
     }
 
     LaunchedEffect(startIndex) {
-        lazyListState.animateScrollToItem(safeStartIndex)
+        lazyListState.scrollToItem(safeStartIndex)
     }
 
     Box(modifier = modifier) {
