@@ -1,6 +1,5 @@
 package com.moneymong.moneymong.design_system.component.datepicker
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.snapping.SnapLayoutInfoProvider
@@ -21,6 +20,7 @@ import androidx.compose.foundation.lazy.LazyItemScope
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -38,7 +38,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.DpSize
@@ -62,8 +61,6 @@ import com.moneymong.moneymong.design_system.theme.Red01
 import com.moneymong.moneymong.design_system.theme.Red02
 import com.moneymong.moneymong.design_system.theme.Red03
 import com.moneymong.moneymong.design_system.theme.White
-import com.moneymong.moneymong.ui.pxToDp
-import com.moneymong.moneymong.ui.spToDp
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
@@ -75,6 +72,7 @@ enum class MDSDateType(val description: String) {
 }
 
 private const val START_DATE_OF_LOCAL_DATE = 1
+private val MONTH_RANGE = 1..12
 
 @Composable
 fun MDSWheelDatePicker(
@@ -92,10 +90,22 @@ fun MDSWheelDatePicker(
     var snappedEndMonth by remember { mutableIntStateOf(endDate.monthValue) }
     var dateType: MDSDateType by remember { mutableStateOf(MDSDateType.END) }
     var isValidValue by remember { mutableStateOf(true) }
-    val months by remember { mutableStateOf((0..13).toList()) }
+    val months by remember { mutableStateOf(MONTH_RANGE.toList()) }
     val years by remember { mutableStateOf(yearRange.toList()) }
-    var startYearIndex by remember { mutableIntStateOf(years.indexOf(endDate.year)) }
-    var startMonthIndex by remember { mutableIntStateOf(months.indexOf(endDate.monthValue)) }
+
+    var startYearIndex by remember { mutableIntStateOf(years.indexOf(startDate.year).coerceIn(0, years.size - 1)) }
+    var startMonthIndex by remember { mutableIntStateOf(months.indexOf(startDate.monthValue).coerceIn(0, months.size - 1)) }
+    var endYearIndex by remember { mutableIntStateOf(years.indexOf(endDate.year).coerceIn(0, years.size - 1)) }
+    var endMonthIndex by remember { mutableIntStateOf(months.indexOf(endDate.monthValue).coerceIn(0, months.size - 1)) }
+    val wheelYearStartIndex = when (dateType) {
+        MDSDateType.START -> startYearIndex
+        MDSDateType.END -> endYearIndex
+    }
+    val wheelMonthStartIndex = when (dateType) {
+        MDSDateType.START -> startMonthIndex
+        MDSDateType.END -> endMonthIndex
+    }
+
 
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
@@ -112,9 +122,11 @@ fun MDSWheelDatePicker(
     }
 
     val updateMonth: (Int) -> Unit = {
-        when (dateType) {
-            MDSDateType.START -> snappedStartMonth = it
-            MDSDateType.END -> snappedEndMonth = it
+        if (it in MONTH_RANGE) {
+            when (dateType) {
+                MDSDateType.START -> snappedStartMonth = it
+                MDSDateType.END -> snappedEndMonth = it
+            }
         }
     }
 
@@ -126,8 +138,8 @@ fun MDSWheelDatePicker(
             }
 
             MDSDateType.END -> {
-                startYearIndex = years.indexOf(snappedEndYear)
-                startMonthIndex = months.indexOf(snappedEndMonth)
+                endYearIndex = years.indexOf(snappedEndYear)
+                endMonthIndex = months.indexOf(snappedEndMonth)
             }
         }
     }
@@ -167,7 +179,12 @@ fun MDSWheelDatePicker(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = MMHorizontalSpacing, top = 20.dp, end = MMHorizontalSpacing, bottom = 12.dp),
+                .padding(
+                    start = MMHorizontalSpacing,
+                    top = 20.dp,
+                    end = MMHorizontalSpacing,
+                    bottom = 12.dp
+                ),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Box(modifier = Modifier.fillMaxWidth()) {
@@ -216,12 +233,12 @@ fun MDSWheelDatePicker(
             ) {
                 WheelPicker(
                     items = years,
-                    startIndex = startYearIndex,
+                    startIndex = wheelYearStartIndex,
                     confirmDateChange = updateYear
                 ) { year, color ->
                     Text(
                         modifier = Modifier.width(64.dp),
-                        text = if (year == yearRange.first || year == yearRange.last) "" else "${year}년",
+                        text = "${year}년",
                         style = Heading2,
                         color = color,
                         textAlign = TextAlign.Center
@@ -230,12 +247,12 @@ fun MDSWheelDatePicker(
                 Spacer(modifier = Modifier.width(40.dp))
                 WheelPicker(
                     items = months,
-                    startIndex = startMonthIndex,
+                    startIndex = wheelMonthStartIndex,
                     confirmDateChange = updateMonth
                 ) { month, color ->
                     Text(
                         modifier = Modifier.width(64.dp),
-                        text = if (month == months.first() || month == months.last()) "" else "${month}월",
+                        text = "${month}월",
                         style = Heading2,
                         color = color,
                         textAlign = TextAlign.Center
@@ -306,40 +323,42 @@ internal fun MDSDatePickerDateView(
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 internal fun <T> WheelPicker(
     modifier: Modifier = Modifier,
     state: DatePickerState = rememberMDSDatePickerState(),
-    size: DpSize = DpSize(width = 64.dp, height = ((Heading2.lineHeight.spToDp * 3) + (28.dp * 2))),
+    size: DpSize = DpSize(width = 64.dp, height = 140.dp),
     items: List<T>,
     startIndex: Int = 0,
     visibleItemsCount: Int = 3,
     confirmDateChange: (value: T) -> Unit = {},
     content: @Composable LazyItemScope.(item: T, color: Color) -> Unit
 ) {
-    val lazyListState =
-        rememberLazyListState(startIndex - 1) // empty string을 위해 리스트 처음과 끝 값을 제외함
+    val paddedItems = listOf(null) + items + listOf(null)
+    val safeStartIndex = startIndex.coerceIn(0, (items.size - 1))
+    val lazyListState = rememberLazyListState(safeStartIndex)
     val snappingLayout = remember(lazyListState) { SnapLayoutInfoProvider(lazyListState) }
     val snapFlingBehavior = rememberSnapFlingBehavior(snappingLayout)
 
     val visibleItemsMiddle by remember { derivedStateOf { visibleItemsCount / 2 } }
-    val itemHeightPixels = remember { mutableIntStateOf(0) }
-    val itemHeightDp = itemHeightPixels.intValue.pxToDp
-
+    val itemHeightDp = 28.dp
+    val centerLinePosition = size.height / 2
 
     LaunchedEffect(lazyListState) {
         snapshotFlow { lazyListState.firstVisibleItemIndex }
             .map { index -> index + visibleItemsMiddle }
             .distinctUntilChanged()
             .collect { item ->
-                state.currentIndex = item
-                confirmDateChange(items[item])
+                val realIndex = item - visibleItemsMiddle
+                if (realIndex in items.indices) {
+                    state.currentIndex = realIndex
+                    confirmDateChange(items[realIndex])
+                }
             }
     }
 
     LaunchedEffect(startIndex) {
-        lazyListState.scrollToItem(startIndex - 1)
+        lazyListState.animateScrollToItem(safeStartIndex)
     }
 
     Box(modifier = modifier) {
@@ -349,28 +368,33 @@ internal fun <T> WheelPicker(
                 .height(size.height),
             verticalArrangement = Arrangement.spacedBy(28.dp),
             state = lazyListState,
-            flingBehavior = snapFlingBehavior
+            flingBehavior = snapFlingBehavior,
         ) {
-            items(items.size) { index ->
+            items(paddedItems.size) { paddedIndex ->
+                val actualIndex = paddedIndex - visibleItemsMiddle
                 Box(
-                    modifier = Modifier
-                        .onSizeChanged { size -> itemHeightPixels.intValue = size.height }
+                    modifier = Modifier.height(itemHeightDp),
+                    contentAlignment = Alignment.Center,
                 ) {
-                    content(items[index], state.calculateItemColor(index))
+                    if (actualIndex in items.indices) {
+                        content(items[actualIndex], state.calculateItemColor(actualIndex))
+                    } else {
+                        Spacer(modifier = Modifier.height(itemHeightDp))
+                    }
                 }
             }
         }
-        Divider(
+        HorizontalDivider(
             modifier = Modifier
                 .width(64.dp)
-                .offset(y = (itemHeightDp - 4.dp) * (visibleItemsMiddle + 1)),
+                .offset(y = centerLinePosition - itemHeightDp / 2 - 6.dp),
             thickness = 2.dp,
             color = Blue04
         )
-        Divider(
+        HorizontalDivider(
             modifier = Modifier
                 .width(64.dp)
-                .offset(y = (itemHeightDp + 4.dp) * (visibleItemsMiddle + 2)),
+                .offset(y = centerLinePosition + itemHeightDp / 2 + 6.dp),
             thickness = 2.dp,
             color = Blue04
         )
@@ -380,7 +404,7 @@ internal fun <T> WheelPicker(
 @Composable
 fun rememberMDSDatePickerState() = remember { DatePickerState() }
 
-class DatePickerState() {
+class DatePickerState {
     var currentIndex by mutableIntStateOf(0)
 
     fun calculateItemColor(itemIndex: Int) =
