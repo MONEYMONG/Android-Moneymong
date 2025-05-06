@@ -125,7 +125,6 @@ fun LedgerDetailScreen(
 
             is LedgerDetailSideEffect.LedgerDetailNavigateToLedger -> {
                 navigateToLedger()
-//                popBackStack()
             }
 
             is LedgerDetailSideEffect.LedgerDetailConfirmModalNegative -> {
