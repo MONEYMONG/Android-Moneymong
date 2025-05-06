@@ -40,7 +40,6 @@ import com.moneymong.moneymong.ledgerdetail.navigation.ledgerDetailScreen
 import com.moneymong.moneymong.ledgerdetail.navigation.navigateLedgerDetail
 import com.moneymong.moneymong.ledgermanual.navigation.ledgerManualScreen
 import com.moneymong.moneymong.ledgermanual.navigation.navigateLedgerManual
-import com.moneymong.moneymong.ocr.navigation.navigateOCR
 import com.moneymong.moneymong.ocr.navigation.ocrScreen
 import com.moneymong.moneymong.ocr_detail.navigation.navigateOCRDetail
 import com.moneymong.moneymong.ocr_detail.navigation.ocrDetailScreen
@@ -157,7 +156,6 @@ fun HomeScreen(
             ledgerScreen(
                 padding = padding,
                 navigateToAgencyRegister = homeNavController::navigateAgencyRegister,
-                navigateToOCR = homeNavController::navigateOCR,
                 navigateToLedgerDetail = homeNavController::navigateLedgerDetail,
                 navigateToLedgerManual = homeNavController::navigateLedgerManual,
             )

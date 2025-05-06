@@ -233,11 +233,6 @@ class LedgerViewModel @Inject constructor(
         fetchLedgerTransactionList()
     }
 
-    fun onClickLedgerRegisterOCR() = intent {
-        eventTracker.logEvent(Event.OCR_CLICK)
-        postSideEffect(LedgerSideEffect.LedgerNavigateToOCR)
-    }
-
     fun onClickLedgerRegisterManual() = intent {
         eventTracker.logEvent(Event.HAND_CLICK)
         postSideEffect(LedgerSideEffect.LedgerNavigateToLedgerManual)
