@@ -19,7 +19,9 @@ import androidx.compose.ui.unit.dp
 import com.moneymong.moneymong.design_system.component.button.MDSButton
 import com.moneymong.moneymong.design_system.component.button.MDSButtonSize
 import com.moneymong.moneymong.design_system.component.button.MDSButtonType
+import com.moneymong.moneymong.design_system.theme.Body3
 import com.moneymong.moneymong.design_system.theme.Body4
+import com.moneymong.moneymong.design_system.theme.Gray07
 import com.moneymong.moneymong.design_system.theme.Gray08
 import com.moneymong.moneymong.design_system.theme.White
 import com.moneymong.moneymong.ledger.R
@@ -27,7 +29,7 @@ import com.moneymong.moneymong.ledger.R
 @Composable
 fun LedgerAgencyEmptyView(
     modifier: Modifier = Modifier,
-    onClickFindAgency: () -> Unit
+    onClickAgencyRegister: () -> Unit
 ) {
     Column(
         modifier = modifier
@@ -43,17 +45,17 @@ fun LedgerAgencyEmptyView(
         )
         Spacer(modifier = Modifier.height(12.dp))
         Text(
-            text = "소속에 가입후 장부를 사용할 수 있습니다",
-            style = Body4,
-            color = Gray08
+            text = "기록한 장부를 만들어보세요",
+            style = Body3,
+            color = Gray07
         )
         Spacer(modifier = Modifier.height(16.dp))
         MDSButton(
-            modifier = Modifier.width(160.dp),
-            text = "내 소속 찾으러가기",
+            modifier = Modifier.width(140.dp),
+            text = "장부 생성하기",
             type = MDSButtonType.PRIMARY,
             size = MDSButtonSize.MEDIUM,
-            onClick = onClickFindAgency
+            onClick = onClickAgencyRegister
         )
     }
 }

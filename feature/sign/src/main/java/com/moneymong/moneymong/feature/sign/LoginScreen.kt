@@ -25,20 +25,21 @@ import org.orbitmvi.orbit.compose.collectAsState
 
 @Composable
 fun LoginScreen(
-    navigateToSignup: () -> Unit,
     navigateToLedger: () -> Unit,
     navigateToLogin: () -> Unit,
+    navigateToAgencyRegister: () -> Unit,
     viewModel: LoginViewModel = hiltViewModel()
 ) {
     val state = viewModel.collectAsState().value
     val context = LocalContext.current
 
-    LaunchedEffect(key1 = state.isSchoolInfoProvided) {
-        if (state.isSchoolInfoProvided == true) {
-            navigateToLedger()
-        } else if (state.isSchoolInfoProvided == false) {
-            navigateToSignup()
-            viewModel.isSchoolInfoProvidedChanged(null)
+    LaunchedEffect(state.hasAnyAgency) {
+        state.hasAnyAgency?.let {
+            if (it) {
+                navigateToLedger()
+            } else {
+                navigateToAgencyRegister()
+            }
         }
     }
 
@@ -50,13 +51,13 @@ fun LoginScreen(
         }
     }
 
-    if (state.visibleError == true) {
+    if (state.visibleError) {
         ErrorScreen(
             modifier = Modifier.fillMaxSize(),
             message = state.errorMessage,
             onRetry = { viewModel.visibleErrorChanged(false) }
         )
-    } else if (state.visibleError == false) {
+    } else {
         Column(
             modifier = Modifier
                 .fillMaxSize()

@@ -9,9 +9,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.Icon
+import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -35,7 +34,6 @@ import com.moneymong.moneymong.design_system.theme.Gray07
 import com.moneymong.moneymong.design_system.theme.MMHorizontalSpacing
 import com.moneymong.moneymong.design_system.theme.White
 import com.moneymong.moneymong.feature.agency.register.view.AgencyResisterContentView
-import com.moneymong.moneymong.feature.agency.search.AgencyType
 import org.orbitmvi.orbit.compose.collectAsState
 import org.orbitmvi.orbit.compose.collectSideEffect
 
@@ -43,9 +41,7 @@ import org.orbitmvi.orbit.compose.collectSideEffect
 fun AgencyRegisterScreen(
     modifier: Modifier = Modifier,
     viewModel: AgencyRegisterViewModel = hiltViewModel(),
-    navigateToComplete: () -> Unit,
-    navigateUp: () -> Unit,
-    registrableClubOrCouncil: Boolean
+    navigateToLedger: () -> Unit,
 ) {
     val state by viewModel.collectAsState()
     val focusManager = LocalFocusManager.current
@@ -53,19 +49,10 @@ fun AgencyRegisterScreen(
 
     viewModel.collectSideEffect {
         when (it) {
-            is AgencyRegisterSideEffect.NavigateToComplete -> {
-                navigateToComplete()
+            is AgencyRegisterSideEffect.NavigateToLedger -> {
+                focusManager.clearFocus()
+                navigateToLedger()
             }
-
-            is AgencyRegisterSideEffect.NavigateUp -> {
-                navigateUp()
-            }
-        }
-    }
-
-    LaunchedEffect(key1 = registrableClubOrCouncil) {
-        if (registrableClubOrCouncil.not()) {
-            viewModel.changeAgencyType(AgencyType.GENERAL)
         }
     }
 
@@ -77,7 +64,7 @@ fun AgencyRegisterScreen(
             negativeBtnText = "취소",
             positiveBtnText = "확인",
             onClickNegative = { viewModel.changeOutDialogVisibility(false) },
-            onClickPositive = viewModel::navigateUp
+            onClickPositive = viewModel::navigateToLedger
         )
     }
 
@@ -95,48 +82,49 @@ fun AgencyRegisterScreen(
             .pointerInput(key1 = Unit) {
                 detectTapGestures(onTap = { focusManager.clearFocus() })
             }
-            .padding(horizontal = MMHorizontalSpacing)
     ) {
-        Icon(
-            modifier = Modifier
-                .align(Alignment.End)
-                .padding(vertical = 10.dp)
-                .size(24.dp)
-                .noRippleClickable(onClick = { viewModel.changeOutDialogVisibility(true) }),
-            painter = painterResource(id = R.drawable.ic_close_default),
-            tint = Gray07,
-            contentDescription = null
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-
-        var contentHeight by remember { mutableStateOf(0.dp) }
-        val contentModifier = if (contentHeight == 0.dp) Modifier.weight(1f) else Modifier
-        AgencyResisterContentView(
-            modifier = contentModifier
-                .onSizeChanged {
-                    if (contentHeight == 0.dp) {
-                        with(density) {
-                            contentHeight = it.height.toDp()
-                        }
-                    }
-                }
-                .height(contentHeight),
-            agencyType = state.agencyType,
-            onAgencyTypeChange = viewModel::changeAgencyType,
-            agencyName = state.agencyName,
-            onAgencyNameChange = viewModel::changeAgencyName,
-            changeNameTextFieldIsError = viewModel::changeNameTextFieldIsError,
-            registrableClubOrCouncil = registrableClubOrCouncil
-        )
-
-        val canRegister = state.agencyName.text.isNotEmpty() && state.nameTextFieldIsError.not()
-        MDSButton(
+        Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(bottom = 28.dp),
+                .weight(1f)
+                .padding(horizontal = MMHorizontalSpacing)
+        ) {
+            Icon(
+                modifier = Modifier
+                    .align(Alignment.End)
+                    .padding(vertical = 10.dp)
+                    .size(24.dp)
+                    .noRippleClickable(onClick = { viewModel.changeOutDialogVisibility(true) }),
+                painter = painterResource(id = R.drawable.ic_close_default),
+                tint = Gray07,
+                contentDescription = null
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+
+            var contentHeight by remember { mutableStateOf(0.dp) }
+            val contentModifier = if (contentHeight == 0.dp) Modifier.weight(1f) else Modifier
+            AgencyResisterContentView(
+                modifier = contentModifier
+                    .onSizeChanged {
+                        if (contentHeight == 0.dp) {
+                            with(density) {
+                                contentHeight = it.height.toDp()
+                            }
+                        }
+                    }
+                    .height(contentHeight),
+                agencyName = state.agencyName,
+                onAgencyNameChange = viewModel::changeAgencyName,
+                changeNameTextFieldIsError = viewModel::changeNameTextFieldIsError,
+            )
+        }
+        val canRegister = state.agencyName.text.isNotEmpty() && state.nameTextFieldIsError.not()
+        MDSButton(
+            modifier = Modifier.fillMaxWidth(),
             onClick = viewModel::registerAgency,
             text = "등록하기",
-            enabled = canRegister
+            enabled = canRegister,
+            cornerShape = 0.dp
         )
     }
 }
@@ -146,8 +134,6 @@ fun AgencyRegisterScreen(
 @Composable
 fun AgencyRegisterScreenPreview() {
     AgencyRegisterScreen(
-        navigateToComplete = {},
-        navigateUp = {},
-        registrableClubOrCouncil = false
+        navigateToLedger = {},
     )
 }

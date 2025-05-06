@@ -20,15 +20,12 @@ import com.moneymong.moneymong.feature.agency.navigation.agencyRoute
 import com.moneymong.moneymong.feature.agency.navigation.agencyScreen
 import com.moneymong.moneymong.feature.agency.navigation.navigateAgency
 import com.moneymong.moneymong.feature.agency.navigation.navigateAgencyRegister
-import com.moneymong.moneymong.feature.agency.navigation.navigateAgencyRegisterComplete
 import com.moneymong.moneymong.feature.mymong.navigation.myMongNavGraph
 import com.moneymong.moneymong.feature.mymong.navigation.navigatePrivacyPolicy
 import com.moneymong.moneymong.feature.mymong.navigation.navigateTermsOfUse
 import com.moneymong.moneymong.feature.mymong.navigation.navigateWithdrawal
 import com.moneymong.moneymong.feature.sign.navigation.loginScreen
 import com.moneymong.moneymong.feature.sign.navigation.navigateLogin
-import com.moneymong.moneymong.feature.sign.navigation.navigateSignComplete
-import com.moneymong.moneymong.feature.sign.navigation.navigateSignUp
 import com.moneymong.moneymong.feature.sign.navigation.navigateSignUpUniversity
 import com.moneymong.moneymong.feature.sign.navigation.signCompleteScreen
 import com.moneymong.moneymong.feature.sign.navigation.signUpScreen
@@ -96,8 +93,8 @@ fun HomeScreen(
             // sign
             loginScreen(
                 navigateToLedger = homeNavController::navigateLedger,
-                navigateToSignUp = homeNavController::navigateSignUp,
                 navigateToLogin = homeNavController::navigateLogin,
+                navigateToAgencyRegister = homeNavController::navigateAgencyRegister
             )
 
             signUpScreen(
@@ -141,8 +138,7 @@ fun HomeScreen(
             )
 
             agencyRegisterScreen(
-                navigateToComplete = homeNavController::navigateAgencyRegisterComplete,
-                navigateUp = homeNavController::navigateUp
+                navigateToLedger = homeNavController::navigateLedger
             )
 
             agencyRegisterCompleteScreen(
@@ -160,10 +156,10 @@ fun HomeScreen(
             // ledger
             ledgerScreen(
                 padding = padding,
-                navigateToAgency = { homeNavigator.navigate(agencyRoute) },
+                navigateToAgencyRegister = homeNavController::navigateAgencyRegister,
                 navigateToOCR = homeNavController::navigateOCR,
                 navigateToLedgerDetail = homeNavController::navigateLedgerDetail,
-                navigateToLedgerManual = homeNavController::navigateLedgerManual
+                navigateToLedgerManual = homeNavController::navigateLedgerManual,
             )
 
             ledgerDetailScreen(
