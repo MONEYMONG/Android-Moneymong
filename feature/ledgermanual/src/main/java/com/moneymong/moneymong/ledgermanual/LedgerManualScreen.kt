@@ -235,12 +235,7 @@ fun LedgerManualScreen(
                 )
                 Spacer(modifier = Modifier.height(24.dp))
                 Text(
-                    text = buildAnnotatedString {
-                        append("거래 유형")
-                        withStyle(SpanStyle(color = Red03)) {
-                            append("*")
-                        }
-                    },
+                    text = withRequiredMark("거래 유형"),
                     style = Body2,
                     color = Gray06
                 )
