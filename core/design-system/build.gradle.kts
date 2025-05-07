@@ -12,4 +12,9 @@ dependencies {
     implementation(projects.core.ui)
 
     implementation(libs.androidx.core.ktx)
+
+    testImplementation(libs.junit4)
+    androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.androidx.test.espresso.core)
+
 }

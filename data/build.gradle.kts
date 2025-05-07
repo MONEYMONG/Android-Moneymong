@@ -21,4 +21,9 @@ dependencies {
     implementation(libs.androidx.datastore.core)
     implementation(libs.paging.runtime)
     implementation(libs.retrofit.core)
+
+    testImplementation(libs.junit4)
+    androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.androidx.test.espresso.core)
+
 }
