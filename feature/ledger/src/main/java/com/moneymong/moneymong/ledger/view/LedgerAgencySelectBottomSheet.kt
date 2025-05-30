@@ -75,12 +75,20 @@ private fun LedgerAgencySelectItems(
     onClickItem: (agencyId: Int) -> Unit,
 ) {
     var itemHeight by remember { mutableIntStateOf(0) }
+    val itemSpace = 12.dp
+    val maxVisibleItemCount = 3
 
     Column(
         modifier = Modifier
-            .height(if (itemHeight > 0) (itemHeight.pxToDp * 3 + 24.dp) else Dp.Unspecified)
+            .height(
+                if (itemHeight > 0 && agencyList.size > maxVisibleItemCount) {
+                    (itemHeight.pxToDp * maxVisibleItemCount) + itemSpace * (maxVisibleItemCount - 1)
+                } else {
+                    Dp.Unspecified
+                }
+            )
             .verticalScroll(rememberScrollState()),
-        verticalArrangement = Arrangement.spacedBy(space = 12.dp),
+        verticalArrangement = Arrangement.spacedBy(space = itemSpace),
     ) {
         agencyList.forEach { item ->
             LedgerAgencySelectItem(
@@ -102,6 +110,31 @@ private fun LedgerAgencySelectItems(
 private fun LedgerAgencySelectBottomSheetPreview() {
     LedgerSelectBottomSheet(
         currentAgencyId = 0,
-        agencyList = emptyList()
+        agencyList = listOf(
+            MyAgencyResponse(
+                id = 0,
+                name = "국민은행",
+                headCount = 0,
+                type = "은행"
+            ),
+            MyAgencyResponse(
+                id = 0,
+                name = "국민은행",
+                headCount = 0,
+                type = "은행"
+            ),
+            MyAgencyResponse(
+                id = 0,
+                name = "국민은행",
+                headCount = 0,
+                type = "은행"
+            ),
+            MyAgencyResponse(
+                id = 0,
+                name = "국민은행",
+                headCount = 0,
+                type = "은행"
+            )
+        )
     ) {}
 }
