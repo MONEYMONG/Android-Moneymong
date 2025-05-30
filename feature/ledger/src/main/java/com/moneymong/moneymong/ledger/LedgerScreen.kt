@@ -64,6 +64,7 @@ fun LedgerScreen(
     viewModel: LedgerViewModel = hiltViewModel(),
     padding: PaddingValues,
     navigateToAgencyRegister: () -> Unit,
+    navigateToAgencyJoin: () -> Unit,
     navigateToLedgerDetail: (NavOptions?, Int, Boolean) -> Unit,
     navigateToLedgerManual: (NavOptions?) -> Unit
 ) {
@@ -176,7 +177,7 @@ fun LedgerScreen(
                                         )
                                     )
                                 },
-                                onClickInvitation = { },
+                                onClickInvitation = navigateToAgencyJoin,
                                 onClickCreateLedger = navigateToAgencyRegister
                             )
                         }
@@ -291,6 +292,7 @@ fun LedgerScreenPreview() {
     LedgerScreen(
         padding = PaddingValues(),
         navigateToAgencyRegister = {},
+        navigateToAgencyJoin = {},
         navigateToLedgerDetail = { navOptions, i, b -> },
         navigateToLedgerManual = {},
     )

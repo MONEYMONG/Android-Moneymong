@@ -34,6 +34,7 @@ fun NavController.navigateLedger(
 fun NavGraphBuilder.ledgerScreen(
     padding: PaddingValues,
     navigateToAgencyRegister: () -> Unit,
+    navigateToAgencyJoin: () -> Unit,
     navigateToLedgerDetail: (NavOptions?, Int, Boolean) -> Unit,
     navigateToLedgerManual: (NavOptions?) -> Unit,
 ) {
@@ -44,6 +45,7 @@ fun NavGraphBuilder.ledgerScreen(
         LedgerScreen(
             padding = padding,
             navigateToAgencyRegister = navigateToAgencyRegister,
+            navigateToAgencyJoin = navigateToAgencyJoin,
             navigateToLedgerDetail = navigateToLedgerDetail,
             navigateToLedgerManual = navigateToLedgerManual
         )
