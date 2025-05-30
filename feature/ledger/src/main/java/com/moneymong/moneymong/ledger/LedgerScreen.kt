@@ -1,6 +1,5 @@
 package com.moneymong.moneymong.ledger
 
-import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -45,8 +44,8 @@ import com.moneymong.moneymong.design_system.theme.MMHorizontalSpacing
 import com.moneymong.moneymong.design_system.theme.Mint03
 import com.moneymong.moneymong.design_system.theme.White
 import com.moneymong.moneymong.ledger.view.LedgerAgencyEmptyView
-import com.moneymong.moneymong.ledger.view.LedgerAgencySelectBottomSheet
 import com.moneymong.moneymong.ledger.view.LedgerDefaultView
+import com.moneymong.moneymong.ledger.view.LedgerSelectBottomSheet
 import com.moneymong.moneymong.ledger.view.LedgerTab
 import com.moneymong.moneymong.ledger.view.LedgerTabRowView
 import com.moneymong.moneymong.ledger.view.LedgerTopbarView
@@ -167,7 +166,7 @@ fun LedgerScreen(
                 content = {
                     when (state.sheetType) {
                         LedgerSheetType.Agency -> {
-                            LedgerAgencySelectBottomSheet(
+                            LedgerSelectBottomSheet(
                                 currentAgencyId = state.agencyId,
                                 agencyList = state.agencyList,
                                 onClickItem = {
