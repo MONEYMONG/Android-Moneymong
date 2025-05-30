@@ -175,7 +175,9 @@ fun LedgerScreen(
                                             it
                                         )
                                     )
-                                }
+                                },
+                                onClickInvitation = { },
+                                onClickCreateLedger = navigateToAgencyRegister
                             )
                         }
 
@@ -290,6 +292,6 @@ fun LedgerScreenPreview() {
         padding = PaddingValues(),
         navigateToAgencyRegister = {},
         navigateToLedgerDetail = { navOptions, i, b -> },
-        navigateToLedgerManual = {}
+        navigateToLedgerManual = {},
     )
 }

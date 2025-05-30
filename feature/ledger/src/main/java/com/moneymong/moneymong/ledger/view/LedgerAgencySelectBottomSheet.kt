@@ -32,7 +32,9 @@ internal fun LedgerSelectBottomSheet(
     modifier: Modifier = Modifier,
     currentAgencyId: Int,
     agencyList: List<MyAgencyResponse>,
-    onClickItem: (agencyId: Int) -> Unit
+    onClickItem: (agencyId: Int) -> Unit,
+    onClickInvitation: () -> Unit,
+    onClickCreateLedger: () -> Unit
 ) {
     Column(
         modifier = modifier.padding(horizontal = MMHorizontalSpacing)
@@ -53,7 +55,7 @@ internal fun LedgerSelectBottomSheet(
             type = MDSButtonType.THIRDARY,
             size = MDSButtonSize.LARGE,
             iconResource = MDSR.drawable.ic_pencil,
-            onClick = {},
+            onClick = onClickInvitation,
         )
         Spacer(modifier = Modifier.height(12.dp))
         MDSButton(
@@ -62,7 +64,7 @@ internal fun LedgerSelectBottomSheet(
             type = MDSButtonType.PRIMARY,
             size = MDSButtonSize.LARGE,
             iconResource = MDSR.drawable.ic_plus_outline,
-            onClick = {},
+            onClick = onClickCreateLedger,
         )
         Spacer(modifier = Modifier.height(12.dp))
     }
@@ -107,7 +109,7 @@ private fun LedgerAgencySelectItems(
 
 @Preview(showBackground = true)
 @Composable
-private fun LedgerAgencySelectBottomSheetPreview() {
+private fun LedgerSelectBottomSheetPreview() {
     LedgerSelectBottomSheet(
         currentAgencyId = 0,
         agencyList = listOf(
@@ -135,6 +137,9 @@ private fun LedgerAgencySelectBottomSheetPreview() {
                 headCount = 0,
                 type = "은행"
             )
-        )
-    ) {}
+        ),
+        onClickCreateLedger = {},
+        onClickInvitation = {},
+        onClickItem = {}
+    )
 }
