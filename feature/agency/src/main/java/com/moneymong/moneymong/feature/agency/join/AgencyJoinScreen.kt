@@ -114,7 +114,7 @@ private fun JoinContent(
     LaunchedEffect(key1 = state.isError) {
         if (state.isError) {
             val result = snackbarHostState.showSnackbar(
-                message = "잘못된 초대코드입니다.",
+                message = state.snackBarMessage,
                 actionLabel = "다시입력"
             )
 

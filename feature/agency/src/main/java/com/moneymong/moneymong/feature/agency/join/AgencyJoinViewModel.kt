@@ -35,8 +35,8 @@ class AgencyJoinViewModel @Inject constructor(
                 }.onFailure { exception ->
                     reduce {
                         state.copy(
-                            visiblePopUpError = true,
-                            errorPopUpMessage = exception.message.toString()
+                            isError = true,
+                            snackBarMessage = exception.message ?: "잘못된 초대코드입니다."
                         )
                     }
                 }
