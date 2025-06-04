@@ -336,7 +336,7 @@ internal fun <T> WheelPicker(
     content: @Composable LazyItemScope.(item: T, color: Color) -> Unit
 ) {
     val paddedItems = listOf(null) + items + listOf(null)
-    val safeStartIndex = startIndex.coerceIn(0, (items.size - 1))
+    val safeStartIndex = startIndex.coerceIn(0, (items.lastIndex))
     val lazyListState = rememberLazyListState(safeStartIndex)
     val snappingLayout = remember(lazyListState) { SnapLayoutInfoProvider(lazyListState) }
     val snapFlingBehavior = rememberSnapFlingBehavior(snappingLayout)
