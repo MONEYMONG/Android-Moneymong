@@ -46,7 +46,7 @@ class LoginViewModel @Inject constructor(
         }
     }
 
-    fun checkAgencyExists() = viewModelScope.launch {
+    private fun checkAgencyExists() = viewModelScope.launch {
         fetchMyAgencyListUseCase()
             .onSuccess {
                 val hasAnyAgency = it.isNotEmpty()
