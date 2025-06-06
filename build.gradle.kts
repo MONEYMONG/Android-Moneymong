@@ -34,4 +34,20 @@ subprojects {
             exclude("**/build/**")
         }
     }
+
+    tasks.register<Copy>("copyGitHooks") {
+        from("${rootDir}/.github/hooks") {
+            include("**/*")
+            rename("(.*)", "$1")
+        }
+        into("${rootDir}/.git/hooks")
+    }
+
+    tasks.register<Exec>("installGitHooks") {
+        group = "git hooks"
+        workingDir = rootDir
+        commandLine("chmod")
+        args("-R", "+x", ".git/hooks/")
+        dependsOn("copyGitHooks")
+    }
 }
