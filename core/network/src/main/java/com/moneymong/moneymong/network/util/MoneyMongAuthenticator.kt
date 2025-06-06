@@ -1,6 +1,7 @@
 package com.moneymong.moneymong.network.util
 
 import com.moneymong.moneymong.domain.repository.token.TokenRepository
+import com.moneymong.moneymong.model.sign.RefreshTokenResponse
 import com.moneymong.moneymong.network.BuildConfig
 import kotlinx.coroutines.runBlocking
 import okhttp3.Authenticator
@@ -14,46 +15,68 @@ class MoneyMongAuthenticator @Inject constructor(
     private val tokenCallback: TokenCallback
 ) : Authenticator {
     override fun authenticate(route: Route?, response: Response): Request? {
-        val isPathRefresh =
-            response.request.url.toString() == BuildConfig.MONEYMONG_BASE_URL + "api/v1/tokens"
-        if (response.code == 401 && !isPathRefresh) {
-            return runBlocking {
-                var newRequest: Request? = null
-                tokenRepository.getRefreshToken().onSuccess {
-                    tokenRepository.getUpdateToken(it)
-                        .onSuccess { token ->
-                            newRequest = response.request.newBuilder().apply {
-                                removeHeader("Authorization")
-                                addHeader("Authorization", "Bearer ${token.accessToken}")
-                            }.build()
+        val isReIssuePath = response.request.url.toString() == REISSUE_URL
 
-                            if (token.refreshToken == it) {
-                                tokenRepository.updateAccessToken(token.accessToken)
-                            } else {
-                                tokenRepository.updateTokens(
-                                    token.accessToken,
-                                    token.refreshToken
-                                )
-                            }
-                        }
-                        .onFailure {
-                            tokenRepository.notifyTokenUpdateFailed(true)
-                        }
-                }.onFailure {
-                    tokenRepository.notifyTokenUpdateFailed(true)
-                }
-                newRequest
-            }
-        } else {
-            //로컬에 저장된 데이터 제거
-            // RefreshToken도 만료되어 로그인화면으로 이동 .
-            runBlocking {
-                tokenRepository.notifyTokenUpdateFailed(true)
-                tokenRepository.deleteToken()
-                tokenCallback.onTokenFailure()
-            }
+        if (response.code == UNAUTHORIZED && isReIssuePath) {
+            handleReIssueFailure()
+            return null
         }
 
-        return null
+        return if (response.code == UNAUTHORIZED) {
+            reIssueAndCreateNewRequest(oldRequest = response.request)
+        } else {
+            null
+        }
+    }
+
+    private fun handleReIssueFailure() {
+        runBlocking {
+            tokenRepository.notifyTokenUpdateFailed(true)
+            tokenRepository.deleteToken()
+            tokenCallback.onTokenFailure()
+        }
+    }
+
+    private fun reIssueAndCreateNewRequest(oldRequest: Request): Request? {
+        return runBlocking {
+            try {
+                val refreshToken = tokenRepository.getRefreshToken().getOrThrow()
+                val newToken = tokenRepository.getUpdateToken(refreshToken).getOrThrow()
+                val newRequest =
+                    createNewRequest(oldRequest = oldRequest, accessToken = newToken.accessToken)
+                updateTokens(
+                    oldRefreshToken = refreshToken,
+                    newToken = newToken,
+                )
+
+                newRequest
+            } catch (e: Exception) {
+                handleReIssueFailure()
+                null
+            }
+        }
+    }
+
+    private fun createNewRequest(oldRequest: Request, accessToken: String): Request {
+        return oldRequest.newBuilder()
+            .removeHeader("Authorization")
+            .addHeader("Authorization", "Bearer $accessToken")
+            .build()
+    }
+
+    private suspend fun updateTokens(oldRefreshToken: String, newToken: RefreshTokenResponse) {
+        if (newToken.refreshToken == oldRefreshToken) {
+            tokenRepository.updateAccessToken(accessToken = newToken.accessToken)
+        } else {
+            tokenRepository.updateTokens(
+                accessToken = newToken.accessToken,
+                refreshToken = newToken.refreshToken,
+            )
+        }
+    }
+
+    companion object {
+        private const val REISSUE_URL = "${BuildConfig.MONEYMONG_BASE_URL}api/v1/tokens"
+        private const val UNAUTHORIZED = 401
     }
 }
