@@ -15,7 +15,6 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object DataStoreModule {
-
     private const val LEDGER_DATASTORE_NAME = "LEDGER_PREFERENCES"
     private const val USER_DATASTORE_NAME = "USER_PREFERENCES"
 
@@ -33,6 +32,6 @@ object DataStoreModule {
     @Singleton
     @Named("user")
     fun provideUserPreferencesDataStore(
-        @ApplicationContext context: Context
+        @ApplicationContext context: Context,
     ): DataStore<Preferences> = context.userDataStore
 }

@@ -55,12 +55,13 @@ class MainActivity : ComponentActivity() {
                         onConfirm = {
                             val playStoreUrl =
                                 "https://play.google.com/store/apps/details?id=${BuildConfig.APPLICATION_ID}"
-                            val intent = Intent(Intent.ACTION_VIEW).apply {
-                                data = Uri.parse(playStoreUrl)
-                                setPackage("com.android.vending")
-                            }
+                            val intent =
+                                Intent(Intent.ACTION_VIEW).apply {
+                                    data = Uri.parse(playStoreUrl)
+                                    setPackage("com.android.vending")
+                                }
                             context.startActivity(intent)
-                        }
+                        },
                     )
                 }
 

@@ -8,12 +8,14 @@ import com.moneymong.moneymong.model.ocr.FileUploadRequest
 import com.moneymong.moneymong.model.ocr.FileUploadResponse
 import javax.inject.Inject
 
-class OCRRepositoryImpl @Inject constructor(
-    private val ocrRemoteDataSource: OCRRemoteDataSource
-): OCRRepository {
-    override suspend fun documentOCR(body: DocumentRequest): Result<DocumentResponse> =
-        ocrRemoteDataSource.documentOCR(body)
+class OCRRepositoryImpl
+    @Inject
+    constructor(
+        private val ocrRemoteDataSource: OCRRemoteDataSource,
+    ) : OCRRepository {
+        override suspend fun documentOCR(body: DocumentRequest): Result<DocumentResponse> =
+            ocrRemoteDataSource.documentOCR(body)
 
-    override suspend fun postFileUpload(body: FileUploadRequest): Result<FileUploadResponse> =
-        ocrRemoteDataSource.postFileUpload(body)
-}
+        override suspend fun postFileUpload(body: FileUploadRequest): Result<FileUploadResponse> =
+            ocrRemoteDataSource.postFileUpload(body)
+    }

@@ -32,5 +32,6 @@ subprojects {
         filter {
             exclude("**/generated/**")
             exclude("**/build/**")
-        }    }
+        }
+    }
 }

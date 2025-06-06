@@ -8,18 +8,20 @@ import com.moneymong.moneymong.model.sign.UnivResponse
 import com.moneymong.moneymong.model.sign.UniversitiesResponse
 import javax.inject.Inject
 
-class UnivRepositoryImpl @Inject constructor(
-    private val univRemoteDataSource: UnivRemoteDataSource
-) : UnivRepository {
-    override suspend fun createUniv(body: UnivRequest): Result<Unit> {
-        return univRemoteDataSource.createUniv(body)
-    }
+class UnivRepositoryImpl
+    @Inject
+    constructor(
+        private val univRemoteDataSource: UnivRemoteDataSource,
+    ) : UnivRepository {
+        override suspend fun createUniv(body: UnivRequest): Result<Unit> {
+            return univRemoteDataSource.createUniv(body)
+        }
 
-    override suspend fun searchUniv(searchQuery: SearchQueryRequest): Result<UniversitiesResponse> {
-        return univRemoteDataSource.searchUniv(searchQuery)
-    }
+        override suspend fun searchUniv(searchQuery: SearchQueryRequest): Result<UniversitiesResponse> {
+            return univRemoteDataSource.searchUniv(searchQuery)
+        }
 
-    override suspend fun getMyUniv(): Result<UnivResponse> {
-        return univRemoteDataSource.getMyUniv()
+        override suspend fun getMyUniv(): Result<UnivResponse> {
+            return univRemoteDataSource.getMyUniv()
+        }
     }
-}

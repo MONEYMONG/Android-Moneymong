@@ -5,10 +5,9 @@ plugins {
     alias(libs.plugins.moneymong.android.library)
     alias(libs.plugins.moneymong.android.hilt)
     alias(libs.plugins.secretsGradlePlugin)
-
 }
 
-fun getApiKey(propertyKey : String): String {
+fun getApiKey(propertyKey: String): String {
     return gradleLocalProperties(rootDir).getProperty(propertyKey)
 }
 
@@ -53,5 +52,4 @@ dependencies {
     androidTestImplementation(libs.androidx.test.espresso.core)
 }
 
-fun fetchClovaProperties(propertyKey: String) =
-    gradleLocalProperties(rootDir).getProperty(propertyKey)
+fun fetchClovaProperties(propertyKey: String) = gradleLocalProperties(rootDir).getProperty(propertyKey)

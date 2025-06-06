@@ -9,8 +9,6 @@ class MoneyMongApplication : Application() {
     override fun onCreate() {
         super.onCreate()
 
-        val NATIVE_APP_KEY = BuildConfig.NATIVE_APP_KEY
-        KakaoSdk.init(this, NATIVE_APP_KEY)
-
+        KakaoSdk.init(this, BuildConfig.NATIVE_APP_KEY)
     }
 }

@@ -9,23 +9,25 @@ import com.moneymong.moneymong.network.api.AccessTokenApi
 import javax.inject.Inject
 import javax.inject.Provider
 
-class TokenRemoteDataSourceImpl @Inject constructor(
-    private val accessTokenApiProvider: Provider<AccessTokenApi>
-) : TokenRemoteDataSource {
-    private val accessTokenApi by lazy { accessTokenApiProvider.get() }
+class TokenRemoteDataSourceImpl
+    @Inject
+    constructor(
+        private val accessTokenApiProvider: Provider<AccessTokenApi>,
+    ) : TokenRemoteDataSource {
+        private val accessTokenApi by lazy { accessTokenApiProvider.get() }
 
-    override suspend fun postAccessToken(
-        type: LoginType,
-        accessToken: String
-    ): Result<TokenResponse> {
-        return accessTokenApi.postAccessToken(TokenRequest(type.name, accessToken, "", ""))
-    }
+        override suspend fun postAccessToken(
+            type: LoginType,
+            accessToken: String,
+        ): Result<TokenResponse> {
+            return accessTokenApi.postAccessToken(TokenRequest(type.name, accessToken, "", ""))
+        }
 
-    override suspend fun getUpdateToken(refreshToken: String): Result<RefreshTokenResponse> {
-        return accessTokenApi.refreshTokenApi(RefreshTokenRequest(refreshToken))
-    }
+        override suspend fun getUpdateToken(refreshToken: String): Result<RefreshTokenResponse> {
+            return accessTokenApi.refreshTokenApi(RefreshTokenRequest(refreshToken))
+        }
 
-    override suspend fun deleteRefreshToken(body: RefreshTokenRequest) {
-        return accessTokenApi.deleteRefreshToken(body)
+        override suspend fun deleteRefreshToken(body: RefreshTokenRequest) {
+            return accessTokenApi.deleteRefreshToken(body)
+        }
     }
-}

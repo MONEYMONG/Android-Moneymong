@@ -14,11 +14,14 @@ dependencies {
     implementation(projects.core.network)
     implementation(projects.core.common)
 
-
     // 카카오 SDK 의존성
     implementation(libs.kakao.v2.user)
     implementation(libs.androidx.datastore)
     implementation(libs.androidx.datastore.core)
     implementation(libs.paging.runtime)
     implementation(libs.retrofit.core)
+
+    testImplementation(libs.junit4)
+    androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.androidx.test.espresso.core)
 }

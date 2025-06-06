@@ -34,69 +34,44 @@ import dagger.hilt.components.SingletonComponent
 @Module
 @InstallIn(SingletonComponent::class)
 interface DataSourceModule {
+    @Binds
+    fun bindUnivDataSource(univRemoteDataSourceImpl: UnivRemoteDataSourceImpl): UnivRemoteDataSource
 
     @Binds
-    fun bindUnivDataSource(
-        univRemoteDataSourceImpl: UnivRemoteDataSourceImpl
-    ): UnivRemoteDataSource
+    fun bindLoginLocalDataSource(loginLocalDataSourceImpl: LoginLocalDataSourceImpl): LoginLocalDataSource
 
     @Binds
-    fun bindLoginLocalDataSource(
-        loginLocalDataSourceImpl: LoginLocalDataSourceImpl
-    ): LoginLocalDataSource
+    fun bindTokenRemoteDataSource(tokenRemoteDataSourceImpl: TokenRemoteDataSourceImpl): TokenRemoteDataSource
 
     @Binds
-    fun bindTokenRemoteDataSource(
-        tokenRemoteDataSourceImpl: TokenRemoteDataSourceImpl
-    ): TokenRemoteDataSource
+    fun bindAgencyRemoteDataSource(agencyRemoteDataSourceImpl: AgencyRemoteDataSourceImpl): AgencyRemoteDataSource
 
     @Binds
-    fun bindAgencyRemoteDataSource(
-        agencyRemoteDataSourceImpl: AgencyRemoteDataSourceImpl
-    ): AgencyRemoteDataSource
+    fun bindAgencyLocalDataSource(agencyLocalDataSourceImpl: AgencyLocalDataSourceImpl): AgencyLocalDataSource
 
     @Binds
-    fun bindAgencyLocalDataSource(
-        agencyLocalDataSourceImpl: AgencyLocalDataSourceImpl
-    ): AgencyLocalDataSource
+    fun bindUserRemoteDataSource(userRemoteDataSourceImpl: UserRemoteDataSourceImpl): UserRemoteDataSource
 
     @Binds
-    fun bindUserRemoteDataSource(
-        userRemoteDataSourceImpl: UserRemoteDataSourceImpl
-    ): UserRemoteDataSource
+    fun bindUserLocalDataSource(userLocalDataSourceImpl: UserLocalDataSourceImpl): UserLocalDataSource
 
     @Binds
-    fun bindUserLocalDataSource(
-        userLocalDataSourceImpl: UserLocalDataSourceImpl
-    ): UserLocalDataSource
+    fun bindOCRRemoteDataSource(ocrRemoteDataSourceImpl: OCRRemoteDataSourceImpl): OCRRemoteDataSource
 
     @Binds
-    fun bindOCRRemoteDataSource(
-        ocrRemoteDataSourceImpl: OCRRemoteDataSourceImpl
-    ): OCRRemoteDataSource
+    fun bindLedgerRemoteDataSource(ledgerRemoteDataSourceImpl: LedgerRemoteDataSourceImpl): LedgerRemoteDataSource
 
     @Binds
-    fun bindLedgerRemoteDataSource(
-        ledgerRemoteDataSourceImpl: LedgerRemoteDataSourceImpl
-    ): LedgerRemoteDataSource
+    fun bindLedgerLocalDataSource(ledgerLocalDataSourceImpl: LedgerLocalDataSourceImpl): LedgerLocalDataSource
 
     @Binds
-    fun bindLedgerLocalDataSource(
-        ledgerLocalDataSourceImpl: LedgerLocalDataSourceImpl
-    ): LedgerLocalDataSource
-
-    @Binds
-    fun bindMemberRemoteDataSource(
-        memberRemoteDataSourceImpl: MemberRemoteDataSourceImpl
-    ): MemberRemoteDataSource
+    fun bindMemberRemoteDataSource(memberRemoteDataSourceImpl: MemberRemoteDataSourceImpl): MemberRemoteDataSource
 
     @Binds
     fun bindLedgerDetailRemoteDataSource(
-        ledgerDetailRemoteDataSourceImpl: LedgerDetailRemoteDataSourceImpl
+        ledgerDetailRemoteDataSourceImpl: LedgerDetailRemoteDataSourceImpl,
     ): LedgerDetailRemoteDataSource
 
     @Binds
-    fun bindVersionRemoteDataSource(
-        versionRemoteDataSourceImpl: VersionRemoteDataSourceImpl
-    ): VersionRemoteDataSource
+    fun bindVersionRemoteDataSource(versionRemoteDataSourceImpl: VersionRemoteDataSourceImpl): VersionRemoteDataSource
 }

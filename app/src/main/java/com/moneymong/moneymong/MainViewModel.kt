@@ -8,13 +8,15 @@ import org.orbitmvi.orbit.syntax.simple.reduce
 import javax.inject.Inject
 
 @HiltViewModel
-class MainViewModel @Inject constructor(
-    val checkVersionUpdateUseCase: CheckVersionUpdateUseCase
-) : BaseViewModel<MainState, MainSideEffect>(MainState()) {
-
-    fun checkShouldUpdate(version: String) = intent {
-        checkVersionUpdateUseCase(version = version)
-            .onSuccess { reduce { state.copy(shouldUpdate = false) } }
-            .onFailure { reduce { state.copy(shouldUpdate = it.message?.contains("업데이트") == true) } }
+class MainViewModel
+    @Inject
+    constructor(
+        val checkVersionUpdateUseCase: CheckVersionUpdateUseCase,
+    ) : BaseViewModel<MainState, MainSideEffect>(MainState()) {
+        fun checkShouldUpdate(version: String) =
+            intent {
+                checkVersionUpdateUseCase(version = version)
+                    .onSuccess { reduce { state.copy(shouldUpdate = false) } }
+                    .onFailure { reduce { state.copy(shouldUpdate = it.message?.contains("업데이트") == true) } }
+            }
     }
-}

@@ -8,7 +8,6 @@ plugins {
     alias(libs.plugins.moneymong.android.application.firebase)
     alias(libs.plugins.moneymong.android.hilt)
     alias(libs.plugins.secretsGradlePlugin)
-
 }
 
 android {
@@ -37,7 +36,7 @@ android {
             isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                "proguard-rules.pro",
             )
         }
     }

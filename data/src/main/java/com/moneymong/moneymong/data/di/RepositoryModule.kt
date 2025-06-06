@@ -27,50 +27,31 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 interface RepositoryModule {
-
     @Binds
-    fun bindUnivRepository(
-        univRepositoryImpl: UnivRepositoryImpl
-    ): UnivRepository
+    fun bindUnivRepository(univRepositoryImpl: UnivRepositoryImpl): UnivRepository
 
     @Singleton
     @Binds
-    fun bindTokenRepository(
-        tokenRepositoryImpl: TokenRepositoryImpl
-    ): TokenRepository
+    fun bindTokenRepository(tokenRepositoryImpl: TokenRepositoryImpl): TokenRepository
 
     @Binds
-    fun bindAgencyRepository(
-        agencyRepositoryImpl: AgencyRepositoryImpl
-    ): AgencyRepository
+    fun bindAgencyRepository(agencyRepositoryImpl: AgencyRepositoryImpl): AgencyRepository
 
     @Binds
-    fun bindUserRepository(
-        userRepositoryImpl: UserRepositoryImpl
-    ): UserRepository
+    fun bindUserRepository(userRepositoryImpl: UserRepositoryImpl): UserRepository
 
     @Binds
-    fun bindOCRRepository(
-        ocrRepositoryImpl: OCRRepositoryImpl
-    ): OCRRepository
+    fun bindOCRRepository(ocrRepositoryImpl: OCRRepositoryImpl): OCRRepository
 
     @Binds
-    fun bindLedgerRepository(
-        ledgerRepositoryImpl: LedgerRepositoryImpl
-    ): LedgerRepository
+    fun bindLedgerRepository(ledgerRepositoryImpl: LedgerRepositoryImpl): LedgerRepository
 
     @Binds
-    fun bindLedgerDetailRepository(
-        ledgerDetailRepositoryImpl: LedgerDetailRepositoryImpl
-    ): LedgerDetailRepository
+    fun bindLedgerDetailRepository(ledgerDetailRepositoryImpl: LedgerDetailRepositoryImpl): LedgerDetailRepository
 
     @Binds
-    fun bindMemberRepository(
-        memberRepositoryImpl: MemberRepositoryImpl
-    ): MemberRepository
+    fun bindMemberRepository(memberRepositoryImpl: MemberRepositoryImpl): MemberRepository
 
     @Binds
-    fun bindVersionRepository(
-        versionRepositoryImpl: VersionRepositoryImpl
-    ): VersionRepository
+    fun bindVersionRepository(versionRepositoryImpl: VersionRepositoryImpl): VersionRepository
 }

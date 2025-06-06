@@ -12,30 +12,33 @@ import java.io.IOException
 import javax.inject.Inject
 import javax.inject.Named
 
-class AgencyLocalDataSourceImpl @Inject constructor(
-    @Named("user") private val userDataStorePreferences: DataStore<Preferences>
-) : AgencyLocalDataSource {
-    override suspend fun saveAgencyId(agencyId: Int) {
-        userDataStorePreferences.edit { preferences ->
-            preferences[AGENCY_ID] = agencyId
+class AgencyLocalDataSourceImpl
+    @Inject
+    constructor(
+        @Named("user") private val userDataStorePreferences: DataStore<Preferences>,
+    ) : AgencyLocalDataSource {
+        override suspend fun saveAgencyId(agencyId: Int) {
+            userDataStorePreferences.edit { preferences ->
+                preferences[AGENCY_ID] = agencyId
+            }
+        }
+
+        override suspend fun fetchAgencyId(): Int {
+            val flow =
+                userDataStorePreferences.data
+                    .catch { exception ->
+                        when (exception) {
+                            is IOException -> emit(emptyPreferences())
+                            else -> throw exception
+                        }
+                    }
+                    .map { preferences ->
+                        preferences[AGENCY_ID]
+                    }
+            return flow.firstOrNull() ?: 0
+        }
+
+        private companion object {
+            val AGENCY_ID = intPreferencesKey(name = "agencyId")
         }
     }
-
-    override suspend fun fetchAgencyId(): Int {
-        val flow = userDataStorePreferences.data
-            .catch { exception ->
-                when (exception) {
-                    is IOException -> emit(emptyPreferences())
-                    else -> throw exception
-                }
-            }
-            .map { preferences ->
-                preferences[AGENCY_ID]
-            }
-        return flow.firstOrNull() ?: 0
-    }
-
-    private companion object {
-        val AGENCY_ID = intPreferencesKey(name = "agencyId")
-    }
-}

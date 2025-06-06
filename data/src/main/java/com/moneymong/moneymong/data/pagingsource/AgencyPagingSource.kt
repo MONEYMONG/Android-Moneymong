@@ -8,7 +8,6 @@ import com.moneymong.moneymong.model.agency.AgencyGetResponse
 class AgencyPagingSource(
     private val dataSource: AgencyRemoteDataSource,
 ) : PagingSource<Int, AgencyGetResponse>() {
-
     override fun getRefreshKey(state: PagingState<Int, AgencyGetResponse>): Int? {
         return state.anchorPosition?.let { anchorPosition ->
             val anchorPage = state.closestPageToPosition(anchorPosition)
@@ -24,12 +23,12 @@ class AgencyPagingSource(
                 LoadResult.Page(
                     data = it.agencies,
                     prevKey = null,
-                    nextKey = if (it.agencies.size < loadSize) null else page + 1
+                    nextKey = if (it.agencies.size < loadSize) null else page + 1,
                 )
             },
             onFailure = {
                 LoadResult.Error(it)
-            }
+            },
         )
     }
 
