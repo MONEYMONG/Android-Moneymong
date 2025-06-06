@@ -4,8 +4,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 enum class MDSButtonSize(val verticalPadding: Dp) {
-
     LARGE(verticalPadding = 18.dp),
     MEDIUM(verticalPadding = 12.dp),
-    SMALL(verticalPadding = 10.dp)
+    SMALL(verticalPadding = 10.dp),
 }

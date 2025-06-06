@@ -24,27 +24,28 @@ fun MDSInfor(
     iconVisible: Boolean = false,
 ) {
     Row(
-        modifier = modifier
-            .background(
-                color = type.backgroundColor,
-                shape = RoundedCornerShape(8.dp)
-            )
-            .padding(horizontal = 12.dp, vertical = 10.dp),
+        modifier =
+            modifier
+                .background(
+                    color = type.backgroundColor,
+                    shape = RoundedCornerShape(8.dp),
+                )
+                .padding(horizontal = 12.dp, vertical = 10.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         if (iconVisible) {
             Icon(
                 modifier = Modifier.size(20.dp),
                 painter = painterResource(id = R.drawable.ic_infor),
                 contentDescription = "infor icon",
-                tint = type.contentColor
+                tint = type.contentColor,
             )
         }
         Text(
             text = message,
             color = type.contentColor,
-            style = Body2
+            style = Body2,
         )
     }
 }

@@ -14,18 +14,16 @@ import com.moneymong.moneymong.design_system.theme.Blue02
 import com.moneymong.moneymong.design_system.theme.Blue04
 
 @Composable
-fun LoadingItem(
-    modifier: Modifier = Modifier
-) {
+fun LoadingItem(modifier: Modifier = Modifier) {
     Box(
         modifier = modifier.padding(vertical = 24.dp),
-        contentAlignment = Alignment.Center
+        contentAlignment = Alignment.Center,
     ) {
         CircularProgressIndicator(
             modifier = Modifier.size(44.dp),
             color = Blue04,
             trackColor = Blue02,
-            strokeWidth = 4.dp
+            strokeWidth = 4.dp,
         )
     }
 }

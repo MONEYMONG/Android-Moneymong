@@ -22,25 +22,25 @@ import com.moneymong.moneymong.design_system.theme.Gray07
 fun ErrorItem(
     modifier: Modifier = Modifier,
     message: String,
-    onRetry: () -> Unit
+    onRetry: () -> Unit,
 ) {
     Column(
         modifier = modifier.padding(vertical = 14.dp),
         verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
             text = message,
             textAlign = TextAlign.Center,
             color = Gray07,
-            style = Body3
+            style = Body3,
         )
         Spacer(modifier = Modifier.height(8.dp))
         MDSButton(
             onClick = onRetry,
             text = "다시 시도",
             size = MDSButtonSize.SMALL,
-            contentHorizontalPadding = 24.dp
+            contentHorizontalPadding = 24.dp,
         )
     }
 }
@@ -51,6 +51,6 @@ fun ErrorItemPreview() {
     ErrorItem(
         modifier = Modifier.fillMaxWidth(),
         message = "문제가 발생했습니다\n다시 시도해주세요",
-        onRetry = {}
+        onRetry = {},
     )
 }

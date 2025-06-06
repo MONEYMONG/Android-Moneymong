@@ -32,13 +32,12 @@ internal fun MDSTextFieldContainer(
     onIconClick: (() -> Unit),
     maxCount: Int?,
     helperText: String?,
-    innerTextField: @Composable () -> Unit
+    innerTextField: @Composable () -> Unit,
 ) {
-
     Column(modifier = modifier) {
         MDSTextFieldContainerTop(
             title = title,
-            state = state
+            state = state,
         )
         Spacer(modifier = Modifier.height(8.dp))
         MDSTextFieldContainerCenter(
@@ -46,14 +45,14 @@ internal fun MDSTextFieldContainer(
             state = state,
             icon = icon,
             onIconClick = onIconClick,
-            innerTextField = innerTextField
+            innerTextField = innerTextField,
         )
         Spacer(modifier = Modifier.height(2.dp))
         MDSTextFieldContainerBottom(
             count = count,
             state = state,
             maxCount = maxCount,
-            helperText = helperText
+            helperText = helperText,
         )
     }
 }
@@ -61,12 +60,12 @@ internal fun MDSTextFieldContainer(
 @Composable
 private fun MDSTextFieldContainerTop(
     title: AnnotatedString,
-    state: MDSTextFieldState
+    state: MDSTextFieldState,
 ) {
     Text(
         text = title,
         color = state.titleColor,
-        style = Body2
+        style = Body2,
     )
 }
 
@@ -76,9 +75,8 @@ private fun MDSTextFieldContainerCenter(
     state: MDSTextFieldState,
     icon: MDSTextFieldIcons?,
     onIconClick: (() -> Unit),
-    innerTextField: @Composable () -> Unit
+    innerTextField: @Composable () -> Unit,
 ) {
-
     Row(modifier = Modifier.fillMaxWidth()) {
         Box(modifier = Modifier.weight(1f)) {
             innerTextField()
@@ -86,19 +84,19 @@ private fun MDSTextFieldContainerCenter(
                 Text(
                     text = placeholder,
                     color = state.textColor,
-                    style = Body3
+                    style = Body3,
                 )
             }
         }
         if (icon != null && icon.visibleByState(state)) {
             IconButton(
                 modifier = Modifier.size(20.dp),
-                onClick = onIconClick
+                onClick = onIconClick,
             ) {
                 Icon(
                     painter = painterResource(id = icon.resourceId),
                     contentDescription = null,
-                    tint = icon.color(state)
+                    tint = icon.color(state),
                 )
             }
         } else {
@@ -107,10 +105,11 @@ private fun MDSTextFieldContainerCenter(
     }
     Spacer(modifier = Modifier.height(10.dp))
     Divider(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(1.dp),
-        color = state.underLineColor
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .height(1.dp),
+        color = state.underLineColor,
     )
 }
 
@@ -119,7 +118,7 @@ private fun MDSTextFieldContainerBottom(
     count: Int,
     state: MDSTextFieldState,
     maxCount: Int? = null,
-    helperText: String? = null
+    helperText: String? = null,
 ) {
     Row(modifier = Modifier.fillMaxWidth()) {
         if (helperText != null && state == MDSTextFieldState.Error) {
@@ -127,27 +126,28 @@ private fun MDSTextFieldContainerBottom(
                 text = helperText,
                 color = MDSTextFieldState.Error.errorColor,
                 textAlign = TextAlign.Start,
-                style = Caption
+                style = Caption,
             )
         } else {
             Text(
                 text = "",
                 textAlign = TextAlign.Start,
-                style = Caption
+                style = Caption,
             )
         }
         if (state.countVisible && maxCount != null) {
-            val countColor = if (state == MDSTextFieldState.Error) {
-                MDSTextFieldState.Error.countColor
-            } else {
-                MDSTextFieldState.Active.countColor
-            }
+            val countColor =
+                if (state == MDSTextFieldState.Error) {
+                    MDSTextFieldState.Error.countColor
+                } else {
+                    MDSTextFieldState.Active.countColor
+                }
             Text(
                 modifier = Modifier.fillMaxWidth(),
                 text = "$count/$maxCount",
                 color = countColor,
                 textAlign = TextAlign.End,
-                style = Caption
+                style = Caption,
             )
         }
     }

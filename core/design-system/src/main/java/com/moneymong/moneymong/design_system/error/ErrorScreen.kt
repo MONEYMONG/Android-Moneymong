@@ -26,34 +26,33 @@ import com.moneymong.moneymong.design_system.theme.Gray07
 fun ErrorScreen(
     modifier: Modifier = Modifier,
     message: String,
-    onRetry: () -> Unit
+    onRetry: () -> Unit,
 ) {
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Image(
             modifier = Modifier.size(size = 100.dp),
             painter = painterResource(id = R.drawable.img_profile_blue),
-            contentDescription = "error"
+            contentDescription = "error",
         )
         Text(
             text = message,
             textAlign = TextAlign.Center,
             color = Gray07,
-            style = Body4
+            style = Body4,
         )
         Spacer(modifier = Modifier.height(12.dp))
         MDSButton(
             onClick = onRetry,
             text = "다시 시도하기",
             size = MDSButtonSize.SMALL,
-            contentHorizontalPadding = 22.dp
+            contentHorizontalPadding = 22.dp,
         )
     }
 }
-
 
 @Preview
 @Composable
@@ -61,6 +60,6 @@ fun ErrorScreenPreview() {
     ErrorScreen(
         modifier = Modifier.fillMaxSize(),
         message = "문제가 발생했습니다\n다시 시도해주세요",
-        onRetry = { Log.i("test", "retry") }
+        onRetry = { Log.i("test", "retry") },
     )
 }

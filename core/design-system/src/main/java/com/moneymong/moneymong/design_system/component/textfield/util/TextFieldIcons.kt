@@ -7,7 +7,7 @@ import com.moneymong.moneymong.design_system.theme.Gray04
 
 enum class MDSTextFieldIcons(
     internal val resourceId: Int,
-    internal val color: (state: MDSTextFieldState) -> Color
+    internal val color: (state: MDSTextFieldState) -> Color,
 ) {
     Clear(
         resourceId = R.drawable.ic_close_default,
@@ -18,7 +18,7 @@ enum class MDSTextFieldIcons(
                 is MDSTextFieldState.Error -> Gray04
                 is MDSTextFieldState.Filled -> Gray04
             }
-        }
+        },
     ),
     Search(
         resourceId = R.drawable.ic_search,
@@ -29,14 +29,16 @@ enum class MDSTextFieldIcons(
                 is MDSTextFieldState.Error -> Gray04
                 is MDSTextFieldState.Filled -> Gray04
             }
-        }
-    );
+        },
+    ),
+    ;
 
     internal fun visibleByState(state: MDSTextFieldState): Boolean {
         return when (this) {
             Clear -> state is MDSTextFieldState.Active || state is MDSTextFieldState.Error
-            Search -> state is MDSTextFieldState.Default || state is MDSTextFieldState.Filled
-                    || state is MDSTextFieldState.Active
+            Search ->
+                state is MDSTextFieldState.Default || state is MDSTextFieldState.Filled ||
+                    state is MDSTextFieldState.Active
         }
     }
 

@@ -27,7 +27,6 @@ import com.moneymong.moneymong.design_system.component.textfield.visualtransform
 import com.moneymong.moneymong.design_system.component.textfield.visualtransformation.PriceVisualTransformation
 import com.moneymong.moneymong.design_system.component.textfield.visualtransformation.TimeVisualTransformation
 
-
 @Composable
 fun MDSNumberTextField(
     modifier: Modifier = Modifier,
@@ -41,7 +40,6 @@ fun MDSNumberTextField(
     visualTransformation: VisualTransformation = VisualTransformation.None,
     keyboardActions: KeyboardActions = KeyboardActions.Default,
 ) {
-
     MDSBaseTextField(
         modifier = modifier,
         value = value,
@@ -73,7 +71,6 @@ fun MDSNumberTextField(
     visualTransformation: VisualTransformation = VisualTransformation.None,
     keyboardActions: KeyboardActions = KeyboardActions.Default,
 ) {
-
     MDSBaseTextField(
         modifier = modifier,
         value = value,
@@ -103,9 +100,10 @@ fun MDSPriceTextFieldPreview() {
 
     Column {
         MDSNumberTextField(
-            modifier = Modifier
-                .fillMaxWidth()
-                .onFocusChanged { isFilled = !it.isFocused },
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .onFocusChanged { isFilled = !it.isFocused },
             value = userInput,
             onValueChange = {
                 userInput = it.copy(text = it.text.trimStart { char -> char == '0' })
@@ -115,24 +113,25 @@ fun MDSPriceTextFieldPreview() {
             isFilled = isFilled,
             onIconClick = { userInput = userInput.copy("") },
             visualTransformation = PriceVisualTransformation(type = dealType),
-            keyboardActions = KeyboardActions(onDone = {
-                focusManager.clearFocus()
-            })
+            keyboardActions =
+                KeyboardActions(onDone = {
+                    focusManager.clearFocus()
+                }),
         )
 
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             MDSButton(
                 modifier = Modifier.weight(1f),
                 onClick = { dealType = PriceType.Income },
-                text = "수입"
+                text = "수입",
             )
             MDSButton(
                 modifier = Modifier.weight(1f),
                 onClick = { dealType = PriceType.Expense },
-                text = "지출"
+                text = "지출",
             )
         }
     }
@@ -147,9 +146,10 @@ fun MDSDateTextFieldPreview() {
     var isFilled by remember { mutableStateOf(false) }
 
     MDSNumberTextField(
-        modifier = Modifier
-            .fillMaxWidth()
-            .onFocusChanged { isFilled = !it.isFocused },
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .onFocusChanged { isFilled = !it.isFocused },
         value = userInput,
         onValueChange = { if (it.text.length <= 8) userInput = it.copy(text = it.text) },
         title = "날짜",
@@ -157,9 +157,10 @@ fun MDSDateTextFieldPreview() {
         isFilled = isFilled,
         onIconClick = { userInput = userInput.copy("") },
         visualTransformation = DateVisualTransformation(),
-        keyboardActions = KeyboardActions(onDone = {
-            focusManager.clearFocus()
-        })
+        keyboardActions =
+            KeyboardActions(onDone = {
+                focusManager.clearFocus()
+            }),
     )
 }
 
@@ -172,9 +173,10 @@ fun MDSTimeTextFieldPreview() {
     var isFilled by remember { mutableStateOf(false) }
 
     MDSNumberTextField(
-        modifier = Modifier
-            .fillMaxWidth()
-            .onFocusChanged { isFilled = !it.isFocused },
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .onFocusChanged { isFilled = !it.isFocused },
         value = userInput,
         onValueChange = { if (it.text.length <= 6) userInput = it.copy(text = it.text) },
         title = "시간",
@@ -182,8 +184,9 @@ fun MDSTimeTextFieldPreview() {
         isFilled = isFilled,
         onIconClick = { userInput = userInput.copy("") },
         visualTransformation = TimeVisualTransformation(),
-        keyboardActions = KeyboardActions(onDone = {
-            focusManager.clearFocus()
-        })
+        keyboardActions =
+            KeyboardActions(onDone = {
+                focusManager.clearFocus()
+            }),
     )
 }

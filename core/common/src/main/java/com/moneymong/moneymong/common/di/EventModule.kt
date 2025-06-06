@@ -10,9 +10,7 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object EventModule {
-
     @Provides
     @Singleton
-    fun provideEventTracker(): EventTracker =
-        EventTracker()
+    fun provideEventTracker(): EventTracker = EventTracker()
 }

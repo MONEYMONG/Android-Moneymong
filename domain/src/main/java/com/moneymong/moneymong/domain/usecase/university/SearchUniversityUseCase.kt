@@ -5,10 +5,12 @@ import com.moneymong.moneymong.model.sign.SearchQueryRequest
 import com.moneymong.moneymong.model.sign.UniversitiesResponse
 import javax.inject.Inject
 
-class SearchUniversityUseCase @Inject constructor(
-    private val univRepository: UnivRepository
-) {
-    suspend operator fun invoke(searchQuery: String): Result<UniversitiesResponse> {
-        return univRepository.searchUniv(SearchQueryRequest(searchQuery))
+class SearchUniversityUseCase
+    @Inject
+    constructor(
+        private val univRepository: UnivRepository,
+    ) {
+        suspend operator fun invoke(searchQuery: String): Result<UniversitiesResponse> {
+            return univRepository.searchUniv(SearchQueryRequest(searchQuery))
+        }
     }
-}

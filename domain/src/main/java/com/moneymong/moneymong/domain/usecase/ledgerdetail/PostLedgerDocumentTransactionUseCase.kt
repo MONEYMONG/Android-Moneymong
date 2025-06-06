@@ -4,9 +4,13 @@ import com.moneymong.moneymong.domain.repository.ledgerdetail.LedgerDetailReposi
 import com.moneymong.moneymong.model.ledgerdetail.LedgerDocumentRequest
 import javax.inject.Inject
 
-class PostLedgerDocumentTransactionUseCase @Inject constructor(
-    private val ledgerDetailRepository: LedgerDetailRepository
-) {
-    suspend operator fun invoke(detailId: Int, data: LedgerDocumentRequest): Result<Unit> =
-        ledgerDetailRepository.postLedgerDocumentTransaction(detailId, data)
-}
+class PostLedgerDocumentTransactionUseCase
+    @Inject
+    constructor(
+        private val ledgerDetailRepository: LedgerDetailRepository,
+    ) {
+        suspend operator fun invoke(
+            detailId: Int,
+            data: LedgerDocumentRequest,
+        ): Result<Unit> = ledgerDetailRepository.postLedgerDocumentTransaction(detailId, data)
+    }

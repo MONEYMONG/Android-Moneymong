@@ -38,26 +38,28 @@ fun MDSButton(
     val contentColor = if (enabled) type.contentColor else disabledContentColor
 
     Box(
-        modifier = modifier
-            .background(
-                color = backgroundColor,
-                shape = RoundedCornerShape(cornerShape)
-            )
-            .clip(
-                RoundedCornerShape(cornerShape)
-            )
-            .clickable(
-                onClick = onClick,
-                enabled = enabled
-            ),
-        contentAlignment = Alignment.Center
+        modifier =
+            modifier
+                .background(
+                    color = backgroundColor,
+                    shape = RoundedCornerShape(cornerShape),
+                )
+                .clip(
+                    RoundedCornerShape(cornerShape),
+                )
+                .clickable(
+                    onClick = onClick,
+                    enabled = enabled,
+                ),
+        contentAlignment = Alignment.Center,
     ) {
         Row(
-            modifier = Modifier.padding(
-                vertical = size.verticalPadding,
-                horizontal = contentHorizontalPadding
-            ),
-            horizontalArrangement = Arrangement.spacedBy(6.dp)
+            modifier =
+                Modifier.padding(
+                    vertical = size.verticalPadding,
+                    horizontal = contentHorizontalPadding,
+                ),
+            horizontalArrangement = Arrangement.spacedBy(6.dp),
         ) {
             Text(
                 text = text,
@@ -69,7 +71,7 @@ fun MDSButton(
                     modifier = Modifier.size(20.dp),
                     painter = painterResource(id = iconResource),
                     contentDescription = "Button icon",
-                    tint = contentColor
+                    tint = contentColor,
                 )
             }
         }
@@ -84,6 +86,6 @@ private fun MDSButtonPreview() {
         text = "Button",
         type = MDSButtonType.PRIMARY,
         size = MDSButtonSize.LARGE,
-        iconResource = R.drawable.ic_scan
+        iconResource = R.drawable.ic_scan,
     )
 }

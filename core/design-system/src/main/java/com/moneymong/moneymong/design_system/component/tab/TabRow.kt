@@ -19,7 +19,7 @@ fun MDSTabRow(
     modifier: Modifier = Modifier,
     tabs: List<String>,
     selectedTabIndex: Int,
-    onChangeSelectedTabIndex: (Int) -> Unit
+    onChangeSelectedTabIndex: (Int) -> Unit,
 ) {
     TabRow(
         modifier = modifier,
@@ -28,12 +28,12 @@ fun MDSTabRow(
         indicator = { tabPositions ->
             TabRowDefaults.Indicator(
                 Modifier.tabIndicatorOffset(tabPositions[selectedTabIndex]),
-                color = MDSTabType.Selected.indicatorColor
+                color = MDSTabType.Selected.indicatorColor,
             )
         },
         divider = {
             Divider(color = MDSTabType.UnSelected.indicatorColor)
-        }
+        },
     ) {
         tabs.forEachIndexed { index, title ->
             val selected = selectedTabIndex == index
@@ -46,13 +46,12 @@ fun MDSTabRow(
                 Text(
                     modifier = Modifier.padding(vertical = 8.dp),
                     text = title,
-                    style = Body3
+                    style = Body3,
                 )
             }
         }
     }
 }
-
 
 @Preview(showBackground = true)
 @Composable
@@ -60,6 +59,6 @@ fun MDSTabRowPreview() {
     MDSTabRow(
         tabs = listOf("tab", "tab", "tab"),
         selectedTabIndex = 0,
-        onChangeSelectedTabIndex = { }
+        onChangeSelectedTabIndex = { },
     )
 }

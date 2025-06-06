@@ -1,0 +1,36 @@
+#!/bin/bash
+echo '🔍 Running ktlint check...'
+
+# 변경된 Kotlin 파일만 검사
+changed_kotlin_files=$(git diff --cached --name-only --diff-filter=ACM | grep -E '\.kt$|\.kts$')
+
+if [ -z "$changed_kotlin_files" ]; then
+    echo '✅ No Kotlin files to check'
+    exit 0
+fi
+
+echo "Checking files: $changed_kotlin_files"
+
+# ktlint 검사 실행
+./gradlew ktlintCheck --daemon --build-cache
+
+if [ $? -ne 0 ]; then
+    echo '❌ ktlint check failed!'
+    echo '🔧 Trying to auto-format...'
+
+    ./gradlew ktlintFormat --daemon --build-cache  # ← 여기가 핵심!
+
+    if [ $? -eq 0 ]; then
+        echo '✅ Auto-formatting completed!'
+        echo '📝 Please review and add the formatted files to your commit:'
+        echo "$changed_kotlin_files"
+        echo ''
+        echo 'Run: git add <files> && git commit'
+        exit 1
+    else
+        echo '❌ Auto-formatting failed. Please fix manually.'
+        exit 1
+    fi
+fi
+
+echo '✅ ktlint check passed!'

@@ -25,43 +25,46 @@ fun MDSFloatingActionButton(
     iconResource: Int,
     iconSize: FABIconSize = FABIconSize(width = 24.dp, height = 24.dp),
     containerColor: Color,
-    contentColor: Color = Color.Unspecified
+    contentColor: Color = Color.Unspecified,
 ) {
     val shadowOffsetY = 2.dp
     val shadowBlurRadius = 8.dp
     val shadowColor = Black.copy(alpha = 0.3f).toArgb()
 
     FloatingActionButton(
-        modifier = modifier
-            .size(48.dp)
-            .drawBehind {
-                drawIntoCanvas {
-                    val paint = Paint()
-                    val frameworkPaint = paint.asFrameworkPaint()
-                    frameworkPaint.color = shadowColor
-                    frameworkPaint.maskFilter = BlurMaskFilter(
-                        shadowBlurRadius.toPx(),
-                        BlurMaskFilter.Blur.NORMAL
-                    )
-                    it.drawOval(
-                        left = 0f,
-                        top = shadowOffsetY.toPx(),
-                        right = size.width,
-                        bottom = size.height + shadowOffsetY.toPx(),
-                        paint = paint
-                    )
-                }
-            },
+        modifier =
+            modifier
+                .size(48.dp)
+                .drawBehind {
+                    drawIntoCanvas {
+                        val paint = Paint()
+                        val frameworkPaint = paint.asFrameworkPaint()
+                        frameworkPaint.color = shadowColor
+                        frameworkPaint.maskFilter =
+                            BlurMaskFilter(
+                                shadowBlurRadius.toPx(),
+                                BlurMaskFilter.Blur.NORMAL,
+                            )
+                        it.drawOval(
+                            left = 0f,
+                            top = shadowOffsetY.toPx(),
+                            right = size.width,
+                            bottom = size.height + shadowOffsetY.toPx(),
+                            paint = paint,
+                        )
+                    }
+                },
         onClick = onClick,
         shape = CircleShape,
         containerColor = containerColor,
         contentColor = contentColor,
-        elevation = FloatingActionButtonDefaults.elevation(
-            defaultElevation = 0.dp,
-            pressedElevation = 0.dp,
-            focusedElevation = 0.dp,
-            hoveredElevation = 0.dp
-        )
+        elevation =
+            FloatingActionButtonDefaults.elevation(
+                defaultElevation = 0.dp,
+                pressedElevation = 0.dp,
+                focusedElevation = 0.dp,
+                hoveredElevation = 0.dp,
+            ),
     ) {
         Icon(
             modifier = Modifier.size(iconSize.width, iconSize.height),
@@ -73,5 +76,5 @@ fun MDSFloatingActionButton(
 
 data class FABIconSize(
     val width: Dp,
-    val height: Dp
+    val height: Dp,
 )

@@ -57,7 +57,7 @@ internal sealed interface MDSTextFieldState : MDSTextFieldAttribute {
 internal fun getMDSTextFieldState(
     text: String,
     isError: Boolean = false,
-    isFilled: Boolean
+    isFilled: Boolean,
 ): MDSTextFieldState {
     return if (text.isEmpty()) {
         MDSTextFieldState.Default

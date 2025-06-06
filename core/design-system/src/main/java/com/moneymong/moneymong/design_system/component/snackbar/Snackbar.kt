@@ -28,25 +28,24 @@ import com.moneymong.moneymong.design_system.theme.Red03
 import com.moneymong.moneymong.design_system.theme.White
 
 @Composable
-internal fun MDSSnackbar(
-    snackbarData: SnackbarData
-) {
+internal fun MDSSnackbar(snackbarData: SnackbarData) {
     val actionLabel = snackbarData.visuals.actionLabel
     val actionComposable: (@Composable () -> Unit)? =
         if (actionLabel != null) {
             @Composable {
                 Box(
-                    modifier = Modifier
-                        .padding(start = 4.dp, end = 8.dp, top = 4.dp, bottom = 4.dp)
-                        .background(color = Color.Transparent)
-                        .clip(RoundedCornerShape(8.dp))
-                        .clickable { snackbarData.performAction() }
+                    modifier =
+                        Modifier
+                            .padding(start = 4.dp, end = 8.dp, top = 4.dp, bottom = 4.dp)
+                            .background(color = Color.Transparent)
+                            .clip(RoundedCornerShape(8.dp))
+                            .clickable { snackbarData.performAction() },
                 ) {
                     Text(
                         modifier = Modifier.padding(horizontal = 12.dp, vertical = 10.dp),
                         text = actionLabel,
                         color = Red03,
-                        style = Body3
+                        style = Body3,
                     )
                 }
             }
@@ -67,7 +66,7 @@ internal fun MDSSnackbar(
                             contentDescription = "Close snackbar",
                             tint = White,
                         )
-                    }
+                    },
                 )
             }
         } else {
@@ -77,33 +76,33 @@ internal fun MDSSnackbar(
     MDSSnackbar(
         message = snackbarData.visuals.message,
         actionComposable = actionComposable,
-        dismissActionComposable = dismissActionComposable
+        dismissActionComposable = dismissActionComposable,
     )
 }
-
 
 @Composable
 private fun MDSSnackbar(
     message: String,
     actionComposable: (@Composable () -> Unit)? = null,
-    dismissActionComposable: (@Composable () -> Unit)? = null
+    dismissActionComposable: (@Composable () -> Unit)? = null,
 ) {
     Surface(
         modifier = Modifier.fillMaxWidth(),
         color = Gray07,
         shape = RoundedCornerShape(size = 8.dp),
-        shadowElevation = 6.dp
+        shadowElevation = 6.dp,
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Text(
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(start = 16.dp, top = 14.dp, bottom = 14.dp),
+                modifier =
+                    Modifier
+                        .weight(1f)
+                        .padding(start = 16.dp, top = 14.dp, bottom = 14.dp),
                 text = message,
                 overflow = TextOverflow.Ellipsis,
                 maxLines = 1,
                 color = White,
-                style = Body3
+                style = Body3,
             )
             actionComposable?.invoke()
             dismissActionComposable?.invoke()

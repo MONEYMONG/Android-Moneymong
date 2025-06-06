@@ -19,9 +19,8 @@ fun MDSBottomSheet(
     modifier: Modifier = Modifier,
     onDismissRequest: () -> Unit,
     sheetState: SheetState = rememberModalBottomSheetState(),
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit,
 ) {
-
     ModalBottomSheet(
         modifier = modifier,
         onDismissRequest = onDismissRequest,

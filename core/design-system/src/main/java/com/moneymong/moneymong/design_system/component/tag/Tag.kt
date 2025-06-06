@@ -29,14 +29,15 @@ fun MDSTag(
     @DrawableRes iconResource: Int? = null,
 ) {
     Row(
-        modifier = modifier
-            .background(
-                color = backgroundColor,
-                shape = RoundedCornerShape(size = Int.MAX_VALUE.dp)
-            )
-            .padding(horizontal = 8.dp, vertical = 1.dp),
+        modifier =
+            modifier
+                .background(
+                    color = backgroundColor,
+                    shape = RoundedCornerShape(size = Int.MAX_VALUE.dp),
+                )
+                .padding(horizontal = 8.dp, vertical = 1.dp),
         horizontalArrangement = Arrangement.spacedBy(4.dp),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(
             text = text,
@@ -48,7 +49,7 @@ fun MDSTag(
                 modifier = Modifier.size(12.dp),
                 painter = painterResource(id = iconResource),
                 contentDescription = "Tag icon",
-                tint = contentColor
+                tint = contentColor,
             )
         }
     }
@@ -59,7 +60,7 @@ fun MDSTag(
 fun MDSTagPreview() {
     Row(
         modifier = Modifier.padding(8.dp),
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         MDSTag(
             text = "tag",
@@ -70,7 +71,7 @@ fun MDSTagPreview() {
             text = "tag",
             backgroundColor = Blue04,
             contentColor = White,
-            iconResource = com.moneymong.moneymong.design_system.R.drawable.ic_pencil
+            iconResource = com.moneymong.moneymong.design_system.R.drawable.ic_pencil,
         )
     }
 }

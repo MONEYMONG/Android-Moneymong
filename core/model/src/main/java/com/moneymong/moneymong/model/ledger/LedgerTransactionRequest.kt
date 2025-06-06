@@ -1,6 +1,6 @@
 package com.moneymong.moneymong.model.ledger
 
-data class LedgerTransactionRequest(
+data class  LedgerTransactionRequest(
     val storeInfo: String,
     val fundType: String,
     val amount: Int,

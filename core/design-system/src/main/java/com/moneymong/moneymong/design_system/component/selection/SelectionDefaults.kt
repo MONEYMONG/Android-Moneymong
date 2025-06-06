@@ -8,19 +8,18 @@ import com.moneymong.moneymong.design_system.theme.Gray04
 import com.moneymong.moneymong.design_system.theme.Gray05
 import com.moneymong.moneymong.design_system.theme.White
 
-
 enum class MDSSelectionType(
     val backgroundColor: Color,
-    val contentColor: Color
+    val contentColor: Color,
 ) {
     PRIMARY(
         backgroundColor = Blue04,
-        contentColor = White
+        contentColor = White,
     ),
     SECONDARY(
         backgroundColor = Blue01,
-        contentColor = Blue04
-    )
+        contentColor = Blue04,
+    ),
 }
 
 internal val unSelectedBackgroundColor = White
@@ -32,7 +31,7 @@ internal val disabledContentColor = Gray04
 internal val selectionBackgroundColor: (
     enabled: Boolean,
     isSelected: Boolean,
-    type: MDSSelectionType
+    type: MDSSelectionType,
 ) -> Color = { enabled, isSelected, type ->
     when {
         enabled.not() -> disabledBackgroundColor
@@ -44,7 +43,7 @@ internal val selectionBackgroundColor: (
 internal val selectionContentColor: (
     enabled: Boolean,
     isSelected: Boolean,
-    type: MDSSelectionType
+    type: MDSSelectionType,
 ) -> Color = { enabled, isSelected, type ->
     when {
         enabled.not() -> disabledContentColor
@@ -56,7 +55,7 @@ internal val selectionContentColor: (
 internal val selectionBorderColor: (
     enabled: Boolean,
     isSelected: Boolean,
-    type: MDSSelectionType
+    type: MDSSelectionType,
 ) -> Color = { enabled, isSelected, type ->
     when {
         enabled.not() -> disabledBackgroundColor

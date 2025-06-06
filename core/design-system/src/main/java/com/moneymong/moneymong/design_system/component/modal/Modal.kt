@@ -46,7 +46,7 @@ fun MDSModal(
     positiveBtnText: String,
     onClickNegative: () -> Unit,
     onClickPositive: () -> Unit,
-    onDismissRequest: () -> Unit = onClickNegative
+    onDismissRequest: () -> Unit = onClickNegative,
 ) {
     val horizontalPadding = 22.dp
     val buttonWidth = 132.dp
@@ -54,60 +54,63 @@ fun MDSModal(
 
     Dialog(
         onDismissRequest = onDismissRequest,
-        properties = DialogProperties(usePlatformDefaultWidth = false)
+        properties = DialogProperties(usePlatformDefaultWidth = false),
     ) {
         Column(
-            modifier = modifier
-                .padding(horizontal = MMHorizontalSpacing)
-                .widthIn(max = horizontalPadding * 2 + buttonWidth * 2 + buttonSpacing)
-                .clip(RoundedCornerShape(20.dp))
-                .background(Color.White)
-                .padding(horizontal = horizontalPadding),
-            horizontalAlignment = Alignment.CenterHorizontally
+            modifier =
+                modifier
+                    .padding(horizontal = MMHorizontalSpacing)
+                    .widthIn(max = horizontalPadding * 2 + buttonWidth * 2 + buttonSpacing)
+                    .clip(RoundedCornerShape(20.dp))
+                    .background(Color.White)
+                    .padding(horizontal = horizontalPadding),
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Spacer(modifier = Modifier.height(24.dp))
             Icon(
                 modifier = Modifier.size(52.dp),
                 painter = painterResource(id = icon),
                 contentDescription = null,
-                tint = Color.Unspecified
+                tint = Color.Unspecified,
             )
             Spacer(modifier = Modifier.height(10.dp))
             Text(
                 text = title,
                 textAlign = TextAlign.Center,
                 style = Heading1,
-                color = Gray10
+                color = Gray10,
             )
             Spacer(modifier = Modifier.height(2.dp))
             Text(
                 text = description,
                 textAlign = TextAlign.Center,
                 style = Body4,
-                color = Gray05
+                color = Gray05,
             )
             Spacer(modifier = Modifier.height(16.dp))
             Row(
-                horizontalArrangement = Arrangement.SpaceBetween
+                horizontalArrangement = Arrangement.SpaceBetween,
             ) {
                 MDSButton(
-                    modifier = Modifier
-                        .weight(weight = 1f, fill = false)
-                        .widthIn(min = buttonWidth),
+                    modifier =
+                        Modifier
+                            .weight(weight = 1f, fill = false)
+                            .widthIn(min = buttonWidth),
                     text = negativeBtnText,
                     size = MDSButtonSize.LARGE,
                     type = MDSButtonType.NEGATIVE,
-                    onClick = onClickNegative
+                    onClick = onClickNegative,
                 )
                 Spacer(modifier = Modifier.width(12.dp))
                 MDSButton(
-                    modifier = Modifier
-                        .weight(weight = 1f, fill = false)
-                        .widthIn(min = buttonWidth),
+                    modifier =
+                        Modifier
+                            .weight(weight = 1f, fill = false)
+                            .widthIn(min = buttonWidth),
                     text = positiveBtnText,
                     size = MDSButtonSize.LARGE,
                     type = MDSButtonType.PRIMARY,
-                    onClick = onClickPositive
+                    onClick = onClickPositive,
                 )
             }
             Spacer(modifier = Modifier.height(20.dp))
@@ -117,12 +120,12 @@ fun MDSModal(
 
 @Preview(
     showBackground = true,
-    device = "spec:shape=Normal,width=240,height=640, unit=dp, dpi= 480"
+    device = "spec:shape=Normal,width=240,height=640, unit=dp, dpi= 480",
 )
 @Composable
 fun MDSModalPreview() {
     Box(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier.fillMaxSize(),
     ) {
         MDSModal(
             icon = R.drawable.ic_camera_modal,
@@ -131,7 +134,7 @@ fun MDSModalPreview() {
             negativeBtnText = "허용 안함",
             positiveBtnText = "허용",
             onClickNegative = {},
-            onClickPositive = {}
+            onClickPositive = {},
         )
     }
 }

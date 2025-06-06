@@ -11,11 +11,10 @@ import com.moneymong.moneymong.design_system.theme.Gray08
 import com.moneymong.moneymong.design_system.theme.White
 
 enum class MDSButtonType(val backgroundColor: Color, val contentColor: Color) {
-
     PRIMARY(backgroundColor = Blue04, contentColor = White),
     SECONDARY(backgroundColor = Blue01, contentColor = Blue04),
     NEGATIVE(backgroundColor = Gray02, contentColor = Gray05),
-    THIRDARY(backgroundColor = Gray08, contentColor = White)
+    THIRDARY(backgroundColor = Gray08, contentColor = White),
 }
 
 val disabledBackgroundColor = Gray03

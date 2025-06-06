@@ -21,33 +21,34 @@ fun MDSChip(
     modifier: Modifier = Modifier,
     tabs: List<String>,
     selectedTabIndex: Int,
-    onChangeSelectedTabIndex: (Int) -> Unit
+    onChangeSelectedTabIndex: (Int) -> Unit,
 ) {
     Row(
         modifier = modifier,
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         tabs.forEachIndexed { index, title ->
             val chipType = if (selectedTabIndex == index) ChipType.Selected else ChipType.UnSelected
             val mdsChipColor = MDSChipColor(chipType)
             Box(
-                modifier = Modifier
-                    .border(
-                        width = 1.dp,
-                        color = mdsChipColor.borderColor().value,
-                        shape = RoundedCornerShape(100)
-                    )
-                    .clip(RoundedCornerShape(100))
-                    .background(mdsChipColor.backgroundColor().value)
-                    .clickable {
-                        onChangeSelectedTabIndex(index)
-                    }
+                modifier =
+                    Modifier
+                        .border(
+                            width = 1.dp,
+                            color = mdsChipColor.borderColor().value,
+                            shape = RoundedCornerShape(100),
+                        )
+                        .clip(RoundedCornerShape(100))
+                        .background(mdsChipColor.backgroundColor().value)
+                        .clickable {
+                            onChangeSelectedTabIndex(index)
+                        },
             ) {
                 Text(
                     modifier = Modifier.padding(horizontal = 14.dp, vertical = 3.dp),
                     text = title,
                     style = Body2,
-                    color = mdsChipColor.textColor().value
+                    color = mdsChipColor.textColor().value,
                 )
             }
         }
@@ -60,5 +61,6 @@ fun MDSChipPreview() {
     MDSChip(
         tabs = listOf("tab", "tab", "tab"),
         selectedTabIndex = 0,
-        onChangeSelectedTabIndex = { 0 })
+        onChangeSelectedTabIndex = { 0 },
+    )
 }

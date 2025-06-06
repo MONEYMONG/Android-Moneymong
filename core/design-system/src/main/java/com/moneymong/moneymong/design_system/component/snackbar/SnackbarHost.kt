@@ -12,7 +12,7 @@ fun MDSSnackbarHost(
 ) {
     SnackbarHost(
         modifier = modifier,
-        hostState = hostState
+        hostState = hostState,
     ) {
         MDSSnackbar(snackbarData = it)
     }

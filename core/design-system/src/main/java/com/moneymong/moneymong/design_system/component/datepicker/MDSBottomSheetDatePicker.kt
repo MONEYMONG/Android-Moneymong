@@ -68,7 +68,7 @@ import java.time.LocalDate
 
 enum class MDSDateType(val description: String) {
     START(description = "시작일"),
-    END(description = "종료일")
+    END(description = "종료일"),
 }
 
 private const val START_DATE_OF_LOCAL_DATE = 1
@@ -94,18 +94,23 @@ fun MDSWheelDatePicker(
     val months by remember { mutableStateOf(MONTH_RANGE.toList()) }
 
     var startYearIndex by remember { mutableIntStateOf(years.indexOf(startDate.year).coerceIn(0, years.size - 1)) }
-    var startMonthIndex by remember { mutableIntStateOf(months.indexOf(startDate.monthValue).coerceIn(0, months.size - 1)) }
+    var startMonthIndex by remember {
+        mutableIntStateOf(
+            months.indexOf(startDate.monthValue).coerceIn(0, months.size - 1),
+        )
+    }
     var endYearIndex by remember { mutableIntStateOf(years.indexOf(endDate.year).coerceIn(0, years.size - 1)) }
     var endMonthIndex by remember { mutableIntStateOf(months.indexOf(endDate.monthValue).coerceIn(0, months.size - 1)) }
-    val wheelYearStartIndex = when (dateType) {
-        MDSDateType.START -> startYearIndex
-        MDSDateType.END -> endYearIndex
-    }
-    val wheelMonthStartIndex = when (dateType) {
-        MDSDateType.START -> startMonthIndex
-        MDSDateType.END -> endMonthIndex
-    }
-
+    val wheelYearStartIndex =
+        when (dateType) {
+            MDSDateType.START -> startYearIndex
+            MDSDateType.END -> endYearIndex
+        }
+    val wheelMonthStartIndex =
+        when (dateType) {
+            MDSDateType.START -> startMonthIndex
+            MDSDateType.END -> endMonthIndex
+        }
 
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
@@ -148,7 +153,7 @@ fun MDSWheelDatePicker(
         snappedStartYear,
         snappedStartMonth,
         snappedEndYear,
-        snappedEndMonth
+        snappedEndMonth,
     ) {
         val startLocalDate = LocalDate.of(snappedStartYear, snappedStartMonth, START_DATE_OF_LOCAL_DATE)
         val endLocalDate = LocalDate.of(snappedEndYear, snappedEndMonth, START_DATE_OF_LOCAL_DATE)
@@ -164,7 +169,7 @@ fun MDSWheelDatePicker(
                 snackbarHostState.showSnackbar(
                     message = "올바른 범위로 기간을 설정해주세요!",
                     withDismissAction = true,
-                    actionLabel = ""
+                    actionLabel = "",
                 )
             }
         } else {
@@ -173,28 +178,31 @@ fun MDSWheelDatePicker(
     }
 
     Box(
-        modifier = modifier
-            .fillMaxWidth()
+        modifier =
+            modifier
+                .fillMaxWidth(),
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(
-                    start = MMHorizontalSpacing,
-                    top = 20.dp,
-                    end = MMHorizontalSpacing,
-                    bottom = 12.dp
-                ),
-            horizontalAlignment = Alignment.CenterHorizontally
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(
+                        start = MMHorizontalSpacing,
+                        top = 20.dp,
+                        end = MMHorizontalSpacing,
+                        bottom = 12.dp,
+                    ),
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Box(modifier = Modifier.fillMaxWidth()) {
                 Icon(
-                    modifier = Modifier
-                        .clickable { onDismissRequest() }
-                        .align(Alignment.CenterEnd),
+                    modifier =
+                        Modifier
+                            .clickable { onDismissRequest() }
+                            .align(Alignment.CenterEnd),
                     painter = painterResource(id = R.drawable.ic_close_default),
                     contentDescription = null,
-                    tint = Gray05
+                    tint = Gray05,
                 )
             }
             Spacer(modifier = Modifier.height(12.dp))
@@ -210,7 +218,7 @@ fun MDSWheelDatePicker(
                     month = snappedStartMonth,
                     selected = dateType == MDSDateType.START,
                     isValidValue = isValidValue,
-                    onClick = onChangeDateType
+                    onClick = onChangeDateType,
                 )
                 MDSDatePickerDateView(
                     modifier = Modifier.weight(1f),
@@ -219,14 +227,14 @@ fun MDSWheelDatePicker(
                     month = snappedEndMonth,
                     selected = dateType == MDSDateType.END,
                     isValidValue = isValidValue,
-                    onClick = onChangeDateType
+                    onClick = onChangeDateType,
                 )
             }
             Spacer(modifier = Modifier.height(16.dp))
             HorizontalDivider(
                 modifier = Modifier.fillMaxWidth(),
                 thickness = 1.dp,
-                color = Gray02
+                color = Gray02,
             )
             Spacer(modifier = Modifier.height(16.dp))
             Row(
@@ -236,28 +244,28 @@ fun MDSWheelDatePicker(
                 WheelPicker(
                     items = years,
                     startIndex = wheelYearStartIndex,
-                    confirmDateChange = updateYear
+                    confirmDateChange = updateYear,
                 ) { year, color ->
                     Text(
                         modifier = Modifier.width(64.dp),
                         text = "${year}년",
                         style = Heading2,
                         color = color,
-                        textAlign = TextAlign.Center
+                        textAlign = TextAlign.Center,
                     )
                 }
                 Spacer(modifier = Modifier.width(40.dp))
                 WheelPicker(
                     items = months,
                     startIndex = wheelMonthStartIndex,
-                    confirmDateChange = updateMonth
+                    confirmDateChange = updateMonth,
                 ) { month, color ->
                     Text(
                         modifier = Modifier.width(64.dp),
                         text = "${month}월",
                         style = Heading2,
                         color = color,
-                        textAlign = TextAlign.Center
+                        textAlign = TextAlign.Center,
                     )
                 }
             }
@@ -271,16 +279,17 @@ fun MDSWheelDatePicker(
                 onClick = {
                     confirmDateChange(
                         LocalDate.of(snappedStartYear, snappedStartMonth, 1),
-                        LocalDate.of(snappedEndYear, snappedEndMonth, 1)
+                        LocalDate.of(snappedEndYear, snappedEndMonth, 1),
                     )
-                }
+                },
             )
         }
         MDSSnackbarHost(
-            modifier = Modifier
-                .padding(start = 20.dp, bottom = 76.dp, end = 20.dp)
-                .align(Alignment.BottomCenter),
-            hostState = snackbarHostState
+            modifier =
+                Modifier
+                    .padding(start = 20.dp, bottom = 76.dp, end = 20.dp)
+                    .align(Alignment.BottomCenter),
+            hostState = snackbarHostState,
         )
     }
 }
@@ -293,32 +302,41 @@ internal fun MDSDatePickerDateView(
     year: Int,
     month: Int,
     isValidValue: Boolean,
-    onClick: (MDSDateType) -> Unit
+    onClick: (MDSDateType) -> Unit,
 ) {
     Box(
-        modifier = modifier
-            .background(
-                color = if (!isValidValue && selected) Red01 else if (selected) Blue01 else White,
-                shape = RoundedCornerShape(8.dp)
-            )
-            .clip(RoundedCornerShape(8.dp))
-            .clickable { onClick(dateType) }
+        modifier =
+            modifier
+                .background(
+                    color =
+                        if (!isValidValue && selected) {
+                            Red01
+                        } else if (selected) {
+                            Blue01
+                        } else {
+                            White
+                        },
+                    shape = RoundedCornerShape(8.dp),
+                )
+                .clip(RoundedCornerShape(8.dp))
+                .clickable { onClick(dateType) },
     ) {
         Column(
-            modifier = Modifier
-                .wrapContentSize()
-                .padding(vertical = 10.dp, horizontal = 12.dp),
+            modifier =
+                Modifier
+                    .wrapContentSize()
+                    .padding(vertical = 10.dp, horizontal = 12.dp),
         ) {
             Text(
                 text = dateType.description,
                 style = Body3,
-                color = if (!isValidValue && selected) Red02 else Blue03
+                color = if (!isValidValue && selected) Red02 else Blue03,
             )
             Spacer(modifier = Modifier.height(2.dp))
             Text(
                 text = "${year}년 ${month}월",
                 style = Heading3,
-                color = if (!isValidValue && selected) Red03 else Blue04
+                color = if (!isValidValue && selected) Red03 else Blue04,
             )
         }
     }
@@ -333,7 +351,7 @@ internal fun <T> WheelPicker(
     startIndex: Int = 0,
     visibleItemsCount: Int = 3,
     confirmDateChange: (value: T) -> Unit = {},
-    content: @Composable LazyItemScope.(item: T, color: Color) -> Unit
+    content: @Composable LazyItemScope.(item: T, color: Color) -> Unit,
 ) {
     val paddedItems = listOf(null) + items + listOf(null)
     val safeStartIndex = startIndex.coerceIn(0, (items.lastIndex))
@@ -364,9 +382,10 @@ internal fun <T> WheelPicker(
 
     Box(modifier = modifier) {
         LazyColumn(
-            modifier = modifier
-                .width(size.width)
-                .height(size.height),
+            modifier =
+                modifier
+                    .width(size.width)
+                    .height(size.height),
             verticalArrangement = Arrangement.spacedBy(28.dp),
             state = lazyListState,
             flingBehavior = snapFlingBehavior,
@@ -386,18 +405,20 @@ internal fun <T> WheelPicker(
             }
         }
         HorizontalDivider(
-            modifier = Modifier
-                .width(64.dp)
-                .offset(y = centerLinePosition - itemHeightDp / 2 - 6.dp),
+            modifier =
+                Modifier
+                    .width(64.dp)
+                    .offset(y = centerLinePosition - itemHeightDp / 2 - 6.dp),
             thickness = 2.dp,
-            color = Blue04
+            color = Blue04,
         )
         HorizontalDivider(
-            modifier = Modifier
-                .width(64.dp)
-                .offset(y = centerLinePosition + itemHeightDp / 2 + 6.dp),
+            modifier =
+                Modifier
+                    .width(64.dp)
+                    .offset(y = centerLinePosition + itemHeightDp / 2 + 6.dp),
             thickness = 2.dp,
-            color = Blue04
+            color = Blue04,
         )
     }
 }

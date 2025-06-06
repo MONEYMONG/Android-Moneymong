@@ -10,22 +10,22 @@ import com.moneymong.moneymong.design_system.theme.Gray05
 enum class ChipType(
     val borderColor: Color,
     val backgroundColor: Color,
-    val textColor: Color
+    val textColor: Color,
 ) {
     Selected(
         borderColor = Blue04,
         backgroundColor = Blue04,
-        textColor = Color.White
+        textColor = Color.White,
     ),
     UnSelected(
         borderColor = Gray03,
         backgroundColor = Color.White,
-        textColor = Gray05
-    )
+        textColor = Gray05,
+    ),
 }
 
 class MDSChipColor internal constructor(
-    private val mdsChipType: ChipType
+    private val mdsChipType: ChipType,
 ) {
     @Composable
     internal fun borderColor() = rememberUpdatedState(mdsChipType.borderColor)

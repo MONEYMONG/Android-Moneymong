@@ -31,23 +31,23 @@ fun MDSSelection(
     enabled: Boolean = true,
     isSelected: Boolean = false,
     type: MDSSelectionType = MDSSelectionType.PRIMARY,
-    onClick: () -> Unit = {}
+    onClick: () -> Unit = {},
 ) {
-
     val backgroundColor = selectionBackgroundColor(enabled, isSelected, type)
     val contentColor = selectionContentColor(enabled, isSelected, type)
     val borderColor = selectionBorderColor(enabled, isSelected, type)
 
     Box(
-        modifier = modifier
-            .clip(RoundedCornerShape(8.dp))
-            .background(color = backgroundColor)
-            .clickable(enabled = enabled) { onClick() }
-            .border(
-                width = 1.dp,
-                color = borderColor,
-                shape = RoundedCornerShape(8.dp)
-            ),
+        modifier =
+            modifier
+                .clip(RoundedCornerShape(8.dp))
+                .background(color = backgroundColor)
+                .clickable(enabled = enabled) { onClick() }
+                .border(
+                    width = 1.dp,
+                    color = borderColor,
+                    shape = RoundedCornerShape(8.dp),
+                ),
         contentAlignment = Alignment.Center,
     ) {
         Text(
@@ -65,26 +65,27 @@ private fun MDSSelectionPreview() {
     var selectedType by remember { mutableIntStateOf(1) }
 
     Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color.White)
+        modifier =
+            Modifier
+                .fillMaxSize()
+                .background(Color.White),
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(10.dp)
+            horizontalArrangement = Arrangement.spacedBy(10.dp),
         ) {
             MDSSelection(
                 modifier = Modifier.weight(1f),
                 text = "동아리",
                 isSelected = selectedType == 1,
-                onClick = { selectedType = 1 }
+                onClick = { selectedType = 1 },
             )
             MDSSelection(
                 modifier = Modifier.weight(1f),
                 text = "나는 Secondary",
                 isSelected = selectedType == 2,
                 type = MDSSelectionType.SECONDARY,
-                onClick = { selectedType = 2 }
+                onClick = { selectedType = 2 },
             )
             MDSSelection(
                 modifier = Modifier.weight(1f),

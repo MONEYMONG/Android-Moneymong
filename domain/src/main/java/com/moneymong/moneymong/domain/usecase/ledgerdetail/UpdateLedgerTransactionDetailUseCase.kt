@@ -5,9 +5,17 @@ import com.moneymong.moneymong.model.ledgerdetail.LedgerTransactionDetailRequest
 import com.moneymong.moneymong.model.ledgerdetail.LedgerTransactionDetailResponse
 import javax.inject.Inject
 
-class UpdateLedgerTransactionDetailUseCase @Inject constructor(
-    private val ledgerDetailRepository: LedgerDetailRepository
-) {
-    suspend operator fun invoke(detailId: Int, data: LedgerTransactionDetailRequest): Result<LedgerTransactionDetailResponse> =
-        ledgerDetailRepository.updateLedgerTransactionDetail(detailId, data)
-}
+class UpdateLedgerTransactionDetailUseCase
+    @Inject
+    constructor(
+        private val ledgerDetailRepository: LedgerDetailRepository,
+    ) {
+        suspend operator fun invoke(
+            detailId: Int,
+            data: LedgerTransactionDetailRequest,
+        ): Result<LedgerTransactionDetailResponse> =
+            ledgerDetailRepository.updateLedgerTransactionDetail(
+                detailId,
+                data,
+            )
+    }

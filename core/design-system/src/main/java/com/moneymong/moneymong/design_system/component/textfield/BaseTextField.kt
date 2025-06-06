@@ -37,7 +37,6 @@ internal fun MDSBaseTextField(
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     keyboardActions: KeyboardActions = KeyboardActions.Default,
 ) {
-
     val focusManager = LocalFocusManager.current
 
     val state = getMDSTextFieldState(text = value.text, isError = isError, isFilled = isFilled)
@@ -45,12 +44,14 @@ internal fun MDSBaseTextField(
     BasicTextField(
         value = value,
         onValueChange = { onValueChange(it) },
-        modifier = modifier
-            .sizeIn(minWidth = 320.dp)
-            .width(intrinsicSize = IntrinsicSize.Min),
-        textStyle = Body3.copy(
-            color = state.textColor
-        ),
+        modifier =
+            modifier
+                .sizeIn(minWidth = 320.dp)
+                .width(intrinsicSize = IntrinsicSize.Min),
+        textStyle =
+            Body3.copy(
+                color = state.textColor,
+            ),
         keyboardOptions = keyboardOptions,
         keyboardActions = keyboardActions,
         singleLine = singleLine,
@@ -71,8 +72,8 @@ internal fun MDSBaseTextField(
                 },
                 maxCount = maxCount,
                 helperText = helperText,
-                innerTextField = innerTextField
+                innerTextField = innerTextField,
             )
-        }
+        },
     )
 }

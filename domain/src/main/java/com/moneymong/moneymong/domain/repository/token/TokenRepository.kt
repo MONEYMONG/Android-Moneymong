@@ -9,16 +9,34 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 
 interface TokenRepository {
     val tokenUpdateFailed: MutableSharedFlow<Boolean>
+
     suspend fun notifyTokenUpdateFailed(failed: Boolean)
+
     suspend fun getRefreshToken(): Result<String>
-    suspend fun postAccessToken(type: LoginType, accessToken: String): Result<TokenResponse>
+
+    suspend fun postAccessToken(
+        type: LoginType,
+        accessToken: String,
+    ): Result<TokenResponse>
+
     suspend fun getAccessToken(): Result<String>
+
     suspend fun getDataStoreInfo(): Result<UserDataStoreInfoResponse>
+
     suspend fun getUpdateToken(refreshToken: String): Result<RefreshTokenResponse>
+
     suspend fun deleteToken()
-    suspend fun updateTokens(aToken: String, rToken: String)
+
+    suspend fun updateTokens(
+        aToken: String,
+        rToken: String,
+    )
+
     suspend fun updateAccessToken(aToken: String)
+
     suspend fun deleteRefreshToken(body: RefreshTokenRequest)
+
     suspend fun getSchoolInfo(): Result<Boolean>
+
     suspend fun setSchoolInfoProvided(infoExist: Boolean)
 }

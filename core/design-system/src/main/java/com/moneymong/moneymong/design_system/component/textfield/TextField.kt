@@ -19,7 +19,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.moneymong.moneymong.design_system.component.textfield.util.MDSTextFieldIcons
 import com.moneymong.moneymong.design_system.component.textfield.util.withRequiredMark
 
-
 @Composable
 fun MDSTextField(
     modifier: Modifier = Modifier,
@@ -37,9 +36,8 @@ fun MDSTextField(
     onIconClick: (() -> Unit) = {},
     visualTransformation: VisualTransformation = VisualTransformation.None,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
-    keyboardActions: KeyboardActions = KeyboardActions.Default
+    keyboardActions: KeyboardActions = KeyboardActions.Default,
 ) {
-
     MDSBaseTextField(
         modifier = modifier,
         value = value,
@@ -56,7 +54,7 @@ fun MDSTextField(
         onIconClick = onIconClick,
         visualTransformation = visualTransformation,
         keyboardOptions = keyboardOptions,
-        keyboardActions = keyboardActions
+        keyboardActions = keyboardActions,
     )
 }
 
@@ -77,9 +75,8 @@ fun MDSTextField(
     onIconClick: (() -> Unit) = {},
     visualTransformation: VisualTransformation = VisualTransformation.None,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
-    keyboardActions: KeyboardActions = KeyboardActions.Default
+    keyboardActions: KeyboardActions = KeyboardActions.Default,
 ) {
-
     MDSBaseTextField(
         modifier = modifier,
         value = value,
@@ -96,7 +93,7 @@ fun MDSTextField(
         onIconClick = onIconClick,
         visualTransformation = visualTransformation,
         keyboardOptions = keyboardOptions,
-        keyboardActions = keyboardActions
+        keyboardActions = keyboardActions,
     )
 }
 
@@ -105,7 +102,10 @@ fun MDSTextField(
 fun MDSTextFieldPreview() {
     val focusManager = LocalFocusManager.current
 
-    fun validate(text: String, maxCount: Int): Boolean {
+    fun validate(
+        text: String,
+        maxCount: Int,
+    ): Boolean {
         return text.length > maxCount
     }
 
@@ -115,9 +115,10 @@ fun MDSTextFieldPreview() {
     val isError by remember { derivedStateOf { validate(userInput.text, maxCount) } }
 
     MDSTextField(
-        modifier = Modifier
-            .fillMaxWidth()
-            .onFocusChanged { isFilled = !it.isFocused },
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .onFocusChanged { isFilled = !it.isFocused },
         value = userInput,
         onValueChange = { userInput = it },
         title = withRequiredMark("title"),
@@ -129,9 +130,10 @@ fun MDSTextFieldPreview() {
         singleLine = true,
         icon = MDSTextFieldIcons.Clear,
         onIconClick = { userInput = userInput.copy("") },
-        keyboardActions = KeyboardActions(onDone = {
-            focusManager.clearFocus()
-        })
+        keyboardActions =
+            KeyboardActions(onDone = {
+                focusManager.clearFocus()
+            }),
     )
 }
 
@@ -144,9 +146,10 @@ fun MDSTextFieldPreviewForSearch() {
     var isFilled by remember { mutableStateOf(false) }
 
     MDSTextField(
-        modifier = Modifier
-            .fillMaxWidth()
-            .onFocusChanged { isFilled = !it.isFocused },
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .onFocusChanged { isFilled = !it.isFocused },
         value = userInput,
         onValueChange = { userInput = it },
         title = "title",
@@ -155,8 +158,9 @@ fun MDSTextFieldPreviewForSearch() {
         singleLine = true,
         icon = MDSTextFieldIcons.Search,
         onIconClick = { },
-        keyboardActions = KeyboardActions(onDone = {
-            focusManager.clearFocus()
-        })
+        keyboardActions =
+            KeyboardActions(onDone = {
+                focusManager.clearFocus()
+            }),
     )
 }

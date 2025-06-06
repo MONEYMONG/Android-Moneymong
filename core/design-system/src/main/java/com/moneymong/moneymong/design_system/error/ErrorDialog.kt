@@ -52,34 +52,36 @@ fun ErrorDialog(
 
     Dialog(
         onDismissRequest = {},
-        properties = DialogProperties(
-            dismissOnBackPress = false,
-            dismissOnClickOutside = false,
-            usePlatformDefaultWidth = false
-        ),
+        properties =
+            DialogProperties(
+                dismissOnBackPress = false,
+                dismissOnClickOutside = false,
+                usePlatformDefaultWidth = false,
+            ),
     ) {
         Column(
-            modifier = modifier
-                .padding(horizontal = MMHorizontalSpacing)
-                .widthIn(max = horizontalPadding * 2 + buttonWidth)
-                .clip(RoundedCornerShape(20.dp))
-                .background(color = White)
-                .padding(horizontal = horizontalPadding),
-            horizontalAlignment = Alignment.CenterHorizontally
+            modifier =
+                modifier
+                    .padding(horizontal = MMHorizontalSpacing)
+                    .widthIn(max = horizontalPadding * 2 + buttonWidth)
+                    .clip(RoundedCornerShape(20.dp))
+                    .background(color = White)
+                    .padding(horizontal = horizontalPadding),
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Spacer(modifier = Modifier.height(24.dp))
             Icon(
                 modifier = Modifier.size(60.dp),
                 painter = painterResource(id = R.drawable.ic_warning_filled),
                 tint = Color.Unspecified,
-                contentDescription = "warning"
+                contentDescription = "warning",
             )
             Spacer(modifier = Modifier.height(10.dp))
             Text(
                 text = message,
                 textAlign = TextAlign.Center,
                 style = Heading1,
-                color = Gray10
+                color = Gray10,
             )
             if (description.isNotBlank()) {
                 Spacer(modifier = Modifier.height(2.dp))
@@ -87,7 +89,7 @@ fun ErrorDialog(
                     text = description,
                     textAlign = TextAlign.Center,
                     style = Body4,
-                    color = Gray06
+                    color = Gray06,
                 )
             }
             Spacer(modifier = Modifier.height(16.dp))
@@ -105,7 +107,7 @@ fun ErrorDialog(
 
 @Preview(
     showBackground = true,
-    device = "spec:shape=Normal,width=240,height=640, unit=dp, dpi= 480"
+    device = "spec:shape=Normal,width=240,height=640, unit=dp, dpi= 480",
 )
 @Composable
 fun ErrorDialogPreview() {
@@ -113,21 +115,20 @@ fun ErrorDialogPreview() {
 
     if (visibleDialog) {
         Box(
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier.fillMaxSize(),
         ) {
             ErrorDialog(
                 message = "dddddddddddddddddd",
                 description = "이것은 설명입니다",
-                onConfirm = { visibleDialog = false }
+                onConfirm = { visibleDialog = false },
             )
         }
     }
 }
 
-
 @Preview(
     showBackground = true,
-    device = "spec:shape=Normal,width=240,height=640, unit=dp, dpi= 480"
+    device = "spec:shape=Normal,width=240,height=640, unit=dp, dpi= 480",
 )
 @Composable
 fun ErrorDialogWithSubMessagePreview() {
@@ -135,12 +136,12 @@ fun ErrorDialogWithSubMessagePreview() {
 
     if (visibleDialog) {
         Box(
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier.fillMaxSize(),
         ) {
             ErrorDialog(
                 message = "ddddddddddddddddddddddddddddddddddddddddddddddddddd",
                 description = "장부 페이지에서 가입한 소속을 확인해보세요",
-                onConfirm = { visibleDialog = false }
+                onConfirm = { visibleDialog = false },
             )
         }
     }

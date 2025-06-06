@@ -1,7 +1,6 @@
 package com.moneymong.moneymong.common.error
 
 sealed class HttpError : MoneyMongError() {
-
     /**
      * 400 Bad Request
      */
@@ -28,7 +27,10 @@ sealed class HttpError : MoneyMongError() {
     data class InternalServerError(override val message: String) : HttpError()
 }
 
-fun getErrorByStatusCode(statusCode: Int, message: String): MoneyMongError {
+fun getErrorByStatusCode(
+    statusCode: Int,
+    message: String,
+): MoneyMongError {
     return when (statusCode) {
         400 -> HttpError.BadRequestError(message = message)
         401 -> HttpError.UnauthorizedError(message = message)

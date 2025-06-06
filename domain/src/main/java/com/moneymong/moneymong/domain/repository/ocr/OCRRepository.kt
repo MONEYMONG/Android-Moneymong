@@ -7,5 +7,6 @@ import com.moneymong.moneymong.model.ocr.FileUploadResponse
 
 interface OCRRepository {
     suspend fun documentOCR(body: DocumentRequest): Result<DocumentResponse>
+
     suspend fun postFileUpload(body: FileUploadRequest): Result<FileUploadResponse>
 }

@@ -36,62 +36,62 @@ import com.moneymong.moneymong.design_system.theme.Blue04
 import com.moneymong.moneymong.design_system.theme.Body2
 import com.moneymong.moneymong.design_system.theme.Gray02
 import com.moneymong.moneymong.design_system.theme.Gray04
-import com.moneymong.moneymong.design_system.theme.Gray09
 import com.moneymong.moneymong.design_system.theme.White
 
 @Composable
 fun MDSNavigationBar(
     modifier: Modifier = Modifier,
-    content: @Composable RowScope.() -> Unit
+    content: @Composable RowScope.() -> Unit,
 ) {
     Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .navigationBarsPadding()
-            .background(color = White)
-            .clip(shape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp))
-            .border(
-                width = 1.dp,
-                color = Gray02,
-                shape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp)
-            )
-            .drawBehind {
-                val strokeWidth = 1.dp.toPx()
-                drawLine(
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .navigationBarsPadding()
+                .background(color = White)
+                .clip(shape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp))
+                .border(
+                    width = 1.dp,
                     color = Gray02,
-                    strokeWidth = strokeWidth,
-                    start = Offset(x = 0f, y = 0f + strokeWidth / 2),
-                    end = Offset(x = size.width, y = 0f + strokeWidth / 2)
+                    shape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp),
                 )
-            }
-            .selectableGroup()
-            .padding(horizontal = 12.dp),
-        content = content
+                .drawBehind {
+                    val strokeWidth = 1.dp.toPx()
+                    drawLine(
+                        color = Gray02,
+                        strokeWidth = strokeWidth,
+                        start = Offset(x = 0f, y = 0f + strokeWidth / 2),
+                        end = Offset(x = size.width, y = 0f + strokeWidth / 2),
+                    )
+                }
+                .selectableGroup()
+                .padding(horizontal = 12.dp),
+        content = content,
     )
 }
-
 
 @Composable
 fun RowScope.MDSNavigationBarItem(
     selected: Boolean,
     labelText: String,
     @DrawableRes icon: Int,
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ) {
     Box(
-        modifier = Modifier
-            .selectable(
-                selected = selected,
-                onClick = onClick,
-                interactionSource = remember { MutableInteractionSource() },
-                indication = null
-            )
-            .weight(1f),
-        contentAlignment = Alignment.Center
+        modifier =
+            Modifier
+                .selectable(
+                    selected = selected,
+                    onClick = onClick,
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = null,
+                )
+                .weight(1f),
+        contentAlignment = Alignment.Center,
     ) {
         Column(
             modifier = Modifier.padding(vertical = 8.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Icon(
                 modifier = Modifier.size(24.dp),
@@ -102,7 +102,7 @@ fun RowScope.MDSNavigationBarItem(
             Text(
                 text = labelText,
                 style = Body2,
-                color = if (selected) selectedLabelColor else unSelectedLabelColor
+                color = if (selected) selectedLabelColor else unSelectedLabelColor,
             )
         }
     }
@@ -125,14 +125,14 @@ fun MDSNavigationBarPreview() {
                 selected = false,
                 labelText = "장부",
                 icon = R.drawable.ic_record,
-                onClick = {}
+                onClick = {},
             )
             MDSNavigationBarItem(
                 selected = false,
                 labelText = "마이몽",
                 icon = R.drawable.ic_mymong,
-                onClick = {}
+                onClick = {},
             )
-        }
+        },
     )
 }

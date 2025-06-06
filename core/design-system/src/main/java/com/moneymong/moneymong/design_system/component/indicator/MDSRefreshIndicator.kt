@@ -20,7 +20,7 @@ fun MDSRefreshIndicator(
         PullRefreshIndicator(
             modifier = Modifier.align(Alignment.TopCenter),
             refreshing = isRefreshing,
-            state = pullRefreshState
+            state = pullRefreshState,
         )
     }
 }

@@ -24,12 +24,14 @@ fun String.toWonFormat(unit: Boolean = false): String {
     }
 }
 
-fun String.validateValue(length: Int, isDigit: Boolean = false) =
-    if (isDigit) {
-        this.isDigitsOnly() && this.length <= length
-    } else {
-        this.length <= length
-    }
+fun String.validateValue(
+    length: Int,
+    isDigit: Boolean = false,
+) = if (isDigit) {
+    this.isDigitsOnly() && this.length <= length
+} else {
+    this.length <= length
+}
 
 fun String.isValidPaymentDate(): Boolean {
     val formatted = SimpleDateFormat("yyyyMMdd")

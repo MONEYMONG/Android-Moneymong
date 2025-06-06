@@ -8,14 +8,14 @@ import com.moneymong.moneymong.design_system.theme.Gray10
 
 enum class MDSTabType(
     val contentColor: Color,
-    val indicatorColor: Color
+    val indicatorColor: Color,
 ) {
     Selected(
         contentColor = Gray10,
-        indicatorColor = Blue04
+        indicatorColor = Blue04,
     ),
     UnSelected(
         contentColor = Gray04,
-        indicatorColor = Gray03
-    )
+        indicatorColor = Gray03,
+    ),
 }

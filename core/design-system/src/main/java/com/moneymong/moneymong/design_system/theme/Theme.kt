@@ -10,10 +10,7 @@ import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
 @Composable
-fun MMTheme(
-    content: @Composable () -> Unit
-) {
-
+fun MMTheme(content: @Composable () -> Unit) {
     val view = LocalView.current
     if (!view.isInEditMode) {
         SideEffect {
@@ -24,6 +21,6 @@ fun MMTheme(
     }
 
     MaterialTheme(
-        content = content
+        content = content,
     )
 }

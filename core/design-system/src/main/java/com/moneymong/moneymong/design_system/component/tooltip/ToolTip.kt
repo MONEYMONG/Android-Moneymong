@@ -25,58 +25,64 @@ import com.moneymong.moneymong.design_system.theme.Black
 import com.moneymong.moneymong.design_system.theme.Body3
 import com.moneymong.moneymong.design_system.theme.Gray07
 
-
 @Composable
 fun MDSToolTip(
     modifier: Modifier = Modifier,
     text: String,
-    position: MDSToolTipPosition
+    position: MDSToolTipPosition,
 ) {
     val shadowBlurRadius = 8.dp
     val shadowColor = Black.copy(alpha = 0.3f).toArgb()
 
-    Column(modifier = modifier.drawBehind {
-        drawIntoCanvas {
-            val paint = Paint()
-            val frameworkPaint = paint.asFrameworkPaint()
-            frameworkPaint.color = shadowColor
-            frameworkPaint.maskFilter = BlurMaskFilter(
-                shadowBlurRadius.toPx(),
-                BlurMaskFilter.Blur.NORMAL
-            )
-            it.drawRect(
-                left = 0f,
-                top = 0f,
-                right = size.width,
-                bottom = size.height - 12,
-                paint = paint
-            )
-        }
-    }) {
+    Column(
+        modifier =
+            modifier.drawBehind {
+                drawIntoCanvas {
+                    val paint = Paint()
+                    val frameworkPaint = paint.asFrameworkPaint()
+                    frameworkPaint.color = shadowColor
+                    frameworkPaint.maskFilter =
+                        BlurMaskFilter(
+                            shadowBlurRadius.toPx(),
+                            BlurMaskFilter.Blur.NORMAL,
+                        )
+                    it.drawRect(
+                        left = 0f,
+                        top = 0f,
+                        right = size.width,
+                        bottom = size.height - 12,
+                        paint = paint,
+                    )
+                }
+            },
+    ) {
         Box(
-            modifier = Modifier
-                .clip(RoundedCornerShape(8.dp))
-                .background(Gray07),
-            contentAlignment = Alignment.Center
+            modifier =
+                Modifier
+                    .clip(RoundedCornerShape(8.dp))
+                    .background(Gray07),
+            contentAlignment = Alignment.Center,
         ) {
             Text(
                 modifier = Modifier.padding(vertical = 10.dp, horizontal = 14.dp),
                 text = text,
                 style = Body3,
-                color = Color.White
+                color = Color.White,
             )
         }
-        val align = when(position) {
-            MDSToolTipPosition.Left -> Alignment.Start
-            MDSToolTipPosition.Right -> Alignment.End
-        }
+        val align =
+            when (position) {
+                MDSToolTipPosition.Left -> Alignment.Start
+                MDSToolTipPosition.Right -> Alignment.End
+            }
         Icon(
-            modifier = Modifier
-                .align(align)
-                .padding(start = position.paddingStart.dp, end = position.paddingEnd.dp),
+            modifier =
+                Modifier
+                    .align(align)
+                    .padding(start = position.paddingStart.dp, end = position.paddingEnd.dp),
             painter = painterResource(id = R.drawable.ic_polygon),
             contentDescription = null,
-            tint = Gray07
+            tint = Gray07,
         )
     }
 }
@@ -86,6 +92,6 @@ fun MDSToolTip(
 fun MDSToolTipPreview() {
     MDSToolTip(
         text = "해당 기능을 사용해보세요",
-        position = MDSToolTipPosition.Right
+        position = MDSToolTipPosition.Right,
     )
 }

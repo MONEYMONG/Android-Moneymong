@@ -10,30 +10,30 @@ class DateVisualTransformation : VisualTransformation {
         val origin = text.text
         val out = origin.formatDate()
 
-        val dateOffsetTranslator = object : OffsetMapping {
-            override fun originalToTransformed(offset: Int): Int {
-                return when (offset) {
-                    in 0..4 -> offset
-                    in 5..6 -> offset + 1
-                    else -> offset + 2
+        val dateOffsetTranslator =
+            object : OffsetMapping {
+                override fun originalToTransformed(offset: Int): Int {
+                    return when (offset) {
+                        in 0..4 -> offset
+                        in 5..6 -> offset + 1
+                        else -> offset + 2
+                    }
                 }
-            }
 
-            override fun transformedToOriginal(offset: Int): Int {
-                return when (offset) {
-                    in 0..4 -> offset
-                    in 5..7 -> offset - 1
-                    else -> offset - 2
+                override fun transformedToOriginal(offset: Int): Int {
+                    return when (offset) {
+                        in 0..4 -> offset
+                        in 5..7 -> offset - 1
+                        else -> offset - 2
+                    }
                 }
             }
-        }
 
         return TransformedText(
             text = AnnotatedString(out),
-            offsetMapping = dateOffsetTranslator
+            offsetMapping = dateOffsetTranslator,
         )
     }
-
 
     private fun String.formatDate(): String {
         require(this.length <= 8) {
