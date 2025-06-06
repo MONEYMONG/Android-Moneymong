@@ -9,7 +9,7 @@ import okhttp3.Response
 import okhttp3.Route
 import javax.inject.Inject
 
-class MoneyMongTokenAuthenticator @Inject constructor(
+class MoneyMongAuthenticator @Inject constructor(
     private val tokenRepository: TokenRepository,
     private val tokenCallback: TokenCallback
 ) : Authenticator {
