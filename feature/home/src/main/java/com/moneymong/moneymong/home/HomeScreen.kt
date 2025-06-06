@@ -117,7 +117,7 @@ fun HomeScreen(
             agencyScreen(
                 padding = padding,
                 navigateToRegister = homeNavController::navigateAgencyRegister,
-                navigateAgencyJoin = homeNavController::navigateAgencyJoin
+                navigateAgencyJoin = {}
             )
 
             agencyJoinScreen(
@@ -156,6 +156,7 @@ fun HomeScreen(
             ledgerScreen(
                 padding = padding,
                 navigateToAgencyRegister = homeNavController::navigateAgencyRegister,
+                navigateToAgencyJoin = homeNavController::navigateAgencyJoin,
                 navigateToLedgerDetail = homeNavController::navigateLedgerDetail,
                 navigateToLedgerManual = homeNavController::navigateLedgerManual,
             )

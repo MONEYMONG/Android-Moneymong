@@ -14,7 +14,7 @@ interface AgencyRepository {
     fun getAgencies(): Flow<PagingData<AgencyGetResponse>>
     suspend fun fetchMyAgencyList(): Result<List<MyAgencyResponse>>
     suspend fun fetchAgencyByName(agencyName: String): Result<List<AgencyGetResponse>>
-    suspend fun agencyCodeNumbers(agencyId: Long, data: AgencyJoinRequest): Result<AgencyJoinResponse>
+    suspend fun agencyCodeNumbers(data: AgencyJoinRequest): Result<AgencyJoinResponse>
 
     suspend fun saveAgencyId(agencyId: Int)
     suspend fun fetchAgencyId(): Int

@@ -9,9 +9,8 @@ class AgencyJoinUseCase @Inject constructor(
     private val agencyRepository: AgencyRepository
 ) {
     suspend operator fun invoke(
-        agencyId: Long,
         data: AgencyJoinRequest
     ): Result<AgencyJoinResponse> {
-        return agencyRepository.agencyCodeNumbers(agencyId, data)
+        return agencyRepository.agencyCodeNumbers(data)
     }
 }

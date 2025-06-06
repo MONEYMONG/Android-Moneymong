@@ -39,9 +39,8 @@ interface AgencyApi {
     ): Result<List<AgencyGetResponse>>
 
     // POST
-    @POST("/api/v1/agencies/{agencyId}/invitation-code")
+    @POST("/api/v2/agencies/invitation-code")
     suspend fun agencyCodeNumbers(
-        @Path("agencyId") agencyId: Long,
         @Body body: AgencyJoinRequest
     ): Result<AgencyJoinResponse>
 
