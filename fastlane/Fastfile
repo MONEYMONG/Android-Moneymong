@@ -77,10 +77,6 @@ platform :android do
 
   desc "Deploy a new version to the Firebase Distribution"
   lane :distribute do
-    latest_release = firebase_app_distribution_get_latest_release(
-         service_credentials_file: "#{ENV["FIREBASE_CREDENTIALS"]}",
-         app: "#{ENV["APP_ID"]}"
-    )
     version_code = get_version_code(
          gradle_file_path: "./app/build.gradle.kts"
     )
