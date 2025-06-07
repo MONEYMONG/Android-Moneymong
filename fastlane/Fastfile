@@ -77,9 +77,10 @@ platform :android do
 
   desc "Deploy a new version to the Firebase Distribution"
   lane :distribute do
-    version_code = get_version_code(
-         gradle_file_path: "./app/build.gradle.kts"
-    )
+    gradle_file = File.read("../app/build.gradle.kts")
+    version_code_match = gradle_file.match(/versionCode\s*=\s*(\d+)/)
+    version_code = version_code_match[1]
+
     version_name = get_version_name(
          gradle_file_path:"./app/build.gradle.kts",
          ext_constant_name:"versionName"
