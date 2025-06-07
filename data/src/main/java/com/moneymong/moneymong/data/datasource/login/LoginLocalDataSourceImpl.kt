@@ -1,7 +1,6 @@
 package com.moneymong.moneymong.data.datasource.login
 
 import android.content.Context
-import android.util.Log
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
@@ -16,73 +15,73 @@ val Context.dataStore by preferencesDataStore(name = "jwt")
 class LoginLocalDataSourceImpl @Inject constructor(
     @ApplicationContext private val context: Context,
 ) : LoginLocalDataSource {
-    private val accessToken = stringPreferencesKey("ACCESS_TOKEN")
-    private val refreshToken = stringPreferencesKey("REFRESH_TOKEN")
-    private val loginSuccess = booleanPreferencesKey("LOGIN_SUCCESS")
-    private val schoolInfoProvided = booleanPreferencesKey("SCHOOL_INFO_PROVIDED")
+    private val accessTokenKey = stringPreferencesKey("ACCESS_TOKEN")
+    private val refreshTokenKey = stringPreferencesKey("REFRESH_TOKEN")
+    private val loginSuccessKey = booleanPreferencesKey("LOGIN_SUCCESS")
+    private val schoolInfoProvidedKey = booleanPreferencesKey("SCHOOL_INFO_PROVIDED")
 
     override suspend fun getRefreshToken(): Result<String> {
         val preferences = context.dataStore.data.first()
-        return preferences[refreshToken]?.let { Result.success(it) }
+        return preferences[refreshTokenKey]?.let { Result.success(it) }
             ?: Result.failure(Exception("refreshToken is null"))
     }
 
     override suspend fun getAccessToken(): Result<String> {
         val preferences = context.dataStore.data.first()
-        return preferences[accessToken]?.let { Result.success(it) }
+        return preferences[accessTokenKey]?.let { Result.success(it) }
             ?: Result.failure(Exception("accessToken is null"))
     }
 
     override suspend fun getDataStoreInfo(): Result<UserDataStoreInfoResponse> {
         val preferences = context.dataStore.data.first()
-        return Result.success(UserDataStoreInfoResponse(preferences[accessToken] ?: "",preferences[schoolInfoProvided] ?: false))
+        return Result.success(UserDataStoreInfoResponse(preferences[accessTokenKey] ?: "",preferences[schoolInfoProvidedKey] ?: false))
     }
 
-    override suspend fun updateTokens(aToken: String, rToken: String) {
+    override suspend fun updateTokens(accessToken: String, refreshToken: String) {
         context.dataStore.edit { preferences ->
-            preferences[accessToken] = aToken
-            preferences[refreshToken] = rToken
+            preferences[accessTokenKey] = accessToken
+            preferences[refreshTokenKey] = refreshToken
         }
     }
 
-    override suspend fun updateAccessToken(aToken: String) {
+    override suspend fun updateAccessToken(accessToken: String) {
         context.dataStore.edit { preferences ->
-            preferences[accessToken] = aToken
+            preferences[accessTokenKey] = accessToken
         }
     }
 
     override suspend fun getSchoolInfo(): Result<Boolean> {
         val preferences = context.dataStore.data.first()
-        return preferences[schoolInfoProvided]?.let { Result.success(it) }
+        return preferences[schoolInfoProvidedKey]?.let { Result.success(it) }
             ?: Result.failure(Exception("schoolInfoProvided is null"))
     }
 
     override suspend fun deleteToken() {
         context.dataStore.edit { preferences ->
-            preferences.remove(accessToken)
-            preferences.remove(refreshToken)
-            preferences.remove(loginSuccess)
-            preferences.remove(schoolInfoProvided)
+            preferences.remove(accessTokenKey)
+            preferences.remove(refreshTokenKey)
+            preferences.remove(loginSuccessKey)
+            preferences.remove(schoolInfoProvidedKey)
         }
     }
 
     override suspend fun setDataStore(
-        aToken: String,
-        rToken: String,
+        accessToken: String,
+        refreshToken: String,
         success: Boolean,
         infoExist: Boolean
     ) {
         context.dataStore.edit { preferences ->
-            preferences[accessToken] = aToken
-            preferences[refreshToken] = rToken
-            preferences[loginSuccess] = success
-            preferences[schoolInfoProvided] = infoExist
+            preferences[accessTokenKey] = accessToken
+            preferences[refreshTokenKey] = refreshToken
+            preferences[loginSuccessKey] = success
+            preferences[schoolInfoProvidedKey] = infoExist
         }
     }
 
     override suspend fun setSchoolInfoProvided(infoExist: Boolean) {
         context.dataStore.edit { preferences ->
-            preferences[schoolInfoProvided] = infoExist
+            preferences[schoolInfoProvidedKey] = infoExist
         }
 
     }

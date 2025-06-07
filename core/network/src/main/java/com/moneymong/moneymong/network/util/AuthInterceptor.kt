@@ -13,23 +13,24 @@ class AuthInterceptor @Inject constructor(
     override fun intercept(chain: Interceptor.Chain): Response {
         val originalRequest = chain.request()
 
-        // refreshTokenApi 호출
-        if (originalRequest.url.toString() == BuildConfig.MONEYMONG_BASE_URL + "api/v1/tokens"
-            || originalRequest.url.toString() == BuildConfig.MONEYMONG_BASE_URL + "api/v1/users"
-        ) {
+        if (originalRequest.url.toString() in IGNORE_FILTER_URL) {
             return chain.proceed(originalRequest)
         }
 
-        val accessToken = runBlocking {
-            tokenRepository.getAccessToken()
-        }
-
+        val accessToken = runBlocking { tokenRepository.getAccessToken() }
         val newRequest = originalRequest.newBuilder().apply {
             accessToken.getOrNull()?.let {
                 addHeader("Authorization", "Bearer $it")
-            } ?: addHeader("Authorization", "null")
+            }
         }.build()
 
         return chain.proceed(newRequest)
+    }
+
+    companion object {
+        private val IGNORE_FILTER_URL = listOf(
+            "${BuildConfig.MONEYMONG_BASE_URL}api/v1/tokens",
+            "${BuildConfig.MONEYMONG_BASE_URL}api/v1/users"
+        )
     }
 }
