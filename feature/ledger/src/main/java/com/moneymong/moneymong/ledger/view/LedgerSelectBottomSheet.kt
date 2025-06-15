@@ -6,9 +6,11 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
@@ -79,8 +81,15 @@ private fun LedgerAgencySelectItems(
     var itemHeight by remember { mutableIntStateOf(0) }
     val itemSpace = 12.dp
     val maxVisibleItemCount = 3
+    val listState = rememberLazyListState()
 
-    Column(
+    LaunchedEffect(key1 = Unit) {
+        val currentAgencyIndex =
+            agencyList.indexOfFirst { it.id == currentAgencyId }.coerceAtLeast(0)
+        listState.animateScrollToItem(index = currentAgencyIndex)
+    }
+
+    LazyColumn(
         modifier = Modifier
             .height(
                 if (itemHeight > 0 && agencyList.size > maxVisibleItemCount) {
@@ -88,11 +97,11 @@ private fun LedgerAgencySelectItems(
                 } else {
                     Dp.Unspecified
                 }
-            )
-            .verticalScroll(rememberScrollState()),
+            ),
+        state = listState,
         verticalArrangement = Arrangement.spacedBy(space = itemSpace),
     ) {
-        agencyList.forEach { item ->
+        items(items = agencyList) { item ->
             LedgerAgencySelectItem(
                 modifier = Modifier.onGloballyPositioned {
                     if (itemHeight == 0) {
