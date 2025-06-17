@@ -16,9 +16,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.moneymong.moneymong.design_system.theme.Body2
+import com.moneymong.moneymong.design_system.R
+import com.moneymong.moneymong.design_system.theme.Body3
 
 @Composable
 fun MDSButton(
@@ -30,7 +32,7 @@ fun MDSButton(
     @DrawableRes iconResource: Int? = null,
     enabled: Boolean = true,
     contentHorizontalPadding: Dp = 0.dp,
-    cornerShape : Dp = 10.dp,
+    cornerShape: Dp = 10.dp,
 ) {
     val backgroundColor = if (enabled) type.backgroundColor else disabledBackgroundColor
     val contentColor = if (enabled) type.contentColor else disabledContentColor
@@ -57,19 +59,31 @@ fun MDSButton(
             ),
             horizontalArrangement = Arrangement.spacedBy(6.dp)
         ) {
+            Text(
+                text = text,
+                color = contentColor,
+                style = Body3,
+            )
             if (iconResource != null) {
                 Icon(
-                    modifier = Modifier.size(18.dp),
+                    modifier = Modifier.size(20.dp),
                     painter = painterResource(id = iconResource),
                     contentDescription = "Button icon",
                     tint = contentColor
                 )
             }
-            Text(
-                text = text,
-                color = contentColor,
-                style = Body2,
-            )
         }
     }
+}
+
+@Preview
+@Composable
+private fun MDSButtonPreview() {
+    MDSButton(
+        onClick = {},
+        text = "Button",
+        type = MDSButtonType.PRIMARY,
+        size = MDSButtonSize.LARGE,
+        iconResource = R.drawable.ic_scan
+    )
 }

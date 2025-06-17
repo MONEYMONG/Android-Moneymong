@@ -55,8 +55,7 @@ class LedgerManualViewModel @Inject constructor(
                 amount = state.totalPriceValue.text.toInt(),
                 description = state.memoValue.text.ifEmpty { "내용 없음" },
                 paymentDate = state.postPaymentDate,
-                receiptImageUrls = state.receiptList,
-                documentImageUrls = state.documentList
+                documentImageUrls = state.documentList,
             )
             postLedgerTransactionUseCase(state.agencyId, ledgerTransactionRequest)
                 .onSuccess {
@@ -79,20 +78,13 @@ class LedgerManualViewModel @Inject constructor(
                 val file = FileUploadRequest(it.toMultipart(), "ledgerManual")
                 postFileUploadUseCase(file)
                     .onSuccess { response ->
-                        state.isReceipt?.let { isReceipt ->
-                            if (isReceipt) {
-                                reduce { state.copy(receiptList = state.receiptList + response.path) }
-                            } else {
-                                reduce { state.copy(documentList = state.documentList + response.path) }
-                            }
-                        }
+                        reduce { state.copy(documentList = state.documentList + response.path) }
                     }.onFailure {
-                        // TODO
+                        // FIXME : 정책 필요
                     }.also {
                         reduce {
                             state.copy(
                                 isLoading = false,
-                                isReceipt = null
                             )
                         }
                     }
@@ -161,8 +153,7 @@ class LedgerManualViewModel @Inject constructor(
         }
     }
 
-    fun onChangeImageType(isReceipt: Boolean) = intent {
-        reduce { state.copy(isReceipt = isReceipt) }
+    fun onOpenImagePicker() = intent {
         postSideEffect(LedgerManualSideEffect.LedgerManualOpenImagePicker)
     }
 
@@ -176,10 +167,6 @@ class LedgerManualViewModel @Inject constructor(
 
     fun visiblePopBackStackModal(visible: Boolean) = intent {
         reduce { state.copy(showPopBackStackModal = visible) }
-    }
-
-    fun removeReceiptImage(image: String) = intent {
-        reduce { state.copy(receiptList = state.receiptList - image) }
     }
 
     fun removeDocumentImage(image: String) = intent {

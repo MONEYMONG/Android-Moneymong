@@ -29,13 +29,10 @@ class AgencyRemoteDataSourceMock : AgencyRemoteDataSource {
     }
 
     override suspend fun agencyCodeNumbers(
-        agencyId: Long,
         data: AgencyJoinRequest
     ): Result<AgencyJoinResponse> {
         return Result.success(
-            AgencyJoinResponse(
-                certified = true,
-            )
+            AgencyJoinResponse(agencyId = Int.MAX_VALUE, certified = true)
         )
     }
 

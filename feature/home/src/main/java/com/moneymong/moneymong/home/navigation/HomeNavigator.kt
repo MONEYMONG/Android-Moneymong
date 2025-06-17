@@ -45,10 +45,10 @@ internal class HomeNavigator(
         get() = when (currentRoute) {
             in listOf(
                 splashRoute,
-                loginRoute
             ) -> Blue04
 
             in listOf(
+                loginRoute,
                 agencyRoute,
                 ledgerDetailRoute,
                 mymongRoute
@@ -64,7 +64,6 @@ internal class HomeNavigator(
         get() = when (currentRoute) {
             in listOf(
                 splashRoute,
-                loginRoute,
                 agencyRegisterCompleteRoute
             ) -> false
 
@@ -83,7 +82,6 @@ internal class HomeNavigator(
             restoreState = route != agencyRoute
         }
         when (route) {
-            HomeBottomTabs.AGENCY.route -> navHostController.navigateAgency(navOptions = navOptions)
             HomeBottomTabs.LEDGER.route -> navHostController.navigateLedger(navOptions = navOptions)
             HomeBottomTabs.MYMONG.route -> navHostController.navigateMyMong(navOptions = navOptions)
         }

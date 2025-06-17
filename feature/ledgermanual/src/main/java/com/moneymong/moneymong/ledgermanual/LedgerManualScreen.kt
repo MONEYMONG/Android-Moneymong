@@ -71,12 +71,12 @@ import com.moneymong.moneymong.design_system.component.textfield.visualtransform
 import com.moneymong.moneymong.design_system.component.textfield.visualtransformation.TimeVisualTransformation
 import com.moneymong.moneymong.design_system.error.ErrorDialog
 import com.moneymong.moneymong.design_system.theme.Blue03
-import com.moneymong.moneymong.design_system.theme.Blue04
 import com.moneymong.moneymong.design_system.theme.Body2
 import com.moneymong.moneymong.design_system.theme.Body3
 import com.moneymong.moneymong.design_system.theme.Gray06
 import com.moneymong.moneymong.design_system.theme.Gray10
 import com.moneymong.moneymong.design_system.theme.MMHorizontalSpacing
+import com.moneymong.moneymong.design_system.theme.Red03
 import com.moneymong.moneymong.design_system.theme.White
 import com.moneymong.moneymong.ledgermanual.view.LedgerManualTopbarView
 import com.moneymong.moneymong.model.ledger.FundType
@@ -125,7 +125,7 @@ fun LedgerManualScreen(
             is LedgerManualSideEffect.LegerManualHidePopBackStackModal -> {
                 viewModel.visiblePopBackStackModal(false)
                 if (it.navigate) {
-                    navigateToLedger(false)
+                    popBackStack()
                 }
             }
 
@@ -235,12 +235,7 @@ fun LedgerManualScreen(
                 )
                 Spacer(modifier = Modifier.height(24.dp))
                 Text(
-                    text = buildAnnotatedString {
-                        append("거래 유형")
-                        withStyle(SpanStyle(color = Gray06)) {
-                            append("*")
-                        }
-                    },
+                    text = withRequiredMark("거래 유형"),
                     style = Body2,
                     color = Gray06
                 )
@@ -321,77 +316,7 @@ fun LedgerManualScreen(
                 )
                 Spacer(modifier = Modifier.height(24.dp))
                 Text(
-                    text = buildAnnotatedString {
-                        append("영수증 (최대 12장)\n")
-                        withStyle(SpanStyle(color = Blue04)) {
-                            append("*지출일 경우 영수증을 꼭 제출해주세요")
-                        }
-                    },
-                    style = Body2,
-                    color = Gray06
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                LazyVerticalGrid(
-                    modifier = modifier
-                        .fillMaxSize()
-                        .heightIn(max = 504.dp)
-                        .background(White),
-                    columns = GridCells.Fixed(3),
-                    verticalArrangement = Arrangement.spacedBy(8.dp),
-                    horizontalArrangement = Arrangement.spacedBy(10.dp)
-                ) {
-                    if (state.receiptList.size < 12) {
-                        item {
-                            Box(
-                                modifier = Modifier
-                                    .height(120.dp)
-                                    .clip(RoundedCornerShape(8.dp))
-                                    .border(
-                                        width = 1.dp,
-                                        color = Blue03,
-                                        shape = RoundedCornerShape(8.dp)
-                                    )
-                                    .background(White)
-                                    .noRippleClickable {
-                                        viewModel.onChangeImageType(true)
-                                    },
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Icon(
-                                    painter = painterResource(id = drawable.ic_plus_filled),
-                                    contentDescription = null,
-                                    tint = Color.Unspecified
-                                )
-                            }
-                        }
-                    }
-                    itemsIndexed(items = state.receiptList) { index, item ->
-                        Box(
-                            modifier = Modifier
-                                .height(120.dp)
-                                .clip(RoundedCornerShape(8.dp))
-                        ) {
-                            GlideImage(
-                                modifier = Modifier.fillMaxSize(),
-                                model = Uri.parse(item),
-                                contentDescription = null,
-                                contentScale = ContentScale.FillWidth
-                            )
-                            Icon(
-                                modifier = Modifier
-                                    .align(Alignment.TopEnd)
-                                    .noRippleClickable { viewModel.removeReceiptImage(item) }
-                                    .padding(5.dp),
-                                painter = painterResource(id = drawable.ic_close_filled),
-                                contentDescription = null,
-                                tint = Color.Unspecified
-                            )
-                        }
-                    }
-                }
-                Spacer(modifier = Modifier.height(24.dp))
-                Text(
-                    text = "증빙 자료 (최대 12장)",
+                    text = "사진 첨부 (최대 12장)",
                     style = Body2,
                     color = Gray06
                 )
@@ -409,7 +334,7 @@ fun LedgerManualScreen(
                         item {
                             Box(
                                 modifier = Modifier
-                                    .height(120.dp)
+                                    .height(140.dp)
                                     .clip(RoundedCornerShape(8.dp))
                                     .border(
                                         width = 1.dp,
@@ -418,7 +343,7 @@ fun LedgerManualScreen(
                                     )
                                     .background(White)
                                     .noRippleClickable {
-                                        viewModel.onChangeImageType(false)
+                                        viewModel.onOpenImagePicker()
                                     },
                                 contentAlignment = Alignment.Center
                             ) {
@@ -433,7 +358,7 @@ fun LedgerManualScreen(
                     itemsIndexed(items = state.documentList) { index, item ->
                         Box(
                             modifier = Modifier
-                                .height(120.dp)
+                                .height(140.dp)
                                 .clip(RoundedCornerShape(8.dp))
                         ) {
                             GlideImage(

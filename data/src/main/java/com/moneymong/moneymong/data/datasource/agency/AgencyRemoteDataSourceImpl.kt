@@ -31,12 +31,8 @@ class AgencyRemoteDataSourceImpl @Inject constructor(
     }
 
     override suspend fun agencyCodeNumbers(
-        agencyId: Long,
         data: AgencyJoinRequest
     ): Result<AgencyJoinResponse> {
-        return agencyApi.agencyCodeNumbers(
-            agencyId = agencyId,
-            body = data
-        )
+        return agencyApi.agencyCodeNumbers(body = data)
     }
 }

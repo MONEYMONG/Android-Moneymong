@@ -52,7 +52,6 @@ class MyMongViewModel @Inject constructor(
                     state.copy(
                         name = it.name,
                         email = it.email,
-                        university = it.university.orEmpty(),
                     )
                 }
             }.onFailure {

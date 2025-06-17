@@ -46,7 +46,7 @@ import org.orbitmvi.orbit.compose.collectSideEffect
 fun AgencySearchScreen(
     modifier: Modifier = Modifier,
     viewModel: AgencySearchViewModel = hiltViewModel(),
-    navigateToRegister: (isUniversityStudent: Boolean) -> Unit,
+    navigateToRegister: () -> Unit,
     navigateAgencyJoin: (agencyId: Long) -> Unit
 ) {
     val state by viewModel.collectAsState()
@@ -60,7 +60,7 @@ fun AgencySearchScreen(
     viewModel.collectSideEffect {
         when (it) {
             is AgencySearchSideEffect.NavigateToRegister -> {
-                navigateToRegister(it.isUniversityStudent)
+                navigateToRegister()
             }
 
             is AgencySearchSideEffect.NavigateToAgencyJoin -> {

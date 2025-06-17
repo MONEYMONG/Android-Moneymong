@@ -16,8 +16,8 @@ interface TokenRepository {
     suspend fun getDataStoreInfo(): Result<UserDataStoreInfoResponse>
     suspend fun getUpdateToken(refreshToken: String): Result<RefreshTokenResponse>
     suspend fun deleteToken()
-    suspend fun updateTokens(aToken: String, rToken: String)
-    suspend fun updateAccessToken(aToken: String)
+    suspend fun updateTokens(accessToken: String, refreshToken: String)
+    suspend fun updateAccessToken(accessToken: String)
     suspend fun deleteRefreshToken(body: RefreshTokenRequest)
     suspend fun getSchoolInfo(): Result<Boolean>
     suspend fun setSchoolInfoProvided(infoExist: Boolean)

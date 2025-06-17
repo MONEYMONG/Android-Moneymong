@@ -19,31 +19,24 @@ class AgencyJoinViewModel @Inject constructor(
     private val saveAgencyIdUseCase: SaveAgencyIdUseCase
 ) : BaseViewModel<AgencyJoinState, AgencyJoinSideEffect>(AgencyJoinState()) {
 
-    fun checkInviteCode(agencyId: Long) = intent {
+    fun findLedgerByInviteCode() = intent {
         viewModelScope.launch {
-            agencyJoinUseCase(agencyId = agencyId, data = AgencyJoinRequest(state.inputCode))
-                .onSuccess {
-                    if (it.certified) {
-                        saveAgencyIdUseCase(agencyId.toInt())
-                        reduce {
-                            state.copy(
-                                isError = false,
-                                codeAccess = true
-                            )
-                        }
-                    } else {
-                        reduce {
-                            state.copy(
-                                isError = true
-                            )
-                        }
-                    }
-                }
-                .onFailure {
+            agencyJoinUseCase(data = AgencyJoinRequest(state.inputCode))
+                .onSuccess { response ->
                     reduce {
                         state.copy(
-                            visiblePopUpError = true,
-                            errorPopUpMessage = it.message.toString()
+                            isError = response.certified.not(),
+                            codeAccess = response.certified
+                        )
+                    }
+                    if (response.certified) {
+                        saveAgencyIdUseCase(agencyId = response.agencyId)
+                    }
+                }.onFailure { exception ->
+                    reduce {
+                        state.copy(
+                            isError = true,
+                            snackBarMessage = exception.message ?: "잘못된 초대코드입니다."
                         )
                     }
                 }

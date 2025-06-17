@@ -13,8 +13,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
-import com.moneymong.moneymong.design_system.R.*
+import com.moneymong.moneymong.design_system.R.drawable
 import com.moneymong.moneymong.design_system.theme.Body3
 import com.moneymong.moneymong.design_system.theme.Gray07
 
@@ -22,7 +23,8 @@ import com.moneymong.moneymong.design_system.theme.Gray07
 fun LedgerTransactionEmptyView(
     modifier: Modifier = Modifier,
     text: String,
-    image: Int
+    image: Int,
+    imageSize: DpSize
 ) {
     Column(
         modifier = modifier.fillMaxSize(),
@@ -30,7 +32,7 @@ fun LedgerTransactionEmptyView(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Image(
-            modifier = Modifier.size(88.dp),
+            modifier = Modifier.size(size = imageSize),
             painter = painterResource(id = image),
             contentDescription = null
         )
@@ -46,5 +48,9 @@ fun LedgerTransactionEmptyView(
 @Preview(showBackground = true)
 @Composable
 fun LedgerTransactionEmptyPreview() {
-    LedgerTransactionEmptyView(text = "10월에 기록된 장부가 없습니다", image = drawable.img_transaction_empty)
+    LedgerTransactionEmptyView(
+        text = "10월에 기록된 장부가 없습니다",
+        image = drawable.img_transaction_empty,
+        imageSize = DpSize(100.dp, 100.dp)
+    )
 }

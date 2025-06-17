@@ -5,7 +5,6 @@ import com.moneymong.moneymong.common.base.BaseViewModel
 import com.moneymong.moneymong.common.error.MoneyMongError
 import com.moneymong.moneymong.domain.usecase.agency.RegisterAgencyUseCase
 import com.moneymong.moneymong.domain.usecase.agency.SaveAgencyIdUseCase
-import com.moneymong.moneymong.feature.agency.search.AgencyType
 import com.moneymong.moneymong.model.agency.AgencyRegisterRequest
 import dagger.hilt.android.lifecycle.HiltViewModel
 import org.orbitmvi.orbit.annotation.OrbitExperimental
@@ -21,7 +20,7 @@ class AgencyRegisterViewModel @Inject constructor(
     private val saveAgencyIdUseCase: SaveAgencyIdUseCase
 ) : BaseViewModel<AgencyRegisterState, AgencyRegisterSideEffect>(AgencyRegisterState()) {
 
-    fun navigateUp() = eventEmit(sideEffect = AgencyRegisterSideEffect.NavigateUp)
+    fun navigateToLedger() = eventEmit(sideEffect = AgencyRegisterSideEffect.NavigateToLedger)
 
     fun registerAgency() = intent {
         registerAgencyUseCase(
@@ -31,7 +30,7 @@ class AgencyRegisterViewModel @Inject constructor(
             )
         ).onSuccess {
             saveAgencyIdUseCase(it.id)
-            postSideEffect(AgencyRegisterSideEffect.NavigateToComplete)
+            postSideEffect(AgencyRegisterSideEffect.NavigateToLedger)
         }.onFailure {
             reduce {
                 state.copy(
@@ -47,14 +46,6 @@ class AgencyRegisterViewModel @Inject constructor(
         reduce {
             state.copy(
                 agencyName = agencyName
-            )
-        }
-    }
-
-    fun changeAgencyType(agencyType: AgencyType) = intent {
-        reduce {
-            state.copy(
-                agencyType = agencyType
             )
         }
     }

@@ -56,12 +56,12 @@ class TokenRepositoryImpl @Inject constructor(
         loginLocalDataSource.deleteToken()
     }
 
-    override suspend fun updateTokens(aToken: String, rToken: String) {
-        loginLocalDataSource.updateTokens(aToken, rToken)
+    override suspend fun updateTokens(accessToken: String, refreshToken: String) {
+        loginLocalDataSource.updateTokens(accessToken, refreshToken)
     }
 
-    override suspend fun updateAccessToken(aToken: String) {
-        loginLocalDataSource.updateAccessToken(aToken)
+    override suspend fun updateAccessToken(accessToken: String) {
+        loginLocalDataSource.updateAccessToken(accessToken)
     }
 
     override suspend fun deleteRefreshToken(body: RefreshTokenRequest) {
