@@ -46,7 +46,6 @@ fun AgencyJoinScreen(
     viewModel: AgencyJoinViewModel = hiltViewModel(),
     navigateToComplete: () -> Unit,
     navigateUp: () -> Unit,
-    agencyId: Long
 ) {
     val state = viewModel.collectAsState().value
 
@@ -79,7 +78,6 @@ fun AgencyJoinScreen(
         content = { innerPadding ->
             JoinContent(
                 modifier = Modifier.padding(innerPadding),
-                agencyId = agencyId,
                 state = state,
                 viewModel = viewModel,
                 navigateToComplete = navigateToComplete,
@@ -92,7 +90,6 @@ fun AgencyJoinScreen(
 @Composable
 private fun JoinContent(
     modifier: Modifier = Modifier,
-    agencyId: Long,
     state: AgencyJoinState,
     viewModel: AgencyJoinViewModel,
     navigateToComplete: () -> Unit,
@@ -117,7 +114,7 @@ private fun JoinContent(
     LaunchedEffect(key1 = state.isError) {
         if (state.isError) {
             val result = snackbarHostState.showSnackbar(
-                message = "잘못된 초대코드입니다.",
+                message = state.snackBarMessage,
                 actionLabel = "다시입력"
             )
 
@@ -147,7 +144,7 @@ private fun JoinContent(
     ) {
         Text(
             modifier = Modifier.fillMaxWidth(),
-            text = "Yapp에서 받은\n초대코드를 입력해주세요",
+            text = "초대코드를 입력해주세요",
             color = Gray10,
             style = Heading3
         )
@@ -164,7 +161,7 @@ private fun JoinContent(
                 inputCode = state.inputCode,
                 onValueChanged = viewModel::changeInputNumber,
                 checkInviteCode = {
-                    viewModel.checkInviteCode(agencyId = agencyId)
+                    viewModel.findLedgerByInviteCode()
                     focusManager.clearFocus()
                 },
             )

@@ -1,10 +1,10 @@
 package com.moneymong.moneymong.data.datasource.agency
 
-import com.moneymong.moneymong.model.agency.AgencyJoinRequest
-import com.moneymong.moneymong.model.agency.AgencyRegisterRequest
 import com.moneymong.moneymong.model.agency.AgenciesGetResponse
 import com.moneymong.moneymong.model.agency.AgencyGetResponse
+import com.moneymong.moneymong.model.agency.AgencyJoinRequest
 import com.moneymong.moneymong.model.agency.AgencyJoinResponse
+import com.moneymong.moneymong.model.agency.AgencyRegisterRequest
 import com.moneymong.moneymong.model.agency.MyAgencyResponse
 import com.moneymong.moneymong.model.agency.RegisterAgencyResponse
 import kotlinx.coroutines.delay
@@ -24,14 +24,15 @@ class AgencyRemoteDataSourceMock : AgencyRemoteDataSource {
         return Result.success(emptyList())
     }
 
+    override suspend fun fetchAgencyByName(agencyName: String): Result<List<AgencyGetResponse>> {
+        return Result.success(emptyList())
+    }
+
     override suspend fun agencyCodeNumbers(
-        agencyId: Long,
         data: AgencyJoinRequest
     ): Result<AgencyJoinResponse> {
         return Result.success(
-            AgencyJoinResponse(
-                certified = true,
-            )
+            AgencyJoinResponse(agencyId = Int.MAX_VALUE, certified = true)
         )
     }
 

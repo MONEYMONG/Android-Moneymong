@@ -77,20 +77,15 @@ platform :android do
 
   desc "Deploy a new version to the Firebase Distribution"
   lane :distribute do
-    latest_release = firebase_app_distribution_get_latest_release(
-         service_credentials_file: "#{ENV["FIREBASE_CREDENTIALS"]}",
-         app: "#{ENV["APP_ID"]}"
-    )
+    gradle_file = File.read("../app/build.gradle.kts")
+    version_code_match = gradle_file.match(/versionCode\s*=\s*(\d+)/)
+    version_code = version_code_match[1]
+
     version_name = get_version_name(
          gradle_file_path:"./app/build.gradle.kts",
          ext_constant_name:"versionName"
     )
-    new_version_code = latest_release[:buildVersion].to_i + 1
-    release_note = "머니몽 Android TB [#{version_name} (#{new_version_code})]"
-
-    increment_code(
-            new_version_code: new_version_code
-    )
+    release_note = "머니몽 Android TB [#{version_name} (#{version_code})]"
 
     gradle(
         task: 'assemble',

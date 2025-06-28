@@ -41,7 +41,7 @@ fun AgencyCompleteView(modifier: Modifier = Modifier) {
                 .fillMaxWidth()
                 .background(White)
                 .padding(top = 12.dp),
-            text = "가입을 축하합니다!",
+            text = "초대가 완료됐습니다",
             style = Heading1,
             color = Gray10,
             textAlign = TextAlign.Center
@@ -52,7 +52,7 @@ fun AgencyCompleteView(modifier: Modifier = Modifier) {
                 .fillMaxWidth()
                 .background(White)
                 .padding(top = 4.dp),
-            text = "이제 동아리 가계부를 확인할 수 있어요",
+            text = "초대 받은 장부를 확인할 수 있어요",
             style = Body4,
             color = Gray07,
             textAlign = TextAlign.Center

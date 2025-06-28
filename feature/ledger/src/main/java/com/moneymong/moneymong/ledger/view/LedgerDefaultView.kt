@@ -31,6 +31,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import com.moneymong.moneymong.common.ui.noRippleClickable
 import com.moneymong.moneymong.common.ui.toWonFormat
@@ -60,17 +61,17 @@ enum class LedgerTransactionType(
     전체(
         type = "ALL",
         description = "장부 기록이 없어요",
-        imgRes = drawable.img_expenditure_empty
+        imgRes = drawable.img_empty_ledger
     ),
     지출(
         type = "EXPENSE",
         description = "지출 기록이 없어요",
-        imgRes = drawable.img_expenditure_empty
+        imgRes = drawable.img_empty_expense
     ),
     수입(
         type = "INCOME",
         description = "수입 기록이 없어요",
-        imgRes = drawable.img_expenditure_empty
+        imgRes = drawable.img_empty_income
     )
 }
 
@@ -165,28 +166,27 @@ internal fun LedgerDefaultView(
                 LoadingScreen(modifier = Modifier.fillMaxSize())
             }
         } else {
-            if (!isExistLedger && isStaff) {
-                item {
-                    Spacer(modifier = Modifier.height(75.dp))
-                    LedgerStaffEmptyView()
+            if (hasTransaction) {
+                itemsIndexed(ledgerDetails) { index, item ->
+                    LedgerTransactionItem(
+                        modifier = Modifier.padding(horizontal = 20.dp),
+                        ledgerDetail = item,
+                        onClickTransactionItem = onClickTransactionItem
+                    )
                 }
             } else {
-                if (hasTransaction) {
-                    itemsIndexed(ledgerDetails) { index, item ->
-                        LedgerTransactionItem(
-                            modifier = Modifier.padding(horizontal = 20.dp),
-                            ledgerDetail = item,
-                            onClickTransactionItem = onClickTransactionItem
-                        )
-                    }
-                } else {
-                    item {
-                        Spacer(modifier = Modifier.height(121.dp))
-                        LedgerTransactionEmptyView(
-                            text = transactionType.description,
-                            image = transactionType.imgRes
-                        )
-                    }
+                val defaultImageSize = DpSize(width = 100.dp, height = 100.dp)
+                item {
+                    Spacer(modifier = Modifier.height(100.dp))
+                    LedgerTransactionEmptyView(
+                        text = transactionType.description,
+                        image = transactionType.imgRes,
+                        imageSize = if (transactionType == LedgerTransactionType.전체) {
+                            DpSize(width = 147.dp, height = 88.dp)
+                        } else {
+                            defaultImageSize
+                        }
+                    )
                 }
             }
         }

@@ -6,7 +6,7 @@ import com.moneymong.moneymong.model.agency.AgencyGetResponse
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class GetAgenciesUseCase @Inject constructor(
+class FetchAgenciesUseCase @Inject constructor(
     private val agencyRepository: AgencyRepository
 ) {
     operator fun invoke(): Flow<PagingData<AgencyGetResponse>> {

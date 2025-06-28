@@ -102,7 +102,6 @@ class OCRDetailViewModel @Inject constructor(
                 amount = state.totalPriceValue.text.replace(".", "").toInt(),
                 description = state.memoValue.text,
                 paymentDate = state.postPaymentDate,
-                receiptImageUrls = state.receiptImageUrls,
                 documentImageUrls = documentImageUrls.ifEmpty {
                     emptyList()
                 }

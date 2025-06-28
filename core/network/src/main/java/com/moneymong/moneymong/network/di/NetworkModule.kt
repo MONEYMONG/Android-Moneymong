@@ -19,7 +19,7 @@ import com.moneymong.moneymong.network.api.UniversityApi
 import com.moneymong.moneymong.network.api.UserApi
 import com.moneymong.moneymong.network.api.VersionApi
 import com.moneymong.moneymong.network.util.AuthInterceptor
-import com.moneymong.moneymong.network.util.MoneyMongTokenAuthenticator
+import com.moneymong.moneymong.network.util.MoneyMongAuthenticator
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -47,7 +47,7 @@ object NetworkModule {
     @Provides
     fun provideOkhttpClient(
         chuckerInterceptor: ChuckerInterceptor,
-        moneymongAuthenticator: MoneyMongTokenAuthenticator,
+        moneymongAuthenticator: MoneyMongAuthenticator,
         authInterceptor: AuthInterceptor
     ): OkHttpClient {
         val okhttpLoggingClient = if (BuildConfig.DEBUG) {

@@ -1,16 +1,16 @@
 package com.moneymong.moneymong.network.api
 
-import com.moneymong.moneymong.model.agency.AgencyJoinRequest
-import com.moneymong.moneymong.model.agency.AgencyRegisterRequest
 import com.moneymong.moneymong.model.agency.AgenciesGetResponse
+import com.moneymong.moneymong.model.agency.AgencyGetResponse
+import com.moneymong.moneymong.model.agency.AgencyJoinRequest
 import com.moneymong.moneymong.model.agency.AgencyJoinResponse
+import com.moneymong.moneymong.model.agency.AgencyRegisterRequest
 import com.moneymong.moneymong.model.agency.MyAgencyResponse
 import com.moneymong.moneymong.model.agency.RegisterAgencyResponse
 import com.moneymong.moneymong.model.member.InvitationCodeResponse
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
-import retrofit2.http.Header
 import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.Path
@@ -33,10 +33,14 @@ interface AgencyApi {
     @GET("api/v1/agencies/me")
     suspend fun fetchMyAgencyList(): Result<List<MyAgencyResponse>>
 
+    @GET("api/v1/agencies/search")
+    suspend fun fetchAgencyByName(
+        @Query("keyword") name: String
+    ): Result<List<AgencyGetResponse>>
+
     // POST
-    @POST("/api/v1/agencies/{agencyId}/invitation-code")
+    @POST("/api/v2/agencies/invitation-code")
     suspend fun agencyCodeNumbers(
-        @Path("agencyId") agencyId: Long,
         @Body body: AgencyJoinRequest
     ): Result<AgencyJoinResponse>
 
@@ -55,5 +59,5 @@ interface AgencyApi {
     @DELETE("api/v1/agencies/{agencyId}")
     suspend fun deleteAgency(
         @Path("agencyId") agencyId: Int
-    ) : Result<Unit>
+    ): Result<Unit>
 }

@@ -20,17 +20,16 @@ import com.moneymong.moneymong.feature.agency.navigation.agencyRoute
 import com.moneymong.moneymong.feature.agency.navigation.agencyScreen
 import com.moneymong.moneymong.feature.agency.navigation.navigateAgency
 import com.moneymong.moneymong.feature.agency.navigation.navigateAgencyRegister
-import com.moneymong.moneymong.feature.agency.navigation.navigateAgencyRegisterComplete
 import com.moneymong.moneymong.feature.mymong.navigation.myMongNavGraph
 import com.moneymong.moneymong.feature.mymong.navigation.navigatePrivacyPolicy
 import com.moneymong.moneymong.feature.mymong.navigation.navigateTermsOfUse
 import com.moneymong.moneymong.feature.mymong.navigation.navigateWithdrawal
 import com.moneymong.moneymong.feature.sign.navigation.loginScreen
 import com.moneymong.moneymong.feature.sign.navigation.navigateLogin
-import com.moneymong.moneymong.feature.sign.navigation.navigateSignComplete
-import com.moneymong.moneymong.feature.sign.navigation.navigateSignUp
+import com.moneymong.moneymong.feature.sign.navigation.navigateSignUpUniversity
 import com.moneymong.moneymong.feature.sign.navigation.signCompleteScreen
 import com.moneymong.moneymong.feature.sign.navigation.signUpScreen
+import com.moneymong.moneymong.feature.sign.navigation.signUpUniversity
 import com.moneymong.moneymong.feature.sign.navigation.splashRoute
 import com.moneymong.moneymong.feature.sign.navigation.splashScreen
 import com.moneymong.moneymong.home.navigation.rememberHomeNavigator
@@ -41,7 +40,6 @@ import com.moneymong.moneymong.ledgerdetail.navigation.ledgerDetailScreen
 import com.moneymong.moneymong.ledgerdetail.navigation.navigateLedgerDetail
 import com.moneymong.moneymong.ledgermanual.navigation.ledgerManualScreen
 import com.moneymong.moneymong.ledgermanual.navigation.navigateLedgerManual
-import com.moneymong.moneymong.ocr.navigation.navigateOCR
 import com.moneymong.moneymong.ocr.navigation.ocrScreen
 import com.moneymong.moneymong.ocr_detail.navigation.navigateOCRDetail
 import com.moneymong.moneymong.ocr_detail.navigation.ocrDetailScreen
@@ -94,12 +92,20 @@ fun HomeScreen(
             // sign
             loginScreen(
                 navigateToLedger = homeNavController::navigateLedger,
-                navigateToSignUp = homeNavController::navigateSignUp,
                 navigateToLogin = homeNavController::navigateLogin,
+                navigateToAgencyRegister = homeNavController::navigateAgencyRegister
             )
 
             signUpScreen(
-                navigateToSignComplete = homeNavController::navigateSignComplete,
+                navigateToLedger = homeNavController::navigateLedger,
+                navigateToSignUniversity = homeNavController::navigateSignUpUniversity,
+                navigateToAgency = homeNavController::navigateAgency,
+                navigateUp = homeNavController::navigateUp
+            )
+
+            signUpUniversity(
+                navigateToLedger = homeNavController::navigateLedger,
+                navigateToAgency = homeNavController::navigateAgency,
                 navigateUp = homeNavController::navigateUp
             )
 
@@ -111,7 +117,7 @@ fun HomeScreen(
             agencyScreen(
                 padding = padding,
                 navigateToRegister = homeNavController::navigateAgencyRegister,
-                navigateAgencyJoin = homeNavController::navigateAgencyJoin
+                navigateAgencyJoin = {}
             )
 
             agencyJoinScreen(
@@ -131,8 +137,7 @@ fun HomeScreen(
             )
 
             agencyRegisterScreen(
-                navigateToComplete = homeNavController::navigateAgencyRegisterComplete,
-                navigateUp = homeNavController::navigateUp
+                navigateToLedger = homeNavController::navigateLedger
             )
 
             agencyRegisterCompleteScreen(
@@ -150,16 +155,13 @@ fun HomeScreen(
             // ledger
             ledgerScreen(
                 padding = padding,
-                navigateToAgency = { homeNavigator.navigate(agencyRoute) },
-                navigateToOCR = homeNavController::navigateOCR,
+                navigateToAgencyRegister = homeNavController::navigateAgencyRegister,
+                navigateToAgencyJoin = homeNavController::navigateAgencyJoin,
                 navigateToLedgerDetail = homeNavController::navigateLedgerDetail,
-                navigateToLedgerManual = homeNavController::navigateLedgerManual
+                navigateToLedgerManual = homeNavController::navigateLedgerManual,
             )
 
-            ledgerDetailScreen(
-                navigateToLedger = homeNavController::navigateLedger,
-                popBackStack = homeNavController::popBackStack
-            )
+            ledgerDetailScreen(navigateToLedger = homeNavController::navigateLedger)
 
             ledgerManualScreen(
                 navigateToLedger = homeNavController::navigateLedger,

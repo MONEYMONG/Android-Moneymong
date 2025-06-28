@@ -100,8 +100,6 @@ fun MyMongScreen(
             errorMessage = state.infoErrorMessage,
             name = state.name,
             email = state.email,
-            university = state.university,
-            grade = state.grade,
             getInfo = viewModel::getInfo
         )
         Spacer(modifier = Modifier.height(16.dp))

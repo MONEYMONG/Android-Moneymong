@@ -12,19 +12,17 @@ import com.moneymong.moneymong.common.ui.validateValue
 import com.moneymong.moneymong.domain.usecase.ledgerdetail.FetchLedgerTransactionDetailUseCase
 import com.moneymong.moneymong.domain.usecase.ledgerdetail.DeleteLedgerDetailUseCase
 import com.moneymong.moneymong.domain.usecase.ledgerdetail.DeleteLedgerDocumentTransactionUseCase
-import com.moneymong.moneymong.domain.usecase.ledgerdetail.DeleteLedgerReceiptTransactionUseCase
 import com.moneymong.moneymong.domain.usecase.ledgerdetail.PostLedgerDocumentTransactionUseCase
-import com.moneymong.moneymong.domain.usecase.ledgerdetail.PostLedgerReceiptTransactionUseCase
 import com.moneymong.moneymong.domain.usecase.ledgerdetail.UpdateLedgerTransactionDetailUseCase
 import com.moneymong.moneymong.domain.usecase.ocr.PostFileUploadUseCase
 import com.moneymong.moneymong.ledgerdetail.navigation.LedgerDetailArgs
 import com.moneymong.moneymong.model.ledgerdetail.LedgerDocumentRequest
-import com.moneymong.moneymong.model.ledgerdetail.LedgerReceiptRequest
 import com.moneymong.moneymong.model.ledgerdetail.LedgerTransactionDetailRequest
 import com.moneymong.moneymong.model.ledgerdetail.LedgerTransactionDetailResponse
 import com.moneymong.moneymong.model.ocr.FileUploadRequest
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.annotation.OrbitExperimental
 import org.orbitmvi.orbit.syntax.simple.blockingIntent
 import org.orbitmvi.orbit.syntax.simple.intent
@@ -39,9 +37,7 @@ class LedgerDetailViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val fetchLedgerTransactionDetailUseCase: FetchLedgerTransactionDetailUseCase,
     private val updateLedgerTransactionDetailUseCase: UpdateLedgerTransactionDetailUseCase,
-    private val postLedgerReceiptTransactionUseCase: PostLedgerReceiptTransactionUseCase,
     private val postLedgerDocumentTransactionUseCase: PostLedgerDocumentTransactionUseCase,
-    private val deleteLedgerReceiptTransactionUseCase: DeleteLedgerReceiptTransactionUseCase,
     private val deleteLedgerDocumentTransactionUseCase: DeleteLedgerDocumentTransactionUseCase,
     private val postFileUploadUseCase: PostFileUploadUseCase,
     private val deleteLedgerDetailUseCase: DeleteLedgerDetailUseCase
@@ -52,11 +48,18 @@ class LedgerDetailViewModel @Inject constructor(
     }
 
     fun ledgerTransactionEdit(detailId: Int) = intent {
-        postLedgerReceiptTransaction(detailId)
-        deleteLedgerReceiptTransaction(detailId)
-        postLedgerDocumentTransaction(detailId)
-        deleteLedgerDocumentTransaction(detailId)
+        reduce { state.copy(isLoading = true) }
+
+        coroutineScope {
+            launch { postLedgerDocumentTransaction(detailId) }
+            launch { deleteLedgerDocumentTransaction(detailId) }
+        }.join()
+
         updateLedgerTransactionDetail(detailId)
+
+        reduce { state.copy(isLoading = false) }
+
+        fetchLedgerTransactionDetail(detailId)
     }
 
     fun fetchLedgerTransactionDetail(detailId: Int) = intent {
@@ -71,8 +74,6 @@ class LedgerDetailViewModel @Inject constructor(
     }
 
     fun updateLedgerTransactionDetail(detailId: Int) = intent {
-        reduce { state.copy(isLoading = true) }
-        delay(1000) // 사진 수정 내용이 DB 반영되기 까지 걸리는 시간을 대응하기 위해 delay 설정
         val request = LedgerTransactionDetailRequest(
             storeInfo = state.storeNameValue.text,
             amount = state.totalPriceValue.text.toInt(),
@@ -85,28 +86,11 @@ class LedgerDetailViewModel @Inject constructor(
                 initTextValue(it)
             }.onFailure {
                 showErrorDialog(it.message)
-            }.also { reduce { state.copy(isLoading = false) } }
-    }
-
-    fun postLedgerReceiptTransaction(detailId: Int) = intent {
-        if (state.receiptList.isNotEmpty()) {
-            reduce { state.copy(isLoading = true) }
-            val mapToOriginalUrl =
-                state.ledgerTransactionDetail?.receiptImageUrls?.map { it.receiptImageUrl }
-                    .orEmpty()
-            val request = LedgerReceiptRequest(
-                receiptImageUrls = state.receiptList - mapToOriginalUrl.toSet()
-            )
-            postLedgerReceiptTransactionUseCase(detailId, request)
-                .onFailure {
-                    showErrorDialog(it.message)
-                }.also { reduce { state.copy(isLoading = false) } }
-        }
+            }
     }
 
     fun postLedgerDocumentTransaction(detailId: Int) = intent {
         if (state.documentList.isNotEmpty()) {
-            reduce { state.copy(isLoading = true) }
             val mapToOriginalUrl =
                 state.ledgerTransactionDetail?.documentImageUrls?.map { it.documentImageUrl }
                     .orEmpty()
@@ -116,42 +100,28 @@ class LedgerDetailViewModel @Inject constructor(
             postLedgerDocumentTransactionUseCase(detailId, request)
                 .onFailure {
                     showErrorDialog(it.message)
-                }.also { reduce { state.copy(isLoading = false) } }
-        }
-    }
-
-    fun deleteLedgerReceiptTransaction(detailId: Int) = intent {
-        if (state.receiptIdList.isNotEmpty()) {
-            reduce { state.copy(isLoading = true) }
-            state.receiptIdList.forEach { receiptId ->
-                deleteLedgerReceiptTransactionUseCase(detailId, receiptId)
-                    .onFailure {
-                        showErrorDialog(it.message)
-                    }.also { reduce { state.copy(isLoading = false) } }
-            }
+                }
         }
     }
 
     fun deleteLedgerDocumentTransaction(detailId: Int) = intent {
         if (state.documentIdList.isNotEmpty()) {
-            reduce { state.copy(isLoading = true) }
             state.documentIdList.forEach { documentId ->
                 deleteLedgerDocumentTransactionUseCase(detailId, documentId)
                     .onFailure {
                         showErrorDialog(it.message)
-                    }.also { reduce { state.copy(isLoading = false) } }
+                    }
             }
         }
     }
 
     fun deleteLedgerDetail(detailId: Int) = intent {
-        reduce { state.copy(isLoading = true) }
         deleteLedgerDetailUseCase(detailId)
             .onSuccess {
                 postSideEffect(LedgerDetailSideEffect.LedgerDetailNavigateToLedger)
             }.onFailure {
                 showErrorDialog(it.message)
-            }.also { reduce { state.copy(isLoading = false) } }
+            }
     }
 
     fun postS3URLImage(imageFile: File?) = intent {
@@ -161,45 +131,12 @@ class LedgerDetailViewModel @Inject constructor(
                 val file = FileUploadRequest(it.toMultipart(), "ledgerDetail")
                 postFileUploadUseCase(file)
                     .onSuccess { response ->
-                        state.isReceipt?.let { isReceipt ->
-                            if (isReceipt) {
-                                reduce { state.copy(receiptList = state.receiptList + response.path) }
-                            } else {
-                                reduce { state.copy(documentList = state.documentList + response.path) }
-                            }
-                        }
+                        reduce { state.copy(documentList = state.documentList + response.path) }
                     }.onFailure {
                         showErrorDialog(it.message)
                     }.also {
-                        reduce {
-                            state.copy(
-                                isLoading = false,
-                                isReceipt = null
-                            )
-                        }
+                        reduce { state.copy(isLoading = false) }
                     }
-            }
-        }
-    }
-
-    fun onClickRemoveReceipt(receiptImage: String) = intent {
-        state.ledgerTransactionDetail?.let {
-            val receiptId = it.receiptImageUrls.find { it.receiptImageUrl == receiptImage }?.id ?: 0
-            val isOriginalReceipt =
-                it.receiptImageUrls.map { it.receiptImageUrl }.contains(receiptImage)
-            if (isOriginalReceipt) {
-                reduce {
-                    state.copy(
-                        receiptList = state.receiptList - receiptImage,
-                        receiptIdList = state.receiptIdList + receiptId
-                    )
-                }
-            } else {
-                reduce {
-                    state.copy(
-                        receiptList = state.receiptList - receiptImage
-                    )
-                }
             }
         }
     }
@@ -227,7 +164,17 @@ class LedgerDetailViewModel @Inject constructor(
         }
     }
 
-    private fun initTextValue(ledgerTransactionDetail: LedgerTransactionDetailResponse) = intent {
+    fun onClickEditButton() = intent {
+        if (state.useEditMode) {
+            eventEmit(LedgerDetailSideEffect.LedgerDetailEditDone)
+        } else {
+            eventEmit(LedgerDetailSideEffect.LedgerDetailEdit)
+        }
+    }
+
+    fun onClickOpenImagePicker() = eventEmit(LedgerDetailSideEffect.LedgerDetailOpenImagePicker)
+
+    private fun initTextValue(ledgerTransactionDetail: LedgerTransactionDetailResponse) = blockingIntent {
         reduce {
             state.copy(
                 storeNameValue = state.storeNameValue.copy(text = ledgerTransactionDetail.storeInfo),
@@ -243,9 +190,7 @@ class LedgerDetailViewModel @Inject constructor(
                     )
                 ),
                 memoValue = state.memoValue.copy(text = ledgerTransactionDetail.description),
-                receiptList = ledgerTransactionDetail.receiptImageUrls.map { it.receiptImageUrl },
                 documentList = ledgerTransactionDetail.documentImageUrls.map { it.documentImageUrl },
-                receiptIdList = emptyList(),
                 documentIdList = emptyList()
             )
         }
@@ -313,11 +258,6 @@ class LedgerDetailViewModel @Inject constructor(
 
     fun onChangeEditMode(useEditMode: Boolean) = intent {
         reduce { state.copy(useEditMode = useEditMode) }
-    }
-
-    fun onChangeImageType(isReceipt: Boolean) = intent {
-        reduce { state.copy(isReceipt = isReceipt) }
-        postSideEffect(LedgerDetailSideEffect.LedgerDetailOpenImagePicker)
     }
 
     fun onChangeVisibleConfirmModal(visible: Boolean) = intent {
