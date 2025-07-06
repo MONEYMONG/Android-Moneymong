@@ -5,11 +5,11 @@ import androidx.compose.animation.ExitTransition
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.navOptions
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import com.moneymong.moneymong.design_system.error.ErrorDialog
 import com.moneymong.moneymong.feature.agency.join.navigation.agencyCompleteScreen
 import com.moneymong.moneymong.feature.agency.join.navigation.agencyJoinScreen
 import com.moneymong.moneymong.feature.agency.join.navigation.navigateAgencyJoin
@@ -60,11 +60,16 @@ fun HomeScreen(
         darkIcons = homeNavigator.darkIcons
     )
 
-    LaunchedEffect(expired) {
-        if (expired) run {
-            homeNavController.navigateLogin()
-            onChangeExpired(false)
-        }
+    if (expired) {
+        ErrorDialog(
+            message = "로그인 정보 만료",
+            description = "안전한 서비스 이용을 위해\n다시 로그인이 필요해요",
+            confirmText = "로그인 하기",
+            onConfirm = {
+                homeNavController.navigateLogin()
+                onChangeExpired(false)
+            }
+        )
     }
 
     Scaffold(
@@ -92,7 +97,6 @@ fun HomeScreen(
             // sign
             loginScreen(
                 navigateToLedger = homeNavController::navigateLedger,
-                navigateToLogin = homeNavController::navigateLogin,
                 navigateToAgencyRegister = homeNavController::navigateAgencyRegister
             )
 

@@ -5,10 +5,10 @@ import com.moneymong.moneymong.model.sign.RefreshTokenRequest
 import com.moneymong.moneymong.model.sign.RefreshTokenResponse
 import com.moneymong.moneymong.model.sign.TokenResponse
 import com.moneymong.moneymong.model.sign.UserDataStoreInfoResponse
-import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
 
 interface TokenRepository {
-    val tokenUpdateFailed: MutableSharedFlow<Boolean>
+    val tokenUpdateFailed: SharedFlow<Boolean>
     suspend fun notifyTokenUpdateFailed(failed: Boolean)
     suspend fun getRefreshToken(): Result<String>
     suspend fun postAccessToken(type: LoginType, accessToken: String): Result<TokenResponse>

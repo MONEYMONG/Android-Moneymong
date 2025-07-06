@@ -20,15 +20,13 @@ import com.moneymong.moneymong.ledger.view.LedgerTransactionType
 import com.moneymong.moneymong.model.agency.MyAgencyResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collectLatest
-import org.orbitmvi.orbit.annotation.OrbitExperimental
-import org.orbitmvi.orbit.syntax.simple.blockingIntent
+import kotlinx.coroutines.joinAll
 import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.postSideEffect
 import org.orbitmvi.orbit.syntax.simple.reduce
 import java.time.LocalDate
 import javax.inject.Inject
 
-@OptIn(OrbitExperimental::class)
 @HiltViewModel
 class LedgerViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
@@ -46,15 +44,24 @@ class LedgerViewModel @Inject constructor(
 
     init {
         checkPostSuccess(LedgerArgs(savedStateHandle).ledgerPostSuccess)
-        fetchDefaultInfo()
-        fetchMyAgencyList()
-        fetchAgencyExistLedger()
-        fetchAgencyMemberList()
-        fetchLedgerTransactionList()
-        fetchVisibleLedgerOnboarding()
+        initializedData()
     }
 
-    fun fetchDefaultInfo() = blockingIntent {
+    private fun initializedData() = intent {
+        fetchDefaultInfo().join()
+        fetchMyAgencyList().join()
+
+        val jobList = listOf(
+            fetchAgencyExistLedger(),
+            fetchAgencyMemberList(),
+            fetchLedgerTransactionList(),
+            fetchVisibleLedgerOnboarding()
+        )
+
+        jobList.joinAll()
+    }
+
+    fun fetchDefaultInfo() = intent {
         val agencyId = fetchAgencyIdUseCase()
         val userId = fetchUserIdUseCase()
         reduce {
@@ -65,7 +72,7 @@ class LedgerViewModel @Inject constructor(
         }
     }
 
-    fun saveAgencyId(agencyId: Int) = blockingIntent {
+    fun saveAgencyId(agencyId: Int) = intent {
         reduce { state.copy(agencyId = agencyId) }
         saveAgencyIdUseCase(agencyId)
     }
@@ -123,7 +130,7 @@ class LedgerViewModel @Inject constructor(
         }
     }
 
-    fun fetchMyAgencyList() = blockingIntent {
+    fun fetchMyAgencyList() = intent {
         reduce { state.copy(isMyAgencyLoading = true) }
         fetchMyAgencyListUseCase()
             .onSuccess {
@@ -136,7 +143,9 @@ class LedgerViewModel @Inject constructor(
                     )
                 }
                 if (it.isNotEmpty() && state.agencyId == 0) {
-                    saveAgencyId(it.first().id)
+                    val newAgencyId = it.first().id
+                    reduce { state.copy(agencyId = newAgencyId) }
+                    saveAgencyIdUseCase(newAgencyId)
                 }
             }.onFailure {
                 reduce {
@@ -148,7 +157,7 @@ class LedgerViewModel @Inject constructor(
             }.also { reduce { state.copy(isMyAgencyLoading = false) } }
     }
 
-    fun fetchAgencyMemberList() = blockingIntent {
+    fun fetchAgencyMemberList() = intent {
         if (state.existAgency) {
             reduce { state.copy(isAgencyMemberLoading = true) }
             fetchMemberListUseCase(state.agencyId.toLong())
@@ -186,12 +195,20 @@ class LedgerViewModel @Inject constructor(
             }
     }
 
-    fun reFetchLedgerData(agencyId: Int) {
-        saveAgencyId(agencyId)
-        updateSelectedDate(startDate = LocalDate.now().minusMonths(6), endDate = LocalDate.now())
-        fetchAgencyExistLedger()
-        fetchAgencyMemberList()
-        fetchLedgerTransactionList()
+    fun reFetchLedgerData(agencyId: Int) = intent {
+        saveAgencyId(agencyId).join()
+        updateSelectedDate(
+            startDate = LocalDate.now().minusMonths(6),
+            endDate = LocalDate.now(),
+        ).join()
+
+        val jobList = listOf(
+            fetchAgencyExistLedger(),
+            fetchAgencyMemberList(),
+            fetchLedgerTransactionList(),
+        )
+
+        jobList.joinAll()
     }
 
     fun onChangeTransactionType(transactionType: LedgerTransactionType) = intent {
