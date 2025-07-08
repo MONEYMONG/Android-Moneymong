@@ -7,7 +7,6 @@ import com.moneymong.moneymong.domain.usecase.token.PostAccessTokenUseCase
 import com.moneymong.moneymong.feature.sign.sideeffect.LoginSideEffect
 import com.moneymong.moneymong.feature.sign.state.LoginState
 import com.moneymong.moneymong.model.sign.LoginType
-import com.moneymong.moneymong.network.util.TokenCallback
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.syntax.simple.intent
@@ -18,7 +17,7 @@ import javax.inject.Inject
 class LoginViewModel @Inject constructor(
     private val postAccessTokenUseCase: PostAccessTokenUseCase,
     private val fetchMyAgencyListUseCase: FetchMyAgencyListUseCase,
-) : BaseViewModel<LoginState, LoginSideEffect>(LoginState()), TokenCallback {
+) : BaseViewModel<LoginState, LoginSideEffect>(LoginState()) {
 
     fun onKakaoLoginSuccess(accessToken: String) = intent {
         postAccessTokenUseCase(type = LoginType.KAKAO, accessToken = accessToken).onSuccess {
@@ -36,16 +35,6 @@ class LoginViewModel @Inject constructor(
 
     fun onKakaoLoginFailure(throwable: Throwable) = visibleErrorChanged(isVisibleError = true)
 
-    override suspend fun onTokenFailure() {
-        intent {
-            reduce {
-                state.copy(
-                    isLoginRequired = true
-                )
-            }
-        }
-    }
-
     private fun checkAgencyExists() = viewModelScope.launch {
         fetchMyAgencyListUseCase()
             .onSuccess {
@@ -54,14 +43,6 @@ class LoginViewModel @Inject constructor(
             }.onFailure {
                 visibleErrorChanged(true)
             }
-    }
-
-    fun isLoginRequiredChanged(boolean: Boolean) = intent {
-        reduce {
-            state.copy(
-                isLoginRequired = boolean
-            )
-        }
     }
 
     fun visibleErrorChanged(isVisibleError: Boolean) = intent {

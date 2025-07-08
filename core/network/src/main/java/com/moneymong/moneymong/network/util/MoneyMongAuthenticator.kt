@@ -12,7 +12,6 @@ import javax.inject.Inject
 
 class MoneyMongAuthenticator @Inject constructor(
     private val tokenRepository: TokenRepository,
-    private val tokenCallback: TokenCallback
 ) : Authenticator {
     override fun authenticate(route: Route?, response: Response): Request? {
         val isReIssuePath = response.request.url.toString() == REISSUE_URL
@@ -33,7 +32,6 @@ class MoneyMongAuthenticator @Inject constructor(
         runBlocking {
             tokenRepository.notifyTokenUpdateFailed(true)
             tokenRepository.deleteToken()
-            tokenCallback.onTokenFailure()
         }
     }
 

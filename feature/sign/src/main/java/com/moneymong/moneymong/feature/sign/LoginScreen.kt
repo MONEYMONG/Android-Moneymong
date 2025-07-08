@@ -26,7 +26,6 @@ import org.orbitmvi.orbit.compose.collectAsState
 @Composable
 fun LoginScreen(
     navigateToLedger: () -> Unit,
-    navigateToLogin: () -> Unit,
     navigateToAgencyRegister: () -> Unit,
     viewModel: LoginViewModel = hiltViewModel()
 ) {
@@ -40,14 +39,6 @@ fun LoginScreen(
             } else {
                 navigateToAgencyRegister()
             }
-        }
-    }
-
-    LaunchedEffect(key1 = state.isLoginRequired)
-    {
-        if (state.isLoginRequired == true) {
-            navigateToLogin()
-            viewModel.isLoginRequiredChanged(false)
         }
     }
 

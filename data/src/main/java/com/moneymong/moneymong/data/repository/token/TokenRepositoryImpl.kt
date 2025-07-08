@@ -8,17 +8,24 @@ import com.moneymong.moneymong.model.sign.RefreshTokenRequest
 import com.moneymong.moneymong.model.sign.RefreshTokenResponse
 import com.moneymong.moneymong.model.sign.TokenResponse
 import com.moneymong.moneymong.model.sign.UserDataStoreInfoResponse
+import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import javax.inject.Inject
 
 class TokenRepositoryImpl @Inject constructor(
     private val loginLocalDataSource: LoginLocalDataSource,
     private val tokenRemoteDataSource: TokenRemoteDataSource,
 ) : TokenRepository {
-    override val tokenUpdateFailed = MutableSharedFlow<Boolean>(replay = 1)
+
+    private val _tokenUpdateFailed = MutableSharedFlow<Boolean>(
+        extraBufferCapacity = TOKEN_SHARED_FLOW_EXTRA_BUFFER_SIZE,
+        onBufferOverflow = BufferOverflow.DROP_OLDEST,
+    )
+    override val tokenUpdateFailed = _tokenUpdateFailed.asSharedFlow()
 
     override suspend fun notifyTokenUpdateFailed(failed: Boolean) {
-        tokenUpdateFailed.emit(failed)
+        _tokenUpdateFailed.emit(failed)
     }
 
     override suspend fun getRefreshToken(): Result<String> {
@@ -76,4 +83,7 @@ class TokenRepositoryImpl @Inject constructor(
         return loginLocalDataSource.setSchoolInfoProvided(infoExist)
     }
 
+    companion object {
+        private const val TOKEN_SHARED_FLOW_EXTRA_BUFFER_SIZE = 1
+    }
 }

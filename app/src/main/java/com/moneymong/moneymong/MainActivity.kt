@@ -6,8 +6,11 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.LifecycleStartEffect
 import com.moneymong.moneymong.common.event.EventTracker
@@ -16,9 +19,6 @@ import com.moneymong.moneymong.design_system.theme.MMTheme
 import com.moneymong.moneymong.domain.repository.token.TokenRepository
 import com.moneymong.moneymong.ui.MoneyMongApp
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.compose.collectAsState
 import javax.inject.Inject
 
@@ -28,7 +28,6 @@ class MainActivity : ComponentActivity() {
 
     @Inject
     lateinit var tokenRepository: TokenRepository
-    private val expired = mutableStateOf(false)
 
     @Inject
     lateinit var eventTracker: EventTracker
@@ -40,6 +39,13 @@ class MainActivity : ComponentActivity() {
         setContent {
             val context = LocalContext.current
             val state by viewModel.collectAsState()
+            var expired by remember { mutableStateOf(false) }
+
+            LaunchedEffect(Unit) {
+                tokenRepository.tokenUpdateFailed.collect { isExpired ->
+                    expired = isExpired
+                }
+            }
 
             val shouldUpdate = state.shouldUpdate
             LifecycleStartEffect(key1 = Unit, effects = {
@@ -64,15 +70,10 @@ class MainActivity : ComponentActivity() {
                     )
                 }
 
-                MoneyMongApp(expired.value) {
-                    expired.value = false
-                }
-            }
-        }
-
-        CoroutineScope(Dispatchers.Default).launch {
-            tokenRepository.tokenUpdateFailed.collect {
-                expired.value = it
+                MoneyMongApp(
+                    expired = expired,
+                    onChangeExpired = { expired = false }
+                )
             }
         }
     }
