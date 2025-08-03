@@ -2,7 +2,7 @@ package com.moneymong.moneymong.ocr_result
 
 import android.content.SharedPreferences
 import com.moneymong.moneymong.common.base.BaseViewModel
-import com.moneymong.moneymong.common.ext.toMultipart
+import com.moneymong.moneymong.common.util.toMultipart
 import com.moneymong.moneymong.domain.usecase.agency.FetchAgencyIdUseCase
 import com.moneymong.moneymong.domain.usecase.ledger.PostLedgerTransactionUseCase
 import com.moneymong.moneymong.domain.usecase.ocr.PostFileUploadUseCase

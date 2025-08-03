@@ -1,4 +1,4 @@
-package com.moneymong.moneymong.common.util
+package com.moneymong.moneymong.ui.util
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect

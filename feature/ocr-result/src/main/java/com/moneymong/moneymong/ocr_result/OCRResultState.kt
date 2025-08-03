@@ -1,7 +1,7 @@
 package com.moneymong.moneymong.ocr_result
 
 import com.moneymong.moneymong.common.base.State
-import com.moneymong.moneymong.common.ext.toZonedDateTime
+import com.moneymong.moneymong.common.util.toZonedDateTime
 import com.moneymong.moneymong.ui.isValidPaymentDate
 import com.moneymong.moneymong.ui.isValidPaymentTime
 import com.moneymong.moneymong.ui.toWonFormat

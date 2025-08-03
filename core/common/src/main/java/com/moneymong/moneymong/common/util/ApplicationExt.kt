@@ -1,4 +1,4 @@
-package com.moneymong.moneymong.common.ext
+package com.moneymong.moneymong.common.util
 
 import android.content.Context
 import android.content.pm.PackageManager
@@ -10,7 +10,6 @@ import android.net.Uri
 import android.os.Build
 import android.util.Base64
 import androidx.core.content.ContextCompat
-import androidx.core.content.FileProvider
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody

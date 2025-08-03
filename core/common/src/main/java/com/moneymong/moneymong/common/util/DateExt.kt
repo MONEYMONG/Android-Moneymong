@@ -1,4 +1,4 @@
-package com.moneymong.moneymong.common.ext
+package com.moneymong.moneymong.common.util
 
 import java.time.Instant
 import java.time.LocalDateTime
