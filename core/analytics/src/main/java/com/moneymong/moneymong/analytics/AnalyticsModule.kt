@@ -15,7 +15,8 @@ import javax.inject.Singleton
 abstract class AnalyticsModule {
 
     @Binds
-    abstract fun bindsAnalyticsTracker(analyticsHelperImpl: FirebaseAnalyticsTracker): AnalyticsTracker
+    @Singleton
+    abstract fun bindsAnalyticsTracker(firebaseAnalyticsTracker: FirebaseAnalyticsTracker): AnalyticsTracker
 
     companion object {
         @Provides

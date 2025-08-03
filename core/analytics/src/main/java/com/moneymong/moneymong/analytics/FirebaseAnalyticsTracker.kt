@@ -7,20 +7,6 @@ import javax.inject.Inject
 class FirebaseAnalyticsTracker @Inject constructor(
     private val firebaseAnalytics: FirebaseAnalytics
 ) : AnalyticsTracker {
-
-//    private var initialized: Boolean = false
-//
-//    fun initialize() {
-//        firebaseAnalytics = Firebase.analytics
-//        initialized = true
-//    }
-
-//    fun logEvent(event: AnalyticsEvent, param: Bundle? = null) {
-//        check(initialized) { "logEvent를 호출하기 전 초기화가 필요합니다." }
-//
-//        firebaseAnalytics.logEvent(event.eventName, param)
-//    }
-
     override fun logEvent(event: AnalyticsEvent) {
         firebaseAnalytics.logEvent(event.type) {
             for (extra in event.extras) {
