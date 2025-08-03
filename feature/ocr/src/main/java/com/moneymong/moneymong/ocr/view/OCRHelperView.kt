@@ -22,7 +22,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.moneymong.moneymong.common.ui.noRippleClickable
+import com.moneymong.moneymong.ui.noRippleClickable
 import com.moneymong.moneymong.design_system.R
 import com.moneymong.moneymong.design_system.theme.Body4
 import com.moneymong.moneymong.design_system.theme.Heading2

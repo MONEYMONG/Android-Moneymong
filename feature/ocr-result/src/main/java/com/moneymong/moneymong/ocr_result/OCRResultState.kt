@@ -2,10 +2,10 @@ package com.moneymong.moneymong.ocr_result
 
 import com.moneymong.moneymong.common.base.State
 import com.moneymong.moneymong.common.ext.toZonedDateTime
-import com.moneymong.moneymong.common.ui.isValidPaymentDate
-import com.moneymong.moneymong.common.ui.isValidPaymentTime
-import com.moneymong.moneymong.common.ui.toWonFormat
-import com.moneymong.moneymong.common.ui.validateValue
+import com.moneymong.moneymong.ui.isValidPaymentDate
+import com.moneymong.moneymong.ui.isValidPaymentTime
+import com.moneymong.moneymong.ui.toWonFormat
+import com.moneymong.moneymong.ui.validateValue
 import com.moneymong.moneymong.model.ocr.DocumentResponse
 import com.moneymong.moneymong.model.ocr.DocumentResult
 import java.io.File

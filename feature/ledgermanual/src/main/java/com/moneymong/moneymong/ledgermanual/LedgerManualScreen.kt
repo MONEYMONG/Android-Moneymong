@@ -44,11 +44,8 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -56,7 +53,7 @@ import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.moneymong.moneymong.common.ext.base64ToFile
 import com.moneymong.moneymong.common.ext.encodingBase64
-import com.moneymong.moneymong.common.ui.noRippleClickable
+import com.moneymong.moneymong.ui.noRippleClickable
 import com.moneymong.moneymong.design_system.R.drawable
 import com.moneymong.moneymong.design_system.component.button.MDSButton
 import com.moneymong.moneymong.design_system.component.button.MDSButtonSize
@@ -76,7 +73,6 @@ import com.moneymong.moneymong.design_system.theme.Body3
 import com.moneymong.moneymong.design_system.theme.Gray06
 import com.moneymong.moneymong.design_system.theme.Gray10
 import com.moneymong.moneymong.design_system.theme.MMHorizontalSpacing
-import com.moneymong.moneymong.design_system.theme.Red03
 import com.moneymong.moneymong.design_system.theme.White
 import com.moneymong.moneymong.ledgermanual.view.LedgerManualTopbarView
 import com.moneymong.moneymong.model.ledger.FundType

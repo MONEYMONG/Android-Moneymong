@@ -3,7 +3,7 @@ package com.moneymong.moneymong.ledgerdetail
 import androidx.compose.ui.text.input.TextFieldValue
 import com.moneymong.moneymong.common.base.State
 import com.moneymong.moneymong.common.ext.toDateFormat
-import com.moneymong.moneymong.common.ui.toWonFormat
+import com.moneymong.moneymong.ui.toWonFormat
 import com.moneymong.moneymong.design_system.component.textfield.util.PriceType
 import com.moneymong.moneymong.model.ledger.FundType
 import com.moneymong.moneymong.model.ledgerdetail.LedgerTransactionDetailResponse

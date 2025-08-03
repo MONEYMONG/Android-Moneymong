@@ -26,7 +26,7 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.moneymong.moneymong.common.ui.noRippleClickable
+import com.moneymong.moneymong.ui.noRippleClickable
 import com.moneymong.moneymong.design_system.R
 import com.moneymong.moneymong.design_system.component.snackbar.MDSSnackbarHost
 import com.moneymong.moneymong.design_system.error.ErrorDialog

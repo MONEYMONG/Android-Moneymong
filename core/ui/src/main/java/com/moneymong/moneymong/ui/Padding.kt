@@ -1,4 +1,4 @@
-package com.moneymong.moneymong.common.ui
+package com.moneymong.moneymong.ui
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.calculateEndPadding

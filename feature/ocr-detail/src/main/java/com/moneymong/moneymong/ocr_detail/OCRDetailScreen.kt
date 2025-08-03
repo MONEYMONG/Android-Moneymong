@@ -54,8 +54,8 @@ import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.moneymong.moneymong.common.ext.base64ToFile
 import com.moneymong.moneymong.common.ext.encodingBase64
-import com.moneymong.moneymong.common.ui.DottedShape
-import com.moneymong.moneymong.common.ui.noRippleClickable
+import com.moneymong.moneymong.ui.DottedShape
+import com.moneymong.moneymong.ui.noRippleClickable
 import com.moneymong.moneymong.design_system.R
 import com.moneymong.moneymong.design_system.component.button.MDSButton
 import com.moneymong.moneymong.design_system.component.selection.MDSSelection
