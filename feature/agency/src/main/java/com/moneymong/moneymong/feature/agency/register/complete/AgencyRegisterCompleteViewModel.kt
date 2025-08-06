@@ -1,6 +1,6 @@
 package com.moneymong.moneymong.feature.agency.register.complete
 
-import com.moneymong.moneymong.common.base.BaseViewModel
+import com.moneymong.moneymong.android.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 

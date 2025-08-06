@@ -13,10 +13,12 @@ android {
 }
 
 dependencies {
+    implementation(projects.core.android)
     implementation(projects.core.designSystem)
     implementation(projects.core.common)
     implementation(projects.core.model)
     implementation(projects.core.network)
+    implementation(projects.core.ui)
     implementation(projects.domain)
 
     implementation(libs.androidx.core.ktx)

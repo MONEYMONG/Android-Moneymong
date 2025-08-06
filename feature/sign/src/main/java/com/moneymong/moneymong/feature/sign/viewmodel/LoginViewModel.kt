@@ -1,7 +1,7 @@
 package com.moneymong.moneymong.feature.sign.viewmodel
 
 import androidx.lifecycle.viewModelScope
-import com.moneymong.moneymong.common.base.BaseViewModel
+import com.moneymong.moneymong.android.BaseViewModel
 import com.moneymong.moneymong.domain.usecase.agency.FetchMyAgencyListUseCase
 import com.moneymong.moneymong.domain.usecase.token.PostAccessTokenUseCase
 import com.moneymong.moneymong.feature.sign.sideeffect.LoginSideEffect

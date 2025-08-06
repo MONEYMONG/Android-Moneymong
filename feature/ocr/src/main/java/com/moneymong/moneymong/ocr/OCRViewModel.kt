@@ -2,7 +2,7 @@ package com.moneymong.moneymong.ocr
 
 import android.content.SharedPreferences
 import androidx.core.content.edit
-import com.moneymong.moneymong.common.base.BaseViewModel
+import com.moneymong.moneymong.android.BaseViewModel
 import com.moneymong.moneymong.domain.usecase.ocr.DocumentOCRUseCase
 import com.moneymong.moneymong.domain.usecase.user.FetchDeniedCameraPermissionUseCase
 import com.moneymong.moneymong.domain.usecase.user.SaveDeniedCameraPermissionUseCase

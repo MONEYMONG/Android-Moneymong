@@ -1,7 +1,7 @@
 package com.moneymong.moneymong.ocr_detail
 
 import androidx.compose.ui.text.input.TextFieldValue
-import com.moneymong.moneymong.common.base.State
+import com.moneymong.moneymong.android.State
 import com.moneymong.moneymong.design_system.component.textfield.util.PriceType
 import com.moneymong.moneymong.model.ledger.FundType
 import com.moneymong.moneymong.model.ocr.DocumentResponse

@@ -34,7 +34,7 @@ import androidx.navigation.NavOptions
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.google.gson.Gson
-import com.moneymong.moneymong.common.util.base64ToFile
+import com.moneymong.moneymong.android.util.base64ToFile
 import com.moneymong.moneymong.design_system.component.snackbar.MDSSnackbarHost
 import com.moneymong.moneymong.design_system.theme.Black
 import com.moneymong.moneymong.design_system.theme.Blue01

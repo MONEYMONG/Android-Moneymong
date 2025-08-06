@@ -1,7 +1,7 @@
 package com.moneymong.moneymong.feature.agency.search
 
 import androidx.compose.foundation.text.input.TextFieldState
-import com.moneymong.moneymong.common.base.State
+import com.moneymong.moneymong.android.State
 
 data class AgencySearchState(
     val joinedAgencies: List<Agency> = emptyList(),

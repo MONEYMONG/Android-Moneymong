@@ -1,7 +1,7 @@
 package com.example.member
 
 import android.util.Log
-import com.moneymong.moneymong.common.base.BaseViewModel
+import com.moneymong.moneymong.android.BaseViewModel
 import com.moneymong.moneymong.domain.usecase.agency.FetchAgencyIdUseCase
 import com.moneymong.moneymong.domain.usecase.member.DeleteAgencyUseCase
 import com.moneymong.moneymong.domain.usecase.member.MemberBlockUseCase

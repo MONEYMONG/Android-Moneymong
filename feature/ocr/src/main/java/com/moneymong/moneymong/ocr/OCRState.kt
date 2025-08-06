@@ -1,6 +1,6 @@
 package com.moneymong.moneymong.ocr
 
-import com.moneymong.moneymong.common.base.State
+import com.moneymong.moneymong.android.State
 import com.moneymong.moneymong.model.ocr.DocumentResponse
 import com.moneymong.moneymong.ocr.util.ModalType
 

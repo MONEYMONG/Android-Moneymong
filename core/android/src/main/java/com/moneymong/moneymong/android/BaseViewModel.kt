@@ -1,4 +1,4 @@
-package com.moneymong.moneymong.common.base
+package com.moneymong.moneymong.android
 
 import androidx.lifecycle.ViewModel
 import org.orbitmvi.orbit.ContainerHost

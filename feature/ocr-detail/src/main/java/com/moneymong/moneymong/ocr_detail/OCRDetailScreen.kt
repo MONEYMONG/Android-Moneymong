@@ -52,8 +52,8 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
-import com.moneymong.moneymong.common.util.base64ToFile
-import com.moneymong.moneymong.common.util.encodingBase64
+import com.moneymong.moneymong.android.util.base64ToFile
+import com.moneymong.moneymong.android.util.encodingBase64
 import com.moneymong.moneymong.ui.DottedShape
 import com.moneymong.moneymong.ui.noRippleClickable
 import com.moneymong.moneymong.design_system.R

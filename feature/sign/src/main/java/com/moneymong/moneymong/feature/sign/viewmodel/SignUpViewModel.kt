@@ -3,7 +3,7 @@ package com.moneymong.moneymong.feature.sign.viewmodel
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.Dp
 import androidx.lifecycle.viewModelScope
-import com.moneymong.moneymong.common.base.BaseViewModel
+import com.moneymong.moneymong.android.BaseViewModel
 import com.moneymong.moneymong.domain.usecase.agency.RegisterAgencyUseCase
 import com.moneymong.moneymong.domain.usecase.signup.SchoolInfoUseCase
 import com.moneymong.moneymong.domain.usecase.university.CreateUniversityUseCase
@@ -23,7 +23,7 @@ class SignUpViewModel @Inject constructor(
     private val createUniversityUseCase: CreateUniversityUseCase,
     private val registerAgencyUseCase: RegisterAgencyUseCase,
     private val schoolInfoUseCase: SchoolInfoUseCase,
-) : BaseViewModel<SignUpState, SignUpSideEffect>(SignUpState()) {
+) : com.moneymong.moneymong.android.BaseViewModel<SignUpState, SignUpSideEffect>(SignUpState()) {
     fun createUniv(universityName: String, grade: Int) = intent {
         val body = UnivRequest(universityName, grade)
         createUniversityUseCase(body)

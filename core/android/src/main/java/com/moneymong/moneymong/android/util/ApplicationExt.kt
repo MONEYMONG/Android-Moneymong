@@ -1,4 +1,4 @@
-package com.moneymong.moneymong.common.util
+package com.moneymong.moneymong.android.util
 
 import android.content.Context
 import android.content.pm.PackageManager

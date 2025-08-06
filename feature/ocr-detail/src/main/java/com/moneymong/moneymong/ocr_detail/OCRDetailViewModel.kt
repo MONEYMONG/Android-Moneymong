@@ -2,8 +2,8 @@ package com.moneymong.moneymong.ocr_detail
 
 import android.content.SharedPreferences
 import androidx.compose.ui.text.input.TextFieldValue
-import com.moneymong.moneymong.common.base.BaseViewModel
-import com.moneymong.moneymong.common.util.toMultipart
+import com.moneymong.moneymong.android.BaseViewModel
+import com.moneymong.moneymong.android.util.toMultipart
 import com.moneymong.moneymong.ui.isValidPaymentDate
 import com.moneymong.moneymong.ui.isValidPaymentTime
 import com.moneymong.moneymong.ui.validateValue

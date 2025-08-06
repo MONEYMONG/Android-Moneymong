@@ -36,7 +36,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
-import com.moneymong.moneymong.common.util.encodingBase64
+import com.moneymong.moneymong.android.util.encodingBase64
 import com.moneymong.moneymong.design_system.R
 import com.moneymong.moneymong.design_system.theme.Black
 import com.moneymong.moneymong.design_system.theme.Gray10

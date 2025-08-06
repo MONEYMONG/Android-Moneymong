@@ -1,6 +1,6 @@
 package com.moneymong.moneymong.ledgerdetail
 
-import com.moneymong.moneymong.common.base.SideEffect
+import com.moneymong.moneymong.android.SideEffect
 
 sealed class LedgerDetailSideEffect : SideEffect {
     data object LedgerDetailEdit : LedgerDetailSideEffect()

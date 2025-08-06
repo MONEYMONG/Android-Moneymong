@@ -1,6 +1,6 @@
 package com.moneymong.moneymong
 
-import com.moneymong.moneymong.common.base.SideEffect
+import com.moneymong.moneymong.android.SideEffect
 
 sealed class MainSideEffect: SideEffect {
 }
