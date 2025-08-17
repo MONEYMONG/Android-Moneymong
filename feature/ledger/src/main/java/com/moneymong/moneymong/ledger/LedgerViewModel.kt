@@ -257,7 +257,6 @@ class LedgerViewModel @Inject constructor(
 
     fun onDismissOnboarding() = intent {
         postDisplayedLedgerOnboardingUseCase(onboardingType = state.onboardingType)
-        reduce { state.copy(visibleOnboarding = false) }
     }
 
 
