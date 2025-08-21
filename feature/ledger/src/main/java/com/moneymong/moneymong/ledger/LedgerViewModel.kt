@@ -55,10 +55,10 @@ class LedgerViewModel @Inject constructor(
             fetchAgencyExistLedger(),
             fetchAgencyMemberList(),
             fetchLedgerTransactionList(),
-            fetchVisibleLedgerOnboarding()
         )
 
         jobList.joinAll()
+        fetchVisibleLedgerOnboarding()
     }
 
     fun fetchDefaultInfo() = intent {
@@ -257,7 +257,6 @@ class LedgerViewModel @Inject constructor(
 
     fun onDismissOnboarding() = intent {
         postDisplayedLedgerOnboardingUseCase(onboardingType = state.onboardingType)
-        reduce { state.copy(visibleOnboarding = false) }
     }
 
 
