@@ -29,7 +29,6 @@ import com.moneymong.moneymong.design_system.theme.Body4
 import com.moneymong.moneymong.design_system.theme.Gray02
 import com.moneymong.moneymong.design_system.theme.Gray06
 import com.moneymong.moneymong.design_system.theme.Gray07
-import com.moneymong.moneymong.design_system.theme.Gray10
 import com.moneymong.moneymong.design_system.theme.White
 import com.moneymong.moneymong.feature.mymong.main.util.myMongRoundRectShadow
 
@@ -48,7 +47,7 @@ internal fun MyMongSettingView(
         } else {
             packageManager.getPackageInfo(packageName, 0)
         }
-    }.versionName
+    }.versionName.orEmpty()
 
     Column(modifier = modifier.fillMaxWidth()) {
         Column(

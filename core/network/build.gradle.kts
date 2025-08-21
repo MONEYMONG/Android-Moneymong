@@ -9,7 +9,7 @@ plugins {
 }
 
 fun getApiKey(propertyKey : String): String {
-    return gradleLocalProperties(rootDir).getProperty(propertyKey)
+    return gradleLocalProperties(rootDir, providers).getProperty(propertyKey)
 }
 
 android {
@@ -54,4 +54,4 @@ dependencies {
 }
 
 fun fetchClovaProperties(propertyKey: String) =
-    gradleLocalProperties(rootDir).getProperty(propertyKey)
+    gradleLocalProperties(rootDir, providers).getProperty(propertyKey)

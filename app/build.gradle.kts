@@ -13,12 +13,12 @@ plugins {
 
 android {
     namespace = "com.moneymong.moneymong"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.moneymong.moneymong"
         minSdk = 24
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 31
         versionName = "2.0.1"
 
@@ -85,5 +85,5 @@ dependencies {
 }
 
 fun getApiKey(propertyKey: String): String {
-    return gradleLocalProperties(rootDir).getProperty(propertyKey)
+    return ""
 }
