@@ -1,14 +1,29 @@
 package com.moneymong.moneymong.home
 
+import android.app.Activity
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.windowInsetsBottomHeight
+import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.layout.windowInsetsTopHeight
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.unit.dp
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.navigation.compose.NavHost
 import androidx.navigation.navOptions
-import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.moneymong.moneymong.design_system.error.ErrorDialog
 import com.moneymong.moneymong.feature.agency.join.navigation.agencyCompleteScreen
 import com.moneymong.moneymong.feature.agency.join.navigation.agencyJoinScreen
@@ -45,6 +60,7 @@ import com.moneymong.moneymong.ocr_detail.navigation.navigateOCRDetail
 import com.moneymong.moneymong.ocr_detail.navigation.ocrDetailScreen
 import com.moneymong.moneymong.ocr_result.navigation.navigateOCRResult
 import com.moneymong.moneymong.ocr_result.navigation.ocrResultScreen
+import com.moneymong.moneymong.ui.pxToDp
 
 @Composable
 fun HomeScreen(
@@ -54,11 +70,14 @@ fun HomeScreen(
     val homeNavigator = rememberHomeNavigator()
     val homeNavController = homeNavigator.navHostController
 
-    val systemUiController = rememberSystemUiController()
-    systemUiController.setStatusBarColor(
-        color = homeNavigator.statusBarColor,
-        darkIcons = homeNavigator.darkIcons
-    )
+    val view = LocalView.current
+    val window = (view.context as Activity).window
+
+    WindowInsetsControllerCompat(window, view).run {
+        isAppearanceLightStatusBars = homeNavigator.isSystemBarDarkIcons
+        isAppearanceLightNavigationBars = homeNavigator.isSystemBarDarkIcons
+    }
+
 
     if (expired) {
         ErrorDialog(
@@ -80,124 +99,150 @@ fun HomeScreen(
                 currentRoute = homeNavigator.currentRoute,
                 navigateToTab = { homeNavigator.navigate(it.route) }
             )
-        }
+        },
+        contentWindowInsets = WindowInsets(0.dp)
     ) { padding ->
-        NavHost(
-            modifier = Modifier.fillMaxSize(),
-            navController = homeNavController,
-            startDestination = splashRoute,
-            enterTransition = { EnterTransition.None },
-            exitTransition = { ExitTransition.None }
-        ) {
-            splashScreen(
-                navigateToLedger = homeNavController::navigateLedger,
-                navigateToLogin = homeNavController::navigateLogin
+
+        val bottomBarHeight =
+            (padding.calculateBottomPadding() - WindowInsets.safeDrawing.getBottom(LocalDensity.current).pxToDp)
+                .coerceAtLeast(0.dp)
+
+        Box {
+            NavHost(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .windowInsetsPadding(WindowInsets.safeDrawing),
+                navController = homeNavController,
+                startDestination = splashRoute,
+                enterTransition = { EnterTransition.None },
+                exitTransition = { ExitTransition.None }
+            ) {
+                splashScreen(
+                    navigateToLedger = homeNavController::navigateLedger,
+                    navigateToLogin = homeNavController::navigateLogin
+                )
+
+                // sign
+                loginScreen(
+                    navigateToLedger = homeNavController::navigateLedger,
+                    navigateToAgencyRegister = homeNavController::navigateAgencyRegister
+                )
+
+                signUpScreen(
+                    navigateToLedger = homeNavController::navigateLedger,
+                    navigateToSignUniversity = homeNavController::navigateSignUpUniversity,
+                    navigateToAgency = homeNavController::navigateAgency,
+                    navigateUp = homeNavController::navigateUp
+                )
+
+                signUpUniversity(
+                    navigateToLedger = homeNavController::navigateLedger,
+                    navigateToAgency = homeNavController::navigateAgency,
+                    navigateUp = homeNavController::navigateUp
+                )
+
+                signCompleteScreen(
+                    navigateToLedger = homeNavController::navigateLedger
+                )
+
+                // agency
+                agencyScreen(
+                    padding = padding,
+                    navigateToRegister = homeNavController::navigateAgencyRegister,
+                    navigateAgencyJoin = {}
+                )
+
+                agencyJoinScreen(
+                    navigateToComplete = homeNavController::navigateAgencyJoinComplete,
+                    navigateUp = homeNavController::navigateUp
+                )
+
+                agencyCompleteScreen(
+                    navigateToSearch = {
+                        homeNavController.navigateAgency(
+                            navOptions = navOptions {
+                                popUpTo(agencyRoute) { inclusive = true }
+                            }
+                        )
+                    },
+                    navigateToLedger = homeNavController::navigateLedger,
+                )
+
+                agencyRegisterScreen(
+                    navigateToLedger = homeNavController::navigateLedger
+                )
+
+                agencyRegisterCompleteScreen(
+                    navigateToSearch = {
+                        homeNavController.navigateAgency(
+                            navOptions = navOptions {
+                                popUpTo(agencyRoute) { inclusive = true }
+                            }
+                        )
+                    },
+                    navigateToLedger = homeNavController::navigateLedger,
+                    navigateToLedgerManual = homeNavController::navigateLedgerManual
+                )
+
+                // ledger
+                ledgerScreen(
+                    padding = PaddingValues(bottom = bottomBarHeight),
+                    navigateToAgencyRegister = homeNavController::navigateAgencyRegister,
+                    navigateToAgencyJoin = homeNavController::navigateAgencyJoin,
+                    navigateToLedgerDetail = homeNavController::navigateLedgerDetail,
+                    navigateToLedgerManual = homeNavController::navigateLedgerManual,
+                )
+
+                ledgerDetailScreen(navigateToLedger = homeNavController::navigateLedger)
+
+                ledgerManualScreen(
+                    navigateToLedger = homeNavController::navigateLedger,
+                    popBackStack = homeNavController::popBackStack
+                )
+
+                // ocr
+                ocrScreen(
+                    navigateToOCRResult = homeNavController::navigateOCRResult,
+                    navigateToLedger = homeNavController::navigateLedger,
+                    popBackStack = homeNavController::popBackStack
+                )
+
+                ocrResultScreen(
+                    navigateToLedger = homeNavController::navigateLedger,
+                    navigateToOCRDetail = homeNavController::navigateOCRDetail,
+                    popBackStack = homeNavController::popBackStack
+                )
+
+                ocrDetailScreen(
+                    navigateToLedger = homeNavController::navigateLedger,
+                    popBackStack = homeNavController::popBackStack
+                )
+
+                // mymong
+                myMongNavGraph(
+                    padding = PaddingValues(bottom = bottomBarHeight),
+                    navigateToTermsOfUse = homeNavController::navigateTermsOfUse,
+                    navigateToPrivacyPolicy = homeNavController::navigatePrivacyPolicy,
+                    navigateToWithdrawal = homeNavController::navigateWithdrawal,
+                    navigateToLogin = homeNavController::navigateLogin,
+                    navigateUp = homeNavController::navigateUp
+                )
+            }
+
+            Spacer(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .windowInsetsTopHeight(WindowInsets.safeDrawing)
+                    .align(alignment = Alignment.TopCenter)
+                    .background(color = homeNavigator.statusBarColor)
             )
 
-            // sign
-            loginScreen(
-                navigateToLedger = homeNavController::navigateLedger,
-                navigateToAgencyRegister = homeNavController::navigateAgencyRegister
-            )
-
-            signUpScreen(
-                navigateToLedger = homeNavController::navigateLedger,
-                navigateToSignUniversity = homeNavController::navigateSignUpUniversity,
-                navigateToAgency = homeNavController::navigateAgency,
-                navigateUp = homeNavController::navigateUp
-            )
-
-            signUpUniversity(
-                navigateToLedger = homeNavController::navigateLedger,
-                navigateToAgency = homeNavController::navigateAgency,
-                navigateUp = homeNavController::navigateUp
-            )
-
-            signCompleteScreen(
-                navigateToLedger = homeNavController::navigateLedger
-            )
-
-            // agency
-            agencyScreen(
-                padding = padding,
-                navigateToRegister = homeNavController::navigateAgencyRegister,
-                navigateAgencyJoin = {}
-            )
-
-            agencyJoinScreen(
-                navigateToComplete = homeNavController::navigateAgencyJoinComplete,
-                navigateUp = homeNavController::navigateUp
-            )
-
-            agencyCompleteScreen(
-                navigateToSearch = {
-                    homeNavController.navigateAgency(
-                        navOptions = navOptions {
-                            popUpTo(agencyRoute) { inclusive = true }
-                        }
-                    )
-                },
-                navigateToLedger = homeNavController::navigateLedger,
-            )
-
-            agencyRegisterScreen(
-                navigateToLedger = homeNavController::navigateLedger
-            )
-
-            agencyRegisterCompleteScreen(
-                navigateToSearch = {
-                    homeNavController.navigateAgency(
-                        navOptions = navOptions {
-                            popUpTo(agencyRoute) { inclusive = true }
-                        }
-                    )
-                },
-                navigateToLedger = homeNavController::navigateLedger,
-                navigateToLedgerManual = homeNavController::navigateLedgerManual
-            )
-
-            // ledger
-            ledgerScreen(
-                padding = padding,
-                navigateToAgencyRegister = homeNavController::navigateAgencyRegister,
-                navigateToAgencyJoin = homeNavController::navigateAgencyJoin,
-                navigateToLedgerDetail = homeNavController::navigateLedgerDetail,
-                navigateToLedgerManual = homeNavController::navigateLedgerManual,
-            )
-
-            ledgerDetailScreen(navigateToLedger = homeNavController::navigateLedger)
-
-            ledgerManualScreen(
-                navigateToLedger = homeNavController::navigateLedger,
-                popBackStack = homeNavController::popBackStack
-            )
-
-            // ocr
-            ocrScreen(
-                navigateToOCRResult = homeNavController::navigateOCRResult,
-                navigateToLedger = homeNavController::navigateLedger,
-                popBackStack = homeNavController::popBackStack
-            )
-
-            ocrResultScreen(
-                navigateToLedger = homeNavController::navigateLedger,
-                navigateToOCRDetail = homeNavController::navigateOCRDetail,
-                popBackStack = homeNavController::popBackStack
-            )
-
-            ocrDetailScreen(
-                navigateToLedger = homeNavController::navigateLedger,
-                popBackStack = homeNavController::popBackStack
-            )
-
-            // mymong
-            myMongNavGraph(
-                padding = padding,
-                navigateToTermsOfUse = homeNavController::navigateTermsOfUse,
-                navigateToPrivacyPolicy = homeNavController::navigatePrivacyPolicy,
-                navigateToWithdrawal = homeNavController::navigateWithdrawal,
-                navigateToLogin = homeNavController::navigateLogin,
-                navigateUp = homeNavController::navigateUp
+            Spacer(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .windowInsetsBottomHeight(WindowInsets.safeDrawing)
+                    .align(alignment = Alignment.BottomCenter)
+                    .background(color = homeNavigator.navigationBarColor)
             )
         }
     }

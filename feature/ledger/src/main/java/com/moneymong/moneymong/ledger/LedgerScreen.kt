@@ -1,10 +1,14 @@
 package com.moneymong.moneymong.ledger
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
@@ -32,7 +36,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavOptions
 import com.example.member.MemberScreen
 import com.moneymong.moneymong.common.event.Event
-import com.moneymong.moneymong.common.ui.plus
 import com.moneymong.moneymong.design_system.R
 import com.moneymong.moneymong.design_system.component.bottomSheet.MDSBottomSheet
 import com.moneymong.moneymong.design_system.component.button.MDSFloatingActionButton
@@ -139,7 +142,9 @@ fun LedgerScreen(
     }
 
     Scaffold(
-        modifier = Modifier.pullRefresh(pullRefreshState),
+        modifier = Modifier
+            .pullRefresh(pullRefreshState)
+            .padding(padding),
         topBar = {
             LedgerTopbarView(
                 modifier = Modifier.background(White),
@@ -158,8 +163,9 @@ fun LedgerScreen(
                 ),
                 hostState = snackbarHostState
             )
-        }
-    ) {
+        },
+        contentWindowInsets = WindowInsets(0.dp)
+    ) { innerPadding ->
         if (state.showBottomSheet) {
             MDSBottomSheet(
                 sheetState = sheetState,
@@ -198,7 +204,7 @@ fun LedgerScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(it + padding)
+                .padding(innerPadding)
         ) {
             if (!state.existAgency) {
                 LedgerAgencyEmptyView(onClickAgencyRegister = navigateToAgencyRegister)
