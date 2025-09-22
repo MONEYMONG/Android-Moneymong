@@ -10,11 +10,9 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
 import com.moneymong.moneymong.design_system.theme.Blue04
 import com.moneymong.moneymong.design_system.theme.Gray01
-import com.moneymong.moneymong.design_system.theme.Gray03
 import com.moneymong.moneymong.design_system.theme.Gray08
 import com.moneymong.moneymong.design_system.theme.White
 import com.moneymong.moneymong.feature.agency.navigation.agencyRegisterCompleteRoute
-import com.moneymong.moneymong.feature.agency.navigation.agencyRegisterRoute
 import com.moneymong.moneymong.feature.agency.navigation.agencyRoute
 import com.moneymong.moneymong.feature.mymong.navigation.mymongRoute
 import com.moneymong.moneymong.feature.mymong.navigation.navigateMyMong
@@ -23,6 +21,7 @@ import com.moneymong.moneymong.feature.sign.navigation.splashRoute
 import com.moneymong.moneymong.home.HomeBottomTabs
 import com.moneymong.moneymong.ledger.navigation.ledgerRouteWithArgs
 import com.moneymong.moneymong.ledger.navigation.navigateLedger
+import com.moneymong.moneymong.ledgerdetail.navigation.LEDGER_DETAIL_IS_STAFF
 import com.moneymong.moneymong.ledgerdetail.navigation.ledgerDetailRoute
 
 @Composable
@@ -41,12 +40,14 @@ internal class HomeNavigator(
     val currentRoute: String?
         @Composable get() = navBackStackEntry?.destination?.route
 
+    private val isLedgerDetailStaff: Boolean
+        @Composable get() = navBackStackEntry?.arguments?.getBoolean(LEDGER_DETAIL_IS_STAFF)
+            ?: false
+
     val statusBarColor: Color
         @Composable
         get() = when (currentRoute) {
-            in listOf(
-                splashRoute,
-            ) -> Blue04
+            splashRoute -> Blue04
 
             in listOf(
                 loginRoute,
@@ -62,14 +63,12 @@ internal class HomeNavigator(
     val navigationBarColor: Color
         @Composable
         get() = when (currentRoute) {
-            in listOf(
-                splashRoute,
-            ) -> Blue04
+            splashRoute -> Blue04
 
-            in listOf(
-                loginRoute,
-                ledgerDetailRoute,
-            ) -> Gray01
+
+            loginRoute -> Gray01
+
+            ledgerDetailRoute -> if (isLedgerDetailStaff) White else Gray01
 
             agencyRegisterCompleteRoute -> Gray08
 
