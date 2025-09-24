@@ -52,14 +52,15 @@ fun MDSNavigationBar(
                 val strokeWidth = 1.dp.toPx()
                 drawRoundRect(
                     color = Gray02,
-                    size = size,
+                    topLeft = Offset(x = strokeWidth / 2, y = strokeWidth / 2),
+                    size = Size(size.width - strokeWidth, size.height - strokeWidth),
                     style = Stroke(width = strokeWidth),
                     cornerRadius = CornerRadius(20.dp.toPx(), 20.dp.toPx())
                 )
                 drawRect(
                     color = White,
                     topLeft = Offset(0f, size.height / 2),
-                    size = Size(size.width, size.height)
+                    size = Size(size.width, size.height/2)
                 )
             }
             .selectableGroup()
