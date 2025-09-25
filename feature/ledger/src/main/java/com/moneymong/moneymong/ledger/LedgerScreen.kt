@@ -158,7 +158,7 @@ fun LedgerScreen(
             MDSSnackbarHost(
                 modifier = Modifier.padding(
                     start = MMHorizontalSpacing,
-                    bottom = 12.dp + padding.calculateBottomPadding(),
+                    bottom = 12.dp,
                     end = MMHorizontalSpacing
                 ),
                 hostState = snackbarHostState
