@@ -24,7 +24,6 @@ import com.moneymong.moneymong.feature.sign.navigation.splashRoute
 import com.moneymong.moneymong.home.HomeBottomTabs
 import com.moneymong.moneymong.ledger.navigation.ledgerRouteWithArgs
 import com.moneymong.moneymong.ledger.navigation.navigateLedger
-import com.moneymong.moneymong.ledgerdetail.navigation.LEDGER_DETAIL_IS_STAFF
 import com.moneymong.moneymong.ledgerdetail.navigation.ledgerDetailRoute
 
 @Composable
@@ -42,10 +41,6 @@ internal class HomeNavigator(
 
     val currentRoute: String?
         @Composable get() = navBackStackEntry?.destination?.route
-
-    private val isLedgerDetailStaff: Boolean
-        @Composable get() = navBackStackEntry?.arguments?.getBoolean(LEDGER_DETAIL_IS_STAFF)
-            ?: false
 
     val statusBarColor: Color
         @Composable
@@ -81,11 +76,8 @@ internal class HomeNavigator(
         @Composable
         get() = when (currentRoute) {
             splashRoute -> Blue04
-
             loginRoute -> Gray01
-
-            ledgerDetailRoute -> if (isLedgerDetailStaff) White else Gray01
-
+            ledgerDetailRoute -> Gray01
             agencyRegisterCompleteRoute -> Gray08
 
             else -> White
