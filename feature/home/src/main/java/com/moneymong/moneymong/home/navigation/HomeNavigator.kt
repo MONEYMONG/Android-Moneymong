@@ -1,6 +1,8 @@
 package com.moneymong.moneymong.home.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavBackStackEntry
@@ -8,6 +10,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
+import com.moneymong.moneymong.common.ui.SystemBarColorController
 import com.moneymong.moneymong.design_system.theme.Blue04
 import com.moneymong.moneymong.design_system.theme.Gray01
 import com.moneymong.moneymong.design_system.theme.Gray08
@@ -46,6 +49,20 @@ internal class HomeNavigator(
 
     val statusBarColor: Color
         @Composable
+        get() {
+            val systemBarColors by SystemBarColorController.systemBarColors.collectAsState()
+            return systemBarColors.statusBarColor ?: statusBarColorWithPolicy
+        }
+
+    val navigationBarColor: Color
+        @Composable
+        get() {
+            val systemBarColors by SystemBarColorController.systemBarColors.collectAsState()
+            return systemBarColors.navigationBarColor ?: navigationBarColorWithPolicy
+        }
+
+    private val statusBarColorWithPolicy: Color
+        @Composable
         get() = when (currentRoute) {
             splashRoute -> Blue04
 
@@ -60,11 +77,10 @@ internal class HomeNavigator(
             else -> White
         }
 
-    val navigationBarColor: Color
+    private val navigationBarColorWithPolicy: Color
         @Composable
         get() = when (currentRoute) {
             splashRoute -> Blue04
-
 
             loginRoute -> Gray01
 
