@@ -116,6 +116,9 @@ fun AgencyRegisterScreen(
                 agencyName = state.agencyName,
                 onAgencyNameChange = viewModel::changeAgencyName,
                 changeNameTextFieldIsError = viewModel::changeNameTextFieldIsError,
+                // heejik: todo
+                visibleInviteCode = true,
+                onClickInviteCode = {}
             )
         }
         val canRegister = state.agencyName.text.isNotEmpty() && state.nameTextFieldIsError.not()
