@@ -42,6 +42,7 @@ fun AgencyRegisterScreen(
     modifier: Modifier = Modifier,
     viewModel: AgencyRegisterViewModel = hiltViewModel(),
     navigateToLedger: () -> Unit,
+    navigateToAgencyJoin: () -> Unit
 ) {
     val state by viewModel.collectAsState()
     val focusManager = LocalFocusManager.current
@@ -52,6 +53,10 @@ fun AgencyRegisterScreen(
             is AgencyRegisterSideEffect.NavigateToLedger -> {
                 focusManager.clearFocus()
                 navigateToLedger()
+            }
+
+            is AgencyRegisterSideEffect.NavigateToAgencyJoin -> {
+                navigateToAgencyJoin()
             }
         }
     }
@@ -117,7 +122,7 @@ fun AgencyRegisterScreen(
                 onAgencyNameChange = viewModel::changeAgencyName,
                 changeNameTextFieldIsError = viewModel::changeNameTextFieldIsError,
                 visibleInviteCode = state.visibleInviteCode,
-                onClickInviteCode = {}
+                onClickInviteCode = viewModel::navigateToAgencyJoin
             )
         }
         val canRegister = state.agencyName.text.isNotEmpty() && state.nameTextFieldIsError.not()
@@ -137,5 +142,6 @@ fun AgencyRegisterScreen(
 fun AgencyRegisterScreenPreview() {
     AgencyRegisterScreen(
         navigateToLedger = {},
+        navigateToAgencyJoin = {}
     )
 }

@@ -21,7 +21,8 @@ fun NavController.navigateAgencyRegister(
 }
 
 fun NavGraphBuilder.agencyRegisterScreen(
-    navigateToLedger: () -> Unit
+    navigateToLedger: () -> Unit,
+    navigateToAgencyJoin: () -> Unit,
 ) {
     composable(
         route = agencyRegisterRouteWithArgs,
@@ -32,6 +33,7 @@ fun NavGraphBuilder.agencyRegisterScreen(
     ) {
         AgencyRegisterScreen(
             navigateToLedger = navigateToLedger,
+            navigateToAgencyJoin = navigateToAgencyJoin
         )
     }
 }

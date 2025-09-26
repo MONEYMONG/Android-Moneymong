@@ -25,7 +25,11 @@ class AgencyRegisterViewModel @Inject constructor(
     state = AgencyRegisterState(visibleInviteCode = AgencyRegisterArgs(savedStateHandle).visibleInviteCode)
 ) {
 
-    fun navigateToLedger() = eventEmit(sideEffect = AgencyRegisterSideEffect.NavigateToLedger)
+    fun navigateToLedger() =
+        eventEmit(sideEffect = AgencyRegisterSideEffect.NavigateToLedger)
+
+    fun navigateToAgencyJoin() =
+        eventEmit(sideEffect = AgencyRegisterSideEffect.NavigateToAgencyJoin)
 
     fun registerAgency() = intent {
         registerAgencyUseCase(
