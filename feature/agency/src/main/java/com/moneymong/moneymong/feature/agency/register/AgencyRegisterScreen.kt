@@ -1,5 +1,6 @@
 package com.moneymong.moneymong.feature.agency.register
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Column
@@ -60,6 +61,8 @@ fun AgencyRegisterScreen(
             }
         }
     }
+
+    BackHandler(onBack = viewModel::navigateToLedger)
 
     if (state.visibleOutDialog) {
         MDSModal(
