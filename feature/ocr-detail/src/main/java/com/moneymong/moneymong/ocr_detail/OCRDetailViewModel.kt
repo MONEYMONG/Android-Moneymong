@@ -145,7 +145,7 @@ class OCRDetailViewModel @Inject constructor(
     fun addDocumentImage(file: File?) = intent {
         val newDocumentUris = state.documentImageUrls.toMutableList()
         if (newDocumentUris.size == 12) {
-            newDocumentUris.removeFirst()
+            newDocumentUris.removeAt(index = 0)
             reduce { state.copy(documentImageUrls = newDocumentUris) }
         }
         postDocumentImage(file)
