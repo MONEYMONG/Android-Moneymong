@@ -5,6 +5,7 @@ import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
@@ -18,6 +19,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.unit.dp
@@ -229,21 +231,37 @@ fun HomeScreen(
                 )
             }
 
-            Spacer(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .windowInsetsTopHeight(WindowInsets.safeDrawing)
-                    .align(alignment = Alignment.TopCenter)
-                    .background(color = homeNavigator.statusBarColor)
-            )
+            if (homeNavigator.statusBarColor.alpha != 1f) {
+                CustomStatusBar(color = homeNavigator.statusBarColorWithPolicy)
+            }
+            CustomStatusBar(color = homeNavigator.statusBarColor)
 
-            Spacer(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .windowInsetsBottomHeight(WindowInsets.safeDrawing)
-                    .align(alignment = Alignment.BottomCenter)
-                    .background(color = homeNavigator.navigationBarColor)
-            )
+            if (homeNavigator.navigationBarColor.alpha != 1f) {
+                CustomNavigationBar(color = homeNavigator.navigationBarColorWithPolicy)
+            }
+            CustomNavigationBar(color = homeNavigator.navigationBarColor)
         }
     }
+}
+
+@Composable
+private fun BoxScope.CustomStatusBar(color: Color) {
+    Spacer(
+        modifier = Modifier
+            .fillMaxWidth()
+            .windowInsetsTopHeight(WindowInsets.safeDrawing)
+            .align(alignment = Alignment.TopCenter)
+            .background(color = color)
+    )
+}
+
+@Composable
+private fun BoxScope.CustomNavigationBar(color: Color) {
+    Spacer(
+        modifier = Modifier
+            .fillMaxWidth()
+            .windowInsetsBottomHeight(WindowInsets.safeDrawing)
+            .align(alignment = Alignment.BottomCenter)
+            .background(color = color)
+    )
 }

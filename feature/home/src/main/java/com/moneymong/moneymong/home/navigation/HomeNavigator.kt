@@ -56,7 +56,7 @@ internal class HomeNavigator(
             return systemBarColors.navigationBarColor ?: navigationBarColorWithPolicy
         }
 
-    private val statusBarColorWithPolicy: Color
+    val statusBarColorWithPolicy: Color
         @Composable
         get() = when (currentRoute) {
             splashRoute -> Blue04
@@ -72,7 +72,7 @@ internal class HomeNavigator(
             else -> White
         }
 
-    private val navigationBarColorWithPolicy: Color
+    val navigationBarColorWithPolicy: Color
         @Composable
         get() = when (currentRoute) {
             splashRoute -> Blue04
