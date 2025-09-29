@@ -1,7 +1,7 @@
 package com.moneymong.moneymong.feature.sign.viewmodel
 
 import android.util.Log
-import com.moneymong.moneymong.common.base.BaseViewModel
+import com.moneymong.moneymong.android.BaseViewModel
 import com.moneymong.moneymong.domain.usecase.token.TokenUseCase
 import com.moneymong.moneymong.feature.sign.sideeffect.SplashSideEffect
 import com.moneymong.moneymong.feature.sign.state.SplashState
@@ -13,7 +13,7 @@ import javax.inject.Inject
 @HiltViewModel
 class SplashViewModel @Inject constructor(
     private val tokenUseCase: TokenUseCase
-) : BaseViewModel<SplashState, SplashSideEffect>(
+) : com.moneymong.moneymong.android.BaseViewModel<SplashState, SplashSideEffect>(
     SplashState()
 ) {
 

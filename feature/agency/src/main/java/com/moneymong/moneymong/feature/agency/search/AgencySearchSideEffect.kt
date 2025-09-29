@@ -1,6 +1,6 @@
 package com.moneymong.moneymong.feature.agency.search
 
-import com.moneymong.moneymong.common.base.SideEffect
+import com.moneymong.moneymong.android.SideEffect
 
 sealed interface AgencySearchSideEffect : SideEffect {
     data class NavigateToRegister(val isUniversityStudent: Boolean) : AgencySearchSideEffect

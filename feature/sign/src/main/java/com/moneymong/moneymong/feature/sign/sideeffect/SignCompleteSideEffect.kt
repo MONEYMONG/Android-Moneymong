@@ -1,6 +1,6 @@
 package com.moneymong.moneymong.feature.sign.sideeffect
 
-import com.moneymong.moneymong.common.base.SideEffect
+import com.moneymong.moneymong.android.SideEffect
 
-sealed interface SignCompleteSideEffect : SideEffect {
+sealed interface SignCompleteSideEffect : com.moneymong.moneymong.android.SideEffect {
 }

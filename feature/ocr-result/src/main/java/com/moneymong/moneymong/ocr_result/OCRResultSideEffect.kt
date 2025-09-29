@@ -1,6 +1,6 @@
 package com.moneymong.moneymong.ocr_result
 
-import com.moneymong.moneymong.common.base.SideEffect
+import com.moneymong.moneymong.android.SideEffect
 import com.moneymong.moneymong.model.ocr.DocumentResponse
 
 sealed class OCRResultSideEffect : SideEffect {

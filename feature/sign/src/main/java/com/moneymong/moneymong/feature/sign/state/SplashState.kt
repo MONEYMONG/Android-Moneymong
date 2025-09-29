@@ -1,8 +1,8 @@
 package com.moneymong.moneymong.feature.sign.state
 
-import com.moneymong.moneymong.common.base.State
+import com.moneymong.moneymong.android.State
 
 data class SplashState(
     val startAnimation: Boolean = false,
     val isTokenValid: Boolean? = null
-) : State
+) : com.moneymong.moneymong.android.State
