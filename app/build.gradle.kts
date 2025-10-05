@@ -1,5 +1,3 @@
-import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
-
 @Suppress("DSL_SCOPE_VIOLATION")
 plugins {
     alias(libs.plugins.moneymong.android.application)
@@ -26,8 +24,8 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
-        buildConfigField("String", "NATIVE_APP_KEY", getApiKey("native_app_key"))
     }
+
     buildFeatures {
         buildConfig = true
     }
@@ -82,8 +80,4 @@ dependencies {
     testImplementation(libs.junit4)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.test.espresso.core)
-}
-
-fun getApiKey(propertyKey: String): String {
-    return ""
 }
