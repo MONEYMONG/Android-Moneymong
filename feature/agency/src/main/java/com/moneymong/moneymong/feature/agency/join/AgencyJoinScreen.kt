@@ -61,15 +61,18 @@ fun AgencyJoinScreen(
                     .background(White)
                     .height(44.dp),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.End
+                horizontalArrangement = if (state.isBackButton) Arrangement.Start else Arrangement.End
             ) {
+                val navigateUpIconId =
+                    if (state.isBackButton) R.drawable.ic_chevron_left else R.drawable.ic_close_default
+
                 Icon(
                     modifier = Modifier
                         .size(24.dp)
                         .noRippleClickable {
                             navigateUp()
                         },
-                    painter = painterResource(id = R.drawable.ic_close_default),
+                    painter = painterResource(id = navigateUpIconId),
                     contentDescription = null,
                     tint = Black
                 )
