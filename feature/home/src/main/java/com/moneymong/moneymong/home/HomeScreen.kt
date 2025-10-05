@@ -174,7 +174,7 @@ fun HomeScreen(
 
                 agencyRegisterScreen(
                     navigateToLedger = homeNavController::navigateLedger,
-                    navigateToAgencyJoin = homeNavController::navigateAgencyJoin
+                    navigateToAgencyJoin = { homeNavController.navigateAgencyJoin(isBackButton = true) }
                 )
 
                 agencyRegisterCompleteScreen(

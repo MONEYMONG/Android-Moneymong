@@ -8,5 +8,6 @@ data class AgencyJoinState(
     val inputCode: String = "",
     val codeAccess: Boolean = false,
     val visiblePopUpError: Boolean = false,
-    val errorPopUpMessage: String = ""
+    val errorPopUpMessage: String = "",
+    val isBackButton: Boolean = false,
 ) : State
