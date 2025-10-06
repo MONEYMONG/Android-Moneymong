@@ -25,7 +25,8 @@ data class LedgerManualState(
     val isMemoError: Boolean = false,
     val showPopBackStackModal: Boolean = false,
     val showErrorDialog: Boolean = false,
-    val errorMessage: String = ""
+    val errorMessage: String = "",
+    val showBottomSheet: Boolean = false,
 ) : State {
 
     val enabled: Boolean

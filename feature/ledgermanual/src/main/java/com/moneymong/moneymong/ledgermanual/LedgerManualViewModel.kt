@@ -177,6 +177,10 @@ class LedgerManualViewModel @Inject constructor(
 
     fun onClickErrorDialogConfirm() = eventEmit(LedgerManualSideEffect.LedgerManualHideErrorDialog)
 
+    fun onClickCategoryEdit() = intent { reduce { state.copy(showBottomSheet = true) } }
+
+    fun onDismissBottomSheet() = intent { reduce { state.copy(showBottomSheet = false) } }
+
     private fun trimStartWithZero(value: TextFieldValue) =
         if (value.text.isNotEmpty() && value.text.all { it == '0' }) {
             value.copy(text = "0")

@@ -26,13 +26,17 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -68,18 +72,21 @@ import com.moneymong.moneymong.design_system.component.textfield.visualtransform
 import com.moneymong.moneymong.design_system.component.textfield.visualtransformation.TimeVisualTransformation
 import com.moneymong.moneymong.design_system.error.ErrorDialog
 import com.moneymong.moneymong.design_system.theme.Blue03
+import com.moneymong.moneymong.design_system.theme.Blue04
 import com.moneymong.moneymong.design_system.theme.Body2
 import com.moneymong.moneymong.design_system.theme.Body3
 import com.moneymong.moneymong.design_system.theme.Gray06
 import com.moneymong.moneymong.design_system.theme.Gray10
 import com.moneymong.moneymong.design_system.theme.MMHorizontalSpacing
 import com.moneymong.moneymong.design_system.theme.White
+import com.moneymong.moneymong.ledgermanual.view.LedgerManualCategoryBottomSheet
 import com.moneymong.moneymong.ledgermanual.view.LedgerManualTopbarView
 import com.moneymong.moneymong.model.ledger.FundType
+import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.compose.collectAsState
 import org.orbitmvi.orbit.compose.collectSideEffect
 
-@OptIn(ExperimentalGlideComposeApi::class)
+@OptIn(ExperimentalGlideComposeApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun LedgerManualScreen(
     modifier: Modifier = Modifier,
@@ -99,6 +106,8 @@ fun LedgerManualScreen(
             }
         }
     )
+    val sheetState = rememberModalBottomSheetState()
+    val scope = rememberCoroutineScope()
 
     viewModel.collectSideEffect {
         when (it) {
@@ -137,6 +146,14 @@ fun LedgerManualScreen(
 
     BackHandler(onBack = { viewModel.eventEmit(LedgerManualSideEffect.LedgerManualShowPopBackStackModal) })
 
+    LaunchedEffect(state.showBottomSheet) {
+        if (state.showBottomSheet) {
+            sheetState.show()
+        } else {
+            sheetState.hide()
+        }
+    }
+
     if (state.showPopBackStackModal) {
         MDSModal(
             icon = drawable.ic_warning_filled,
@@ -165,6 +182,19 @@ fun LedgerManualScreen(
         ErrorDialog(
             message = state.errorMessage,
             onConfirm = viewModel::onClickErrorDialogConfirm
+        )
+    }
+
+    if (state.showBottomSheet) {
+        LedgerManualCategoryBottomSheet(
+            sheetState = sheetState,
+            categories = emptyList(),
+            onDismissRequest = {
+                scope.launch {
+                    sheetState.hide()
+                    viewModel.onDismissBottomSheet()
+                }
+            }
         )
     }
 
@@ -310,6 +340,25 @@ fun LedgerManualScreen(
                     isError = state.isMemoError,
                     keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() })
                 )
+                Spacer(modifier = Modifier.height(24.dp))
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                ) {
+                    Text(
+                        text = "카테고리",
+                        style = Body2,
+                        color = Gray06,
+                    )
+                    Spacer(modifier = Modifier.weight(1f))
+                    Text(
+                        modifier = Modifier.noRippleClickable(viewModel::onClickCategoryEdit),
+                        text = "수정",
+                        style = Body2,
+                        color = Blue04,
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                }
                 Spacer(modifier = Modifier.height(24.dp))
                 Text(
                     text = "사진 첨부 (최대 12장)",
