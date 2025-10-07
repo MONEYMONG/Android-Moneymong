@@ -1,5 +1,10 @@
 package com.moneymong.moneymong.ledgermanual.view
 
+import androidx.activity.compose.BackHandler
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -10,25 +15,44 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.moneymong.moneymong.design_system.theme.MMHorizontalSpacing
 import com.moneymong.moneymong.design_system.R
 import com.moneymong.moneymong.design_system.component.bottomSheet.MDSBottomSheet
+import com.moneymong.moneymong.design_system.component.button.MDSButton
+import com.moneymong.moneymong.design_system.component.button.MDSButtonSize
+import com.moneymong.moneymong.design_system.component.button.MDSButtonType
 import com.moneymong.moneymong.design_system.component.tag.MDSOutlineTag
+import com.moneymong.moneymong.design_system.component.textfield.MDSTextField
+import com.moneymong.moneymong.design_system.component.textfield.util.MDSTextFieldIcons
+import com.moneymong.moneymong.design_system.theme.Black
 import com.moneymong.moneymong.design_system.theme.Blue04
 import com.moneymong.moneymong.design_system.theme.Body2
 import com.moneymong.moneymong.design_system.theme.Body3
 import com.moneymong.moneymong.design_system.theme.Gray05
+import com.moneymong.moneymong.design_system.theme.Gray07
 import com.moneymong.moneymong.design_system.theme.Gray10
+import com.moneymong.moneymong.design_system.theme.Heading1
 import com.moneymong.moneymong.design_system.theme.Heading4
 import com.moneymong.moneymong.design_system.theme.White
 import com.moneymong.moneymong.ui.noRippleClickable
@@ -41,15 +65,49 @@ fun LedgerManualCategoryBottomSheet(
     categories: List<String>, // TODO API response
     onDismissRequest: () -> Unit
 ) {
+    var sheetType by remember { mutableStateOf(LedgerManualBottomSheetType.LIST) }
+
     MDSBottomSheet(
         modifier = modifier,
         sheetState = sheetState,
         onDismissRequest = onDismissRequest,
     ) {
-        LedgerManualCategoryBottomSheetContent(
-            categories = categories,
-            onDismissRequest = onDismissRequest,
-        )
+        AnimatedContent(
+            targetState = sheetType,
+            transitionSpec = {
+                when (targetState) {
+                    LedgerManualBottomSheetType.CREATE -> {
+                        slideInHorizontally { fullWidth -> fullWidth }
+                            .togetherWith(slideOutHorizontally { fullWidth -> fullWidth / -3 })
+                    }
+
+                    LedgerManualBottomSheetType.LIST -> {
+                        slideInHorizontally { fullWidth -> -fullWidth }
+                            .togetherWith(slideOutHorizontally { fullWidth -> fullWidth / 3 })
+                    }
+                }
+            }
+        ) { targetState ->
+            when (targetState) {
+                LedgerManualBottomSheetType.LIST -> {
+                    LedgerManualCategoryBottomSheetContent(
+                        categories = categories,
+                        onDismissRequest = onDismissRequest,
+                        onClickCreate = { sheetType = LedgerManualBottomSheetType.CREATE }
+                    )
+                }
+
+                LedgerManualBottomSheetType.CREATE -> {
+                    LedgerManualCategoryCreateBottomSheetContent(
+                        textFieldValue = TextFieldValue(),
+                        isError = false,
+                        onValueChange = {},
+                        onClickRegister = {},
+                        onPrev = { sheetType = LedgerManualBottomSheetType.LIST }
+                    )
+                }
+            }
+        }
     }
 }
 
@@ -59,6 +117,7 @@ fun LedgerManualCategoryBottomSheetContent(
     modifier: Modifier = Modifier,
     categories: List<String>,
     onDismissRequest: () -> Unit,
+    onClickCreate: () -> Unit,
 ) {
     Column(
         modifier = modifier
@@ -86,6 +145,7 @@ fun LedgerManualCategoryBottomSheetContent(
                 text = "카테고리",
             )
             Text(
+                modifier = Modifier.noRippleClickable(onClickCreate),
                 style = Body3,
                 color = Blue04,
                 text = "추가",
@@ -112,10 +172,111 @@ fun LedgerManualCategoryBottomSheetContent(
     }
 }
 
+@Composable
+fun LedgerManualCategoryCreateBottomSheetContent(
+    modifier: Modifier = Modifier,
+    textFieldValue: TextFieldValue,
+    isError: Boolean,
+    onValueChange: (TextFieldValue) -> Unit,
+    onClickRegister: () -> Unit,
+    onPrev: () -> Unit,
+) {
+    val maxCount = 10
+    var isFilled by remember { mutableStateOf(false) }
+    val focusRequester = remember { FocusRequester() }
+    val keyboard = LocalSoftwareKeyboardController.current
+
+    BackHandler {
+        keyboard?.hide()
+        onPrev()
+    }
+
+    LaunchedEffect(Unit) {
+        focusRequester.requestFocus()
+    }
+
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .background(White)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(White)
+                .padding(horizontal = MMHorizontalSpacing, vertical = 20.dp),
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Icon(
+                    modifier = Modifier
+                        .size(24.dp)
+                        .noRippleClickable {
+                            keyboard?.hide()
+                            onPrev()
+                        },
+                    painter = painterResource(R.drawable.ic_chevron_left),
+                    contentDescription = null,
+                    tint = Gray07,
+                )
+                Text(
+                    text = "카테고리 생성",
+                    style = Heading1,
+                    color = Black,
+                )
+            }
+            Spacer(modifier = Modifier.height(36.dp))
+            MDSTextField(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .onFocusChanged { isFilled = !it.isFocused }
+                    .focusRequester(focusRequester),
+                placeholder = "카테고리를 입력해주세요",
+                value = textFieldValue,
+                onValueChange = onValueChange,
+                title = "",
+                isFilled = isFilled,
+                isError = isError,
+                singleLine = true,
+                icon = MDSTextFieldIcons.Clear,
+                onIconClick = { onValueChange(TextFieldValue("")) },
+                maxCount = maxCount
+            )
+            Spacer(modifier = Modifier.height(20.dp))
+        }
+        MDSButton(
+            modifier = Modifier.fillMaxWidth(),
+            text = "등록",
+            type = MDSButtonType.PRIMARY,
+            size = MDSButtonSize.LARGE,
+            cornerShape = 0.dp,
+            enabled = textFieldValue.text.isNotBlank(),
+            onClick = onClickRegister,
+        )
+    }
+}
+
 @Preview(showBackground = true)
 @Composable
 fun LedgerManualCategoryBottomSheetContentPreview() {
     val categories = listOf("testTooLongTextOverFlow", "test")
 
-    LedgerManualCategoryBottomSheetContent(categories = categories) {}
+    LedgerManualCategoryBottomSheetContent(
+        categories = categories,
+        onDismissRequest = {},
+    ) {}
+}
+
+@Preview(showBackground = true)
+@Composable
+fun LedgerManualCategoryCreateBottomSheetContentPreview() {
+    LedgerManualCategoryCreateBottomSheetContent(
+        textFieldValue = TextFieldValue(),
+        isError = false,
+        onValueChange = {},
+        onClickRegister = {}
+    ) {}
 }
