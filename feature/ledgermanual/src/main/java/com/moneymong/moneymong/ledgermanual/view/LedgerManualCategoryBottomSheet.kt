@@ -22,6 +22,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -63,7 +64,10 @@ fun LedgerManualCategoryBottomSheet(
     modifier: Modifier = Modifier,
     sheetState: SheetState,
     categories: List<String>, // TODO API response
-    onDismissRequest: () -> Unit
+    categoryValue: TextFieldValue,
+    isSystemCategoryError: Boolean,
+    onDismissRequest: () -> Unit,
+    onChangeCategoryValue: (TextFieldValue) -> Unit,
 ) {
     var sheetType by remember { mutableStateOf(LedgerManualBottomSheetType.LIST) }
 
@@ -99,9 +103,10 @@ fun LedgerManualCategoryBottomSheet(
 
                 LedgerManualBottomSheetType.CREATE -> {
                     LedgerManualCategoryCreateBottomSheetContent(
-                        textFieldValue = TextFieldValue(),
-                        isError = false,
-                        onValueChange = {},
+                        textFieldValue = categoryValue,
+                        isSystemCategoryError = isSystemCategoryError,
+                        categories = categories,
+                        onValueChange = onChangeCategoryValue,
                         onClickRegister = {},
                         onPrev = { sheetType = LedgerManualBottomSheetType.LIST }
                     )
@@ -176,7 +181,8 @@ fun LedgerManualCategoryBottomSheetContent(
 fun LedgerManualCategoryCreateBottomSheetContent(
     modifier: Modifier = Modifier,
     textFieldValue: TextFieldValue,
-    isError: Boolean,
+    isSystemCategoryError: Boolean,
+    categories: List<String>, // TODO API response
     onValueChange: (TextFieldValue) -> Unit,
     onClickRegister: () -> Unit,
     onPrev: () -> Unit,
@@ -185,6 +191,16 @@ fun LedgerManualCategoryCreateBottomSheetContent(
     var isFilled by remember { mutableStateOf(false) }
     val focusRequester = remember { FocusRequester() }
     val keyboard = LocalSoftwareKeyboardController.current
+    val isExists = categories.contains(textFieldValue.text)
+    val helperText by remember(isSystemCategoryError, isExists) {
+        derivedStateOf {
+            when {
+                isSystemCategoryError -> "사용할 수 없는 카테고리 이름이에요"
+                isExists -> "이미 있는 카테고리에요"
+                else -> ""
+            }
+        }
+    }
 
     BackHandler {
         keyboard?.hide()
@@ -239,21 +255,23 @@ fun LedgerManualCategoryCreateBottomSheetContent(
                 onValueChange = onValueChange,
                 title = "",
                 isFilled = isFilled,
-                isError = isError,
+                isError = isSystemCategoryError || isExists,
                 singleLine = true,
+                helperText = helperText,
                 icon = MDSTextFieldIcons.Clear,
                 onIconClick = { onValueChange(TextFieldValue("")) },
                 maxCount = maxCount
             )
             Spacer(modifier = Modifier.height(20.dp))
         }
+        val enabled = textFieldValue.text.isNotBlank() && (!isSystemCategoryError && !isExists)
         MDSButton(
             modifier = Modifier.fillMaxWidth(),
             text = "등록",
             type = MDSButtonType.PRIMARY,
             size = MDSButtonSize.LARGE,
             cornerShape = 0.dp,
-            enabled = textFieldValue.text.isNotBlank(),
+            enabled = enabled,
             onClick = onClickRegister,
         )
     }
@@ -275,7 +293,8 @@ fun LedgerManualCategoryBottomSheetContentPreview() {
 fun LedgerManualCategoryCreateBottomSheetContentPreview() {
     LedgerManualCategoryCreateBottomSheetContent(
         textFieldValue = TextFieldValue(),
-        isError = false,
+        isSystemCategoryError = false,
+        categories = emptyList(),
         onValueChange = {},
         onClickRegister = {}
     ) {}

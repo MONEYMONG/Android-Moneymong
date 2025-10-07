@@ -27,6 +27,7 @@ data class LedgerManualState(
     val showErrorDialog: Boolean = false,
     val errorMessage: String = "",
     val showBottomSheet: Boolean = false,
+    val categoryValue: TextFieldValue = TextFieldValue(),
 ) : State {
 
     val enabled: Boolean
@@ -54,4 +55,11 @@ data class LedgerManualState(
             val formattedTime = timeFormat.format(timeFormat.parse(paymentTimeValue.text))
             return "$formattedDate $formattedTime".toZonedDateTime("yyyyMMdd HHmmss")
         }
+
+    val isSystemCategoryError: Boolean
+        get() = categoryValue.text == SYSTEM_CATEGORY
+
+    companion object {
+        private const val SYSTEM_CATEGORY = "카테고리 없음"
+    }
 }

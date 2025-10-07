@@ -181,6 +181,14 @@ class LedgerManualViewModel @Inject constructor(
 
     fun onDismissBottomSheet() = intent { reduce { state.copy(showBottomSheet = false) } }
 
+    fun onChangeCategoryValue(value: TextFieldValue) = blockingIntent {
+        val validate = value.text.validateValue(length = 10)
+
+        if (validate) {
+            reduce { state.copy(categoryValue = value) }
+        }
+    }
+
     private fun trimStartWithZero(value: TextFieldValue) =
         if (value.text.isNotEmpty() && value.text.all { it == '0' }) {
             value.copy(text = "0")

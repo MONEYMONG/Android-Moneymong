@@ -189,12 +189,15 @@ fun LedgerManualScreen(
         LedgerManualCategoryBottomSheet(
             sheetState = sheetState,
             categories = emptyList(),
+            categoryValue = state.categoryValue,
+            isSystemCategoryError = state.isSystemCategoryError,
             onDismissRequest = {
                 scope.launch {
                     sheetState.hide()
                     viewModel.onDismissBottomSheet()
                 }
-            }
+            },
+            onChangeCategoryValue = viewModel::onChangeCategoryValue
         )
     }
 
