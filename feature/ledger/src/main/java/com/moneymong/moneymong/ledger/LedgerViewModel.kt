@@ -2,10 +2,8 @@ package com.moneymong.moneymong.ledger
 
 import android.util.Log
 import androidx.lifecycle.SavedStateHandle
-import com.moneymong.moneymong.common.base.BaseViewModel
+import com.moneymong.moneymong.android.BaseViewModel
 import com.moneymong.moneymong.common.error.MoneyMongError
-import com.moneymong.moneymong.common.event.Event
-import com.moneymong.moneymong.common.event.EventTracker
 import com.moneymong.moneymong.domain.usecase.agency.FetchAgencyIdUseCase
 import com.moneymong.moneymong.domain.usecase.agency.FetchMyAgencyListUseCase
 import com.moneymong.moneymong.domain.usecase.agency.SaveAgencyIdUseCase
@@ -30,7 +28,6 @@ import javax.inject.Inject
 @HiltViewModel
 class LedgerViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    val eventTracker: EventTracker,
     private val fetchLedgerTransactionListUseCase: FetchLedgerTransactionListUseCase,
     private val fetchAgencyExistLedgerUseCase: FetchAgencyExistLedgerUseCase,
     private val fetchMyAgencyListUseCase: FetchMyAgencyListUseCase,
@@ -251,7 +248,6 @@ class LedgerViewModel @Inject constructor(
     }
 
     fun onClickLedgerRegisterManual() = intent {
-        eventTracker.logEvent(Event.HAND_CLICK)
         postSideEffect(LedgerSideEffect.LedgerNavigateToLedgerManual)
     }
 

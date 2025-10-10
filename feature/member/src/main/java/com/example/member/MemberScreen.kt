@@ -2,7 +2,6 @@ package com.example.member
 
 import BottomSheetType
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -31,7 +30,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.member.component.MemberCardView
 import com.example.member.component.MemberDialogView
 import com.example.member.component.MemberListView
-import com.moneymong.moneymong.common.ui.noRippleClickable
+import com.moneymong.moneymong.ui.noRippleClickable
 import com.moneymong.moneymong.design_system.R
 import com.moneymong.moneymong.design_system.component.bottomSheet.MDSBottomSheet
 import com.moneymong.moneymong.design_system.component.button.MDSButton

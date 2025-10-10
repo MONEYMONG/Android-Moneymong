@@ -35,6 +35,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavOptions
 import com.example.member.MemberScreen
 import com.moneymong.moneymong.common.event.Event
+import com.moneymong.moneymong.analytics.LocalAnalyticsTracker
+import com.moneymong.moneymong.ui.plus
 import com.moneymong.moneymong.design_system.R
 import com.moneymong.moneymong.design_system.component.bottomSheet.MDSBottomSheet
 import com.moneymong.moneymong.design_system.component.button.MDSFloatingActionButton
@@ -52,6 +54,7 @@ import com.moneymong.moneymong.ledger.view.LedgerTab
 import com.moneymong.moneymong.ledger.view.LedgerTabRowView
 import com.moneymong.moneymong.ledger.view.LedgerTopbarView
 import com.moneymong.moneymong.ledger.view.onboarding.OnboardingComponentState
+import com.moneymong.moneymong.ui.logClicked
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.compose.collectAsState
 import org.orbitmvi.orbit.compose.collectSideEffect
@@ -82,6 +85,7 @@ fun LedgerScreen(
         refreshing = state.isRefreshing,
         onRefresh = viewModel::fetchLedgerTransactionList
     )
+    val analyticsTracker = LocalAnalyticsTracker.current
 
     LaunchedEffect(Unit) {
         viewModel.fetchMyAgencyList()
@@ -265,7 +269,7 @@ fun LedgerScreen(
                                         iconResource = R.drawable.ic_plus_default,
                                         containerColor = Mint03,
                                         onClick = {
-                                            viewModel.eventTracker.logEvent(Event.PLUS_CLICK)
+                                            analyticsTracker.logClicked("plus_click")
                                             viewModel.onClickLedgerRegisterManual()
                                         }
                                     )

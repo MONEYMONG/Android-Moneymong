@@ -1,7 +1,7 @@
 package com.example.member
 
 
-import com.moneymong.moneymong.common.base.State
+import com.moneymong.moneymong.android.State
 import com.moneymong.moneymong.model.member.AgencyUser
 
 data class MemberState(

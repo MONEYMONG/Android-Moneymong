@@ -36,8 +36,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
-import com.moneymong.moneymong.common.ui.noRippleClickable
-import com.moneymong.moneymong.common.ui.toWonFormat
+import com.moneymong.moneymong.ui.noRippleClickable
+import com.moneymong.moneymong.ui.toWonFormat
 import com.moneymong.moneymong.design_system.R.drawable
 import com.moneymong.moneymong.design_system.component.chip.MDSChip
 import com.moneymong.moneymong.design_system.component.indicator.LoadingScreen

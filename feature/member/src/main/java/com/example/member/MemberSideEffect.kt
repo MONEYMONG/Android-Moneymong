@@ -1,6 +1,6 @@
 package com.example.member
 
-import com.moneymong.moneymong.common.base.SideEffect
+import com.moneymong.moneymong.android.SideEffect
 
 sealed class MemberSideEffect : SideEffect {
     data class GetInvitationCode(val agencyId: Long) : MemberSideEffect()

@@ -2,7 +2,7 @@ package com.moneymong.moneymong.feature.agency.join
 
 import androidx.core.text.isDigitsOnly
 import androidx.lifecycle.viewModelScope
-import com.moneymong.moneymong.common.base.BaseViewModel
+import com.moneymong.moneymong.android.BaseViewModel
 import com.moneymong.moneymong.domain.usecase.agency.AgencyJoinUseCase
 import com.moneymong.moneymong.domain.usecase.agency.SaveAgencyIdUseCase
 import com.moneymong.moneymong.feature.agency.join.component.CODE_MAX_SIZE
