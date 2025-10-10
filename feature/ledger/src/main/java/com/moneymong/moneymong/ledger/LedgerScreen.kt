@@ -34,9 +34,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavOptions
 import com.example.member.MemberScreen
-import com.moneymong.moneymong.common.event.Event
 import com.moneymong.moneymong.analytics.LocalAnalyticsTracker
-import com.moneymong.moneymong.ui.plus
 import com.moneymong.moneymong.design_system.R
 import com.moneymong.moneymong.design_system.component.bottomSheet.MDSBottomSheet
 import com.moneymong.moneymong.design_system.component.button.MDSFloatingActionButton
