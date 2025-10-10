@@ -1,5 +1,3 @@
-import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
-
 @Suppress("DSL_SCOPE_VIOLATION")
 plugins {
     alias(libs.plugins.moneymong.android.application)
@@ -13,12 +11,12 @@ plugins {
 
 android {
     namespace = "com.moneymong.moneymong"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.moneymong.moneymong"
         minSdk = 24
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 31
         versionName = "2.0.1"
 
@@ -26,8 +24,8 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
-        buildConfigField("String", "NATIVE_APP_KEY", getApiKey("native_app_key"))
     }
+
     buildFeatures {
         buildConfig = true
     }
@@ -84,8 +82,4 @@ dependencies {
     testImplementation(libs.junit4)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.test.espresso.core)
-}
-
-fun getApiKey(propertyKey: String): String {
-    return gradleLocalProperties(rootDir).getProperty(propertyKey)
 }

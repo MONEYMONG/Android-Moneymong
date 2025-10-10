@@ -27,6 +27,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -45,12 +46,12 @@ import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.moneymong.moneymong.android.util.base64ToFile
 import com.moneymong.moneymong.android.util.encodingBase64
-import com.moneymong.moneymong.ui.DottedShape
-import com.moneymong.moneymong.ui.noRippleClickable
+import com.moneymong.moneymong.common.ui.SystemBarColorController
 import com.moneymong.moneymong.design_system.R
 import com.moneymong.moneymong.design_system.component.button.MDSButton
 import com.moneymong.moneymong.design_system.component.button.MDSButtonSize
 import com.moneymong.moneymong.design_system.component.button.MDSButtonType
+import com.moneymong.moneymong.design_system.component.indicator.LoadingScreen
 import com.moneymong.moneymong.design_system.component.modal.MDSModal
 import com.moneymong.moneymong.design_system.component.textfield.MDSTextField
 import com.moneymong.moneymong.design_system.component.textfield.util.MDSTextFieldIcons
@@ -59,7 +60,6 @@ import com.moneymong.moneymong.design_system.component.textfield.visualtransform
 import com.moneymong.moneymong.design_system.component.textfield.visualtransformation.PriceVisualTransformation
 import com.moneymong.moneymong.design_system.component.textfield.visualtransformation.TimeVisualTransformation
 import com.moneymong.moneymong.design_system.error.ErrorDialog
-import com.moneymong.moneymong.design_system.component.indicator.LoadingScreen
 import com.moneymong.moneymong.design_system.theme.Blue01
 import com.moneymong.moneymong.design_system.theme.Blue03
 import com.moneymong.moneymong.design_system.theme.Blue04
@@ -72,6 +72,8 @@ import com.moneymong.moneymong.design_system.theme.Gray10
 import com.moneymong.moneymong.design_system.theme.MMHorizontalSpacing
 import com.moneymong.moneymong.design_system.theme.White
 import com.moneymong.moneymong.ledgerdetail.view.LedgerDetailTopbarView
+import com.moneymong.moneymong.ui.DottedShape
+import com.moneymong.moneymong.ui.noRippleClickable
 import org.orbitmvi.orbit.compose.collectAsState
 import org.orbitmvi.orbit.compose.collectSideEffect
 
@@ -466,6 +468,14 @@ fun LedgerDetailScreen(
             }
             Spacer(modifier = Modifier.height(20.dp))
             if (state.isStaff) {
+                DisposableEffect(key1 = Unit) {
+                    SystemBarColorController.setNavigationBarColor(color = White)
+
+                    onDispose {
+                        SystemBarColorController.initialSystemBarColors()
+                    }
+                }
+
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()

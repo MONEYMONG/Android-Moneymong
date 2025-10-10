@@ -4,8 +4,10 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.ExperimentalMaterialApi
@@ -26,13 +28,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavOptions
 import com.example.member.MemberScreen
 import com.moneymong.moneymong.analytics.LocalAnalyticsTracker
-import com.moneymong.moneymong.ui.plus
 import com.moneymong.moneymong.design_system.R
 import com.moneymong.moneymong.design_system.component.bottomSheet.MDSBottomSheet
 import com.moneymong.moneymong.design_system.component.button.MDSFloatingActionButton
@@ -71,6 +73,7 @@ fun LedgerScreen(
 ) {
     val state = viewModel.collectAsState().value
     val tabs = listOf(LedgerTab.Ledger, LedgerTab.Member)
+    val systemBarTopHeight = WindowInsets.safeDrawing.getTop(LocalDensity.current).toFloat()
     val coroutineScope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
     val pagerState = rememberPagerState(pageCount = { tabs.size })
@@ -141,7 +144,9 @@ fun LedgerScreen(
     }
 
     Scaffold(
-        modifier = Modifier.pullRefresh(pullRefreshState),
+        modifier = Modifier
+            .pullRefresh(pullRefreshState)
+            .padding(padding),
         topBar = {
             LedgerTopbarView(
                 modifier = Modifier.background(White),
@@ -155,13 +160,14 @@ fun LedgerScreen(
             MDSSnackbarHost(
                 modifier = Modifier.padding(
                     start = MMHorizontalSpacing,
-                    bottom = 12.dp + padding.calculateBottomPadding(),
+                    bottom = 12.dp,
                     end = MMHorizontalSpacing
                 ),
                 hostState = snackbarHostState
             )
-        }
-    ) {
+        },
+        contentWindowInsets = WindowInsets(0.dp)
+    ) { innerPadding ->
         if (state.showBottomSheet) {
             MDSBottomSheet(
                 sheetState = sheetState,
@@ -200,7 +206,7 @@ fun LedgerScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(it + padding)
+                .padding(innerPadding)
         ) {
             if (!state.existAgency) {
                 LedgerAgencyEmptyView(onClickAgencyRegister = navigateToAgencyRegister)
@@ -249,7 +255,12 @@ fun LedgerScreen(
                                     MDSFloatingActionButton(
                                         modifier = Modifier.onGloballyPositioned { layoutCoordinates ->
                                             addFABState = OnboardingComponentState(
-                                                offset = layoutCoordinates.localToRoot(Offset.Zero),
+                                                offset = layoutCoordinates.localToRoot(
+                                                    Offset(
+                                                        x = 0f,
+                                                        y = -systemBarTopHeight
+                                                    )
+                                                ),
                                                 size = layoutCoordinates.size
                                             )
                                         },

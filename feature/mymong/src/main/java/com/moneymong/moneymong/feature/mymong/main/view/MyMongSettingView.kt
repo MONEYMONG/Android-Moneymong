@@ -47,7 +47,7 @@ internal fun MyMongSettingView(
         } else {
             packageManager.getPackageInfo(packageName, 0)
         }
-    }.versionName
+    }.versionName.orEmpty()
 
     Column(modifier = modifier.fillMaxWidth()) {
         Column(
