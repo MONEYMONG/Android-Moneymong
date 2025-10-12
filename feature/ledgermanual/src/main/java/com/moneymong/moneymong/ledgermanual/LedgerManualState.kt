@@ -4,6 +4,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import com.moneymong.moneymong.android.State
 import com.moneymong.moneymong.common.util.toZonedDateTime
 import com.moneymong.moneymong.design_system.component.textfield.util.PriceType
+import com.moneymong.moneymong.model.agency.CategoryResponse
 import com.moneymong.moneymong.model.ledger.FundType
 import java.text.SimpleDateFormat
 
@@ -28,6 +29,7 @@ data class LedgerManualState(
     val errorMessage: String = "",
     val showBottomSheet: Boolean = false,
     val categoryValue: TextFieldValue = TextFieldValue(),
+    val categories: List<CategoryResponse>? = null,
 ) : State {
 
     val enabled: Boolean

@@ -3,6 +3,8 @@ package com.moneymong.moneymong.ledgermanual
 import androidx.compose.ui.text.input.TextFieldValue
 import com.moneymong.moneymong.android.BaseViewModel
 import com.moneymong.moneymong.android.util.toMultipart
+import com.moneymong.moneymong.common.error.MoneyMongError
+import com.moneymong.moneymong.domain.usecase.agency.CreateCategoryUseCase
 import com.moneymong.moneymong.ui.isValidPaymentDate
 import com.moneymong.moneymong.ui.isValidPaymentTime
 import com.moneymong.moneymong.ui.validateValue
@@ -10,6 +12,7 @@ import com.moneymong.moneymong.domain.usecase.agency.FetchAgencyIdUseCase
 import com.moneymong.moneymong.domain.usecase.ledger.PostLedgerTransactionUseCase
 import com.moneymong.moneymong.domain.usecase.ocr.PostFileUploadUseCase
 import com.moneymong.moneymong.domain.usecase.user.FetchUserNicknameUseCase
+import com.moneymong.moneymong.model.agency.CategoryCreateRequest
 import com.moneymong.moneymong.model.ledger.FundType
 import com.moneymong.moneymong.model.ledger.LedgerTransactionRequest
 import com.moneymong.moneymong.model.ocr.FileUploadRequest
@@ -27,7 +30,8 @@ class LedgerManualViewModel @Inject constructor(
     private val postLedgerTransactionUseCase: PostLedgerTransactionUseCase,
     private val postFileUploadUseCase: PostFileUploadUseCase,
     private val fetchAgencyIdUseCase: FetchAgencyIdUseCase,
-    private val fetchUserNicknameUseCase: FetchUserNicknameUseCase
+    private val fetchUserNicknameUseCase: FetchUserNicknameUseCase,
+    private val createCategoryUseCase: CreateCategoryUseCase,
 ) : BaseViewModel<LedgerManualState, LedgerManualSideEffect>(LedgerManualState()) {
 
     init {
@@ -90,6 +94,29 @@ class LedgerManualViewModel @Inject constructor(
                     }
             }
         }
+    }
+
+    fun createCategory() = intent {
+        val agencyId = fetchAgencyIdUseCase()
+        val request =
+            CategoryCreateRequest(agencyId = agencyId.toLong(), name = state.categoryValue.text)
+
+        createCategoryUseCase(request)
+            .onSuccess {
+                reduce {
+                    state.copy(
+                        showBottomSheet = false,
+                        categoryValue = TextFieldValue(),
+                    )
+                }
+            }.onFailure {
+                reduce {
+                    state.copy(
+                        showErrorDialog = true,
+                        errorMessage = it.message ?: MoneyMongError.UnExpectedError.message
+                    )
+                }
+            }
     }
 
     fun onChangeStoreNameValue(value: TextFieldValue) = blockingIntent {
