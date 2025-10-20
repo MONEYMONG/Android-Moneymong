@@ -11,4 +11,5 @@ data class AgencyRegisterState(
     val nameTextFieldIsError: Boolean = false,
     val visibleOutDialog: Boolean = false,
     val visibleErrorDialog: Boolean = false,
+    val visibleInviteCode: Boolean = false
 ) : State

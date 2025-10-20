@@ -127,7 +127,9 @@ fun HomeScreen(
                 // sign
                 loginScreen(
                     navigateToLedger = homeNavController::navigateLedger,
-                    navigateToAgencyRegister = homeNavController::navigateAgencyRegister
+                    navigateToAgencyRegister = {
+                        homeNavController.navigateAgencyRegister(visibleInviteCode = true)
+                    }
                 )
 
                 signUpScreen(
@@ -171,7 +173,8 @@ fun HomeScreen(
                 )
 
                 agencyRegisterScreen(
-                    navigateToLedger = homeNavController::navigateLedger
+                    navigateToLedger = homeNavController::navigateLedger,
+                    navigateToAgencyJoin = { homeNavController.navigateAgencyJoin(isBackButton = true) }
                 )
 
                 agencyRegisterCompleteScreen(

@@ -152,7 +152,6 @@ fun LedgerScreen(
                 modifier = Modifier.background(White),
                 header = state.currentAgency?.name ?: "장부",
                 icon = R.drawable.ic_chevron_bottom,
-                visibleArrow = state.agencyList.isNotEmpty(),
                 onClickDownArrow = viewModel::onClickAgencyChange
             )
         },
