@@ -52,7 +52,6 @@ import com.moneymong.moneymong.design_system.theme.Body2
 import com.moneymong.moneymong.design_system.theme.Body3
 import com.moneymong.moneymong.design_system.theme.Gray05
 import com.moneymong.moneymong.design_system.theme.Gray07
-import com.moneymong.moneymong.design_system.theme.Gray10
 import com.moneymong.moneymong.design_system.theme.Heading1
 import com.moneymong.moneymong.design_system.theme.Heading4
 import com.moneymong.moneymong.design_system.theme.White
@@ -146,7 +145,7 @@ fun LedgerManualCategoryBottomSheetContent(
         ) {
             Text(
                 style = Heading4,
-                color = Gray10,
+                color = Black,
                 text = "카테고리",
             )
             Text(
