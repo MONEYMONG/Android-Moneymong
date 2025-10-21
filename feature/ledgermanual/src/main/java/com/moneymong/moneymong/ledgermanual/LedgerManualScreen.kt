@@ -152,14 +152,6 @@ fun LedgerManualScreen(
 
     BackHandler(onBack = { viewModel.eventEmit(LedgerManualSideEffect.LedgerManualShowPopBackStackModal) })
 
-    LaunchedEffect(state.showBottomSheet) {
-        if (state.showBottomSheet) {
-            sheetState.show()
-        } else {
-            sheetState.hide()
-        }
-    }
-
     if (state.showPopBackStackModal) {
         MDSModal(
             icon = drawable.ic_warning_filled,
@@ -200,8 +192,7 @@ fun LedgerManualScreen(
             onDismissRequest = {
                 scope.launch {
                     sheetState.hide()
-                    viewModel.onDismissBottomSheet()
-                }
+                }.invokeOnCompletion { viewModel.onDismissBottomSheet() }
             },
             onChangeCategoryValue = viewModel::onChangeCategoryValue
         )
