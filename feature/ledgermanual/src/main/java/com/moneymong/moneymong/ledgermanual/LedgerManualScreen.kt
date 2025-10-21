@@ -11,6 +11,8 @@ import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -26,13 +28,17 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -53,6 +59,7 @@ import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.moneymong.moneymong.android.util.base64ToFile
 import com.moneymong.moneymong.android.util.encodingBase64
+import com.moneymong.moneymong.design_system.R
 import com.moneymong.moneymong.ui.noRippleClickable
 import com.moneymong.moneymong.design_system.R.drawable
 import com.moneymong.moneymong.design_system.component.button.MDSButton
@@ -60,6 +67,7 @@ import com.moneymong.moneymong.design_system.component.button.MDSButtonSize
 import com.moneymong.moneymong.design_system.component.button.MDSButtonType
 import com.moneymong.moneymong.design_system.component.modal.MDSModal
 import com.moneymong.moneymong.design_system.component.selection.MDSSelection
+import com.moneymong.moneymong.design_system.component.tag.MDSOutlineTag
 import com.moneymong.moneymong.design_system.component.textfield.MDSTextField
 import com.moneymong.moneymong.design_system.component.textfield.util.MDSTextFieldIcons
 import com.moneymong.moneymong.design_system.component.textfield.util.withRequiredMark
@@ -68,18 +76,23 @@ import com.moneymong.moneymong.design_system.component.textfield.visualtransform
 import com.moneymong.moneymong.design_system.component.textfield.visualtransformation.TimeVisualTransformation
 import com.moneymong.moneymong.design_system.error.ErrorDialog
 import com.moneymong.moneymong.design_system.theme.Blue03
+import com.moneymong.moneymong.design_system.theme.Blue04
 import com.moneymong.moneymong.design_system.theme.Body2
 import com.moneymong.moneymong.design_system.theme.Body3
 import com.moneymong.moneymong.design_system.theme.Gray06
 import com.moneymong.moneymong.design_system.theme.Gray10
 import com.moneymong.moneymong.design_system.theme.MMHorizontalSpacing
 import com.moneymong.moneymong.design_system.theme.White
+import com.moneymong.moneymong.ledgermanual.view.LedgerManualCategoryBottomSheet
 import com.moneymong.moneymong.ledgermanual.view.LedgerManualTopbarView
 import com.moneymong.moneymong.model.ledger.FundType
+import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.compose.collectAsState
 import org.orbitmvi.orbit.compose.collectSideEffect
 
-@OptIn(ExperimentalGlideComposeApi::class)
+@OptIn(ExperimentalGlideComposeApi::class, ExperimentalMaterial3Api::class,
+    ExperimentalLayoutApi::class
+)
 @Composable
 fun LedgerManualScreen(
     modifier: Modifier = Modifier,
@@ -99,6 +112,8 @@ fun LedgerManualScreen(
             }
         }
     )
+    val sheetState = rememberModalBottomSheetState()
+    val scope = rememberCoroutineScope()
 
     viewModel.collectSideEffect {
         when (it) {
@@ -165,6 +180,21 @@ fun LedgerManualScreen(
         ErrorDialog(
             message = state.errorMessage,
             onConfirm = viewModel::onClickErrorDialogConfirm
+        )
+    }
+
+    if (state.showBottomSheet) {
+        LedgerManualCategoryBottomSheet(
+            sheetState = sheetState,
+            categories = emptyList(),
+            categoryValue = state.categoryValue,
+            isSystemCategoryError = state.isSystemCategoryError,
+            onDismissRequest = {
+                scope.launch {
+                    sheetState.hide()
+                }.invokeOnCompletion { viewModel.onDismissBottomSheet() }
+            },
+            onChangeCategoryValue = viewModel::onChangeCategoryValue
         )
     }
 
@@ -310,6 +340,34 @@ fun LedgerManualScreen(
                     isError = state.isMemoError,
                     keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() })
                 )
+                Spacer(modifier = Modifier.height(24.dp))
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                ) {
+                    Text(
+                        text = "카테고리",
+                        style = Body2,
+                        color = Gray06,
+                    )
+                    Spacer(modifier = Modifier.weight(1f))
+                    Text(
+                        modifier = Modifier.noRippleClickable(viewModel::onClickCategoryEdit),
+                        text = "수정",
+                        style = Body2,
+                        color = Blue04,
+                    )
+                }
+                Spacer(modifier = Modifier.height(8.dp))
+                FlowRow(
+                    horizontalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    MDSOutlineTag(
+                        text = "Test", // TODO
+                        iconResource = drawable.ic_close_default,
+                        onClick = {},
+                    )
+                }
                 Spacer(modifier = Modifier.height(24.dp))
                 Text(
                     text = "사진 첨부 (최대 12장)",
