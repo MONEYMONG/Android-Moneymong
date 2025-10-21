@@ -261,7 +261,6 @@ fun LedgerManualCategoryCreateBottomSheetContent(
                 onIconClick = { onValueChange(TextFieldValue("")) },
                 maxCount = maxCount
             )
-            Spacer(modifier = Modifier.height(20.dp))
         }
         val enabled = textFieldValue.text.isNotBlank() && (!isSystemCategoryError && !isExists)
         MDSButton(
