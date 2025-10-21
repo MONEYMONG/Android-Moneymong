@@ -243,7 +243,7 @@ fun LedgerManualCategoryCreateBottomSheetContent(
                     color = Black,
                 )
             }
-            Spacer(modifier = Modifier.height(36.dp))
+            Spacer(modifier = Modifier.height(16.dp))
             MDSTextField(
                 modifier = Modifier
                     .fillMaxWidth()
