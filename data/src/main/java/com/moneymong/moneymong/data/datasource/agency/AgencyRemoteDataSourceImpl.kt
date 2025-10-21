@@ -5,6 +5,8 @@ import com.moneymong.moneymong.model.agency.AgencyGetResponse
 import com.moneymong.moneymong.model.agency.AgencyJoinRequest
 import com.moneymong.moneymong.model.agency.AgencyJoinResponse
 import com.moneymong.moneymong.model.agency.AgencyRegisterRequest
+import com.moneymong.moneymong.model.agency.CategoryCreateRequest
+import com.moneymong.moneymong.model.agency.CategoryCreateResponse
 import com.moneymong.moneymong.model.agency.MyAgencyResponse
 import com.moneymong.moneymong.model.agency.RegisterAgencyResponse
 import com.moneymong.moneymong.network.api.AgencyApi
@@ -34,5 +36,9 @@ class AgencyRemoteDataSourceImpl @Inject constructor(
         data: AgencyJoinRequest
     ): Result<AgencyJoinResponse> {
         return agencyApi.agencyCodeNumbers(body = data)
+    }
+
+    override suspend fun createCategory(request: CategoryCreateRequest): Result<CategoryCreateResponse> {
+        return agencyApi.createCategory(request = request)
     }
 }
