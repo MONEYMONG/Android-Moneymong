@@ -97,9 +97,8 @@ class LedgerManualViewModel @Inject constructor(
     }
 
     fun createCategory() = intent {
-        val agencyId = fetchAgencyIdUseCase()
         val request =
-            CategoryCreateRequest(agencyId = agencyId.toLong(), name = state.categoryValue.text)
+            CategoryCreateRequest(agencyId = state.agencyId.toLong(), name = state.categoryValue.text)
 
         createCategoryUseCase(request)
             .onSuccess {
