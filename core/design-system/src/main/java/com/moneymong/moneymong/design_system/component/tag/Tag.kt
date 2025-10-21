@@ -79,7 +79,7 @@ fun MDSOutlineTag(
                 shape = RoundedCornerShape(size = Int.MAX_VALUE.dp)
             )
             .padding(horizontal = 12.dp, vertical = 6.dp),
-        horizontalArrangement = Arrangement.spacedBy(4.dp),
+        horizontalArrangement = Arrangement.spacedBy(2.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
