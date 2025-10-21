@@ -202,7 +202,6 @@ fun LedgerManualCategoryCreateBottomSheetContent(
     }
 
     BackHandler {
-        keyboard?.hide()
         onPrev()
     }
 
