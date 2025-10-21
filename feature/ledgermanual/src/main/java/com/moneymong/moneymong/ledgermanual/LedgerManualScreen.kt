@@ -59,7 +59,6 @@ import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.moneymong.moneymong.android.util.base64ToFile
 import com.moneymong.moneymong.android.util.encodingBase64
-import com.moneymong.moneymong.design_system.R
 import com.moneymong.moneymong.ui.noRippleClickable
 import com.moneymong.moneymong.design_system.R.drawable
 import com.moneymong.moneymong.design_system.component.button.MDSButton
@@ -186,7 +185,7 @@ fun LedgerManualScreen(
     if (state.showBottomSheet) {
         LedgerManualCategoryBottomSheet(
             sheetState = sheetState,
-            categories = emptyList(),
+            categories = state.categories,
             categoryValue = state.categoryValue,
             isSystemCategoryError = state.isSystemCategoryError,
             onDismissRequest = {
@@ -194,7 +193,8 @@ fun LedgerManualScreen(
                     sheetState.hide()
                 }.invokeOnCompletion { viewModel.onDismissBottomSheet() }
             },
-            onChangeCategoryValue = viewModel::onChangeCategoryValue
+            onChangeCategoryValue = viewModel::onChangeCategoryValue,
+            onCategoryCreate = viewModel::createCategory,
         )
     }
 

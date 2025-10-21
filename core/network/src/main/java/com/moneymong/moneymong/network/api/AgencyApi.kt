@@ -5,6 +5,8 @@ import com.moneymong.moneymong.model.agency.AgencyGetResponse
 import com.moneymong.moneymong.model.agency.AgencyJoinRequest
 import com.moneymong.moneymong.model.agency.AgencyJoinResponse
 import com.moneymong.moneymong.model.agency.AgencyRegisterRequest
+import com.moneymong.moneymong.model.agency.CategoryCreateRequest
+import com.moneymong.moneymong.model.agency.CategoryCreateResponse
 import com.moneymong.moneymong.model.agency.MyAgencyResponse
 import com.moneymong.moneymong.model.agency.RegisterAgencyResponse
 import com.moneymong.moneymong.model.member.InvitationCodeResponse
@@ -48,6 +50,11 @@ interface AgencyApi {
     suspend fun registerAgency(
         @Body request: AgencyRegisterRequest
     ): Result<RegisterAgencyResponse>
+
+    @POST("api/v1/agencies/categories")
+    suspend fun createCategory(
+        @Body request: CategoryCreateRequest
+    ): Result<CategoryCreateResponse>
 
     // PATCH
     @PATCH("api/v1/agencies/{agencyId}/invitation-code")

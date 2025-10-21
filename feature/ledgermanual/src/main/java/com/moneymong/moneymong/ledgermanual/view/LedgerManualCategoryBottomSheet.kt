@@ -55,6 +55,7 @@ import com.moneymong.moneymong.design_system.theme.Gray07
 import com.moneymong.moneymong.design_system.theme.Heading1
 import com.moneymong.moneymong.design_system.theme.Heading4
 import com.moneymong.moneymong.design_system.theme.White
+import com.moneymong.moneymong.model.agency.CategoryResponse
 import com.moneymong.moneymong.ui.noRippleClickable
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -62,11 +63,12 @@ import com.moneymong.moneymong.ui.noRippleClickable
 fun LedgerManualCategoryBottomSheet(
     modifier: Modifier = Modifier,
     sheetState: SheetState,
-    categories: List<String>, // TODO API response
+    categories: List<CategoryResponse>?,
     categoryValue: TextFieldValue,
     isSystemCategoryError: Boolean,
     onDismissRequest: () -> Unit,
     onChangeCategoryValue: (TextFieldValue) -> Unit,
+    onCategoryCreate: () -> Unit,
 ) {
     var sheetType by remember { mutableStateOf(LedgerManualBottomSheetType.LIST) }
 
@@ -106,7 +108,7 @@ fun LedgerManualCategoryBottomSheet(
                         isSystemCategoryError = isSystemCategoryError,
                         categories = categories,
                         onValueChange = onChangeCategoryValue,
-                        onClickRegister = {},
+                        onClickRegister = onCategoryCreate,
                         onPrev = { sheetType = LedgerManualBottomSheetType.LIST }
                     )
                 }
@@ -119,7 +121,7 @@ fun LedgerManualCategoryBottomSheet(
 @Composable
 fun LedgerManualCategoryBottomSheetContent(
     modifier: Modifier = Modifier,
-    categories: List<String>,
+    categories: List<CategoryResponse>?,
     onDismissRequest: () -> Unit,
     onClickCreate: () -> Unit,
 ) {
@@ -165,9 +167,9 @@ fun LedgerManualCategoryBottomSheetContent(
         FlowRow(
             horizontalArrangement = Arrangement.spacedBy(12.dp),
         ) {
-            categories.forEach {
+            categories?.forEach {
                 MDSOutlineTag(
-                    text = it,
+                    text = it.name,
                     iconResource = R.drawable.ic_close_default,
                     onClick = {},
                 )
@@ -181,7 +183,7 @@ fun LedgerManualCategoryCreateBottomSheetContent(
     modifier: Modifier = Modifier,
     textFieldValue: TextFieldValue,
     isSystemCategoryError: Boolean,
-    categories: List<String>, // TODO API response
+    categories: List<CategoryResponse>?,
     onValueChange: (TextFieldValue) -> Unit,
     onClickRegister: () -> Unit,
     onPrev: () -> Unit,
@@ -190,7 +192,7 @@ fun LedgerManualCategoryCreateBottomSheetContent(
     var isFilled by remember { mutableStateOf(false) }
     val focusRequester = remember { FocusRequester() }
     val keyboard = LocalSoftwareKeyboardController.current
-    val isExists = categories.contains(textFieldValue.text)
+    val isExists = categories?.any { it.name == textFieldValue.text } ?: false
     val helperText by remember(isSystemCategoryError, isExists) {
         derivedStateOf {
             when {
@@ -277,7 +279,7 @@ fun LedgerManualCategoryCreateBottomSheetContent(
 @Preview(showBackground = true)
 @Composable
 fun LedgerManualCategoryBottomSheetContentPreview() {
-    val categories = listOf("testTooLongTextOverFlow", "test")
+    val categories = listOf(CategoryResponse("testTooLongTextOverFlow"), CategoryResponse("test"))
 
     LedgerManualCategoryBottomSheetContent(
         categories = categories,
