@@ -166,6 +166,7 @@ fun LedgerManualCategoryBottomSheetContent(
         Spacer(modifier = Modifier.height(16.dp))
         FlowRow(
             horizontalArrangement = Arrangement.spacedBy(12.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             categories?.forEach {
                 MDSOutlineTag(

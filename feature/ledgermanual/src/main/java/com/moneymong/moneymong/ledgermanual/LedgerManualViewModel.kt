@@ -108,6 +108,7 @@ class LedgerManualViewModel @Inject constructor(
 
         createCategoryUseCase(request)
             .onSuccess {
+                fetchCategories()
                 reduce {
                     state.copy(
                         showBottomSheet = false,

@@ -360,13 +360,15 @@ fun LedgerManualScreen(
                 }
                 Spacer(modifier = Modifier.height(8.dp))
                 FlowRow(
-                    horizontalArrangement = Arrangement.spacedBy(10.dp)
+                    horizontalArrangement = Arrangement.spacedBy(10.dp),
+                    verticalArrangement = Arrangement.spacedBy(10.dp),
                 ) {
-                    MDSOutlineTag(
-                        text = "Test", // TODO
-                        iconResource = drawable.ic_close_default,
-                        onClick = {},
-                    )
+                    state.categories?.forEach { category ->
+                        MDSOutlineTag(
+                            text = category.name,
+                            onClick = {},
+                        )
+                    }
                 }
                 Spacer(modifier = Modifier.height(24.dp))
                 Text(
