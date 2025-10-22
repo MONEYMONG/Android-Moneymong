@@ -41,9 +41,9 @@ interface AgencyApi {
         @Query("keyword") name: String
     ): Result<List<AgencyGetResponse>>
 
-    @GET("api/v1/agencies/categories/{agencyId}")
+    @GET("api/v1/agencies/categories")
     suspend fun fetchCategories(
-        @Path("agencyId") agencyId: Long
+        @Query("agencyId") agencyId: Long
     ): Result<CategoryReadResponse>
 
     // POST
