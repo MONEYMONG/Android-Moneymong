@@ -14,6 +14,7 @@ import com.moneymong.moneymong.domain.usecase.ledger.PostLedgerTransactionUseCas
 import com.moneymong.moneymong.domain.usecase.ocr.PostFileUploadUseCase
 import com.moneymong.moneymong.domain.usecase.user.FetchUserNicknameUseCase
 import com.moneymong.moneymong.model.agency.CategoryCreateRequest
+import com.moneymong.moneymong.model.agency.CategoryResponse
 import com.moneymong.moneymong.model.ledger.FundType
 import com.moneymong.moneymong.model.ledger.LedgerTransactionRequest
 import com.moneymong.moneymong.model.ocr.FileUploadRequest
@@ -229,6 +230,18 @@ class LedgerManualViewModel @Inject constructor(
         if (validate) {
             reduce { state.copy(categoryValue = value) }
         }
+    }
+
+    fun onClickCategory(category: CategoryResponse) = intent {
+        val existsCategory = state.selectedCategories.contains(category)
+
+        val targetCategories = if (existsCategory) {
+            state.selectedCategories - category
+        } else {
+            state.selectedCategories + category
+        }
+
+        reduce { state.copy(selectedCategories = targetCategories) }
     }
 
     private fun trimStartWithZero(value: TextFieldValue) =

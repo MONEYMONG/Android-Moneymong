@@ -3,6 +3,7 @@ package com.moneymong.moneymong.design_system.component.tag
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
@@ -13,16 +14,19 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.moneymong.moneymong.design_system.R
 import com.moneymong.moneymong.design_system.theme.Blue04
 import com.moneymong.moneymong.design_system.theme.Body2
 import com.moneymong.moneymong.design_system.theme.Body3
 import com.moneymong.moneymong.design_system.theme.Gray03
 import com.moneymong.moneymong.design_system.theme.Gray05
 import com.moneymong.moneymong.design_system.theme.Gray06
+import com.moneymong.moneymong.design_system.theme.Gray08
 import com.moneymong.moneymong.design_system.theme.White
 import com.moneymong.moneymong.ui.noRippleClickable
 
@@ -64,19 +68,25 @@ fun MDSTag(
 fun MDSOutlineTag(
     modifier: Modifier = Modifier,
     text: String,
+    selected: Boolean = false,
     @DrawableRes iconResource: Int? = null,
-    onClick: () -> Unit,
+    onClick: () -> Unit = {},
 ) {
     Row(
         modifier = modifier
             .border(
                 width = 1.4.dp,
-                color = Gray03,
+                color = if (selected) Blue04 else Gray03,
                 shape = RoundedCornerShape(size = Int.MAX_VALUE.dp)
             )
+            .clip(RoundedCornerShape(size = Int.MAX_VALUE.dp))
             .background(
                 color = White,
                 shape = RoundedCornerShape(size = Int.MAX_VALUE.dp)
+            )
+            .clickable(
+                enabled = iconResource == null,
+                onClick = onClick
             )
             .padding(horizontal = 12.dp, vertical = 6.dp),
         horizontalArrangement = Arrangement.spacedBy(2.dp),
@@ -84,18 +94,30 @@ fun MDSOutlineTag(
     ) {
         Text(
             text = text,
-            color = Gray06,
+            color = if (selected) Gray08 else Gray06,
             style = Body3,
         )
-        if (iconResource != null) {
-            Icon(
-                modifier = Modifier
-                    .size(18.dp)
-                    .noRippleClickable(onClick),
-                painter = painterResource(id = iconResource),
-                contentDescription = "Tag icon",
-                tint = Gray05
-            )
+        when {
+            !selected && iconResource != null -> {
+                Icon(
+                    modifier = Modifier
+                        .size(18.dp)
+                        .noRippleClickable(onClick),
+                    painter = painterResource(id = iconResource),
+                    contentDescription = "Tag icon",
+                    tint = Gray05
+                )
+            }
+
+            selected -> {
+                Icon(
+                    modifier = Modifier
+                        .size(18.dp),
+                    painter = painterResource(id = R.drawable.ic_check),
+                    contentDescription = "Tag icon",
+                    tint = Blue04
+                )
+            }
         }
     }
 }
@@ -116,7 +138,7 @@ fun MDSTagPreview() {
             text = "tag",
             backgroundColor = Blue04,
             contentColor = White,
-            iconResource = com.moneymong.moneymong.design_system.R.drawable.ic_pencil
+            iconResource = R.drawable.ic_pencil
         )
     }
 }
@@ -130,11 +152,13 @@ fun MDSOutlineTagPreview() {
     ) {
         MDSOutlineTag(
             text = "tag",
+            selected = false,
             onClick = {},
         )
         MDSOutlineTag(
             text = "tag",
-            iconResource = com.moneymong.moneymong.design_system.R.drawable.ic_close_default,
+            selected = true,
+            iconResource = R.drawable.ic_close_default,
             onClick = {},
         )
     }

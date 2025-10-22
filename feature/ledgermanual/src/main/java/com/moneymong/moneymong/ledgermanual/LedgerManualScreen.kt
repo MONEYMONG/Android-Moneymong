@@ -89,7 +89,8 @@ import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.compose.collectAsState
 import org.orbitmvi.orbit.compose.collectSideEffect
 
-@OptIn(ExperimentalGlideComposeApi::class, ExperimentalMaterial3Api::class,
+@OptIn(
+    ExperimentalGlideComposeApi::class, ExperimentalMaterial3Api::class,
     ExperimentalLayoutApi::class
 )
 @Composable
@@ -363,10 +364,11 @@ fun LedgerManualScreen(
                     horizontalArrangement = Arrangement.spacedBy(10.dp),
                     verticalArrangement = Arrangement.spacedBy(10.dp),
                 ) {
-                    state.categories?.forEach { category ->
+                    state.categories.forEach { category ->
                         MDSOutlineTag(
                             text = category.name,
-                            onClick = {},
+                            selected = state.selectedCategories.contains(category),
+                            onClick = { viewModel.onClickCategory(category) },
                         )
                     }
                 }

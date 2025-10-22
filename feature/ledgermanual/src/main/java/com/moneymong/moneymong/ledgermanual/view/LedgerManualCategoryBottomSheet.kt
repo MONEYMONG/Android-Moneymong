@@ -172,7 +172,6 @@ fun LedgerManualCategoryBottomSheetContent(
                 MDSOutlineTag(
                     text = it.name,
                     iconResource = R.drawable.ic_close_default,
-                    onClick = {},
                 )
             }
         }
