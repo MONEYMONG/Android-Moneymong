@@ -1,6 +1,7 @@
 package com.moneymong.moneymong.model.agency
 
 data class CategoryReadResponse(
+    val agencyId: Long,
     val categories: List<CategoryResponse>,
 )
 

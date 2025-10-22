@@ -7,6 +7,7 @@ import com.moneymong.moneymong.model.agency.AgencyJoinResponse
 import com.moneymong.moneymong.model.agency.AgencyRegisterRequest
 import com.moneymong.moneymong.model.agency.CategoryCreateRequest
 import com.moneymong.moneymong.model.agency.CategoryCreateResponse
+import com.moneymong.moneymong.model.agency.CategoryReadResponse
 import com.moneymong.moneymong.model.agency.MyAgencyResponse
 import com.moneymong.moneymong.model.agency.RegisterAgencyResponse
 import com.moneymong.moneymong.model.member.InvitationCodeResponse
@@ -39,6 +40,11 @@ interface AgencyApi {
     suspend fun fetchAgencyByName(
         @Query("keyword") name: String
     ): Result<List<AgencyGetResponse>>
+
+    @GET("api/v1/agencies/categories/{agencyId}")
+    suspend fun fetchCategories(
+        @Path("agencyId") agencyId: Long
+    ): Result<CategoryReadResponse>
 
     // POST
     @POST("/api/v2/agencies/invitation-code")
