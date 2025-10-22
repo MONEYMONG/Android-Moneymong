@@ -9,6 +9,7 @@ import com.moneymong.moneymong.ui.isValidPaymentDate
 import com.moneymong.moneymong.ui.isValidPaymentTime
 import com.moneymong.moneymong.ui.validateValue
 import com.moneymong.moneymong.domain.usecase.agency.FetchAgencyIdUseCase
+import com.moneymong.moneymong.domain.usecase.agency.FetchCategoriesUseCase
 import com.moneymong.moneymong.domain.usecase.ledger.PostLedgerTransactionUseCase
 import com.moneymong.moneymong.domain.usecase.ocr.PostFileUploadUseCase
 import com.moneymong.moneymong.domain.usecase.user.FetchUserNicknameUseCase
@@ -32,10 +33,12 @@ class LedgerManualViewModel @Inject constructor(
     private val fetchAgencyIdUseCase: FetchAgencyIdUseCase,
     private val fetchUserNicknameUseCase: FetchUserNicknameUseCase,
     private val createCategoryUseCase: CreateCategoryUseCase,
+    private val fetchCategoriesUseCase: FetchCategoriesUseCase,
 ) : BaseViewModel<LedgerManualState, LedgerManualSideEffect>(LedgerManualState()) {
 
     init {
         fetchUserInfo()
+        fetchCategories()
     }
 
     @OptIn(OrbitExperimental::class)
@@ -98,7 +101,10 @@ class LedgerManualViewModel @Inject constructor(
 
     fun createCategory() = intent {
         val request =
-            CategoryCreateRequest(agencyId = state.agencyId.toLong(), name = state.categoryValue.text)
+            CategoryCreateRequest(
+                agencyId = state.agencyId.toLong(),
+                name = state.categoryValue.text
+            )
 
         createCategoryUseCase(request)
             .onSuccess {
@@ -114,6 +120,15 @@ class LedgerManualViewModel @Inject constructor(
                         showErrorDialog = true,
                         errorMessage = it.message ?: MoneyMongError.UnExpectedError.message
                     )
+                }
+            }
+    }
+
+    fun fetchCategories() = intent {
+        fetchCategoriesUseCase(agencyId = state.agencyId.toLong())
+            .onSuccess {
+                reduce {
+                    state.copy(categories = it.categories)
                 }
             }
     }
