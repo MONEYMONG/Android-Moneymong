@@ -110,12 +110,7 @@ class LedgerManualViewModel @Inject constructor(
         createCategoryUseCase(request)
             .onSuccess {
                 fetchCategories()
-                reduce {
-                    state.copy(
-                        showBottomSheet = false,
-                        categoryValue = TextFieldValue(),
-                    )
-                }
+                reduce { state.copy(showBottomSheet = false) }
             }.onFailure {
                 reduce {
                     state.copy(
@@ -123,7 +118,7 @@ class LedgerManualViewModel @Inject constructor(
                         errorMessage = it.message ?: MoneyMongError.UnExpectedError.message
                     )
                 }
-            }
+            }.also { onChangeCategoryValue(TextFieldValue()) }
     }
 
     fun fetchCategories() = intent {

@@ -34,7 +34,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -192,7 +191,10 @@ fun LedgerManualScreen(
             onDismissRequest = {
                 scope.launch {
                     sheetState.hide()
-                }.invokeOnCompletion { viewModel.onDismissBottomSheet() }
+                }.invokeOnCompletion {
+                    viewModel.onDismissBottomSheet()
+                    viewModel.onChangeCategoryValue(TextFieldValue())
+                }
             },
             onChangeCategoryValue = viewModel::onChangeCategoryValue,
             onCategoryCreate = viewModel::createCategory,
