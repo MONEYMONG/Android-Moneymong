@@ -16,6 +16,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -109,7 +111,10 @@ fun LedgerManualCategoryBottomSheet(
                         categories = categories,
                         onValueChange = onChangeCategoryValue,
                         onClickRegister = onCategoryCreate,
-                        onPrev = { sheetType = LedgerManualBottomSheetType.LIST }
+                        onPrev = {
+                            sheetType = LedgerManualBottomSheetType.LIST
+                            onChangeCategoryValue(TextFieldValue())
+                        }
                     )
                 }
             }
@@ -125,6 +130,7 @@ fun LedgerManualCategoryBottomSheetContent(
     onDismissRequest: () -> Unit,
     onClickCreate: () -> Unit,
 ) {
+    val scrollState = rememberScrollState()
     Column(
         modifier = modifier
             .fillMaxWidth()
@@ -165,13 +171,14 @@ fun LedgerManualCategoryBottomSheetContent(
         )
         Spacer(modifier = Modifier.height(16.dp))
         FlowRow(
+            modifier = Modifier.verticalScroll(scrollState),
             horizontalArrangement = Arrangement.spacedBy(12.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             categories?.forEach {
                 MDSOutlineTag(
                     text = it.name,
                     iconResource = R.drawable.ic_close_default,
-                    onClick = {},
                 )
             }
         }

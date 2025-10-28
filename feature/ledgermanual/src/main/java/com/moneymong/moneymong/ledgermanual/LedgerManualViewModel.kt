@@ -9,10 +9,12 @@ import com.moneymong.moneymong.ui.isValidPaymentDate
 import com.moneymong.moneymong.ui.isValidPaymentTime
 import com.moneymong.moneymong.ui.validateValue
 import com.moneymong.moneymong.domain.usecase.agency.FetchAgencyIdUseCase
+import com.moneymong.moneymong.domain.usecase.agency.FetchCategoriesUseCase
 import com.moneymong.moneymong.domain.usecase.ledger.PostLedgerTransactionUseCase
 import com.moneymong.moneymong.domain.usecase.ocr.PostFileUploadUseCase
 import com.moneymong.moneymong.domain.usecase.user.FetchUserNicknameUseCase
 import com.moneymong.moneymong.model.agency.CategoryCreateRequest
+import com.moneymong.moneymong.model.agency.CategoryResponse
 import com.moneymong.moneymong.model.ledger.FundType
 import com.moneymong.moneymong.model.ledger.LedgerTransactionRequest
 import com.moneymong.moneymong.model.ocr.FileUploadRequest
@@ -32,10 +34,12 @@ class LedgerManualViewModel @Inject constructor(
     private val fetchAgencyIdUseCase: FetchAgencyIdUseCase,
     private val fetchUserNicknameUseCase: FetchUserNicknameUseCase,
     private val createCategoryUseCase: CreateCategoryUseCase,
+    private val fetchCategoriesUseCase: FetchCategoriesUseCase,
 ) : BaseViewModel<LedgerManualState, LedgerManualSideEffect>(LedgerManualState()) {
 
     init {
         fetchUserInfo()
+        fetchCategories()
     }
 
     @OptIn(OrbitExperimental::class)
@@ -98,22 +102,30 @@ class LedgerManualViewModel @Inject constructor(
 
     fun createCategory() = intent {
         val request =
-            CategoryCreateRequest(agencyId = state.agencyId.toLong(), name = state.categoryValue.text)
+            CategoryCreateRequest(
+                agencyId = state.agencyId.toLong(),
+                name = state.categoryValue.text
+            )
 
         createCategoryUseCase(request)
             .onSuccess {
-                reduce {
-                    state.copy(
-                        showBottomSheet = false,
-                        categoryValue = TextFieldValue(),
-                    )
-                }
+                fetchCategories()
+                reduce { state.copy(showBottomSheet = false) }
             }.onFailure {
                 reduce {
                     state.copy(
                         showErrorDialog = true,
                         errorMessage = it.message ?: MoneyMongError.UnExpectedError.message
                     )
+                }
+            }.also { onChangeCategoryValue(TextFieldValue()) }
+    }
+
+    fun fetchCategories() = intent {
+        fetchCategoriesUseCase(agencyId = state.agencyId.toLong())
+            .onSuccess {
+                reduce {
+                    state.copy(categories = it.categories)
                 }
             }
     }
@@ -213,6 +225,10 @@ class LedgerManualViewModel @Inject constructor(
         if (validate) {
             reduce { state.copy(categoryValue = value) }
         }
+    }
+
+    fun onClickCategory(category: CategoryResponse) = intent {
+        reduce { state.copy(selectedCategory = category) }
     }
 
     private fun trimStartWithZero(value: TextFieldValue) =

@@ -34,7 +34,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -89,7 +88,8 @@ import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.compose.collectAsState
 import org.orbitmvi.orbit.compose.collectSideEffect
 
-@OptIn(ExperimentalGlideComposeApi::class, ExperimentalMaterial3Api::class,
+@OptIn(
+    ExperimentalGlideComposeApi::class, ExperimentalMaterial3Api::class,
     ExperimentalLayoutApi::class
 )
 @Composable
@@ -191,7 +191,10 @@ fun LedgerManualScreen(
             onDismissRequest = {
                 scope.launch {
                     sheetState.hide()
-                }.invokeOnCompletion { viewModel.onDismissBottomSheet() }
+                }.invokeOnCompletion {
+                    viewModel.onDismissBottomSheet()
+                    viewModel.onChangeCategoryValue(TextFieldValue())
+                }
             },
             onChangeCategoryValue = viewModel::onChangeCategoryValue,
             onCategoryCreate = viewModel::createCategory,
@@ -360,13 +363,17 @@ fun LedgerManualScreen(
                 }
                 Spacer(modifier = Modifier.height(8.dp))
                 FlowRow(
-                    horizontalArrangement = Arrangement.spacedBy(10.dp)
+                    horizontalArrangement = Arrangement.spacedBy(10.dp),
+                    verticalArrangement = Arrangement.spacedBy(10.dp),
                 ) {
-                    MDSOutlineTag(
-                        text = "Test", // TODO
-                        iconResource = drawable.ic_close_default,
-                        onClick = {},
-                    )
+                    state.categories.forEach { category ->
+                        val isSelected = category == state.selectedCategory
+                        MDSOutlineTag(
+                            text = category.name,
+                            selected = isSelected,
+                            onClick = { viewModel.onClickCategory(category) },
+                        )
+                    }
                 }
                 Spacer(modifier = Modifier.height(24.dp))
                 Text(

@@ -29,7 +29,8 @@ data class LedgerManualState(
     val errorMessage: String = "",
     val showBottomSheet: Boolean = false,
     val categoryValue: TextFieldValue = TextFieldValue(),
-    val categories: List<CategoryResponse>? = null,
+    val categories: List<CategoryResponse> = emptyList(),
+    val selectedCategory: CategoryResponse? = null
 ) : State {
 
     val enabled: Boolean
