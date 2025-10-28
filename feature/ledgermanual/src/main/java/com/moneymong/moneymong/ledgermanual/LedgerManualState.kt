@@ -30,7 +30,7 @@ data class LedgerManualState(
     val showBottomSheet: Boolean = false,
     val categoryValue: TextFieldValue = TextFieldValue(),
     val categories: List<CategoryResponse> = emptyList(),
-    val selectedCategories: Set<CategoryResponse> = emptySet()
+    val selectedCategory: CategoryResponse? = null
 ) : State {
 
     val enabled: Boolean

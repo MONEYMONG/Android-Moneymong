@@ -367,9 +367,10 @@ fun LedgerManualScreen(
                     verticalArrangement = Arrangement.spacedBy(10.dp),
                 ) {
                     state.categories.forEach { category ->
+                        val isSelected = category == state.selectedCategory
                         MDSOutlineTag(
                             text = category.name,
-                            selected = state.selectedCategories.contains(category),
+                            selected = isSelected,
                             onClick = { viewModel.onClickCategory(category) },
                         )
                     }

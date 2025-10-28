@@ -228,15 +228,7 @@ class LedgerManualViewModel @Inject constructor(
     }
 
     fun onClickCategory(category: CategoryResponse) = intent {
-        val existsCategory = state.selectedCategories.contains(category)
-
-        val targetCategories = if (existsCategory) {
-            state.selectedCategories - category
-        } else {
-            state.selectedCategories + category
-        }
-
-        reduce { state.copy(selectedCategories = targetCategories) }
+        reduce { state.copy(selectedCategory = category) }
     }
 
     private fun trimStartWithZero(value: TextFieldValue) =
