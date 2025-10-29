@@ -178,6 +178,36 @@ fun LedgerDetailScreen(
                 onClickDelete = { viewModel.onChangeVisibleConfirmModal(true) },
                 onClickDone = viewModel::onClickEditButton
             )
+        },
+        bottomBar = {
+            if (state.isStaff) {
+                DisposableEffect(key1 = Unit) {
+                    SystemBarColorController.setNavigationBarColor(color = White)
+
+                    onDispose {
+                        SystemBarColorController.initialSystemBarColors()
+                    }
+                }
+
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(White)
+                        .padding(horizontal = MMHorizontalSpacing),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Spacer(modifier = Modifier.height(20.dp))
+                    MDSButton(
+                        modifier = Modifier.fillMaxWidth(),
+                        text = "수정하기",
+                        enabled = state.enabledEdit,
+                        size = MDSButtonSize.LARGE,
+                        type = MDSButtonType.PRIMARY,
+                        onClick = viewModel::onClickEditButton
+                    )
+                    Spacer(modifier = Modifier.height(12.dp))
+                }
+            }
         }
     ) {
         Column(
@@ -484,34 +514,6 @@ fun LedgerDetailScreen(
                 }
             }
             Spacer(modifier = Modifier.height(20.dp))
-            if (state.isStaff) {
-                DisposableEffect(key1 = Unit) {
-                    SystemBarColorController.setNavigationBarColor(color = White)
-
-                    onDispose {
-                        SystemBarColorController.initialSystemBarColors()
-                    }
-                }
-
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(White)
-                        .padding(horizontal = MMHorizontalSpacing),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Spacer(modifier = Modifier.height(20.dp))
-                    MDSButton(
-                        modifier = Modifier.fillMaxWidth(),
-                        text = "수정하기",
-                        enabled = state.enabledEdit,
-                        size = MDSButtonSize.LARGE,
-                        type = MDSButtonType.PRIMARY,
-                        onClick = viewModel::onClickEditButton
-                    )
-                    Spacer(modifier = Modifier.height(12.dp))
-                }
-            }
         }
         if (state.isLoading) {
             LoadingScreen(modifier = Modifier.fillMaxSize())
