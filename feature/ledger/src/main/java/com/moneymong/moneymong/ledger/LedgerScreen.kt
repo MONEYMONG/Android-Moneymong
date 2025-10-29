@@ -85,16 +85,14 @@ fun LedgerScreen(
     )
     val analyticsTracker = LocalAnalyticsTracker.current
 
-    LaunchedEffect(Unit) {
-        viewModel.fetchMyAgencyList()
-        viewModel.fetchAgencyMemberList()
-        viewModel.fetchAgencyExistLedger()
+    LaunchedEffect(state.isStaff) {
+        println("isStaff: ${state.isStaff}")
     }
 
     viewModel.collectSideEffect {
         when (it) {
             is LedgerSideEffect.LedgerNavigateToLedgerDetail -> {
-                navigateToLedgerDetail(null, it.id, state.isStaff)
+                navigateToLedgerDetail(null, it.id, it.isStaff)
             }
 
             is LedgerSideEffect.LedgerNavigateToLedgerManual -> {
@@ -236,7 +234,8 @@ fun LedgerScreen(
                                 onClickTransactionItem = {
                                     viewModel.eventEmit(
                                         LedgerSideEffect.LedgerNavigateToLedgerDetail(
-                                            it
+                                            id = it,
+                                            isStaff = state.isStaff,
                                         )
                                     )
                                 },

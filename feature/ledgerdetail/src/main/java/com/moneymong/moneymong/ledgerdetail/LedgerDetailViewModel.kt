@@ -272,7 +272,7 @@ class LedgerDetailViewModel @Inject constructor(
         reduce { state.copy(isStaff = isStaff) }
     }
 
-    private fun showErrorDialog(message: String?) = intent {
+    private fun showErrorDialog(message: String?) = blockingIntent {
         reduce {
             state.copy(
                 showErrorDialog = true,

@@ -12,5 +12,6 @@ data class LedgerTransactionDetailResponse(
     val paymentDate: String,
     val receiptImageUrls: List<ReceiptImageURL>,
     val documentImageUrls: List<DocumentImageURL>,
-    val authorName: String
+    val authorName: String,
+    val category: String?,
 )
