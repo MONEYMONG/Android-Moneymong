@@ -64,6 +64,7 @@ class LedgerManualViewModel @Inject constructor(
                 description = state.memoValue.text.ifEmpty { "내용 없음" },
                 paymentDate = state.postPaymentDate,
                 documentImageUrls = state.documentList,
+                category = state.selectedCategory?.name,
             )
             postLedgerTransactionUseCase(state.agencyId, ledgerTransactionRequest)
                 .onSuccess {
