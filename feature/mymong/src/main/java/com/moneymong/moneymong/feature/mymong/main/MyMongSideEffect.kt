@@ -1,6 +1,6 @@
 package com.moneymong.moneymong.feature.mymong.main
 
-import com.moneymong.moneymong.common.base.SideEffect
+import com.moneymong.moneymong.android.SideEffect
 
 sealed interface MyMongSideEffect : SideEffect {
     data object NavigateToWithdrawal : MyMongSideEffect

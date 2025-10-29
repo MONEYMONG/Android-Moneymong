@@ -1,11 +1,13 @@
 package com.moneymong.moneymong.feature.agency.join
 
 import androidx.core.text.isDigitsOnly
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
-import com.moneymong.moneymong.common.base.BaseViewModel
+import com.moneymong.moneymong.android.BaseViewModel
 import com.moneymong.moneymong.domain.usecase.agency.AgencyJoinUseCase
 import com.moneymong.moneymong.domain.usecase.agency.SaveAgencyIdUseCase
 import com.moneymong.moneymong.feature.agency.join.component.CODE_MAX_SIZE
+import com.moneymong.moneymong.feature.agency.join.navigation.AgencyJoinArgs
 import com.moneymong.moneymong.model.agency.AgencyJoinRequest
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -15,9 +17,11 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AgencyJoinViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle,
     private val agencyJoinUseCase: AgencyJoinUseCase,
     private val saveAgencyIdUseCase: SaveAgencyIdUseCase
-) : BaseViewModel<AgencyJoinState, AgencyJoinSideEffect>(AgencyJoinState()) {
+) : BaseViewModel<AgencyJoinState, AgencyJoinSideEffect>(
+    state = AgencyJoinState(isBackButton = AgencyJoinArgs(savedStateHandle).isBackButton)) {
 
     fun findLedgerByInviteCode() = intent {
         viewModelScope.launch {

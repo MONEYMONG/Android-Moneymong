@@ -17,7 +17,7 @@ enum class MoneyMongFlavor(val dimension: FlavorDimension, val applicationIdSuff
 }
 
 fun configureFlavors(
-    commonExtension: CommonExtension<*, *, *, *, *>,
+    commonExtension: CommonExtension<*, *, *, *, *, *>,
     flavorConfigurationBlock: ProductFlavor.(flavor: MoneyMongFlavor) -> Unit = {}
 ) {
     commonExtension.apply {

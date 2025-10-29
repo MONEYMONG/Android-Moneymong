@@ -10,7 +10,7 @@ android {
 }
 
 dependencies {
-
+    implementation(projects.core.android)
     implementation(projects.core.designSystem)
     implementation(projects.feature.sign)
     implementation(projects.feature.agency)

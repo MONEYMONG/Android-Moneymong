@@ -2,13 +2,11 @@ package com.moneymong.moneymong.ocr_detail
 
 import android.content.SharedPreferences
 import androidx.compose.ui.text.input.TextFieldValue
-import com.moneymong.moneymong.common.base.BaseViewModel
-import com.moneymong.moneymong.common.event.Event
-import com.moneymong.moneymong.common.event.EventTracker
-import com.moneymong.moneymong.common.ext.toMultipart
-import com.moneymong.moneymong.common.ui.isValidPaymentDate
-import com.moneymong.moneymong.common.ui.isValidPaymentTime
-import com.moneymong.moneymong.common.ui.validateValue
+import com.moneymong.moneymong.android.BaseViewModel
+import com.moneymong.moneymong.android.util.toMultipart
+import com.moneymong.moneymong.ui.isValidPaymentDate
+import com.moneymong.moneymong.ui.isValidPaymentTime
+import com.moneymong.moneymong.ui.validateValue
 import com.moneymong.moneymong.domain.usecase.agency.FetchAgencyIdUseCase
 import com.moneymong.moneymong.domain.usecase.ledger.PostLedgerTransactionUseCase
 import com.moneymong.moneymong.domain.usecase.ocr.PostFileUploadUseCase
@@ -31,7 +29,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class OCRDetailViewModel @Inject constructor(
-    private val eventTracker: EventTracker,
     private val prefs: SharedPreferences,
     private val postLedgerTransactionUseCase: PostLedgerTransactionUseCase,
     private val postFileUploadUseCase: PostFileUploadUseCase,
@@ -136,7 +133,6 @@ class OCRDetailViewModel @Inject constructor(
     }
 
     fun onClickPostLedger() = intent {
-        eventTracker.logEvent(Event.OCR_MODIFY_TO_REGISTER_CLICK)
         postDocumentImage(imageFile = state.receiptFile, isReceipt = true)
     }
 
@@ -145,7 +141,7 @@ class OCRDetailViewModel @Inject constructor(
     fun addDocumentImage(file: File?) = intent {
         val newDocumentUris = state.documentImageUrls.toMutableList()
         if (newDocumentUris.size == 12) {
-            newDocumentUris.removeFirst()
+            newDocumentUris.removeAt(index = 0)
             reduce { state.copy(documentImageUrls = newDocumentUris) }
         }
         postDocumentImage(file)

@@ -1,6 +1,6 @@
 package com.moneymong.moneymong.feature.mymong.withdrawal
 
-import com.moneymong.moneymong.common.base.BaseViewModel
+import com.moneymong.moneymong.android.BaseViewModel
 import com.moneymong.moneymong.common.error.MoneyMongError
 import com.moneymong.moneymong.domain.usecase.agency.SaveAgencyIdUseCase
 import com.moneymong.moneymong.domain.usecase.user.SaveDeniedCameraPermissionUseCase

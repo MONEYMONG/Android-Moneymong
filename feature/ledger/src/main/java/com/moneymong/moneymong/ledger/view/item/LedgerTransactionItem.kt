@@ -19,8 +19,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.moneymong.moneymong.common.ext.toDateFormat
-import com.moneymong.moneymong.common.ui.toWonFormat
+import com.moneymong.moneymong.common.util.toDateFormat
+import com.moneymong.moneymong.ui.toWonFormat
 import com.moneymong.moneymong.design_system.R.*
 import com.moneymong.moneymong.design_system.theme.Blue01
 import com.moneymong.moneymong.design_system.theme.Blue04

@@ -1,9 +1,11 @@
 package com.moneymong.moneymong.feature.agency.register.view
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -14,15 +16,18 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.moneymong.moneymong.design_system.component.textfield.MDSTextField
 import com.moneymong.moneymong.design_system.component.textfield.util.MDSTextFieldIcons
 import com.moneymong.moneymong.design_system.component.textfield.util.withRequiredMark
+import com.moneymong.moneymong.design_system.theme.Body1
 import com.moneymong.moneymong.design_system.theme.Body3
 import com.moneymong.moneymong.design_system.theme.Gray05
 import com.moneymong.moneymong.design_system.theme.Gray10
@@ -34,6 +39,8 @@ internal fun AgencyResisterContentView(
     agencyName: TextFieldValue,
     onAgencyNameChange: (TextFieldValue) -> Unit,
     changeNameTextFieldIsError: (Boolean) -> Unit,
+    visibleInviteCode: Boolean,
+    onClickInviteCode: () -> Unit
 ) {
     Column(modifier = modifier) {
         TitleView()
@@ -43,6 +50,20 @@ internal fun AgencyResisterContentView(
             onAgencyNameChange = onAgencyNameChange,
             changeIsError = changeNameTextFieldIsError
         )
+        Spacer(modifier = Modifier.height(7.dp))
+
+        if (visibleInviteCode) {
+            Text(
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .clickable(onClick = onClickInviteCode)
+                    .padding(8.dp),
+                text = "초대코드를 받았어요 >",
+                style = Body1,
+                color = Gray05,
+                textDecoration = TextDecoration.Underline
+            )
+        }
     }
 }
 
@@ -119,5 +140,7 @@ private fun AgencyResisterContentViewPreview() {
         agencyName = TextFieldValue("동아리"),
         onAgencyNameChange = {},
         changeNameTextFieldIsError = {},
+        visibleInviteCode = true,
+        onClickInviteCode = {}
     )
 }

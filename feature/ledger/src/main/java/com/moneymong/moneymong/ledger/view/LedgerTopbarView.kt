@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -19,17 +18,16 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.moneymong.moneymong.common.ui.noRippleClickable
+import com.moneymong.moneymong.design_system.R
 import com.moneymong.moneymong.design_system.theme.Gray10
 import com.moneymong.moneymong.design_system.theme.Heading1
-import com.moneymong.moneymong.design_system.R
+import com.moneymong.moneymong.ui.noRippleClickable
 
 @Composable
 fun LedgerTopbarView(
     modifier: Modifier = Modifier,
     header: String,
     icon: Int,
-    visibleArrow: Boolean = false,
     onClickDownArrow: () -> Unit
 ) {
     Row(
@@ -51,18 +49,16 @@ fun LedgerTopbarView(
             maxLines = 1
         )
         Spacer(modifier = Modifier.width(4.dp))
-        if (visibleArrow) {
-            Icon(
-                modifier = Modifier
-                    .size(20.dp)
-                    .noRippleClickable {
-                        onClickDownArrow()
-                    },
-                painter = painterResource(id = icon),
-                contentDescription = null,
-                tint = Gray10
-            )
-        }
+        Icon(
+            modifier = Modifier
+                .size(20.dp)
+                .noRippleClickable {
+                    onClickDownArrow()
+                },
+            painter = painterResource(id = icon),
+            contentDescription = null,
+            tint = Gray10
+        )
     }
 }
 
@@ -72,6 +68,5 @@ fun LedgerTopbarPreview() {
     LedgerTopbarView(
         header = "장부장부장부장부장부장부장부장부장부",
         icon = R.drawable.ic_chevron_bottom,
-        visibleArrow = true
     ) {}
 }

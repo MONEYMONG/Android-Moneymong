@@ -1,6 +1,8 @@
 package com.moneymong.moneymong.home.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavBackStackEntry
@@ -8,13 +10,13 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
+import com.moneymong.moneymong.common.ui.SystemBarColorController
 import com.moneymong.moneymong.design_system.theme.Blue04
 import com.moneymong.moneymong.design_system.theme.Gray01
 import com.moneymong.moneymong.design_system.theme.Gray08
 import com.moneymong.moneymong.design_system.theme.White
 import com.moneymong.moneymong.feature.agency.navigation.agencyRegisterCompleteRoute
 import com.moneymong.moneymong.feature.agency.navigation.agencyRoute
-import com.moneymong.moneymong.feature.agency.navigation.navigateAgency
 import com.moneymong.moneymong.feature.mymong.navigation.mymongRoute
 import com.moneymong.moneymong.feature.mymong.navigation.navigateMyMong
 import com.moneymong.moneymong.feature.sign.navigation.loginRoute
@@ -35,21 +37,32 @@ internal class HomeNavigator(
         @Composable get() = navHostController.currentBackStackEntryAsState().value
 
     private val routes: List<String>
-        @Composable get() = remember { HomeBottomTabs.values().map { it.route } }
+        @Composable get() = remember { HomeBottomTabs.entries.map { it.route } }
 
     val currentRoute: String?
         @Composable get() = navBackStackEntry?.destination?.route
 
     val statusBarColor: Color
         @Composable
+        get() {
+            val systemBarColors by SystemBarColorController.systemBarColors.collectAsState()
+            return systemBarColors.statusBarColor ?: statusBarColorWithPolicy
+        }
+
+    val navigationBarColor: Color
+        @Composable
+        get() {
+            val systemBarColors by SystemBarColorController.systemBarColors.collectAsState()
+            return systemBarColors.navigationBarColor ?: navigationBarColorWithPolicy
+        }
+
+    val statusBarColorWithPolicy: Color
+        @Composable
         get() = when (currentRoute) {
-            in listOf(
-                splashRoute,
-            ) -> Blue04
+            splashRoute -> Blue04
 
             in listOf(
                 loginRoute,
-                agencyRoute,
                 ledgerDetailRoute,
                 mymongRoute
             ) -> Gray01
@@ -59,7 +72,18 @@ internal class HomeNavigator(
             else -> White
         }
 
-    val darkIcons: Boolean
+    val navigationBarColorWithPolicy: Color
+        @Composable
+        get() = when (currentRoute) {
+            splashRoute -> Blue04
+            loginRoute -> Gray01
+            ledgerDetailRoute -> Gray01
+            agencyRegisterCompleteRoute -> Gray08
+
+            else -> White
+        }
+
+    val isSystemBarDarkIcons: Boolean
         @Composable
         get() = when (currentRoute) {
             in listOf(

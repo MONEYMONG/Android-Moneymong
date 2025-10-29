@@ -1,6 +1,6 @@
 package com.moneymong.moneymong.ledger
 
-import com.moneymong.moneymong.common.base.State
+import com.moneymong.moneymong.android.State
 import com.moneymong.moneymong.ledger.view.LedgerTransactionType
 import com.moneymong.moneymong.model.agency.MyAgencyResponse
 import com.moneymong.moneymong.model.ledger.LedgerDetail
