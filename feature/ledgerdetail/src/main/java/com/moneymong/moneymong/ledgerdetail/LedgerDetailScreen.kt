@@ -53,6 +53,7 @@ import com.moneymong.moneymong.design_system.component.button.MDSButtonSize
 import com.moneymong.moneymong.design_system.component.button.MDSButtonType
 import com.moneymong.moneymong.design_system.component.indicator.LoadingScreen
 import com.moneymong.moneymong.design_system.component.modal.MDSModal
+import com.moneymong.moneymong.design_system.component.tag.MDSOutlineTag
 import com.moneymong.moneymong.design_system.component.textfield.MDSTextField
 import com.moneymong.moneymong.design_system.component.textfield.util.MDSTextFieldIcons
 import com.moneymong.moneymong.design_system.component.textfield.util.withRequiredMark
@@ -376,6 +377,22 @@ fun LedgerDetailScreen(
                             style = Body3,
                             color = Gray10
                         )
+                    }
+                    Box(
+                        modifier = Modifier
+                            .padding(vertical = 20.dp)
+                            .fillMaxWidth()
+                            .height(1.dp)
+                            .background(Gray03, shape = DottedShape(8.dp))
+                    )
+                    Text(
+                        text = "카테고리",
+                        style = Body2,
+                        color = Gray06
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    state.ledgerTransactionDetail?.category?.let {
+                        MDSOutlineTag(text = it)
                     }
                     Box(
                         modifier = Modifier
