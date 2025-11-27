@@ -7,10 +7,12 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -29,12 +31,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
-import com.moneymong.moneymong.common.ui.noRippleClickable
-import com.moneymong.moneymong.common.ui.toWonFormat
+import com.moneymong.moneymong.ui.noRippleClickable
+import com.moneymong.moneymong.ui.toWonFormat
 import com.moneymong.moneymong.design_system.R.drawable
 import com.moneymong.moneymong.design_system.component.chip.MDSChip
 import com.moneymong.moneymong.design_system.component.indicator.LoadingScreen
@@ -102,6 +105,7 @@ internal fun LedgerDefaultView(
         LedgerTransactionType.수입
     )
 
+    val systemBarTopHeight = WindowInsets.safeDrawing.getTop(LocalDensity.current).toFloat()
     var dateRowState by remember { mutableStateOf(OnboardingComponentState()) }
 
     LazyColumn(
@@ -140,7 +144,7 @@ internal fun LedgerDefaultView(
             LedgerDefaultDateRow(
                 modifier = Modifier.onGloballyPositioned {
                     dateRowState = OnboardingComponentState(
-                        offset = it.localToRoot(Offset.Zero),
+                        offset = it.localToRoot(Offset(x = 0f, y = -systemBarTopHeight)),
                         size = it.size
                     )
                 },

@@ -1,6 +1,6 @@
 package com.moneymong.moneymong.feature.mymong.main
 
-import com.moneymong.moneymong.common.base.State
+import com.moneymong.moneymong.android.State
 
 data class MyMongState(
     val name: String = "",

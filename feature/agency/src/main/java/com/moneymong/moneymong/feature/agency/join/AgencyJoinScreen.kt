@@ -26,7 +26,7 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.moneymong.moneymong.common.ui.noRippleClickable
+import com.moneymong.moneymong.ui.noRippleClickable
 import com.moneymong.moneymong.design_system.R
 import com.moneymong.moneymong.design_system.component.snackbar.MDSSnackbarHost
 import com.moneymong.moneymong.design_system.error.ErrorDialog
@@ -61,15 +61,18 @@ fun AgencyJoinScreen(
                     .background(White)
                     .height(44.dp),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.End
+                horizontalArrangement = if (state.isBackButton) Arrangement.Start else Arrangement.End
             ) {
+                val navigateUpIconId =
+                    if (state.isBackButton) R.drawable.ic_chevron_left else R.drawable.ic_close_default
+
                 Icon(
                     modifier = Modifier
                         .size(24.dp)
                         .noRippleClickable {
                             navigateUp()
                         },
-                    painter = painterResource(id = R.drawable.ic_close_default),
+                    painter = painterResource(id = navigateUpIconId),
                     contentDescription = null,
                     tint = Black
                 )

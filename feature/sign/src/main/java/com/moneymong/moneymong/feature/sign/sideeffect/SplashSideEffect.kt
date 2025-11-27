@@ -1,6 +1,6 @@
 package com.moneymong.moneymong.feature.sign.sideeffect
 
-import com.moneymong.moneymong.common.base.SideEffect
+import com.moneymong.moneymong.android.SideEffect
 
-sealed interface SplashSideEffect : SideEffect {
+sealed interface SplashSideEffect : com.moneymong.moneymong.android.SideEffect {
 }

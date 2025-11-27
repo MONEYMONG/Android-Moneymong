@@ -10,6 +10,8 @@ android {
 }
 
 dependencies {
+    implementation(projects.core.analytics)
+    implementation(projects.core.android)
     implementation(projects.core.common)
     implementation(projects.core.model)
     implementation(projects.domain)

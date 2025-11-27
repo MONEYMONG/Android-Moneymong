@@ -1,7 +1,7 @@
 package com.moneymong.moneymong.feature.agency.register
 
 import androidx.compose.ui.text.input.TextFieldValue
-import com.moneymong.moneymong.common.base.State
+import com.moneymong.moneymong.android.State
 import com.moneymong.moneymong.feature.agency.search.AgencyType
 
 data class AgencyRegisterState(
@@ -11,4 +11,5 @@ data class AgencyRegisterState(
     val nameTextFieldIsError: Boolean = false,
     val visibleOutDialog: Boolean = false,
     val visibleErrorDialog: Boolean = false,
+    val visibleInviteCode: Boolean = false
 ) : State

@@ -1,5 +1,6 @@
 package com.moneymong.moneymong.feature.agency.register
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Column
@@ -25,7 +26,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.moneymong.moneymong.common.ui.noRippleClickable
+import com.moneymong.moneymong.ui.noRippleClickable
 import com.moneymong.moneymong.design_system.R
 import com.moneymong.moneymong.design_system.component.button.MDSButton
 import com.moneymong.moneymong.design_system.component.modal.MDSModal
@@ -42,6 +43,7 @@ fun AgencyRegisterScreen(
     modifier: Modifier = Modifier,
     viewModel: AgencyRegisterViewModel = hiltViewModel(),
     navigateToLedger: () -> Unit,
+    navigateToAgencyJoin: () -> Unit
 ) {
     val state by viewModel.collectAsState()
     val focusManager = LocalFocusManager.current
@@ -53,8 +55,14 @@ fun AgencyRegisterScreen(
                 focusManager.clearFocus()
                 navigateToLedger()
             }
+
+            is AgencyRegisterSideEffect.NavigateToAgencyJoin -> {
+                navigateToAgencyJoin()
+            }
         }
     }
+
+    BackHandler(onBack = viewModel::navigateToLedger)
 
     if (state.visibleOutDialog) {
         MDSModal(
@@ -116,6 +124,8 @@ fun AgencyRegisterScreen(
                 agencyName = state.agencyName,
                 onAgencyNameChange = viewModel::changeAgencyName,
                 changeNameTextFieldIsError = viewModel::changeNameTextFieldIsError,
+                visibleInviteCode = state.visibleInviteCode,
+                onClickInviteCode = viewModel::navigateToAgencyJoin
             )
         }
         val canRegister = state.agencyName.text.isNotEmpty() && state.nameTextFieldIsError.not()
@@ -135,5 +145,6 @@ fun AgencyRegisterScreen(
 fun AgencyRegisterScreenPreview() {
     AgencyRegisterScreen(
         navigateToLedger = {},
+        navigateToAgencyJoin = {}
     )
 }

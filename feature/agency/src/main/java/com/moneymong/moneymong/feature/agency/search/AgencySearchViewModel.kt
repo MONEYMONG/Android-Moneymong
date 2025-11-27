@@ -4,7 +4,7 @@ import androidx.compose.foundation.text.input.clearText
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
 import androidx.paging.map
-import com.moneymong.moneymong.common.base.BaseViewModel
+import com.moneymong.moneymong.android.BaseViewModel
 import com.moneymong.moneymong.common.error.MoneyMongError
 import com.moneymong.moneymong.domain.usecase.agency.FetchAgenciesUseCase
 import com.moneymong.moneymong.domain.usecase.agency.FetchAgencyByNameUseCase
