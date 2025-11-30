@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -23,12 +24,14 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.moneymong.moneymong.design_system.theme.Black
 import com.moneymong.moneymong.design_system.theme.Blue04
 import com.moneymong.moneymong.design_system.theme.Body2
 import com.moneymong.moneymong.design_system.theme.Gray01
 import com.moneymong.moneymong.design_system.theme.Gray06
 import com.moneymong.moneymong.design_system.theme.Gray10
 import com.moneymong.moneymong.design_system.theme.Heading1
+import com.moneymong.moneymong.design_system.theme.Heading3
 import com.moneymong.moneymong.design_system.theme.Heading5
 import com.moneymong.moneymong.design_system.theme.MMHorizontalSpacing
 import com.moneymong.moneymong.design_system.theme.White
@@ -54,6 +57,7 @@ private fun ReportScreen(
     Column(modifier = modifier.background(color = Gray01)) {
         ReportTopBar(modifier = Modifier.fillMaxWidth()) { /* todo */ }
         ReportSummary(modifier = Modifier.padding(horizontal = MMHorizontalSpacing))
+        Spacer(modifier = Modifier.height(20.dp))
         ReportContent()
     }
 }
@@ -103,7 +107,8 @@ private fun ReportSummary(
 @Composable
 private fun SummaryItem(
     modifier: Modifier = Modifier,
-    amount: Int
+    amount: Int,
+    // type: AmountType
 ) {
     Column(
         modifier = modifier
@@ -129,9 +134,100 @@ private fun SummaryItem(
 
 @Composable
 private fun ReportContent(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    yearMonth: Pair<Int, Int> = Pair(2025, 6),
+    monthlyIncome: Int = 500000,
+    monthlyExpense: Int = 400000,
+    monthlyIncomePercent: Float = 70.2f,
+    monthlyExpensePercent: Float = 85.3f
 ) {
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .background(color = White)
+            .padding(
+                start = MMHorizontalSpacing,
+                end = MMHorizontalSpacing,
+                top = 20.dp,
+                bottom = 16.dp
+            )
+    ) {
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(4.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                modifier = Modifier.size(20.dp),
+                painter = painterResource(id = MDSR.drawable.ic_chevron_left),
+                contentDescription = "이전 달 레포트 확인하기",
+                tint = Gray06
+            )
+            Text(
+                text = "${yearMonth.first}. ${yearMonth.second}",
+                color = Black,
+                style = Heading5
+            )
+            Icon(
+                modifier = Modifier.size(20.dp),
+                painter = painterResource(id = MDSR.drawable.ic_chevron_right),
+                contentDescription = "다음 달 레포트 확인하기",
+                tint = Gray06
+            )
+        }
+        Spacer(modifier = Modifier.height(8.dp))
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            MonthlyItem(
+                modifier = Modifier.weight(1f),
+                month = yearMonth.second,
+                monthlyAmount = monthlyIncome,
+                monthlyPercent = monthlyIncomePercent.toInt()
+            )
+            MonthlyItem(
+                modifier = Modifier.weight(1f),
+                month = yearMonth.second,
+                monthlyAmount = monthlyExpense,
+                monthlyPercent = monthlyExpensePercent.toInt()
+            )
+        }
+    }
+}
 
+@Composable
+private fun MonthlyItem(
+    modifier: Modifier = Modifier,
+    month: Int,
+    monthlyAmount: Int,
+    monthlyPercent: Int,
+    // type: AmountType
+) {
+    Column(
+        modifier = modifier
+            .clip(shape = RoundedCornerShape(size = 12.dp))
+            .background(color = Gray01)
+            .padding(vertical = 12.dp, horizontal = 16.dp),
+        verticalArrangement = Arrangement.Center
+    ) {
+        Text(
+            text = "${month}월 수입",
+            color = Blue04,
+            style = Body2
+        )
+        Spacer(modifier = Modifier.height(2.dp))
+        Text(
+            text = "+${monthlyAmount.toString().toWonFormat()}원",
+            color = Gray10,
+            style = Heading3
+        )
+        Spacer(modifier = Modifier.height(12.dp))
+        Text(
+            text = "총 수입이 $monthlyPercent%를 차지",
+            color = Gray06,
+            style = Body2
+        )
+    }
 }
 
 @Preview
