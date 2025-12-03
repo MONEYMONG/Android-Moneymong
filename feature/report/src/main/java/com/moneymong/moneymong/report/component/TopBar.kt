@@ -14,6 +14,7 @@ import com.moneymong.moneymong.design_system.R
 import com.moneymong.moneymong.design_system.theme.Gray07
 import com.moneymong.moneymong.design_system.theme.Gray10
 import com.moneymong.moneymong.design_system.theme.Heading1
+import com.moneymong.moneymong.design_system.theme.MMHorizontalSpacing
 import com.moneymong.moneymong.ui.noRippleClickable
 
 @Composable
@@ -21,7 +22,7 @@ internal fun ReportTopBar(
     modifier: Modifier = Modifier,
     onClose: () -> Unit
 ) {
-    Box(modifier = modifier.padding(vertical = 8.dp, horizontal = 16.dp)) {
+    Box(modifier = modifier.padding(vertical = 8.dp, horizontal = MMHorizontalSpacing)) {
         Text(
             modifier = Modifier.align(Alignment.Center),
             text = "레포트",

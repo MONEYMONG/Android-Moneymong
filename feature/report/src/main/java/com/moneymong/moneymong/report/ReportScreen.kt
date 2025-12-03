@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -17,6 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -24,18 +26,27 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.moneymong.moneymong.design_system.component.tag.MDSTag
 import com.moneymong.moneymong.design_system.theme.Black
 import com.moneymong.moneymong.design_system.theme.Blue04
 import com.moneymong.moneymong.design_system.theme.Body2
+import com.moneymong.moneymong.design_system.theme.Body3
 import com.moneymong.moneymong.design_system.theme.Gray01
+import com.moneymong.moneymong.design_system.theme.Gray05
 import com.moneymong.moneymong.design_system.theme.Gray06
 import com.moneymong.moneymong.design_system.theme.Gray10
 import com.moneymong.moneymong.design_system.theme.Heading1
 import com.moneymong.moneymong.design_system.theme.Heading3
+import com.moneymong.moneymong.design_system.theme.Heading4
 import com.moneymong.moneymong.design_system.theme.Heading5
 import com.moneymong.moneymong.design_system.theme.MMHorizontalSpacing
+import com.moneymong.moneymong.design_system.theme.Red01
+import com.moneymong.moneymong.design_system.theme.Red03
 import com.moneymong.moneymong.design_system.theme.White
 import com.moneymong.moneymong.report.component.ReportTopBar
+import com.moneymong.moneymong.report.model.AmountType
+import com.moneymong.moneymong.report.model.MemberAmount
+import com.moneymong.moneymong.report.model.mockMemberAmounts
 import com.moneymong.moneymong.ui.toWonFormat
 import com.moneymong.moneymong.design_system.R as MDSR
 
@@ -58,7 +69,18 @@ private fun ReportScreen(
         ReportTopBar(modifier = Modifier.fillMaxWidth()) { /* todo */ }
         ReportSummary(modifier = Modifier.padding(horizontal = MMHorizontalSpacing))
         Spacer(modifier = Modifier.height(20.dp))
-        ReportContent()
+
+        Column(
+            modifier = Modifier
+                .background(color = White)
+                .padding(horizontal = MMHorizontalSpacing)
+        ) {
+            ReportContent()
+            Spacer(modifier = Modifier.height(32.dp))
+            MemberReport()
+            Spacer(modifier = Modifier.height(32.dp))
+            CategoryReport()
+        }
     }
 }
 
@@ -144,13 +166,7 @@ private fun ReportContent(
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .background(color = White)
-            .padding(
-                start = MMHorizontalSpacing,
-                end = MMHorizontalSpacing,
-                top = 20.dp,
-                bottom = 16.dp
-            )
+            .padding(top = 20.dp, bottom = 16.dp)
     ) {
         Row(
             horizontalArrangement = Arrangement.spacedBy(4.dp),
@@ -208,7 +224,6 @@ private fun MonthlyItem(
             .clip(shape = RoundedCornerShape(size = 12.dp))
             .background(color = Gray01)
             .padding(vertical = 12.dp, horizontal = 16.dp),
-        verticalArrangement = Arrangement.Center
     ) {
         Text(
             text = "${month}월 수입",
@@ -228,6 +243,84 @@ private fun MonthlyItem(
             style = Body2
         )
     }
+}
+
+
+@Composable
+private fun MemberReport(
+    modifier: Modifier = Modifier,
+    memberAmounts: List<MemberAmount> = mockMemberAmounts
+) {
+    Column(modifier = modifier) {
+        Text(
+            text = "멤버별로 얼마나 쓰고 있을까?",
+            color = Gray10,
+            style = Heading4
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        Column(
+            modifier = Modifier
+                .clip(shape = RoundedCornerShape(size = 20.dp))
+                .background(color = Gray01)
+                .padding(all = 20.dp),
+            verticalArrangement = Arrangement.spacedBy(24.dp)
+        ) {
+            memberAmounts.forEach { memberAmount ->
+                MemberItem(memberAmount = memberAmount)
+            }
+        }
+    }
+}
+
+@Composable
+private fun MemberItem(
+    modifier: Modifier = Modifier,
+    memberAmount: MemberAmount
+) {
+    Column(modifier = modifier.fillMaxWidth()) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Icon(
+                modifier = Modifier.size(32.dp),
+                painter = painterResource(MDSR.drawable.img_auditor),
+                contentDescription = "멤버 아이콘",
+                tint = Color.Unspecified
+            )
+            Spacer(modifier = Modifier.width(4.dp))
+            Text(
+                text = memberAmount.name,
+                color = Gray10,
+                style = Heading1
+            )
+        }
+        Spacer(modifier = Modifier.height(12.dp))
+
+        AmountType.entries.forEach { amountType ->
+            val label: String = amountType.label
+            val tagBackgroundColor: Color = if (amountType == AmountType.INCOME) Blue04 else Red03
+            val tagContentColor: Color = if (amountType == AmountType.INCOME) White else Red01
+            val amount = if (amountType == AmountType.INCOME) memberAmount.income else memberAmount.expense
+            val percent = if (amountType == AmountType.INCOME) memberAmount.incomePercent else memberAmount.expensePercent
+
+            Row {
+                Text(text = label, color = Gray05, style = Body3)
+                Spacer(modifier = Modifier.width(4.dp))
+                Text(text = "${amount.toString().toWonFormat()}원", color = Gray06, style = Body3)
+                Spacer(modifier = Modifier.width(8.dp))
+                MDSTag(
+                    text = "${percent}%",
+                    backgroundColor = tagBackgroundColor,
+                    contentColor = tagContentColor
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun CategoryReport(
+    modifier: Modifier = Modifier
+) {
+
 }
 
 @Preview
