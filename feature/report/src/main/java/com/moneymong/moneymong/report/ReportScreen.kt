@@ -11,10 +11,16 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -26,14 +32,17 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.moneymong.moneymong.design_system.component.tab.MDSTabRow
 import com.moneymong.moneymong.design_system.component.tag.MDSTag
 import com.moneymong.moneymong.design_system.theme.Black
 import com.moneymong.moneymong.design_system.theme.Blue04
 import com.moneymong.moneymong.design_system.theme.Body2
 import com.moneymong.moneymong.design_system.theme.Body3
 import com.moneymong.moneymong.design_system.theme.Gray01
+import com.moneymong.moneymong.design_system.theme.Gray04
 import com.moneymong.moneymong.design_system.theme.Gray05
 import com.moneymong.moneymong.design_system.theme.Gray06
+import com.moneymong.moneymong.design_system.theme.Gray07
 import com.moneymong.moneymong.design_system.theme.Gray10
 import com.moneymong.moneymong.design_system.theme.Heading1
 import com.moneymong.moneymong.design_system.theme.Heading3
@@ -45,7 +54,9 @@ import com.moneymong.moneymong.design_system.theme.Red03
 import com.moneymong.moneymong.design_system.theme.White
 import com.moneymong.moneymong.report.component.ReportTopBar
 import com.moneymong.moneymong.report.model.AmountType
+import com.moneymong.moneymong.report.model.CategoryAmountItem
 import com.moneymong.moneymong.report.model.MemberAmount
+import com.moneymong.moneymong.report.model.mockCategoryAmounts
 import com.moneymong.moneymong.report.model.mockMemberAmounts
 import com.moneymong.moneymong.ui.toWonFormat
 import com.moneymong.moneymong.design_system.R as MDSR
@@ -65,7 +76,11 @@ private fun ReportScreen(
     modifier: Modifier = Modifier
 ) {
 
-    Column(modifier = modifier.background(color = Gray01)) {
+    Column(
+        modifier = modifier
+            .verticalScroll(rememberScrollState())
+            .background(color = Gray01)
+    ) {
         ReportTopBar(modifier = Modifier.fillMaxWidth()) { /* todo */ }
         ReportSummary(modifier = Modifier.padding(horizontal = MMHorizontalSpacing))
         Spacer(modifier = Modifier.height(20.dp))
@@ -81,6 +96,7 @@ private fun ReportScreen(
             Spacer(modifier = Modifier.height(32.dp))
             CategoryReport()
         }
+        Spacer(modifier = Modifier.height(20.dp))
     }
 }
 
@@ -277,7 +293,7 @@ private fun MemberItem(
     modifier: Modifier = Modifier,
     memberAmount: MemberAmount
 ) {
-    Column(modifier = modifier.fillMaxWidth()) {
+    Column(modifier = modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(12.dp)) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Icon(
                 modifier = Modifier.size(32.dp),
@@ -292,7 +308,6 @@ private fun MemberItem(
                 style = Heading1
             )
         }
-        Spacer(modifier = Modifier.height(12.dp))
 
         AmountType.entries.forEach { amountType ->
             val label: String = amountType.label
@@ -320,7 +335,89 @@ private fun MemberItem(
 private fun CategoryReport(
     modifier: Modifier = Modifier
 ) {
+    var categoryAmountType: AmountType by remember { mutableStateOf(AmountType.EXPENSE) }
+    val categoryAmountTypes = remember { AmountType.entries.reversed() }
 
+    Column(modifier = modifier) {
+        Text(
+            text = "카테고리별 이만큼 사용하고 있어요",
+            color = Gray10,
+            style = Heading4
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        MDSTabRow(
+            tabs = categoryAmountTypes.map { it.label },
+            selectedTabIndex = categoryAmountTypes.indexOf(categoryAmountType),
+            onChangeSelectedTabIndex = { categoryAmountType = categoryAmountTypes[it] }
+        )
+        Spacer(modifier = Modifier.height(20.dp))
+        CategoryReportContent(amountType = categoryAmountType)
+    }
+}
+
+
+@Composable
+private fun CategoryReportContent(
+    modifier: Modifier = Modifier,
+    month: Int = 12,
+    amountType: AmountType,
+    categoryAmountItems: List<CategoryAmountItem> = mockCategoryAmounts
+        .map { it.toCategoryAmountItem(type = amountType) }
+        .sortedByDescending { it.amount }
+) {
+    val extraCategoryVisibleOffset = 3
+
+    Column(modifier = modifier) {
+        Text(
+            text = buildAnnotatedString {
+                append("${month}월 동안\n")
+                withStyle(style = SpanStyle(color = Blue04)) {
+                    append(categoryAmountItems.first().name)
+                }
+                append("에서 ${amountType.label}이 가장 많아요")
+            },
+            color = Gray10,
+            style = Heading1
+        )
+        Spacer(modifier = Modifier.height(28.dp))
+
+
+        if (categoryAmountItems.size > extraCategoryVisibleOffset) {
+            Column(
+                modifier = Modifier
+                    .clip(shape = RoundedCornerShape(size = 20.dp))
+                    .background(color = Gray01)
+                    .padding(all = 20.dp),
+                verticalArrangement = Arrangement.spacedBy(15.dp)
+            ) {
+                categoryAmountItems.drop(3).forEach { categoryAmountItem ->
+                    Column {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Text(
+                                text = categoryAmountItem.name,
+                                color = Gray07,
+                                style = Heading1
+                            )
+                            Text(
+                                text = "${categoryAmountItem.amount.toString().toWonFormat()}원",
+                                color = Gray07,
+                                style = Heading1
+                            )
+                        }
+                        Spacer(modifier = Modifier.height(2.dp))
+                        Text(
+                            text = "${categoryAmountItem.percent}%",
+                            color = Gray04,
+                            style = Body3
+                        )
+                    }
+                }
+            }
+        }
+    }
 }
 
 @Preview
