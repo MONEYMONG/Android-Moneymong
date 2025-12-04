@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
@@ -121,7 +122,7 @@ private fun ReportSummary(
             .background(color = White)
             .padding(vertical = 20.dp, horizontal = 24.dp),
     ) {
-        Row(horizontalArrangement = Arrangement.SpaceBetween) {
+        Row(horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
             Text(
                 modifier = Modifier.weight(1f),
                 text = buildAnnotatedString {
@@ -135,10 +136,11 @@ private fun ReportSummary(
             )
             Image(
                 modifier = Modifier.size(80.dp),
-                painter = painterResource(MDSR.drawable.ic_record),
+                painter = painterResource(MDSR.drawable.img_record),
                 contentDescription = "레포트 이미지"
             )
         }
+        Spacer(modifier = Modifier.height(12.dp))
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
@@ -303,7 +305,10 @@ private fun MemberItem(
     Column(modifier = modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(12.dp)) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Icon(
-                modifier = Modifier.size(32.dp),
+                modifier = Modifier
+                    .background(color = SkyBlue01, shape = CircleShape)
+                    .padding(4.dp)
+                    .size(32.dp),
                 painter = painterResource(MDSR.drawable.img_auditor),
                 contentDescription = "멤버 아이콘",
                 tint = Color.Unspecified
