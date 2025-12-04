@@ -1,8 +1,10 @@
 package com.moneymong.moneymong.report
 
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -17,7 +19,9 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -35,9 +39,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.moneymong.moneymong.design_system.component.tab.MDSTabRow
 import com.moneymong.moneymong.design_system.component.tag.MDSTag
 import com.moneymong.moneymong.design_system.theme.Black
+import com.moneymong.moneymong.design_system.theme.Blue01
 import com.moneymong.moneymong.design_system.theme.Blue04
 import com.moneymong.moneymong.design_system.theme.Body2
 import com.moneymong.moneymong.design_system.theme.Body3
+import com.moneymong.moneymong.design_system.theme.Caption
 import com.moneymong.moneymong.design_system.theme.Gray01
 import com.moneymong.moneymong.design_system.theme.Gray04
 import com.moneymong.moneymong.design_system.theme.Gray05
@@ -51,6 +57,7 @@ import com.moneymong.moneymong.design_system.theme.Heading5
 import com.moneymong.moneymong.design_system.theme.MMHorizontalSpacing
 import com.moneymong.moneymong.design_system.theme.Red01
 import com.moneymong.moneymong.design_system.theme.Red03
+import com.moneymong.moneymong.design_system.theme.SkyBlue01
 import com.moneymong.moneymong.design_system.theme.White
 import com.moneymong.moneymong.report.component.ReportTopBar
 import com.moneymong.moneymong.report.model.AmountType
@@ -381,6 +388,25 @@ private fun CategoryReportContent(
         )
         Spacer(modifier = Modifier.height(28.dp))
 
+        Row(
+            modifier = Modifier.padding(horizontal = 33.dp),
+            horizontalArrangement = Arrangement.SpaceEvenly,
+            verticalAlignment = Alignment.Bottom
+        ) {
+            val stickColors = listOf(Blue04, Blue01, SkyBlue01)
+
+            categoryAmountItems.take(3).forEachIndexed { idx, categoryAmountItem ->
+                CategoryAmountStick(
+                    modifier = Modifier.weight(1f),
+                    name = categoryAmountItem.name,
+                    amount = categoryAmountItem.amount,
+                    percent = categoryAmountItem.percent,
+                    color = stickColors[idx]
+                )
+            }
+        }
+
+        Spacer(modifier = Modifier.height(24.dp))
 
         if (categoryAmountItems.size > extraCategoryVisibleOffset) {
             Column(
@@ -418,6 +444,41 @@ private fun CategoryReportContent(
             }
         }
     }
+}
+
+
+@Composable
+private fun CategoryAmountStick(
+    modifier: Modifier,
+    name: String,
+    amount: Int,
+    percent: Float,
+    color: Color
+) {
+    val minHeight = 20
+    val maxHeight = 174
+    var targetHeight: Float by remember { mutableFloatStateOf(value = 0f) }
+    val animatedHeight by animateFloatAsState(targetValue = targetHeight)
+
+    LaunchedEffect(key1 = percent) {
+        targetHeight = minHeight + (maxHeight - minHeight) * (percent / 100)
+    }
+
+    Column(modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally) {
+        Text(text = "${amount.toString().toWonFormat()}원", color = Gray10, style = Heading1)
+        Spacer(modifier = Modifier.height(9.dp))
+        Box(
+            modifier = Modifier
+                .width(44.dp)
+                .height(animatedHeight.dp)
+                .clip(RoundedCornerShape(topStart = 8.dp, topEnd = 8.dp))
+                .background(color = color)
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        Text(text = name, color = Gray10, style = Body3)
+        Text(text = "${percent}%", color = Gray04, style = Caption)
+    }
+
 }
 
 @Preview
