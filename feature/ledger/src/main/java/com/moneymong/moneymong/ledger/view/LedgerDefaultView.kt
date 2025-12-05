@@ -1,5 +1,6 @@
 package com.moneymong.moneymong.ledger.view
 
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -11,12 +12,15 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -30,14 +34,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
-import com.moneymong.moneymong.ui.noRippleClickable
-import com.moneymong.moneymong.ui.toWonFormat
 import com.moneymong.moneymong.design_system.R.drawable
 import com.moneymong.moneymong.design_system.component.chip.MDSChip
 import com.moneymong.moneymong.design_system.component.indicator.LoadingScreen
@@ -46,13 +49,18 @@ import com.moneymong.moneymong.design_system.theme.Body3
 import com.moneymong.moneymong.design_system.theme.Gray01
 import com.moneymong.moneymong.design_system.theme.Gray06
 import com.moneymong.moneymong.design_system.theme.Gray07
+import com.moneymong.moneymong.design_system.theme.Gray08
 import com.moneymong.moneymong.design_system.theme.Gray10
 import com.moneymong.moneymong.design_system.theme.Heading5
+import com.moneymong.moneymong.design_system.theme.MMHorizontalSpacing
 import com.moneymong.moneymong.design_system.theme.White
+import com.moneymong.moneymong.design_system.theme.Yellow01
 import com.moneymong.moneymong.ledger.view.item.LedgerTransactionItem
 import com.moneymong.moneymong.ledger.view.onboarding.LedgerOnboarding
 import com.moneymong.moneymong.ledger.view.onboarding.OnboardingComponentState
 import com.moneymong.moneymong.model.ledger.LedgerDetail
+import com.moneymong.moneymong.ui.noRippleClickable
+import com.moneymong.moneymong.ui.toWonFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -118,7 +126,7 @@ internal fun LedgerDefaultView(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 20.dp),
+                    .padding(horizontal = MMHorizontalSpacing),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -152,17 +160,25 @@ internal fun LedgerDefaultView(
                 endDate = endDate,
                 onClickPeriod = onClickPeriod,
             )
-            Spacer(modifier = Modifier.height(20.dp))
-            MDSChip(
-                modifier = Modifier.padding(start = 20.dp),
-                tabs = chips.map { it.name },
-                selectedTabIndex = selectedTabIndex,
-                onChangeSelectedTabIndex = {
-                    selectedTabIndex = it
-                    onChangeTransactionType(chips[it])
-                }
-            )
-            Spacer(modifier = Modifier.height(6.dp))
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                MDSChip(
+                    tabs = chips.map { it.name },
+                    selectedTabIndex = selectedTabIndex,
+                    onChangeSelectedTabIndex = {
+                        selectedTabIndex = it
+                        onChangeTransactionType(chips[it])
+                    }
+                )
+                ReportEntry(
+                    navigateReport = { /* todo */ }
+                )
+            }
         }
         if (isLoading) {
             item {
@@ -173,7 +189,7 @@ internal fun LedgerDefaultView(
             if (hasTransaction) {
                 itemsIndexed(ledgerDetails) { index, item ->
                     LedgerTransactionItem(
-                        modifier = Modifier.padding(horizontal = 20.dp),
+                        modifier = Modifier.padding(horizontal = MMHorizontalSpacing),
                         ledgerDetail = item,
                         onClickTransactionItem = onClickTransactionItem
                     )
@@ -209,7 +225,6 @@ internal fun LedgerDefaultView(
     }
 }
 
-
 @Composable
 internal fun LedgerDefaultDateRow(
     modifier: Modifier = Modifier,
@@ -220,7 +235,7 @@ internal fun LedgerDefaultDateRow(
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = 20.dp)
+            .padding(horizontal = MMHorizontalSpacing)
             .clip(RoundedCornerShape(8.dp))
             .background(Gray01)
             .noRippleClickable { onClickPeriod() },
@@ -247,6 +262,48 @@ internal fun LedgerDefaultDateRow(
                 tint = Gray06
             )
         }
+    }
+}
+
+@Composable
+private fun ReportEntry(
+    modifier: Modifier = Modifier,
+    navigateReport: () -> Unit
+) {
+    Row(
+        modifier = modifier.noRippleClickable(onClick = navigateReport),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            modifier = Modifier
+                .background(color = Gray08, shape = CircleShape)
+                .padding(vertical = 6.dp, horizontal = 12.dp),
+            text = "레포트 보러가기",
+            color = Yellow01,
+            style = Body2
+        )
+        Canvas(
+            modifier = Modifier
+                .size(width = 8.dp, height = 12.dp)
+                .offset(x = (-4).dp)
+        ) {
+            val path = Path().apply {
+                moveTo(0f, 0f)
+                lineTo(0f, size.height)
+                lineTo(size.width, size.height / 2)
+                close()
+            }
+            drawPath(
+                path = path,
+                color = Gray08
+            )
+        }
+        Spacer(modifier = Modifier.width(2.dp))
+        Image(
+            modifier = Modifier.size(36.dp),
+            painter = painterResource(id = drawable.img_report),
+            contentDescription = "레포트 보러 가기 이미지"
+        )
     }
 }
 
