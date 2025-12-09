@@ -196,6 +196,7 @@ fun HomeScreen(
                     navigateToAgencyJoin = homeNavController::navigateAgencyJoin,
                     navigateToLedgerDetail = homeNavController::navigateLedgerDetail,
                     navigateToLedgerManual = homeNavController::navigateLedgerManual,
+                    navigateToReport = homeNavController::navigateReport,
                 )
 
                 ledgerDetailScreen(navigateToLedger = homeNavController::navigateLedger)

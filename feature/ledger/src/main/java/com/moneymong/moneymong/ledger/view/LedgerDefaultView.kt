@@ -101,6 +101,7 @@ internal fun LedgerDefaultView(
     onChangeTransactionType: (LedgerTransactionType) -> Unit,
     onClickPeriod: () -> Unit,
     onClickTransactionItem: (Int) -> Unit,
+    navigateReport: () -> Unit,
     addFABState: OnboardingComponentState,
     visibleOnboarding: Boolean,
     onDismissOnboarding: () -> Unit
@@ -176,7 +177,7 @@ internal fun LedgerDefaultView(
                     }
                 )
                 ReportEntry(
-                    navigateReport = { /* todo */ }
+                    navigateReport = navigateReport
                 )
             }
         }
@@ -265,6 +266,7 @@ internal fun LedgerDefaultDateRow(
     }
 }
 
+// todo: 장부가 없는 경우에는 안 보여주도록(아마도 id값이 0일 듯?)
 @Composable
 private fun ReportEntry(
     modifier: Modifier = Modifier,
