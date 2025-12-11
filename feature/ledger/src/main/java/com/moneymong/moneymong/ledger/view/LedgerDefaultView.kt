@@ -101,6 +101,7 @@ internal fun LedgerDefaultView(
     onChangeTransactionType: (LedgerTransactionType) -> Unit,
     onClickPeriod: () -> Unit,
     onClickTransactionItem: (Int) -> Unit,
+    navigateReport: () -> Unit,
     addFABState: OnboardingComponentState,
     visibleOnboarding: Boolean,
     onDismissOnboarding: () -> Unit
@@ -176,7 +177,7 @@ internal fun LedgerDefaultView(
                     }
                 )
                 ReportEntry(
-                    navigateReport = { /* todo */ }
+                    navigateReport = navigateReport
                 )
             }
         }
@@ -323,6 +324,7 @@ fun LedgerDefaultPreview() {
         onChangeTransactionType = {},
         onClickPeriod = {},
         onClickTransactionItem = {},
+        navigateReport = {},
         addFABState = OnboardingComponentState(),
         visibleOnboarding = true,
         onDismissOnboarding = {}

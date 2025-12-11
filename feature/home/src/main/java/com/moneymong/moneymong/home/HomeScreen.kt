@@ -62,6 +62,8 @@ import com.moneymong.moneymong.ocr_detail.navigation.navigateOCRDetail
 import com.moneymong.moneymong.ocr_detail.navigation.ocrDetailScreen
 import com.moneymong.moneymong.ocr_result.navigation.navigateOCRResult
 import com.moneymong.moneymong.ocr_result.navigation.ocrResultScreen
+import com.moneymong.moneymong.report.navigation.navigateReport
+import com.moneymong.moneymong.report.navigation.reportScreen
 import com.moneymong.moneymong.ui.pxToDp
 
 @Composable
@@ -196,6 +198,7 @@ fun HomeScreen(
                     navigateToAgencyJoin = homeNavController::navigateAgencyJoin,
                     navigateToLedgerDetail = homeNavController::navigateLedgerDetail,
                     navigateToLedgerManual = homeNavController::navigateLedgerManual,
+                    navigateToReport = { homeNavController.navigateReport(agencyId = it) },
                 )
 
                 ledgerDetailScreen(navigateToLedger = homeNavController::navigateLedger)
@@ -204,6 +207,9 @@ fun HomeScreen(
                     navigateToLedger = homeNavController::navigateLedger,
                     popBackStack = homeNavController::popBackStack
                 )
+
+                // report
+                reportScreen(navigateUp = homeNavController::navigateUp)
 
                 // ocr
                 ocrScreen(

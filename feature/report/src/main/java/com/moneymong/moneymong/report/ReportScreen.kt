@@ -73,15 +73,20 @@ import com.moneymong.moneymong.design_system.R as MDSR
 @Composable
 fun ReportRoute(
     modifier: Modifier = Modifier,
+    navigateUp: () -> Unit,
     viewModel: ReportViewModel = hiltViewModel()
 ) {
-    ReportScreen(modifier = modifier)
+    ReportScreen(
+        modifier = modifier,
+        navigateUp = navigateUp
+    )
 }
 
 
 @Composable
 private fun ReportScreen(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    navigateUp: () -> Unit
 ) {
 
     Column(
@@ -89,7 +94,10 @@ private fun ReportScreen(
             .verticalScroll(rememberScrollState())
             .background(color = Gray01)
     ) {
-        ReportTopBar(modifier = Modifier.fillMaxWidth()) { /* todo */ }
+        ReportTopBar(
+            modifier = Modifier.fillMaxWidth(),
+            onClose = navigateUp
+        )
         ReportSummary(modifier = Modifier.padding(horizontal = MMHorizontalSpacing))
         Spacer(modifier = Modifier.height(20.dp))
 
@@ -489,5 +497,7 @@ private fun CategoryAmountStick(
 @Preview
 @Composable
 private fun ReportScreenPreview() {
-    ReportScreen()
+    ReportScreen(
+        navigateUp = {}
+    )
 }

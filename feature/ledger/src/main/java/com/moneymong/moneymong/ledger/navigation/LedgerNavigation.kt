@@ -37,6 +37,7 @@ fun NavGraphBuilder.ledgerScreen(
     navigateToAgencyJoin: () -> Unit,
     navigateToLedgerDetail: (NavOptions?, Int, Boolean) -> Unit,
     navigateToLedgerManual: (NavOptions?) -> Unit,
+    navigateToReport: (id: Int) -> Unit
 ) {
     composable(
         route = ledgerRouteWithArgs,
@@ -47,7 +48,8 @@ fun NavGraphBuilder.ledgerScreen(
             navigateToAgencyRegister = navigateToAgencyRegister,
             navigateToAgencyJoin = navigateToAgencyJoin,
             navigateToLedgerDetail = navigateToLedgerDetail,
-            navigateToLedgerManual = navigateToLedgerManual
+            navigateToLedgerManual = navigateToLedgerManual,
+            navigateToReport = navigateToReport
         )
     }
 }

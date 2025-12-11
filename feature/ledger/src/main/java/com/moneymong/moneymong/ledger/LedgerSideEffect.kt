@@ -8,6 +8,7 @@ sealed class LedgerSideEffect : SideEffect {
     data object LedgerNavigateToLedgerManual : LedgerSideEffect()
     data object LedgerFetchRetry : LedgerSideEffect()
     data class LedgerNavigateToLedgerDetail(val id: Int, val isStaff: Boolean): LedgerSideEffect()
+    data class LedgerNavigateToReport(val id: Int): LedgerSideEffect()
     data class LedgerSelectedAgencyChange(val agencyId: Int): LedgerSideEffect()
     data class LedgerVisibleSnackbar(val message: String, val withDismissAction: Boolean): LedgerSideEffect()
 }

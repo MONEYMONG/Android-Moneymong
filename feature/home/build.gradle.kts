@@ -21,6 +21,7 @@ dependencies {
     implementation(projects.feature.ledger)
     implementation(projects.feature.ledgerdetail)
     implementation(projects.feature.ledgermanual)
+    implementation(projects.feature.report)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.appcompat)

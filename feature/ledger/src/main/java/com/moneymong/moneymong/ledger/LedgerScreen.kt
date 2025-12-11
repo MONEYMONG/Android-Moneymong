@@ -69,7 +69,8 @@ fun LedgerScreen(
     navigateToAgencyRegister: () -> Unit,
     navigateToAgencyJoin: () -> Unit,
     navigateToLedgerDetail: (NavOptions?, Int, Boolean) -> Unit,
-    navigateToLedgerManual: (NavOptions?) -> Unit
+    navigateToLedgerManual: (NavOptions?) -> Unit,
+    navigateToReport: (id: Int) -> Unit
 ) {
     val state = viewModel.collectAsState().value
     val tabs = listOf(LedgerTab.Ledger, LedgerTab.Member)
@@ -93,6 +94,10 @@ fun LedgerScreen(
 
             is LedgerSideEffect.LedgerNavigateToLedgerManual -> {
                 navigateToLedgerManual(null)
+            }
+
+            is LedgerSideEffect.LedgerNavigateToReport -> {
+                navigateToReport(it.id)
             }
 
             is LedgerSideEffect.LedgerOpenSheet -> {
@@ -235,6 +240,9 @@ fun LedgerScreen(
                                         )
                                     )
                                 },
+                                navigateReport = {
+                                    viewModel.eventEmit(LedgerSideEffect.LedgerNavigateToReport(id = state.agencyId))
+                                },
                                 addFABState = addFABState,
                                 visibleOnboarding = state.visibleOnboarding,
                                 onDismissOnboarding = viewModel::onDismissOnboarding
@@ -302,5 +310,6 @@ fun LedgerScreenPreview() {
         navigateToAgencyJoin = {},
         navigateToLedgerDetail = { navOptions, i, b -> },
         navigateToLedgerManual = {},
+        navigateToReport = {}
     )
 }
