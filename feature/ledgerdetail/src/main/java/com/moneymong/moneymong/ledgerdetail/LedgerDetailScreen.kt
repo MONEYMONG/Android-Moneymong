@@ -53,6 +53,7 @@ import com.moneymong.moneymong.design_system.component.button.MDSButtonSize
 import com.moneymong.moneymong.design_system.component.button.MDSButtonType
 import com.moneymong.moneymong.design_system.component.indicator.LoadingScreen
 import com.moneymong.moneymong.design_system.component.modal.MDSModal
+import com.moneymong.moneymong.design_system.component.tag.MDSOutlineTag
 import com.moneymong.moneymong.design_system.component.textfield.MDSTextField
 import com.moneymong.moneymong.design_system.component.textfield.util.MDSTextFieldIcons
 import com.moneymong.moneymong.design_system.component.textfield.util.withRequiredMark
@@ -177,6 +178,36 @@ fun LedgerDetailScreen(
                 onClickDelete = { viewModel.onChangeVisibleConfirmModal(true) },
                 onClickDone = viewModel::onClickEditButton
             )
+        },
+        bottomBar = {
+            if (state.isStaff) {
+                DisposableEffect(key1 = Unit) {
+                    SystemBarColorController.setNavigationBarColor(color = White)
+
+                    onDispose {
+                        SystemBarColorController.initialSystemBarColors()
+                    }
+                }
+
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(White)
+                        .padding(horizontal = MMHorizontalSpacing),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Spacer(modifier = Modifier.height(20.dp))
+                    MDSButton(
+                        modifier = Modifier.fillMaxWidth(),
+                        text = "수정하기",
+                        enabled = state.enabledEdit,
+                        size = MDSButtonSize.LARGE,
+                        type = MDSButtonType.PRIMARY,
+                        onClick = viewModel::onClickEditButton
+                    )
+                    Spacer(modifier = Modifier.height(12.dp))
+                }
+            }
         }
     ) {
         Column(
@@ -385,6 +416,22 @@ fun LedgerDetailScreen(
                             .background(Gray03, shape = DottedShape(8.dp))
                     )
                     Text(
+                        text = "카테고리",
+                        style = Body2,
+                        color = Gray06
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    state.ledgerTransactionDetail?.category?.let {
+                        MDSOutlineTag(text = it)
+                    }
+                    Box(
+                        modifier = Modifier
+                            .padding(vertical = 20.dp)
+                            .fillMaxWidth()
+                            .height(1.dp)
+                            .background(Gray03, shape = DottedShape(8.dp))
+                    )
+                    Text(
                         text = "사진 첨부 (최대12장)",
                         style = Body2,
                         color = Gray06
@@ -467,34 +514,6 @@ fun LedgerDetailScreen(
                 }
             }
             Spacer(modifier = Modifier.height(20.dp))
-            if (state.isStaff) {
-                DisposableEffect(key1 = Unit) {
-                    SystemBarColorController.setNavigationBarColor(color = White)
-
-                    onDispose {
-                        SystemBarColorController.initialSystemBarColors()
-                    }
-                }
-
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(White)
-                        .padding(horizontal = MMHorizontalSpacing),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Spacer(modifier = Modifier.height(20.dp))
-                    MDSButton(
-                        modifier = Modifier.fillMaxWidth(),
-                        text = "수정하기",
-                        enabled = state.enabledEdit,
-                        size = MDSButtonSize.LARGE,
-                        type = MDSButtonType.PRIMARY,
-                        onClick = viewModel::onClickEditButton
-                    )
-                    Spacer(modifier = Modifier.height(12.dp))
-                }
-            }
         }
         if (state.isLoading) {
             LoadingScreen(modifier = Modifier.fillMaxSize())
