@@ -85,10 +85,6 @@ fun LedgerScreen(
     )
     val analyticsTracker = LocalAnalyticsTracker.current
 
-    LaunchedEffect(state.isStaff) {
-        println("isStaff: ${state.isStaff}")
-    }
-
     viewModel.collectSideEffect {
         when (it) {
             is LedgerSideEffect.LedgerNavigateToLedgerDetail -> {
