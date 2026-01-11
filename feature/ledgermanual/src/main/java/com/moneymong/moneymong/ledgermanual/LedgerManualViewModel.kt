@@ -5,6 +5,7 @@ import com.moneymong.moneymong.android.BaseViewModel
 import com.moneymong.moneymong.android.util.toMultipart
 import com.moneymong.moneymong.common.error.MoneyMongError
 import com.moneymong.moneymong.domain.usecase.agency.CreateCategoryUseCase
+import com.moneymong.moneymong.domain.usecase.agency.DeleteCategoryUseCase
 import com.moneymong.moneymong.ui.isValidPaymentDate
 import com.moneymong.moneymong.ui.isValidPaymentTime
 import com.moneymong.moneymong.ui.validateValue
@@ -14,6 +15,7 @@ import com.moneymong.moneymong.domain.usecase.ledger.PostLedgerTransactionUseCas
 import com.moneymong.moneymong.domain.usecase.ocr.PostFileUploadUseCase
 import com.moneymong.moneymong.domain.usecase.user.FetchUserNicknameUseCase
 import com.moneymong.moneymong.model.agency.CategoryCreateRequest
+import com.moneymong.moneymong.model.agency.CategoryDeleteRequest
 import com.moneymong.moneymong.model.agency.CategoryResponse
 import com.moneymong.moneymong.model.ledger.FundType
 import com.moneymong.moneymong.model.ledger.LedgerTransactionRequest
@@ -35,6 +37,7 @@ class LedgerManualViewModel @Inject constructor(
     private val fetchUserNicknameUseCase: FetchUserNicknameUseCase,
     private val createCategoryUseCase: CreateCategoryUseCase,
     private val fetchCategoriesUseCase: FetchCategoriesUseCase,
+    private val deleteCategoryUseCase: DeleteCategoryUseCase,
 ) : BaseViewModel<LedgerManualState, LedgerManualSideEffect>(LedgerManualState()) {
 
     init {
@@ -127,6 +130,21 @@ class LedgerManualViewModel @Inject constructor(
             .onSuccess {
                 reduce {
                     state.copy(categories = it.categories)
+                }
+            }
+    }
+
+    fun deleteCategory(category: CategoryResponse) = intent {
+        val request = CategoryDeleteRequest(categoryId = category.id)
+
+        deleteCategoryUseCase(request = request)
+            .onSuccess { fetchCategories() }
+            .onFailure {
+                reduce {
+                    state.copy(
+                        showBottomSheet = true,
+                        errorMessage = it.message ?: MoneyMongError.UnExpectedError.message
+                    )
                 }
             }
     }
