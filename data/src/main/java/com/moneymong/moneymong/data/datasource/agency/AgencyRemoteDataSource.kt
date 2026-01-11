@@ -7,6 +7,7 @@ import com.moneymong.moneymong.model.agency.AgencyJoinResponse
 import com.moneymong.moneymong.model.agency.AgencyRegisterRequest
 import com.moneymong.moneymong.model.agency.CategoryCreateRequest
 import com.moneymong.moneymong.model.agency.CategoryCreateResponse
+import com.moneymong.moneymong.model.agency.CategoryDeleteRequest
 import com.moneymong.moneymong.model.agency.CategoryReadResponse
 import com.moneymong.moneymong.model.agency.MyAgencyResponse
 import com.moneymong.moneymong.model.agency.RegisterAgencyResponse
@@ -19,4 +20,5 @@ interface AgencyRemoteDataSource {
     suspend fun agencyCodeNumbers(data: AgencyJoinRequest): Result<AgencyJoinResponse>
     suspend fun createCategory(request: CategoryCreateRequest): Result<CategoryCreateResponse>
     suspend fun fetchCategories(agencyId: Long): Result<CategoryReadResponse>
+    suspend fun deleteCategory(request: CategoryDeleteRequest): Result<Unit>
 }
