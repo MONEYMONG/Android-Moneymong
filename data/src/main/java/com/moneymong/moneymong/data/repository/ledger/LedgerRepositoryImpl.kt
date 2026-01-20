@@ -3,6 +3,7 @@ package com.moneymong.moneymong.data.repository.ledger
 import com.moneymong.moneymong.data.datasource.ledger.LedgerLocalDataSource
 import com.moneymong.moneymong.data.datasource.ledger.LedgerRemoteDataSource
 import com.moneymong.moneymong.domain.repository.ledger.LedgerRepository
+import com.moneymong.moneymong.model.ledger.LedgerReportResponse
 import com.moneymong.moneymong.model.ledger.LedgerTransactionListResponse
 import com.moneymong.moneymong.model.ledger.LedgerTransactionRequest
 import com.moneymong.moneymong.model.ledger.LedgerTransactionResponse
@@ -49,4 +50,19 @@ class LedgerRepositoryImpl @Inject constructor(
     override suspend fun postDisplayedLedgerOnboarding(onboardingType: OnboardingType) {
         ledgerLocalDataSource.postDisplayedLedgerOnboarding(onboardingType = onboardingType)
     }
+
+    override suspend fun fetchLedgerReport(
+        agencyId: Int,
+        startYear: Int,
+        startMonth: Int,
+        endYear: Int,
+        endMonth: Int
+    ): Result<LedgerReportResponse> =
+        ledgerRemoteDataSource.fetchLedgerReport(
+            agencyId = agencyId,
+            startYear = startYear,
+            startMonth = startMonth,
+            endYear = endYear,
+            endMonth = endMonth
+        )
 }

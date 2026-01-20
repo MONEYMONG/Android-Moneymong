@@ -1,5 +1,6 @@
 package com.moneymong.moneymong.domain.repository.ledger
 
+import com.moneymong.moneymong.model.ledger.LedgerReportResponse
 import com.moneymong.moneymong.model.ledger.LedgerTransactionListResponse
 import com.moneymong.moneymong.model.ledger.LedgerTransactionRequest
 import com.moneymong.moneymong.model.ledger.LedgerTransactionResponse
@@ -13,4 +14,12 @@ interface LedgerRepository {
 
     fun fetchVisibleLedgerOnboarding(onboardingType: OnboardingType): Flow<Boolean>
     suspend fun postDisplayedLedgerOnboarding(onboardingType: OnboardingType)
+
+    suspend fun fetchLedgerReport(
+        agencyId: Int,
+        startYear: Int,
+        startMonth: Int,
+        endYear: Int,
+        endMonth: Int
+    ): Result<LedgerReportResponse>
 }

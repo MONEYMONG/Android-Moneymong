@@ -1,5 +1,6 @@
 package com.moneymong.moneymong.data.datasource.ledger
 
+import com.moneymong.moneymong.model.ledger.LedgerReportResponse
 import com.moneymong.moneymong.network.api.LedgerApi
 import com.moneymong.moneymong.model.ledger.LedgerTransactionRequest
 import com.moneymong.moneymong.model.ledger.LedgerTransactionListResponse
@@ -7,7 +8,7 @@ import javax.inject.Inject
 
 class LedgerRemoteDataSourceImpl @Inject constructor(
     private val ledgerApi: LedgerApi
-): LedgerRemoteDataSource {
+) : LedgerRemoteDataSource {
     override suspend fun fetchLedgerTransactionList(
         id: Int,
         startYear: Int,
@@ -32,4 +33,19 @@ class LedgerRemoteDataSourceImpl @Inject constructor(
 
     override suspend fun postLedgerTransaction(id: Int, body: LedgerTransactionRequest) =
         ledgerApi.postLedgerTransaction(id = id, body = body)
+
+    override suspend fun fetchLedgerReport(
+        agencyId: Int,
+        startYear: Int,
+        startMonth: Int,
+        endYear: Int,
+        endMonth: Int
+    ): Result<LedgerReportResponse> =
+        ledgerApi.fetchLedgerReport(
+            agencyId = agencyId,
+            startYear = startYear,
+            startMonth = startMonth,
+            endYear = endYear,
+            endMonth = endMonth
+        )
 }

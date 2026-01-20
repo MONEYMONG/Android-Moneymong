@@ -1,7 +1,8 @@
 package com.moneymong.moneymong.network.api
 
-import com.moneymong.moneymong.model.ledger.LedgerTransactionRequest
+import com.moneymong.moneymong.model.ledger.LedgerReportResponse
 import com.moneymong.moneymong.model.ledger.LedgerTransactionListResponse
+import com.moneymong.moneymong.model.ledger.LedgerTransactionRequest
 import com.moneymong.moneymong.model.ledger.LedgerTransactionResponse
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -27,6 +28,15 @@ interface LedgerApi {
     suspend fun fetchAgencyExistLedger(
         @Path("agencyId") agencyId: Int
     ): Result<Boolean>
+
+    @GET("api/v1/ledger/agencies/{agencyId}/reports")
+    suspend fun fetchLedgerReport(
+        @Path("agencyId") agencyId: Int,
+        @Query("startYear") startYear: Int,
+        @Query("startMonth") startMonth: Int,
+        @Query("endYear") endYear: Int,
+        @Query("endMonth") endMonth: Int
+    ): Result<LedgerReportResponse>
 
     // POST
     @POST("api/v2/ledger/{id}")
