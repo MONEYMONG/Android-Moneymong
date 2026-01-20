@@ -62,10 +62,10 @@ import com.moneymong.moneymong.design_system.theme.SkyBlue01
 import com.moneymong.moneymong.design_system.theme.White
 import com.moneymong.moneymong.report.component.ReportTopBar
 import com.moneymong.moneymong.report.model.AmountType
-import com.moneymong.moneymong.report.model.CategoryAmountItem
-import com.moneymong.moneymong.report.model.MemberAmount
-import com.moneymong.moneymong.report.model.mockCategoryAmounts
-import com.moneymong.moneymong.report.model.mockMemberAmounts
+import com.moneymong.moneymong.report.model.CategoryReportItem
+import com.moneymong.moneymong.report.model.MemberReport
+import com.moneymong.moneymong.report.model.mockCategoryReports
+import com.moneymong.moneymong.report.model.mockMemberReports
 import com.moneymong.moneymong.ui.toWonFormat
 import com.moneymong.moneymong.design_system.R as MDSR
 
@@ -282,7 +282,7 @@ private fun MonthlyItem(
 @Composable
 private fun MemberReport(
     modifier: Modifier = Modifier,
-    memberAmounts: List<MemberAmount> = mockMemberAmounts
+    memberReports: List<MemberReport> = mockMemberReports
 ) {
     Column(modifier = modifier) {
         Text(
@@ -298,8 +298,8 @@ private fun MemberReport(
                 .padding(all = 20.dp),
             verticalArrangement = Arrangement.spacedBy(24.dp)
         ) {
-            memberAmounts.forEach { memberAmount ->
-                MemberItem(memberAmount = memberAmount)
+            memberReports.forEach { memberReport ->
+                MemberItem(memberReport = memberReport)
             }
         }
     }
@@ -308,7 +308,7 @@ private fun MemberReport(
 @Composable
 private fun MemberItem(
     modifier: Modifier = Modifier,
-    memberAmount: MemberAmount
+    memberReport: MemberReport
 ) {
     Column(modifier = modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(12.dp)) {
         Row(verticalAlignment = Alignment.CenterVertically) {
@@ -323,7 +323,7 @@ private fun MemberItem(
             )
             Spacer(modifier = Modifier.width(4.dp))
             Text(
-                text = memberAmount.name,
+                text = memberReport.name,
                 color = Gray10,
                 style = Heading1
             )
@@ -333,8 +333,8 @@ private fun MemberItem(
             val label: String = amountType.label
             val tagBackgroundColor: Color = if (amountType == AmountType.INCOME) Blue04 else Red03
             val tagContentColor: Color = if (amountType == AmountType.INCOME) White else Red01
-            val amount = if (amountType == AmountType.INCOME) memberAmount.income else memberAmount.expense
-            val percent = if (amountType == AmountType.INCOME) memberAmount.incomePercent else memberAmount.expensePercent
+            val amount = if (amountType == AmountType.INCOME) memberReport.income else memberReport.expense
+            val percent = if (amountType == AmountType.INCOME) memberReport.incomePercent else memberReport.expensePercent
 
             Row {
                 Text(text = label, color = Gray05, style = Body3)
@@ -381,8 +381,8 @@ private fun CategoryReportContent(
     modifier: Modifier = Modifier,
     month: Int = 12,
     amountType: AmountType,
-    categoryAmountItems: List<CategoryAmountItem> = mockCategoryAmounts
-        .map { it.toCategoryAmountItem(type = amountType) }
+    categoryReportItems: List<CategoryReportItem> = mockCategoryReports
+        .map { it.toCategoryReportItem(type = amountType) }
         .sortedByDescending { it.amount }
 ) {
     val extraCategoryVisibleOffset = 3
@@ -392,7 +392,7 @@ private fun CategoryReportContent(
             text = buildAnnotatedString {
                 append("${month}월 동안\n")
                 withStyle(style = SpanStyle(color = Blue04)) {
-                    append(categoryAmountItems.first().name)
+                    append(categoryReportItems.first().name)
                 }
                 append("에서 ${amountType.label}이 가장 많아요")
             },
@@ -408,12 +408,12 @@ private fun CategoryReportContent(
         ) {
             val stickColors = listOf(Blue04, Blue01, SkyBlue01)
 
-            categoryAmountItems.take(3).forEachIndexed { idx, categoryAmountItem ->
-                CategoryAmountStick(
+            categoryReportItems.take(3).forEachIndexed { idx, categoryReportItem ->
+                CategoryReportStick(
                     modifier = Modifier.weight(1f),
-                    name = categoryAmountItem.name,
-                    amount = categoryAmountItem.amount,
-                    percent = categoryAmountItem.percent,
+                    name = categoryReportItem.name,
+                    amount = categoryReportItem.amount,
+                    percent = categoryReportItem.percent,
                     color = stickColors[idx]
                 )
             }
@@ -421,7 +421,7 @@ private fun CategoryReportContent(
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        if (categoryAmountItems.size > extraCategoryVisibleOffset) {
+        if (categoryReportItems.size > extraCategoryVisibleOffset) {
             Column(
                 modifier = Modifier
                     .clip(shape = RoundedCornerShape(size = 20.dp))
@@ -429,26 +429,26 @@ private fun CategoryReportContent(
                     .padding(all = 20.dp),
                 verticalArrangement = Arrangement.spacedBy(15.dp)
             ) {
-                categoryAmountItems.drop(3).forEach { categoryAmountItem ->
+                categoryReportItems.drop(3).forEach { categoryReportItem ->
                     Column {
                         Row(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
                             Text(
-                                text = categoryAmountItem.name,
+                                text = categoryReportItem.name,
                                 color = Gray07,
                                 style = Heading1
                             )
                             Text(
-                                text = "${categoryAmountItem.amount.toString().toWonFormat()}원",
+                                text = "${categoryReportItem.amount.toString().toWonFormat()}원",
                                 color = Gray07,
                                 style = Heading1
                             )
                         }
                         Spacer(modifier = Modifier.height(2.dp))
                         Text(
-                            text = "${categoryAmountItem.percent}%",
+                            text = "${categoryReportItem.percent}%",
                             color = Gray04,
                             style = Body3
                         )
@@ -461,11 +461,11 @@ private fun CategoryReportContent(
 
 
 @Composable
-private fun CategoryAmountStick(
+private fun CategoryReportStick(
     modifier: Modifier,
     name: String,
-    amount: Int,
-    percent: Float,
+    amount: Long,
+    percent: Double,
     color: Color
 ) {
     val minHeight = 20
@@ -474,7 +474,7 @@ private fun CategoryAmountStick(
     val animatedHeight by animateFloatAsState(targetValue = targetHeight)
 
     LaunchedEffect(key1 = percent) {
-        targetHeight = minHeight + (maxHeight - minHeight) * (percent / 100)
+        targetHeight = minHeight + (maxHeight - minHeight) * (percent.toFloat() / 100)
     }
 
     Column(modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally) {
