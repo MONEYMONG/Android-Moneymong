@@ -1,4 +1,4 @@
-package com.moneymong.moneymong.common.ui
+package com.moneymong.moneymong.ui
 
 import androidx.compose.ui.graphics.Color
 import kotlinx.coroutines.flow.MutableStateFlow

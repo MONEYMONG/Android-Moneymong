@@ -10,7 +10,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
-import com.moneymong.moneymong.common.ui.SystemBarColorController
+import com.moneymong.moneymong.ui.SystemBarColorController
 import com.moneymong.moneymong.design_system.theme.Blue04
 import com.moneymong.moneymong.design_system.theme.Gray01
 import com.moneymong.moneymong.design_system.theme.Gray08
@@ -25,6 +25,7 @@ import com.moneymong.moneymong.home.HomeBottomTabs
 import com.moneymong.moneymong.ledger.navigation.ledgerRouteWithArgs
 import com.moneymong.moneymong.ledger.navigation.navigateLedger
 import com.moneymong.moneymong.ledgerdetail.navigation.ledgerDetailRoute
+import com.moneymong.moneymong.report.navigation.reportRouteWithArgs
 
 @Composable
 internal fun rememberHomeNavigator(navHostController: NavHostController = rememberNavController()) =
@@ -64,7 +65,8 @@ internal class HomeNavigator(
             in listOf(
                 loginRoute,
                 ledgerDetailRoute,
-                mymongRoute
+                mymongRoute,
+                reportRouteWithArgs
             ) -> Gray01
 
             agencyRegisterCompleteRoute -> Gray08

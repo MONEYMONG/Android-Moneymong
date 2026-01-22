@@ -10,7 +10,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.unit.IntSize
-import com.moneymong.moneymong.common.ui.SystemBarColorController
+import com.moneymong.moneymong.ui.SystemBarColorController
 import com.moneymong.moneymong.design_system.theme.Gray10
 import com.moneymong.moneymong.ledger.view.onboarding.popup.LedgerOnboardingPopup
 import java.time.LocalDate

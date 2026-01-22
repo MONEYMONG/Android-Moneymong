@@ -52,7 +52,7 @@ import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.moneymong.moneymong.android.util.base64ToFile
 import com.moneymong.moneymong.android.util.encodingBase64
-import com.moneymong.moneymong.common.ui.SystemBarColorController
+import com.moneymong.moneymong.ui.SystemBarColorController
 import com.moneymong.moneymong.design_system.R
 import com.moneymong.moneymong.design_system.component.button.MDSButton
 import com.moneymong.moneymong.design_system.component.button.MDSButtonSize
