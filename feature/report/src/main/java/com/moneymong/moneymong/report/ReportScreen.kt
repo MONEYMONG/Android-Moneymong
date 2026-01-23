@@ -37,8 +37,10 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.moneymong.moneymong.design_system.component.tab.MDSTabRow
 import com.moneymong.moneymong.design_system.component.tag.MDSTag
+import com.moneymong.moneymong.design_system.error.ErrorScreen
 import com.moneymong.moneymong.design_system.theme.Black
 import com.moneymong.moneymong.design_system.theme.Blue01
 import com.moneymong.moneymong.design_system.theme.Blue04
@@ -62,11 +64,13 @@ import com.moneymong.moneymong.design_system.theme.SkyBlue01
 import com.moneymong.moneymong.design_system.theme.White
 import com.moneymong.moneymong.report.component.ReportTopBar
 import com.moneymong.moneymong.report.model.AmountType
+import com.moneymong.moneymong.report.model.CategoryReport
 import com.moneymong.moneymong.report.model.CategoryReportItem
 import com.moneymong.moneymong.report.model.MemberReport
-import com.moneymong.moneymong.report.model.mockCategoryReports
-import com.moneymong.moneymong.report.model.mockMemberReports
+import com.moneymong.moneymong.report.model.toCategoryReportItemsWithSort
+import com.moneymong.moneymong.ui.noRippleClickable
 import com.moneymong.moneymong.ui.toWonFormat
+import java.time.YearMonth
 import com.moneymong.moneymong.design_system.R as MDSR
 
 
@@ -76,17 +80,40 @@ fun ReportRoute(
     navigateUp: () -> Unit,
     viewModel: ReportViewModel = hiltViewModel()
 ) {
-    ReportScreen(
-        modifier = modifier,
-        navigateUp = navigateUp
-    )
+
+    val uiState = viewModel.uiState.collectAsStateWithLifecycle().value
+
+    when {
+        uiState.errorMessage != null -> {
+            ErrorScreen(
+                modifier = modifier,
+                message = uiState.errorMessage,
+                onRetry = viewModel::fetchReport
+            )
+        }
+
+        else -> {
+            ReportScreen(
+                modifier = modifier,
+                navigateUp = navigateUp,
+                selectYearMonth = uiState.selectYearMonth,
+                reportData = uiState.reportData,
+                updateReportToPreviousMonth = viewModel::updateReportToPreviousMonth,
+                updateReportToNextMonth = viewModel::updateReportToNextMonth
+            )
+        }
+    }
 }
 
 
 @Composable
 private fun ReportScreen(
     modifier: Modifier = Modifier,
-    navigateUp: () -> Unit
+    navigateUp: () -> Unit,
+    selectYearMonth: YearMonth,
+    reportData: ReportUiData,
+    updateReportToPreviousMonth: () -> Unit,
+    updateReportToNextMonth: () -> Unit
 ) {
 
     Column(
@@ -98,7 +125,12 @@ private fun ReportScreen(
             modifier = Modifier.fillMaxWidth(),
             onClose = navigateUp
         )
-        ReportSummary(modifier = Modifier.padding(horizontal = MMHorizontalSpacing))
+        ReportSummary(
+            modifier = Modifier.padding(horizontal = MMHorizontalSpacing),
+            balance = reportData.totalReport.balance,
+            income = reportData.totalReport.income,
+            expense = reportData.totalReport.expense
+        )
         Spacer(modifier = Modifier.height(20.dp))
 
         Column(
@@ -106,22 +138,37 @@ private fun ReportScreen(
                 .background(color = White)
                 .padding(horizontal = MMHorizontalSpacing)
         ) {
-            ReportContent()
+            ReportContent(
+                yearMonth = selectYearMonth,
+                monthlyIncome = reportData.monthlyReport.income,
+                monthlyExpense = reportData.monthlyReport.expense,
+                monthlyIncomePercent = reportData.monthlyReport.incomePercent,
+                monthlyExpensePercent = reportData.monthlyReport.expensePercent,
+                updateToPreviousMonth = updateReportToPreviousMonth,
+                updateToNextMonth = updateReportToNextMonth
+            )
             Spacer(modifier = Modifier.height(32.dp))
-            MemberReport()
-            Spacer(modifier = Modifier.height(32.dp))
-            CategoryReport()
+            if (reportData.memberReports.isNotEmpty()) {
+                MemberReport(memberReports = reportData.memberReports)
+                Spacer(modifier = Modifier.height(32.dp))
+            }
+            if (reportData.categoryReports.isNotEmpty()) {
+                CategoryReport(
+                    selectMont = selectYearMonth.monthValue,
+                    categoryReports = reportData.categoryReports
+                )
+                Spacer(modifier = Modifier.height(20.dp))
+            }
         }
-        Spacer(modifier = Modifier.height(20.dp))
     }
 }
 
 @Composable
 private fun ReportSummary(
     modifier: Modifier = Modifier,
-    balance: Int = 50000, // todo
-    income: Int = 100000, // todo
-    expense: Int = 100000 // todo
+    balance: Long,
+    income: Long,
+    expense: Long
 ) {
     Column(
         modifier = modifier
@@ -130,7 +177,10 @@ private fun ReportSummary(
             .background(color = White)
             .padding(vertical = 20.dp, horizontal = 24.dp),
     ) {
-        Row(horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+        Row(
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
             Text(
                 modifier = Modifier.weight(1f),
                 text = buildAnnotatedString {
@@ -153,8 +203,8 @@ private fun ReportSummary(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            SummaryItem(amount = income)
-            SummaryItem(amount = expense)
+            SummaryItem(amount = income, type = AmountType.INCOME)
+            SummaryItem(amount = expense, type = AmountType.EXPENSE)
         }
     }
 }
@@ -162,8 +212,8 @@ private fun ReportSummary(
 @Composable
 private fun SummaryItem(
     modifier: Modifier = Modifier,
-    amount: Int,
-    // type: AmountType
+    amount: Long,
+    type: AmountType
 ) {
     Column(
         modifier = modifier
@@ -180,7 +230,7 @@ private fun SummaryItem(
         )
         Spacer(modifier = Modifier.height(2.dp))
         Text(
-            text = "+${amount.toString().toWonFormat()}원",
+            text = "${type.symbol}${amount.toString().toWonFormat()}원",
             color = Gray10,
             style = Heading1
         )
@@ -190,11 +240,13 @@ private fun SummaryItem(
 @Composable
 private fun ReportContent(
     modifier: Modifier = Modifier,
-    yearMonth: Pair<Int, Int> = Pair(2025, 6),
-    monthlyIncome: Int = 500000,
-    monthlyExpense: Int = 400000,
-    monthlyIncomePercent: Float = 70.2f,
-    monthlyExpensePercent: Float = 85.3f
+    yearMonth: YearMonth,
+    monthlyIncome: Long,
+    monthlyExpense: Long,
+    monthlyIncomePercent: Int,
+    monthlyExpensePercent: Int,
+    updateToPreviousMonth: () -> Unit,
+    updateToNextMonth: () -> Unit
 ) {
     Column(
         modifier = modifier
@@ -206,18 +258,22 @@ private fun ReportContent(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Icon(
-                modifier = Modifier.size(20.dp),
+                modifier = Modifier
+                    .size(20.dp)
+                    .noRippleClickable(updateToPreviousMonth),
                 painter = painterResource(id = MDSR.drawable.ic_chevron_left),
                 contentDescription = "이전 달 레포트 확인하기",
                 tint = Gray06
             )
             Text(
-                text = "${yearMonth.first}. ${yearMonth.second}",
+                text = "${yearMonth.year}. ${yearMonth.monthValue}",
                 color = Black,
                 style = Heading5
             )
             Icon(
-                modifier = Modifier.size(20.dp),
+                modifier = Modifier
+                    .size(20.dp)
+                    .noRippleClickable(updateToNextMonth),
                 painter = painterResource(id = MDSR.drawable.ic_chevron_right),
                 contentDescription = "다음 달 레포트 확인하기",
                 tint = Gray06
@@ -230,15 +286,17 @@ private fun ReportContent(
         ) {
             MonthlyItem(
                 modifier = Modifier.weight(1f),
-                month = yearMonth.second,
+                month = yearMonth.monthValue,
                 monthlyAmount = monthlyIncome,
-                monthlyPercent = monthlyIncomePercent.toInt()
+                monthlyPercent = monthlyIncomePercent,
+                type = AmountType.INCOME
             )
             MonthlyItem(
                 modifier = Modifier.weight(1f),
-                month = yearMonth.second,
+                month = yearMonth.monthValue,
                 monthlyAmount = monthlyExpense,
-                monthlyPercent = monthlyExpensePercent.toInt()
+                monthlyPercent = monthlyExpensePercent,
+                type = AmountType.EXPENSE
             )
         }
     }
@@ -248,9 +306,9 @@ private fun ReportContent(
 private fun MonthlyItem(
     modifier: Modifier = Modifier,
     month: Int,
-    monthlyAmount: Int,
+    monthlyAmount: Long,
     monthlyPercent: Int,
-    // type: AmountType
+    type: AmountType
 ) {
     Column(
         modifier = modifier
@@ -259,13 +317,13 @@ private fun MonthlyItem(
             .padding(vertical = 12.dp, horizontal = 16.dp),
     ) {
         Text(
-            text = "${month}월 수입",
+            text = "${month}월 ${type.label}",
             color = Blue04,
             style = Body2
         )
         Spacer(modifier = Modifier.height(2.dp))
         Text(
-            text = "+${monthlyAmount.toString().toWonFormat()}원",
+            text = "${type.symbol}${monthlyAmount.toString().toWonFormat()}원",
             color = Gray10,
             style = Heading3
         )
@@ -282,7 +340,7 @@ private fun MonthlyItem(
 @Composable
 private fun MemberReport(
     modifier: Modifier = Modifier,
-    memberReports: List<MemberReport> = mockMemberReports
+    memberReports: List<MemberReport>
 ) {
     Column(modifier = modifier) {
         Text(
@@ -333,8 +391,10 @@ private fun MemberItem(
             val label: String = amountType.label
             val tagBackgroundColor: Color = if (amountType == AmountType.INCOME) Blue04 else Red03
             val tagContentColor: Color = if (amountType == AmountType.INCOME) White else Red01
-            val amount = if (amountType == AmountType.INCOME) memberReport.income else memberReport.expense
-            val percent = if (amountType == AmountType.INCOME) memberReport.incomePercent else memberReport.expensePercent
+            val amount =
+                if (amountType == AmountType.INCOME) memberReport.income else memberReport.expense
+            val percent =
+                if (amountType == AmountType.INCOME) memberReport.incomePercent else memberReport.expensePercent
 
             Row {
                 Text(text = label, color = Gray05, style = Body3)
@@ -353,7 +413,9 @@ private fun MemberItem(
 
 @Composable
 private fun CategoryReport(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    selectMont: Int,
+    categoryReports: List<CategoryReport>
 ) {
     var categoryAmountType: AmountType by remember { mutableStateOf(AmountType.EXPENSE) }
     val categoryAmountTypes = remember { AmountType.entries.reversed() }
@@ -371,7 +433,11 @@ private fun CategoryReport(
             onChangeSelectedTabIndex = { categoryAmountType = categoryAmountTypes[it] }
         )
         Spacer(modifier = Modifier.height(20.dp))
-        CategoryReportContent(amountType = categoryAmountType)
+        CategoryReportContent(
+            month = selectMont,
+            amountType = categoryAmountType,
+            categoryReportItems = categoryReports.toCategoryReportItemsWithSort(type = categoryAmountType)
+        )
     }
 }
 
@@ -379,12 +445,11 @@ private fun CategoryReport(
 @Composable
 private fun CategoryReportContent(
     modifier: Modifier = Modifier,
-    month: Int = 12,
+    month: Int,
     amountType: AmountType,
-    categoryReportItems: List<CategoryReportItem> = mockCategoryReports
-        .map { it.toCategoryReportItem(type = amountType) }
-        .sortedByDescending { it.amount }
+    categoryReportItems: List<CategoryReportItem>
 ) {
+
     val extraCategoryVisibleOffset = 3
 
     Column(modifier = modifier) {
@@ -465,7 +530,7 @@ private fun CategoryReportStick(
     modifier: Modifier,
     name: String,
     amount: Long,
-    percent: Double,
+    percent: Int,
     color: Color
 ) {
     val minHeight = 20
@@ -498,6 +563,10 @@ private fun CategoryReportStick(
 @Composable
 private fun ReportScreenPreview() {
     ReportScreen(
-        navigateUp = {}
+        navigateUp = {},
+        selectYearMonth = YearMonth.now(),
+        reportData = ReportUiData.Empty,
+        updateReportToPreviousMonth = {},
+        updateReportToNextMonth = {}
     )
 }

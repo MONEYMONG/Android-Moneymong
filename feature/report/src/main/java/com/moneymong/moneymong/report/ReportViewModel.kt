@@ -24,6 +24,10 @@ class ReportViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(ReportUiState())
     val uiState: StateFlow<ReportUiState> = _uiState.asStateFlow()
 
+    init {
+        fetchReport()
+    }
+
     fun fetchReport() {
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true, errorMessage = null) }
@@ -36,12 +40,27 @@ class ReportViewModel @Inject constructor(
                 month = yearMonth.monthValue
             ).fold(
                 onSuccess = { reportResponse ->
-                    _uiState.update { it.copy(isLoading = false, reportData = reportResponse.toUiData()) }
+                    _uiState.update {
+                        it.copy(
+                            isLoading = false,
+                            reportData = reportResponse.toUiData()
+                        )
+                    }
                 },
                 onFailure = { error ->
                     _uiState.update { it.copy(isLoading = false, errorMessage = error.message) }
                 }
             )
         }
+    }
+
+    fun updateReportToPreviousMonth() {
+        _uiState.update { it.copy(selectYearMonth = it.selectYearMonth.minusMonths(1)) }
+        fetchReport()
+    }
+
+    fun updateReportToNextMonth() {
+        _uiState.update { it.copy(selectYearMonth = it.selectYearMonth.plusMonths(1)) }
+        fetchReport()
     }
 }
