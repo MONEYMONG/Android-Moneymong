@@ -71,6 +71,7 @@ fun LedgerManualCategoryBottomSheet(
     onDismissRequest: () -> Unit,
     onChangeCategoryValue: (TextFieldValue) -> Unit,
     onCategoryCreate: () -> Unit,
+    onCategoryDelete: (CategoryResponse) -> Unit,
 ) {
     var sheetType by remember { mutableStateOf(LedgerManualBottomSheetType.LIST) }
 
@@ -100,7 +101,8 @@ fun LedgerManualCategoryBottomSheet(
                     LedgerManualCategoryBottomSheetContent(
                         categories = categories,
                         onDismissRequest = onDismissRequest,
-                        onClickCreate = { sheetType = LedgerManualBottomSheetType.CREATE }
+                        onClickCreate = { sheetType = LedgerManualBottomSheetType.CREATE },
+                        onClickDelete = onCategoryDelete,
                     )
                 }
 
@@ -129,6 +131,7 @@ fun LedgerManualCategoryBottomSheetContent(
     categories: List<CategoryResponse>?,
     onDismissRequest: () -> Unit,
     onClickCreate: () -> Unit,
+    onClickDelete: (CategoryResponse) -> Unit,
 ) {
     val scrollState = rememberScrollState()
     Column(
@@ -179,6 +182,7 @@ fun LedgerManualCategoryBottomSheetContent(
                 MDSOutlineTag(
                     text = it.name,
                     iconResource = R.drawable.ic_close_default,
+                    onClick = { onClickDelete(it) }
                 )
             }
         }
@@ -286,11 +290,13 @@ fun LedgerManualCategoryCreateBottomSheetContent(
 @Preview(showBackground = true)
 @Composable
 fun LedgerManualCategoryBottomSheetContentPreview() {
-    val categories = listOf(CategoryResponse("testTooLongTextOverFlow"), CategoryResponse("test"))
+    val categories =
+        listOf(CategoryResponse(1L, "testTooLongTextOverFlow"), CategoryResponse(1L, "test"))
 
     LedgerManualCategoryBottomSheetContent(
         categories = categories,
         onDismissRequest = {},
+        onClickCreate = {},
     ) {}
 }
 

@@ -7,6 +7,7 @@ import com.moneymong.moneymong.model.agency.AgencyJoinResponse
 import com.moneymong.moneymong.model.agency.AgencyRegisterRequest
 import com.moneymong.moneymong.model.agency.CategoryCreateRequest
 import com.moneymong.moneymong.model.agency.CategoryCreateResponse
+import com.moneymong.moneymong.model.agency.CategoryDeleteRequest
 import com.moneymong.moneymong.model.agency.CategoryReadResponse
 import com.moneymong.moneymong.model.agency.MyAgencyResponse
 import com.moneymong.moneymong.model.agency.RegisterAgencyResponse
@@ -14,6 +15,7 @@ import com.moneymong.moneymong.model.member.InvitationCodeResponse
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
+import retrofit2.http.HTTP
 import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.Path
@@ -72,5 +74,10 @@ interface AgencyApi {
     @DELETE("api/v1/agencies/{agencyId}")
     suspend fun deleteAgency(
         @Path("agencyId") agencyId: Int
+    ): Result<Unit>
+
+    @HTTP(method = "DELETE", path = "api/v1/agencies/categories", hasBody = true)
+    suspend fun deleteCategory(
+        @Body request: CategoryDeleteRequest
     ): Result<Unit>
 }
