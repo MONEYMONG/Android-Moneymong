@@ -6,5 +6,6 @@ data class CategoryReadResponse(
 )
 
 data class CategoryResponse(
+    val id: Long,
     val name: String,
 )

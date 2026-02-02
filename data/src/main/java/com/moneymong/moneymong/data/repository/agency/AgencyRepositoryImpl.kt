@@ -13,6 +13,7 @@ import com.moneymong.moneymong.model.agency.AgencyJoinResponse
 import com.moneymong.moneymong.model.agency.AgencyRegisterRequest
 import com.moneymong.moneymong.model.agency.CategoryCreateRequest
 import com.moneymong.moneymong.model.agency.CategoryCreateResponse
+import com.moneymong.moneymong.model.agency.CategoryDeleteRequest
 import com.moneymong.moneymong.model.agency.CategoryReadResponse
 import com.moneymong.moneymong.model.agency.MyAgencyResponse
 import com.moneymong.moneymong.model.agency.RegisterAgencyResponse
@@ -58,4 +59,7 @@ class AgencyRepositoryImpl @Inject constructor(
 
     override suspend fun fetchCategories(agencyId: Long): Result<CategoryReadResponse> =
         agencyRemoteDataSource.fetchCategories(agencyId = agencyId)
+
+    override suspend fun deleteCategory(request: CategoryDeleteRequest): Result<Unit> =
+        agencyRemoteDataSource.deleteCategory(request = request)
 }

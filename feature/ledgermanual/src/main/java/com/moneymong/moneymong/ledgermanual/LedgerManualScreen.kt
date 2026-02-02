@@ -198,6 +198,7 @@ fun LedgerManualScreen(
             },
             onChangeCategoryValue = viewModel::onChangeCategoryValue,
             onCategoryCreate = viewModel::createCategory,
+            onCategoryDelete = viewModel::deleteCategory,
         )
     }
 
