@@ -142,7 +142,7 @@ class LedgerManualViewModel @Inject constructor(
             .onFailure {
                 reduce {
                     state.copy(
-                        showBottomSheet = true,
+                        showErrorDialog = true,
                         errorMessage = it.message ?: MoneyMongError.UnExpectedError.message
                     )
                 }
