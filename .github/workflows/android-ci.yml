@@ -27,7 +27,7 @@ jobs:
       - name: Create API Certificate
         run: |
           echo "sdk.dir=$ANDROID_SDK_ROOT" > ./local.properties
-          echo "native_app_key=\"${{ secrets.NATIVE_APP_KEY }}\"" >> ./local.properties
+          echo "NATIVE_APP_KEY=\"${{ secrets.NATIVE_APP_KEY }}\"" >> ./local.properties
           echo "CLOVA_OCR_DOCUMENT_SECRET=\"${{ secrets.CLOVA_OCR_DOCUMENT_SECRET }}\"" >> ./local.properties
           echo "CLOVA_OCR_DOCUMENT_BASEURL=\"${{ secrets.CLOVA_OCR_DOCUMENT_BASEURL }}\"" >> ./local.properties
 
@@ -84,7 +84,7 @@ jobs:
         - name: Create API Certificate
           run: |
             echo "sdk.dir=$ANDROID_SDK_ROOT" > ./local.properties
-            echo "native_app_key=\"${{ secrets.NATIVE_APP_KEY }}\"" >> ./local.properties
+            echo "NATIVE_APP_KEY=\"${{ secrets.NATIVE_APP_KEY }}\"" >> ./local.properties
             echo "CLOVA_OCR_DOCUMENT_SECRET=\"${{ secrets.CLOVA_OCR_DOCUMENT_SECRET }}\"" >> ./local.properties
             echo "CLOVA_OCR_DOCUMENT_BASEURL=\"${{ secrets.CLOVA_OCR_DOCUMENT_BASEURL }}\"" >> ./local.properties        
 
