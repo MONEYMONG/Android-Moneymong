@@ -319,7 +319,13 @@ class LedgerDetailViewModel @Inject constructor(
     }
 
     fun onClickCategory(category: CategoryResponse) = intent {
-        reduce { state.copy(selectedCategory = category) }
+        reduce {
+            if (state.selectedCategory == category) {
+                state.copy(selectedCategory = null)
+            } else {
+                state.copy(selectedCategory = category)
+            }
+        }
     }
 
     fun onClickCategoryEdit() = intent {
