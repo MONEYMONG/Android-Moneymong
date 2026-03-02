@@ -303,10 +303,10 @@ class LedgerDetailViewModel @Inject constructor(
         createCategoryUseCase(request)
             .onSuccess {
                 fetchCategories()
-                reduce { state.copy(showBottomSheet = false) }
+                reduce { state.copy(showBottomSheet = false, categoryValue = TextFieldValue()) }
             }.onFailure {
                 showErrorDialog(it.message)
-            }.also { onChangeCategoryValue(TextFieldValue()) }
+            }
     }
 
     fun deleteCategory(category: CategoryResponse) = intent {
@@ -329,11 +329,11 @@ class LedgerDetailViewModel @Inject constructor(
     }
 
     fun onClickCategoryEdit() = intent {
-        reduce { state.copy(showBottomSheet = true) }
+        reduce { state.copy(showBottomSheet = true, categoryValue = TextFieldValue()) }
     }
 
     fun onDismissBottomSheet() = intent {
-        reduce { state.copy(showBottomSheet = false) }
+        reduce { state.copy(showBottomSheet = false, categoryValue = TextFieldValue()) }
     }
 
     fun onChangeCategoryValue(value: TextFieldValue) = blockingIntent {

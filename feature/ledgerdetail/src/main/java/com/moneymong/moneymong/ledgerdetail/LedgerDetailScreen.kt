@@ -178,7 +178,6 @@ fun LedgerDetailScreen(
                     sheetState.hide()
                 }.invokeOnCompletion {
                     viewModel.onDismissBottomSheet()
-                    viewModel.onChangeCategoryValue(TextFieldValue())
                 }
             },
             onChangeCategoryValue = viewModel::onChangeCategoryValue,
