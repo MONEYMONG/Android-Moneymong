@@ -9,6 +9,9 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -26,9 +29,12 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -75,10 +81,12 @@ import com.moneymong.moneymong.design_system.theme.White
 import com.moneymong.moneymong.ledgerdetail.view.LedgerDetailTopbarView
 import com.moneymong.moneymong.ui.DottedShape
 import com.moneymong.moneymong.ui.noRippleClickable
+import com.moneymong.moneymong.ledgerdetail.view.LedgerDetailCategoryBottomSheet
+import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.compose.collectAsState
 import org.orbitmvi.orbit.compose.collectSideEffect
 
-@OptIn(ExperimentalGlideComposeApi::class)
+@OptIn(ExperimentalGlideComposeApi::class, ExperimentalLayoutApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun LedgerDetailScreen(
     modifier: Modifier = Modifier,
@@ -90,6 +98,8 @@ fun LedgerDetailScreen(
     val state = viewModel.collectAsState().value
     val verticalScrollState = rememberScrollState()
     val focusManager = LocalFocusManager.current
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+    val scope = rememberCoroutineScope()
 
     val singlePhotoPickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickVisualMedia(),
@@ -155,6 +165,26 @@ fun LedgerDetailScreen(
         ErrorDialog(message = state.errorMessage) {
             viewModel.onChangeErrorDialogVisible(false)
         }
+    }
+
+    if (state.showBottomSheet) {
+        LedgerDetailCategoryBottomSheet(
+            sheetState = sheetState,
+            categories = state.categories,
+            categoryValue = state.categoryValue,
+            isSystemCategoryError = state.isSystemCategoryError,
+            onDismissRequest = {
+                scope.launch {
+                    sheetState.hide()
+                }.invokeOnCompletion {
+                    viewModel.onDismissBottomSheet()
+                    viewModel.onChangeCategoryValue(TextFieldValue())
+                }
+            },
+            onChangeCategoryValue = viewModel::onChangeCategoryValue,
+            onCategoryCreate = viewModel::createCategory,
+            onCategoryDelete = viewModel::deleteCategory,
+        )
     }
 
     if (state.showConfirmModal) {
@@ -415,14 +445,48 @@ fun LedgerDetailScreen(
                             .height(1.dp)
                             .background(Gray03, shape = DottedShape(8.dp))
                     )
-                    Text(
-                        text = "카테고리",
-                        style = Body2,
-                        color = Gray06
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    state.ledgerTransactionDetail?.category?.let {
-                        MDSOutlineTag(text = it)
+                    if (state.useEditMode) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                        ) {
+                            Text(
+                                text = "카테고리",
+                                style = Body2,
+                                color = Gray06,
+                            )
+                            Spacer(modifier = Modifier.weight(1f))
+                            Text(
+                                modifier = Modifier.noRippleClickable(viewModel::onClickCategoryEdit),
+                                text = "수정",
+                                style = Body2,
+                                color = Blue04,
+                            )
+                        }
+                        Spacer(modifier = Modifier.height(8.dp))
+                        FlowRow(
+                            horizontalArrangement = Arrangement.spacedBy(10.dp),
+                            verticalArrangement = Arrangement.spacedBy(10.dp),
+                        ) {
+                            state.categories.forEach { category ->
+                                val isSelected = category == state.selectedCategory
+                                MDSOutlineTag(
+                                    text = category.name,
+                                    selected = isSelected,
+                                    onClick = { viewModel.onClickCategory(category) },
+                                )
+                            }
+                        }
+                    } else {
+                        Text(
+                            text = "카테고리",
+                            style = Body2,
+                            color = Gray06
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                        state.ledgerTransactionDetail?.category?.let {
+                            MDSOutlineTag(text = it)
+                        }
                     }
                     Box(
                         modifier = Modifier
