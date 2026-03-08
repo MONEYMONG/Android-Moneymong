@@ -114,7 +114,7 @@ class LedgerManualViewModel @Inject constructor(
         createCategoryUseCase(request)
             .onSuccess {
                 fetchCategories()
-                reduce { state.copy(showBottomSheet = false) }
+                reduce { state.copy(showBottomSheet = false, categoryValue = TextFieldValue()) }
             }.onFailure {
                 reduce {
                     state.copy(
@@ -122,7 +122,7 @@ class LedgerManualViewModel @Inject constructor(
                         errorMessage = it.message ?: MoneyMongError.UnExpectedError.message
                     )
                 }
-            }.also { onChangeCategoryValue(TextFieldValue()) }
+            }
     }
 
     fun fetchCategories() = intent {
@@ -234,9 +234,9 @@ class LedgerManualViewModel @Inject constructor(
 
     fun onClickErrorDialogConfirm() = eventEmit(LedgerManualSideEffect.LedgerManualHideErrorDialog)
 
-    fun onClickCategoryEdit() = intent { reduce { state.copy(showBottomSheet = true) } }
+    fun onClickCategoryEdit() = intent { reduce { state.copy(showBottomSheet = true, categoryValue = TextFieldValue()) } }
 
-    fun onDismissBottomSheet() = intent { reduce { state.copy(showBottomSheet = false) } }
+    fun onDismissBottomSheet() = intent { reduce { state.copy(showBottomSheet = false, categoryValue = TextFieldValue()) } }
 
     fun onChangeCategoryValue(value: TextFieldValue) = blockingIntent {
         val validate = value.text.validateValue(length = 10)
@@ -247,7 +247,13 @@ class LedgerManualViewModel @Inject constructor(
     }
 
     fun onClickCategory(category: CategoryResponse) = intent {
-        reduce { state.copy(selectedCategory = category) }
+        reduce {
+            if (state.selectedCategory == category) {
+                state.copy(selectedCategory = null)
+            } else {
+                state.copy(selectedCategory = category)
+            }
+        }
     }
 
     private fun trimStartWithZero(value: TextFieldValue) =

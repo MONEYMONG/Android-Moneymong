@@ -5,6 +5,7 @@ import com.moneymong.moneymong.android.State
 import com.moneymong.moneymong.common.util.toDateFormat
 import com.moneymong.moneymong.ui.toWonFormat
 import com.moneymong.moneymong.design_system.component.textfield.util.PriceType
+import com.moneymong.moneymong.model.agency.CategoryResponse
 import com.moneymong.moneymong.model.ledger.FundType
 import com.moneymong.moneymong.model.ledgerdetail.LedgerTransactionDetailResponse
 import java.time.LocalDateTime
@@ -32,8 +33,16 @@ data class LedgerDetailState(
     val showConfirmModal: Boolean = false,
     val showErrorDialog: Boolean = false,
     val errorMessage: String = "",
-    val isStaff: Boolean = false
+    val isStaff: Boolean = false,
+    val agencyId: Int = 0,
+    val categories: List<CategoryResponse> = emptyList(),
+    val selectedCategory: CategoryResponse? = null,
+    val showBottomSheet: Boolean = false,
+    val categoryValue: TextFieldValue = TextFieldValue()
 ) : State {
+
+    val isSystemCategoryError: Boolean
+        get() = categoryValue.text == SYSTEM_CATEGORY
 
     val fundTypeText: String
         get() = ledgerTransactionDetail?.fundType?.let {
@@ -73,4 +82,9 @@ data class LedgerDetailState(
             val hasPaymentDate = !isPaymentDateError && paymentDateValue.text.isNotEmpty()
             val hasPaymentTime = !isPaymentTimeError && paymentTimeValue.text.isNotEmpty()
             return hasStoreName && hasTotalPrice && hasPaymentDate && hasPaymentTime && !isMemoError
-        }}
+        }
+
+    companion object {
+        private const val SYSTEM_CATEGORY = "카테고리 없음"
+    }
+}

@@ -4,5 +4,6 @@ data class LedgerTransactionDetailRequest(
     val storeInfo: String,
     val amount: Int,
     val description: String,
-    val paymentDate: String
+    val paymentDate: String,
+    val category: String? = null,
 )

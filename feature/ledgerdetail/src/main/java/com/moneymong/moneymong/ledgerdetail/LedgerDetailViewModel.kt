@@ -9,6 +9,10 @@ import com.moneymong.moneymong.android.util.toMultipart
 import com.moneymong.moneymong.ui.isValidPaymentDate
 import com.moneymong.moneymong.ui.isValidPaymentTime
 import com.moneymong.moneymong.ui.validateValue
+import com.moneymong.moneymong.domain.usecase.agency.CreateCategoryUseCase
+import com.moneymong.moneymong.domain.usecase.agency.DeleteCategoryUseCase
+import com.moneymong.moneymong.domain.usecase.agency.FetchAgencyIdUseCase
+import com.moneymong.moneymong.domain.usecase.agency.FetchCategoriesUseCase
 import com.moneymong.moneymong.domain.usecase.ledgerdetail.FetchLedgerTransactionDetailUseCase
 import com.moneymong.moneymong.domain.usecase.ledgerdetail.DeleteLedgerDetailUseCase
 import com.moneymong.moneymong.domain.usecase.ledgerdetail.DeleteLedgerDocumentTransactionUseCase
@@ -16,6 +20,9 @@ import com.moneymong.moneymong.domain.usecase.ledgerdetail.PostLedgerDocumentTra
 import com.moneymong.moneymong.domain.usecase.ledgerdetail.UpdateLedgerTransactionDetailUseCase
 import com.moneymong.moneymong.domain.usecase.ocr.PostFileUploadUseCase
 import com.moneymong.moneymong.ledgerdetail.navigation.LedgerDetailArgs
+import com.moneymong.moneymong.model.agency.CategoryCreateRequest
+import com.moneymong.moneymong.model.agency.CategoryDeleteRequest
+import com.moneymong.moneymong.model.agency.CategoryResponse
 import com.moneymong.moneymong.model.ledgerdetail.LedgerDocumentRequest
 import com.moneymong.moneymong.model.ledgerdetail.LedgerTransactionDetailRequest
 import com.moneymong.moneymong.model.ledgerdetail.LedgerTransactionDetailResponse
@@ -40,11 +47,16 @@ class LedgerDetailViewModel @Inject constructor(
     private val postLedgerDocumentTransactionUseCase: PostLedgerDocumentTransactionUseCase,
     private val deleteLedgerDocumentTransactionUseCase: DeleteLedgerDocumentTransactionUseCase,
     private val postFileUploadUseCase: PostFileUploadUseCase,
-    private val deleteLedgerDetailUseCase: DeleteLedgerDetailUseCase
+    private val deleteLedgerDetailUseCase: DeleteLedgerDetailUseCase,
+    private val fetchAgencyIdUseCase: FetchAgencyIdUseCase,
+    private val fetchCategoriesUseCase: FetchCategoriesUseCase,
+    private val createCategoryUseCase: CreateCategoryUseCase,
+    private val deleteCategoryUseCase: DeleteCategoryUseCase,
 ) : BaseViewModel<LedgerDetailState, LedgerDetailSideEffect>(LedgerDetailState()) {
 
     init {
         onChangeStaffStatus(isStaff = LedgerDetailArgs(savedStateHandle).isStaff)
+        fetchAgencyId()
     }
 
     fun ledgerTransactionEdit(detailId: Int) = intent {
@@ -78,7 +90,8 @@ class LedgerDetailViewModel @Inject constructor(
             storeInfo = state.storeNameValue.text,
             amount = state.totalPriceValue.text.toInt(),
             description = state.memoValue.text,
-            paymentDate = state.formattedPaymentDate
+            paymentDate = state.formattedPaymentDate,
+            category = state.selectedCategory?.name,
         )
         updateLedgerTransactionDetailUseCase(detailId, request)
             .onSuccess {
@@ -191,7 +204,8 @@ class LedgerDetailViewModel @Inject constructor(
                 ),
                 memoValue = state.memoValue.copy(text = ledgerTransactionDetail.description),
                 documentList = ledgerTransactionDetail.documentImageUrls.map { it.documentImageUrl },
-                documentIdList = emptyList()
+                documentIdList = emptyList(),
+                selectedCategory = state.categories.find { it.name == ledgerTransactionDetail.category }
             )
         }
     }
@@ -266,6 +280,67 @@ class LedgerDetailViewModel @Inject constructor(
 
     fun onChangeErrorDialogVisible(visible: Boolean) = intent {
         reduce { state.copy(showErrorDialog = visible) }
+    }
+
+    private fun fetchAgencyId() = blockingIntent {
+        val agencyId = fetchAgencyIdUseCase()
+        reduce { state.copy(agencyId = agencyId) }
+        fetchCategories()
+    }
+
+    fun fetchCategories() = intent {
+        fetchCategoriesUseCase(agencyId = state.agencyId.toLong())
+            .onSuccess {
+                reduce { state.copy(categories = it.categories) }
+            }
+    }
+
+    fun createCategory() = intent {
+        val request = CategoryCreateRequest(
+            agencyId = state.agencyId.toLong(),
+            name = state.categoryValue.text
+        )
+        createCategoryUseCase(request)
+            .onSuccess {
+                fetchCategories()
+                reduce { state.copy(showBottomSheet = false, categoryValue = TextFieldValue()) }
+            }.onFailure {
+                showErrorDialog(it.message)
+            }
+    }
+
+    fun deleteCategory(category: CategoryResponse) = intent {
+        val request = CategoryDeleteRequest(categoryId = category.id)
+        deleteCategoryUseCase(request = request)
+            .onSuccess { fetchCategories() }
+            .onFailure {
+                showErrorDialog(it.message)
+            }
+    }
+
+    fun onClickCategory(category: CategoryResponse) = intent {
+        reduce {
+            if (state.selectedCategory == category) {
+                state.copy(selectedCategory = null)
+            } else {
+                state.copy(selectedCategory = category)
+            }
+        }
+    }
+
+    fun onClickCategoryEdit() = intent {
+        reduce { state.copy(showBottomSheet = true, categoryValue = TextFieldValue()) }
+    }
+
+    fun onDismissBottomSheet() = intent {
+        reduce { state.copy(showBottomSheet = false, categoryValue = TextFieldValue()) }
+    }
+
+    fun onChangeCategoryValue(value: TextFieldValue) = blockingIntent {
+        val validate = value.text.validateValue(length = 10)
+        if (validate) {
+            reduce { state.copy(categoryValue = value) }
+        }
     }
 
     private fun onChangeStaffStatus(isStaff: Boolean) = intent {
