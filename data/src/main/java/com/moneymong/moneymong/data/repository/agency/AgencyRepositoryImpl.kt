@@ -11,6 +11,10 @@ import com.moneymong.moneymong.model.agency.AgencyGetResponse
 import com.moneymong.moneymong.model.agency.AgencyJoinRequest
 import com.moneymong.moneymong.model.agency.AgencyJoinResponse
 import com.moneymong.moneymong.model.agency.AgencyRegisterRequest
+import com.moneymong.moneymong.model.agency.CategoryCreateRequest
+import com.moneymong.moneymong.model.agency.CategoryCreateResponse
+import com.moneymong.moneymong.model.agency.CategoryDeleteRequest
+import com.moneymong.moneymong.model.agency.CategoryReadResponse
 import com.moneymong.moneymong.model.agency.MyAgencyResponse
 import com.moneymong.moneymong.model.agency.RegisterAgencyResponse
 import kotlinx.coroutines.flow.Flow
@@ -49,4 +53,13 @@ class AgencyRepositoryImpl @Inject constructor(
 
     override suspend fun fetchAgencyId(): Int =
         agencyLocalDataSource.fetchAgencyId()
+
+    override suspend fun createCategory(request: CategoryCreateRequest): Result<CategoryCreateResponse> =
+        agencyRemoteDataSource.createCategory(request = request)
+
+    override suspend fun fetchCategories(agencyId: Long): Result<CategoryReadResponse> =
+        agencyRemoteDataSource.fetchCategories(agencyId = agencyId)
+
+    override suspend fun deleteCategory(request: CategoryDeleteRequest): Result<Unit> =
+        agencyRemoteDataSource.deleteCategory(request = request)
 }

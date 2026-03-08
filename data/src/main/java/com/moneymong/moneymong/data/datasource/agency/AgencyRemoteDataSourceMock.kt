@@ -5,6 +5,10 @@ import com.moneymong.moneymong.model.agency.AgencyGetResponse
 import com.moneymong.moneymong.model.agency.AgencyJoinRequest
 import com.moneymong.moneymong.model.agency.AgencyJoinResponse
 import com.moneymong.moneymong.model.agency.AgencyRegisterRequest
+import com.moneymong.moneymong.model.agency.CategoryCreateRequest
+import com.moneymong.moneymong.model.agency.CategoryCreateResponse
+import com.moneymong.moneymong.model.agency.CategoryDeleteRequest
+import com.moneymong.moneymong.model.agency.CategoryReadResponse
 import com.moneymong.moneymong.model.agency.MyAgencyResponse
 import com.moneymong.moneymong.model.agency.RegisterAgencyResponse
 import kotlinx.coroutines.delay
@@ -34,6 +38,18 @@ class AgencyRemoteDataSourceMock : AgencyRemoteDataSource {
         return Result.success(
             AgencyJoinResponse(agencyId = Int.MAX_VALUE, certified = true)
         )
+    }
+
+    override suspend fun createCategory(request: CategoryCreateRequest): Result<CategoryCreateResponse> {
+        return Result.success(CategoryCreateResponse(agencyId = 1L, name = "category"))
+    }
+
+    override suspend fun fetchCategories(agencyId: Long): Result<CategoryReadResponse> {
+        return Result.success(CategoryReadResponse(agencyId = agencyId, categories = emptyList()))
+    }
+
+    override suspend fun deleteCategory(request: CategoryDeleteRequest): Result<Unit> {
+        return Result.success(Unit)
     }
 
     private companion object {
