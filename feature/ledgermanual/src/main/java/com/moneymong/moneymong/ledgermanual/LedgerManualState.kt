@@ -4,6 +4,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import com.moneymong.moneymong.android.State
 import com.moneymong.moneymong.common.util.toZonedDateTime
 import com.moneymong.moneymong.design_system.component.textfield.util.PriceType
+import com.moneymong.moneymong.model.agency.CategoryResponse
 import com.moneymong.moneymong.model.ledger.FundType
 import java.text.SimpleDateFormat
 
@@ -25,7 +26,11 @@ data class LedgerManualState(
     val isMemoError: Boolean = false,
     val showPopBackStackModal: Boolean = false,
     val showErrorDialog: Boolean = false,
-    val errorMessage: String = ""
+    val errorMessage: String = "",
+    val showBottomSheet: Boolean = false,
+    val categoryValue: TextFieldValue = TextFieldValue(),
+    val categories: List<CategoryResponse> = emptyList(),
+    val selectedCategory: CategoryResponse? = null
 ) : State {
 
     val enabled: Boolean
@@ -53,4 +58,11 @@ data class LedgerManualState(
             val formattedTime = timeFormat.format(timeFormat.parse(paymentTimeValue.text))
             return "$formattedDate $formattedTime".toZonedDateTime("yyyyMMdd HHmmss")
         }
+
+    val isSystemCategoryError: Boolean
+        get() = categoryValue.text == SYSTEM_CATEGORY
+
+    companion object {
+        private const val SYSTEM_CATEGORY = "카테고리 없음"
+    }
 }

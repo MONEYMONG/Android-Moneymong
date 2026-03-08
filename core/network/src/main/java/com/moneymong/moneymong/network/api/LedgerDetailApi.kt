@@ -33,7 +33,7 @@ interface LedgerDetailApi {
     ): Result<Unit>
 
     // PUT
-    @PUT("api/v1/ledger/ledger-detail/{detailId}")
+    @PUT("api/v2/ledger/ledger-detail/{detailId}")
     suspend fun updateLedgerTransactionDetail(
         @Path("detailId") detailId: Int,
         @Body body: LedgerTransactionDetailRequest

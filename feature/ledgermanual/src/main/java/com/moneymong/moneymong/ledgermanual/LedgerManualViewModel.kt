@@ -3,13 +3,20 @@ package com.moneymong.moneymong.ledgermanual
 import androidx.compose.ui.text.input.TextFieldValue
 import com.moneymong.moneymong.android.BaseViewModel
 import com.moneymong.moneymong.android.util.toMultipart
+import com.moneymong.moneymong.common.error.MoneyMongError
+import com.moneymong.moneymong.domain.usecase.agency.CreateCategoryUseCase
+import com.moneymong.moneymong.domain.usecase.agency.DeleteCategoryUseCase
 import com.moneymong.moneymong.ui.isValidPaymentDate
 import com.moneymong.moneymong.ui.isValidPaymentTime
 import com.moneymong.moneymong.ui.validateValue
 import com.moneymong.moneymong.domain.usecase.agency.FetchAgencyIdUseCase
+import com.moneymong.moneymong.domain.usecase.agency.FetchCategoriesUseCase
 import com.moneymong.moneymong.domain.usecase.ledger.PostLedgerTransactionUseCase
 import com.moneymong.moneymong.domain.usecase.ocr.PostFileUploadUseCase
 import com.moneymong.moneymong.domain.usecase.user.FetchUserNicknameUseCase
+import com.moneymong.moneymong.model.agency.CategoryCreateRequest
+import com.moneymong.moneymong.model.agency.CategoryDeleteRequest
+import com.moneymong.moneymong.model.agency.CategoryResponse
 import com.moneymong.moneymong.model.ledger.FundType
 import com.moneymong.moneymong.model.ledger.LedgerTransactionRequest
 import com.moneymong.moneymong.model.ocr.FileUploadRequest
@@ -27,11 +34,15 @@ class LedgerManualViewModel @Inject constructor(
     private val postLedgerTransactionUseCase: PostLedgerTransactionUseCase,
     private val postFileUploadUseCase: PostFileUploadUseCase,
     private val fetchAgencyIdUseCase: FetchAgencyIdUseCase,
-    private val fetchUserNicknameUseCase: FetchUserNicknameUseCase
+    private val fetchUserNicknameUseCase: FetchUserNicknameUseCase,
+    private val createCategoryUseCase: CreateCategoryUseCase,
+    private val fetchCategoriesUseCase: FetchCategoriesUseCase,
+    private val deleteCategoryUseCase: DeleteCategoryUseCase,
 ) : BaseViewModel<LedgerManualState, LedgerManualSideEffect>(LedgerManualState()) {
 
     init {
         fetchUserInfo()
+        fetchCategories()
     }
 
     @OptIn(OrbitExperimental::class)
@@ -56,6 +67,7 @@ class LedgerManualViewModel @Inject constructor(
                 description = state.memoValue.text.ifEmpty { "내용 없음" },
                 paymentDate = state.postPaymentDate,
                 documentImageUrls = state.documentList,
+                category = state.selectedCategory?.name,
             )
             postLedgerTransactionUseCase(state.agencyId, ledgerTransactionRequest)
                 .onSuccess {
@@ -90,6 +102,51 @@ class LedgerManualViewModel @Inject constructor(
                     }
             }
         }
+    }
+
+    fun createCategory() = intent {
+        val request =
+            CategoryCreateRequest(
+                agencyId = state.agencyId.toLong(),
+                name = state.categoryValue.text
+            )
+
+        createCategoryUseCase(request)
+            .onSuccess {
+                fetchCategories()
+                reduce { state.copy(showBottomSheet = false, categoryValue = TextFieldValue()) }
+            }.onFailure {
+                reduce {
+                    state.copy(
+                        showErrorDialog = true,
+                        errorMessage = it.message ?: MoneyMongError.UnExpectedError.message
+                    )
+                }
+            }
+    }
+
+    fun fetchCategories() = intent {
+        fetchCategoriesUseCase(agencyId = state.agencyId.toLong())
+            .onSuccess {
+                reduce {
+                    state.copy(categories = it.categories)
+                }
+            }
+    }
+
+    fun deleteCategory(category: CategoryResponse) = intent {
+        val request = CategoryDeleteRequest(categoryId = category.id)
+
+        deleteCategoryUseCase(request = request)
+            .onSuccess { fetchCategories() }
+            .onFailure {
+                reduce {
+                    state.copy(
+                        showErrorDialog = true,
+                        errorMessage = it.message ?: MoneyMongError.UnExpectedError.message
+                    )
+                }
+            }
     }
 
     fun onChangeStoreNameValue(value: TextFieldValue) = blockingIntent {
@@ -176,6 +233,28 @@ class LedgerManualViewModel @Inject constructor(
     fun onClickPostTransaction() = eventEmit(LedgerManualSideEffect.LedgerManualPostTransaction)
 
     fun onClickErrorDialogConfirm() = eventEmit(LedgerManualSideEffect.LedgerManualHideErrorDialog)
+
+    fun onClickCategoryEdit() = intent { reduce { state.copy(showBottomSheet = true, categoryValue = TextFieldValue()) } }
+
+    fun onDismissBottomSheet() = intent { reduce { state.copy(showBottomSheet = false, categoryValue = TextFieldValue()) } }
+
+    fun onChangeCategoryValue(value: TextFieldValue) = blockingIntent {
+        val validate = value.text.validateValue(length = 10)
+
+        if (validate) {
+            reduce { state.copy(categoryValue = value) }
+        }
+    }
+
+    fun onClickCategory(category: CategoryResponse) = intent {
+        reduce {
+            if (state.selectedCategory == category) {
+                state.copy(selectedCategory = null)
+            } else {
+                state.copy(selectedCategory = category)
+            }
+        }
+    }
 
     private fun trimStartWithZero(value: TextFieldValue) =
         if (value.text.isNotEmpty() && value.text.all { it == '0' }) {
