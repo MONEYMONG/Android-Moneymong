@@ -224,7 +224,7 @@ private fun SummaryItem(
         verticalArrangement = Arrangement.Center
     ) {
         Text(
-            text = "총 수입",
+            text = "총 ${type.label}",
             color = Gray06,
             style = Body2
         )
@@ -329,7 +329,7 @@ private fun MonthlyItem(
         )
         Spacer(modifier = Modifier.height(12.dp))
         Text(
-            text = "총 수입이 $monthlyPercent%를 차지",
+            text = "총 ${type.label}의 $monthlyPercent%를 차지",
             color = Gray06,
             style = Body2
         )
