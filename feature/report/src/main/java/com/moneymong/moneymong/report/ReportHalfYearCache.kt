@@ -31,6 +31,10 @@ internal fun YearMonth.toReportHalfYearRange(): ReportHalfYearRange {
     )
 }
 
+internal fun YearMonth.canMoveToNextReportMonth(
+    currentYearMonth: YearMonth = YearMonth.now()
+): Boolean = this.plusMonths(1) <= currentYearMonth
+
 internal class ReportHalfYearCache {
     private val reports = mutableMapOf<ReportHalfYear, Map<YearMonth, ReportUiData>>()
 

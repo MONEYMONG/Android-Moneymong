@@ -91,8 +91,17 @@ class ReportViewModel @Inject constructor(
     }
 
     fun updateReportToNextMonth() {
+        if (_uiState.value.selectYearMonth.canMoveToNextReportMonth().not()) {
+            _uiState.update { it.copy(isFutureMonthDialogVisible = true) }
+            return
+        }
+
         val yearMonth = _uiState.value.selectYearMonth.plusMonths(1)
         _uiState.update { it.copy(selectYearMonth = yearMonth) }
         fetchReport(yearMonth = yearMonth)
+    }
+
+    fun dismissFutureMonthDialog() {
+        _uiState.update { it.copy(isFutureMonthDialogVisible = false) }
     }
 }

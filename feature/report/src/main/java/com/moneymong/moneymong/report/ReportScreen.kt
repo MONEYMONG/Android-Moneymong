@@ -15,6 +15,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.moneymong.moneymong.design_system.component.indicator.LoadingItem
+import com.moneymong.moneymong.design_system.error.ErrorDialog
 import com.moneymong.moneymong.design_system.error.ErrorScreen
 import com.moneymong.moneymong.design_system.theme.Gray01
 import com.moneymong.moneymong.design_system.theme.MMHorizontalSpacing
@@ -35,6 +36,14 @@ fun ReportRoute(
 ) {
 
     val uiState = viewModel.uiState.collectAsStateWithLifecycle().value
+
+    if (uiState.isFutureMonthDialogVisible) {
+        ErrorDialog(
+            message = "조회할 수 없는 기간이에요",
+            description = "현재 달 이후의 레포트는 조회할 수 없어요.",
+            onConfirm = viewModel::dismissFutureMonthDialog
+        )
+    }
 
     when {
         uiState.errorMessage != null -> {
