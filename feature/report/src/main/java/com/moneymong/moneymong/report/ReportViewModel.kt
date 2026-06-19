@@ -3,6 +3,7 @@ package com.moneymong.moneymong.report
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.moneymong.moneymong.common.error.MoneyMongError
 import com.moneymong.moneymong.domain.usecase.ledger.FetchLedgerReportUseCase
 import com.moneymong.moneymong.report.navigation.ReportArgs
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -82,7 +83,7 @@ class ReportViewModel @Inject constructor(
                     _uiState.update {
                         it.copy(
                             isLoading = false,
-                            errorMessage = error.message
+                            errorMessage = error.message ?: MoneyMongError.UnExpectedError.message
                         )
                     }
                 }
