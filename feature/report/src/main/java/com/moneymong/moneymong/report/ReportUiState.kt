@@ -53,16 +53,16 @@ internal fun LedgerReportResponse.toUiData(
         monthlyReport = MonthlyReport(
             income = monthlyReport.income,
             expense = monthlyReport.expense,
-            incomePercent = monthlyReport.incomeShareOfPeriod.toInt(),
-            expensePercent = monthlyReport.expenseShareOfPeriod.toInt()
+            incomePercent = monthlyReport.incomeShareOfPeriod.toPercentInt(),
+            expensePercent = monthlyReport.expenseShareOfPeriod.toPercentInt()
         ),
         memberReports = monthlyReport.members.map { member ->
             MemberReport(
                 name = member.nickname,
                 income = member.income,
                 expense = member.expense,
-                incomePercent = member.incomeShare.toInt(),
-                expensePercent = member.expenseShare.toInt()
+                incomePercent = member.incomeShare.toPercentInt(),
+                expensePercent = member.expenseShare.toPercentInt()
             )
         },
         categoryReports = monthlyReport.categories.map { category ->
@@ -70,9 +70,11 @@ internal fun LedgerReportResponse.toUiData(
                 name = category.name,
                 income = category.income,
                 expense = category.expense,
-                incomePercent = category.incomeShare.toInt(),
-                expensePercent = category.expenseShare.toInt()
+                incomePercent = category.incomeShare.toPercentInt(),
+                expensePercent = category.expenseShare.toPercentInt()
             )
         }
     )
 }
+
+private fun Double.toPercentInt(): Int = (this * 100).toInt()
