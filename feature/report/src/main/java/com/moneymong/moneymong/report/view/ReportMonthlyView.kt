@@ -40,6 +40,7 @@ internal fun ReportMonthly(
     monthlyExpense: Long,
     monthlyIncomePercent: Int,
     monthlyExpensePercent: Int,
+    isLoading: Boolean,
     updateToPreviousMonth: () -> Unit,
     updateToNextMonth: () -> Unit
 ) {
@@ -74,25 +75,27 @@ internal fun ReportMonthly(
                 tint = Gray06
             )
         }
-        Spacer(modifier = Modifier.height(8.dp))
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            MonthlyItem(
-                modifier = Modifier.weight(1f),
-                month = yearMonth.monthValue,
-                monthlyAmount = monthlyIncome,
-                monthlyPercent = monthlyIncomePercent,
-                type = AmountType.INCOME
-            )
-            MonthlyItem(
-                modifier = Modifier.weight(1f),
-                month = yearMonth.monthValue,
-                monthlyAmount = monthlyExpense,
-                monthlyPercent = monthlyExpensePercent,
-                type = AmountType.EXPENSE
-            )
+        if (isLoading.not()) {
+            Spacer(modifier = Modifier.height(8.dp))
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                MonthlyItem(
+                    modifier = Modifier.weight(1f),
+                    month = yearMonth.monthValue,
+                    monthlyAmount = monthlyIncome,
+                    monthlyPercent = monthlyIncomePercent,
+                    type = AmountType.INCOME
+                )
+                MonthlyItem(
+                    modifier = Modifier.weight(1f),
+                    month = yearMonth.monthValue,
+                    monthlyAmount = monthlyExpense,
+                    monthlyPercent = monthlyExpensePercent,
+                    type = AmountType.EXPENSE
+                )
+            }
         }
     }
 }

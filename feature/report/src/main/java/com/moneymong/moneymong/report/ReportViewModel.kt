@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.time.YearMonth
 import javax.inject.Inject
 
 @HiltViewModel
@@ -20,6 +21,7 @@ class ReportViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val agencyId = ReportArgs(savedStateHandle).agencyId
+    private val reportCache = ReportHalfYearCache()
 
     private val _uiState = MutableStateFlow(ReportUiState())
     val uiState: StateFlow<ReportUiState> = _uiState.asStateFlow()
@@ -29,38 +31,68 @@ class ReportViewModel @Inject constructor(
     }
 
     fun fetchReport() {
+        fetchReport(yearMonth = _uiState.value.selectYearMonth)
+    }
+
+    private fun fetchReport(
+        yearMonth: YearMonth
+    ) {
+        val cachedReport = reportCache.get(yearMonth)
+
+        if (cachedReport != null) {
+            _uiState.update {
+                it.copy(
+                    isLoading = false,
+                    errorMessage = null,
+                    reportData = cachedReport
+                )
+            }
+            return
+        }
+
+        val halfYearRange = yearMonth.toReportHalfYearRange()
+
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true, errorMessage = null) }
 
-            val yearMonth = _uiState.value.selectYearMonth
-
             fetchLedgerReportUseCase(
                 agencyId = agencyId,
-                year = yearMonth.year,
-                month = yearMonth.monthValue
+                startYear = halfYearRange.startYear,
+                startMonth = halfYearRange.startMonth,
+                endYear = halfYearRange.endYear,
+                endMonth = halfYearRange.endMonth
             ).fold(
                 onSuccess = { reportResponse ->
+                    reportCache.put(halfYearRange.half, reportResponse)
+
                     _uiState.update {
                         it.copy(
                             isLoading = false,
-                            reportData = reportResponse.toUiData()
+                            reportData = reportCache.get(yearMonth) ?: ReportUiData.Empty
                         )
                     }
                 },
                 onFailure = { error ->
-                    _uiState.update { it.copy(isLoading = false, errorMessage = error.message) }
+                    _uiState.update {
+                        it.copy(
+                            isLoading = false,
+                            errorMessage = error.message
+                        )
+                    }
                 }
             )
         }
     }
 
     fun updateReportToPreviousMonth() {
-        _uiState.update { it.copy(selectYearMonth = it.selectYearMonth.minusMonths(1)) }
-        fetchReport()
+        val yearMonth = _uiState.value.selectYearMonth.minusMonths(1)
+        _uiState.update { it.copy(selectYearMonth = yearMonth) }
+        fetchReport(yearMonth = yearMonth)
     }
 
     fun updateReportToNextMonth() {
-        _uiState.update { it.copy(selectYearMonth = it.selectYearMonth.plusMonths(1)) }
-        fetchReport()
+        val yearMonth = _uiState.value.selectYearMonth.plusMonths(1)
+        _uiState.update { it.copy(selectYearMonth = yearMonth) }
+        fetchReport(yearMonth = yearMonth)
     }
 }

@@ -1,6 +1,7 @@
 package com.moneymong.moneymong.report
 
 import com.moneymong.moneymong.model.ledger.LedgerReportResponse
+import com.moneymong.moneymong.model.ledger.ReportMonthly
 import com.moneymong.moneymong.report.model.CategoryReport
 import com.moneymong.moneymong.report.model.MemberReport
 import com.moneymong.moneymong.report.model.MonthlyReport
@@ -40,9 +41,8 @@ data class ReportUiData(
 }
 
 internal fun LedgerReportResponse.toUiData(
+    monthlyReport: ReportMonthly
 ): ReportUiData {
-    val monthlyReport = this.monthly.first()
-
     return ReportUiData(
         totalReport = TotalReport(
             balance = this.totalBalance,

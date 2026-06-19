@@ -14,6 +14,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.moneymong.moneymong.design_system.component.indicator.LoadingItem
 import com.moneymong.moneymong.design_system.error.ErrorScreen
 import com.moneymong.moneymong.design_system.theme.Gray01
 import com.moneymong.moneymong.design_system.theme.MMHorizontalSpacing
@@ -50,6 +51,7 @@ fun ReportRoute(
                 navigateUp = navigateUp,
                 selectYearMonth = uiState.selectYearMonth,
                 reportData = uiState.reportData,
+                isLoading = uiState.isLoading,
                 updateReportToPreviousMonth = viewModel::updateReportToPreviousMonth,
                 updateReportToNextMonth = viewModel::updateReportToNextMonth
             )
@@ -64,6 +66,7 @@ private fun ReportScreen(
     navigateUp: () -> Unit,
     selectYearMonth: YearMonth,
     reportData: ReportUiData,
+    isLoading: Boolean,
     updateReportToPreviousMonth: () -> Unit,
     updateReportToNextMonth: () -> Unit
 ) {
@@ -77,13 +80,15 @@ private fun ReportScreen(
             modifier = Modifier.fillMaxWidth(),
             onClose = navigateUp
         )
-        ReportSummary(
-            modifier = Modifier.padding(horizontal = MMHorizontalSpacing),
-            balance = reportData.totalReport.balance,
-            income = reportData.totalReport.income,
-            expense = reportData.totalReport.expense
-        )
-        Spacer(modifier = Modifier.height(20.dp))
+        if (isLoading.not()) {
+            ReportSummary(
+                modifier = Modifier.padding(horizontal = MMHorizontalSpacing),
+                balance = reportData.totalReport.balance,
+                income = reportData.totalReport.income,
+                expense = reportData.totalReport.expense
+            )
+            Spacer(modifier = Modifier.height(20.dp))
+        }
 
         Column(
             modifier = Modifier
@@ -96,20 +101,26 @@ private fun ReportScreen(
                 monthlyExpense = reportData.monthlyReport.expense,
                 monthlyIncomePercent = reportData.monthlyReport.incomePercent,
                 monthlyExpensePercent = reportData.monthlyReport.expensePercent,
+                isLoading = isLoading,
                 updateToPreviousMonth = updateReportToPreviousMonth,
                 updateToNextMonth = updateReportToNextMonth
             )
             Spacer(modifier = Modifier.height(32.dp))
-            if (reportData.memberReports.isNotEmpty()) {
-                MemberReportView(memberReports = reportData.memberReports)
-                Spacer(modifier = Modifier.height(32.dp))
-            }
-            if (reportData.categoryReports.isNotEmpty()) {
-                CategoryReportView(
-                    selectMonth = selectYearMonth.monthValue,
-                    categoryReports = reportData.categoryReports
-                )
+            if (isLoading) {
+                LoadingItem(modifier = Modifier.fillMaxWidth())
                 Spacer(modifier = Modifier.height(20.dp))
+            } else {
+                if (reportData.memberReports.isNotEmpty()) {
+                    MemberReportView(memberReports = reportData.memberReports)
+                    Spacer(modifier = Modifier.height(32.dp))
+                }
+                if (reportData.categoryReports.isNotEmpty()) {
+                    CategoryReportView(
+                        selectMonth = selectYearMonth.monthValue,
+                        categoryReports = reportData.categoryReports
+                    )
+                    Spacer(modifier = Modifier.height(20.dp))
+                }
             }
         }
     }
@@ -122,6 +133,7 @@ private fun ReportScreenPreview() {
         navigateUp = {},
         selectYearMonth = YearMonth.now(),
         reportData = ReportUiData.Empty,
+        isLoading = false,
         updateReportToPreviousMonth = {},
         updateReportToNextMonth = {}
     )

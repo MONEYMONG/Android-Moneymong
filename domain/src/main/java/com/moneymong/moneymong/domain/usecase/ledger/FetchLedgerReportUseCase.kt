@@ -8,13 +8,15 @@ class FetchLedgerReportUseCase @Inject constructor(
 ){
     suspend operator fun invoke(
         agencyId: Int,
-        year: Int,
-        month: Int,
+        startYear: Int,
+        startMonth: Int,
+        endYear: Int,
+        endMonth: Int
     ) = ledgerRepository.fetchLedgerReport(
             agencyId = agencyId,
-            startYear = year,
-            startMonth = month,
-            endYear = year,
-            endMonth = month
+            startYear = startYear,
+            startMonth = startMonth,
+            endYear = endYear,
+            endMonth = endMonth
     )
 }
