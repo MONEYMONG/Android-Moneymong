@@ -26,6 +26,7 @@ import com.moneymong.moneymong.design_system.theme.Gray06
 import com.moneymong.moneymong.design_system.theme.Gray10
 import com.moneymong.moneymong.design_system.theme.Heading3
 import com.moneymong.moneymong.design_system.theme.Heading5
+import com.moneymong.moneymong.design_system.theme.Red03
 import com.moneymong.moneymong.report.model.AmountType
 import com.moneymong.moneymong.ui.noRippleClickable
 import com.moneymong.moneymong.ui.toWonFormat
@@ -116,7 +117,7 @@ private fun MonthlyItem(
     ) {
         Text(
             text = "${month}월 ${type.label}",
-            color = Blue04,
+            color = if (type == AmountType.INCOME) Blue04 else Red03,
             style = Body2
         )
         Spacer(modifier = Modifier.height(2.dp))

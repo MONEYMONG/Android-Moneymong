@@ -101,7 +101,7 @@ private fun MemberItem(
             Row {
                 Text(text = label, color = Gray05, style = Body3)
                 Spacer(modifier = Modifier.width(4.dp))
-                Text(text = "${amount.toString().toWonFormat()}원", color = Gray06, style = Body3)
+                Text(text = "${amountType.symbol}${amount.toString().toWonFormat()}원", color = Gray06, style = Body3)
                 Spacer(modifier = Modifier.width(8.dp))
                 MDSTag(
                     text = "${percent}%",
