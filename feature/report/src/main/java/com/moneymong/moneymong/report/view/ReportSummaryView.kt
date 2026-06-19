@@ -55,7 +55,7 @@ internal fun ReportSummary(
                 modifier = Modifier.weight(1f),
                 text = buildAnnotatedString {
                     withStyle(style = SpanStyle(color = Blue04)) {
-                        append("$balance")
+                        append(balance.toString().toWonFormat())
                     }
                     append("원\n남아 있어요!")
                 },
