@@ -19,6 +19,7 @@ data class ReportUiState(
 )
 
 data class ReportUiData(
+    val agencyName: String,
     val totalReport: TotalReport,
     val monthlyReport: MonthlyReport,
     val memberReports: List<MemberReport>,
@@ -26,6 +27,7 @@ data class ReportUiData(
 ) {
     companion object {
         val Empty = ReportUiData(
+            agencyName = "",
             totalReport = TotalReport(
                 balance = 0L,
                 income = 0L,
@@ -47,6 +49,7 @@ internal fun LedgerReportResponse.toUiData(
     monthlyReport: ReportMonthly
 ): ReportUiData {
     return ReportUiData(
+        agencyName = agencyName,
         totalReport = TotalReport(
             balance = this.totalBalance,
             income = this.totalIncome,
