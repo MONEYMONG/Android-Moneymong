@@ -38,8 +38,19 @@ class ReportViewModel @Inject constructor(
         fetchReport(yearMonth = _uiState.value.selectYearMonth)
     }
 
+    fun refreshReport() {
+        val yearMonth = YearMonth.now()
+        reportCache.clear()
+        _uiState.update { it.copy(selectYearMonth = yearMonth) }
+        fetchReport(
+            yearMonth = yearMonth,
+            isRefresh = true
+        )
+    }
+
     private fun fetchReport(
-        yearMonth: YearMonth
+        yearMonth: YearMonth,
+        isRefresh: Boolean = false
     ) {
         fetchReportJob?.cancel()
         fetchReportJob = null
@@ -50,6 +61,7 @@ class ReportViewModel @Inject constructor(
             _uiState.update {
                 it.copy(
                     isLoading = false,
+                    isRefreshing = false,
                     errorMessage = null,
                     reportData = cachedReport
                 )
@@ -60,7 +72,13 @@ class ReportViewModel @Inject constructor(
         val halfYearRange = yearMonth.toReportHalfYearRange()
 
         fetchReportJob = viewModelScope.launch {
-            _uiState.update { it.copy(isLoading = true, errorMessage = null) }
+            _uiState.update {
+                it.copy(
+                    isLoading = isRefresh.not(),
+                    isRefreshing = isRefresh,
+                    errorMessage = null
+                )
+            }
 
             fetchLedgerReportUseCase(
                 agencyId = agencyId,
@@ -75,6 +93,7 @@ class ReportViewModel @Inject constructor(
                     _uiState.update {
                         it.copy(
                             isLoading = false,
+                            isRefreshing = false,
                             reportData = reportCache.get(yearMonth) ?: ReportUiData.Empty
                         )
                     }
@@ -83,6 +102,7 @@ class ReportViewModel @Inject constructor(
                     _uiState.update {
                         it.copy(
                             isLoading = false,
+                            isRefreshing = false,
                             errorMessage = error.message ?: MoneyMongError.UnExpectedError.message
                         )
                     }

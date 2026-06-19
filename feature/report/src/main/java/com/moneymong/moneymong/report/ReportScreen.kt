@@ -1,13 +1,18 @@
 package com.moneymong.moneymong.report
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -15,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.moneymong.moneymong.design_system.component.indicator.LoadingItem
+import com.moneymong.moneymong.design_system.component.indicator.MDSRefreshIndicator
 import com.moneymong.moneymong.design_system.error.ErrorDialog
 import com.moneymong.moneymong.design_system.error.ErrorScreen
 import com.moneymong.moneymong.design_system.theme.Gray01
@@ -28,6 +34,7 @@ import com.moneymong.moneymong.report.view.ReportSummary
 import java.time.YearMonth
 
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ReportRoute(
     modifier: Modifier = Modifier,
@@ -61,6 +68,8 @@ fun ReportRoute(
                 selectYearMonth = uiState.selectYearMonth,
                 reportData = uiState.reportData,
                 isLoading = uiState.isLoading,
+                isRefreshing = uiState.isRefreshing,
+                refreshReport = viewModel::refreshReport,
                 updateReportToPreviousMonth = viewModel::updateReportToPreviousMonth,
                 updateReportToNextMonth = viewModel::updateReportToNextMonth
             )
@@ -69,6 +78,7 @@ fun ReportRoute(
 }
 
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 private fun ReportScreen(
     modifier: Modifier = Modifier,
@@ -76,62 +86,79 @@ private fun ReportScreen(
     selectYearMonth: YearMonth,
     reportData: ReportUiData,
     isLoading: Boolean,
+    isRefreshing: Boolean,
+    refreshReport: () -> Unit,
     updateReportToPreviousMonth: () -> Unit,
     updateReportToNextMonth: () -> Unit
 ) {
+    val pullRefreshState = rememberPullRefreshState(
+        refreshing = isRefreshing,
+        onRefresh = refreshReport
+    )
 
-    Column(
+    Box(
         modifier = modifier
-            .verticalScroll(rememberScrollState())
-            .background(color = Gray01)
+            .fillMaxSize()
+            .pullRefresh(pullRefreshState)
     ) {
-        ReportTopBar(
-            modifier = Modifier.fillMaxWidth(),
-            onClose = navigateUp
-        )
-        if (isLoading.not()) {
-            ReportSummary(
-                modifier = Modifier.padding(horizontal = MMHorizontalSpacing),
-                balance = reportData.totalReport.balance,
-                income = reportData.totalReport.income,
-                expense = reportData.totalReport.expense
-            )
-            Spacer(modifier = Modifier.height(20.dp))
-        }
-
         Column(
             modifier = Modifier
-                .background(color = White)
-                .padding(horizontal = MMHorizontalSpacing)
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+                .background(color = Gray01)
         ) {
-            ReportMonthly(
-                yearMonth = selectYearMonth,
-                monthlyIncome = reportData.monthlyReport.income,
-                monthlyExpense = reportData.monthlyReport.expense,
-                monthlyIncomePercent = reportData.monthlyReport.incomePercent,
-                monthlyExpensePercent = reportData.monthlyReport.expensePercent,
-                isLoading = isLoading,
-                updateToPreviousMonth = updateReportToPreviousMonth,
-                updateToNextMonth = updateReportToNextMonth
+            ReportTopBar(
+                modifier = Modifier.fillMaxWidth(),
+                onClose = navigateUp
             )
-            Spacer(modifier = Modifier.height(32.dp))
-            if (isLoading) {
-                LoadingItem(modifier = Modifier.fillMaxWidth())
+            if (isLoading.not()) {
+                ReportSummary(
+                    modifier = Modifier.padding(horizontal = MMHorizontalSpacing),
+                    balance = reportData.totalReport.balance,
+                    income = reportData.totalReport.income,
+                    expense = reportData.totalReport.expense
+                )
                 Spacer(modifier = Modifier.height(20.dp))
-            } else {
-                if (reportData.memberReports.isNotEmpty()) {
-                    MemberReportView(memberReports = reportData.memberReports)
-                    Spacer(modifier = Modifier.height(32.dp))
-                }
-                if (reportData.categoryReports.isNotEmpty()) {
-                    CategoryReportView(
-                        selectMonth = selectYearMonth.monthValue,
-                        categoryReports = reportData.categoryReports
-                    )
+            }
+
+            Column(
+                modifier = Modifier
+                    .background(color = White)
+                    .padding(horizontal = MMHorizontalSpacing)
+            ) {
+                ReportMonthly(
+                    yearMonth = selectYearMonth,
+                    monthlyIncome = reportData.monthlyReport.income,
+                    monthlyExpense = reportData.monthlyReport.expense,
+                    monthlyIncomePercent = reportData.monthlyReport.incomePercent,
+                    monthlyExpensePercent = reportData.monthlyReport.expensePercent,
+                    isLoading = isLoading,
+                    updateToPreviousMonth = updateReportToPreviousMonth,
+                    updateToNextMonth = updateReportToNextMonth
+                )
+                Spacer(modifier = Modifier.height(32.dp))
+                if (isLoading) {
+                    LoadingItem(modifier = Modifier.fillMaxWidth())
                     Spacer(modifier = Modifier.height(20.dp))
+                } else {
+                    if (reportData.memberReports.isNotEmpty()) {
+                        MemberReportView(memberReports = reportData.memberReports)
+                        Spacer(modifier = Modifier.height(32.dp))
+                    }
+                    if (reportData.categoryReports.isNotEmpty()) {
+                        CategoryReportView(
+                            selectMonth = selectYearMonth.monthValue,
+                            categoryReports = reportData.categoryReports
+                        )
+                        Spacer(modifier = Modifier.height(20.dp))
+                    }
                 }
             }
         }
+        MDSRefreshIndicator(
+            pullRefreshState = pullRefreshState,
+            isRefreshing = isRefreshing
+        )
     }
 }
 
@@ -143,6 +170,8 @@ private fun ReportScreenPreview() {
         selectYearMonth = YearMonth.now(),
         reportData = ReportUiData.Empty,
         isLoading = false,
+        isRefreshing = false,
+        refreshReport = {},
         updateReportToPreviousMonth = {},
         updateReportToNextMonth = {}
     )

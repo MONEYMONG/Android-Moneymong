@@ -51,4 +51,8 @@ internal class ReportHalfYearCache {
         val key = yearMonth.toReportHalfYearRange().half
         return reports[key]?.get(yearMonth)
     }
+
+    fun clear() {
+        reports.clear()
+    }
 }

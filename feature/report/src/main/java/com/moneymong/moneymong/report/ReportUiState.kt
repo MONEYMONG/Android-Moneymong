@@ -13,6 +13,7 @@ data class ReportUiState(
     val selectYearMonth: YearMonth = YearMonth.now(),
     val reportData: ReportUiData = ReportUiData.Empty,
     val isLoading: Boolean = true,
+    val isRefreshing: Boolean = false,
     val errorMessage: String? = null,
     val isFutureMonthDialogVisible: Boolean = false
 )
