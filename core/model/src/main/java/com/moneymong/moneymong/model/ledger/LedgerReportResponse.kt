@@ -7,9 +7,7 @@ data class LedgerReportResponse(
     val totalIncome: Long,
     val totalExpense: Long,
     val totalBalance: Long,
-    val monthly: List<ReportMonthly>,
-    val members: List<ReportMember>,
-    val categories: List<ReportCategory>
+    val monthly: List<ReportMonthly>
 )
 
 data class ReportPeriod(
@@ -26,7 +24,9 @@ data class ReportMonthly(
     val expense: Long,
     val netAmount: Long,
     val incomeShareOfPeriod: Double,
-    val expenseShareOfPeriod: Double
+    val expenseShareOfPeriod: Double,
+    val members: List<ReportMember>,
+    val categories: List<ReportCategory>
 )
 
 data class ReportMember(
@@ -42,5 +42,6 @@ data class ReportCategory(
     val name: String,
     val income: Long,
     val expense: Long,
-    val share: Double
+    val incomeShare: Double,
+    val expenseShare: Double
 )

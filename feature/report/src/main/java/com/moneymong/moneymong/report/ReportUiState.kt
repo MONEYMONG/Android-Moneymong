@@ -5,7 +5,6 @@ import com.moneymong.moneymong.report.model.CategoryReport
 import com.moneymong.moneymong.report.model.MemberReport
 import com.moneymong.moneymong.report.model.MonthlyReport
 import com.moneymong.moneymong.report.model.TotalReport
-import com.moneymong.moneymong.report.model.mockCategoryReports
 import java.time.YearMonth
 
 data class ReportUiState(
@@ -41,35 +40,38 @@ data class ReportUiData(
 }
 
 internal fun LedgerReportResponse.toUiData(
-): ReportUiData = ReportUiData(
-    totalReport = TotalReport(
-        balance = this.totalBalance,
-        income = this.totalIncome,
-        expense = this.totalExpense
-    ),
-    monthlyReport = MonthlyReport(
-        income = this.monthly.first().income,
-        expense = this.monthly.first().expense,
-        incomePercent = this.monthly.first().incomeShareOfPeriod.toInt(),
-        expensePercent = this.monthly.first().expenseShareOfPeriod.toInt()
-    ),
-    memberReports = this.members.map { member ->
-        MemberReport(
-            name = member.nickname,
-            income = member.income,
-            expense = member.expense,
-            incomePercent = member.incomeShare.toInt(),
-            expensePercent = member.expenseShare.toInt()
-        )
-    },
-//    categoryReports = this.categories.map { category ->
-//        CategoryReport(
-//            name = category.name,
-//            income = category.income,
-//            expense = category.expense,
-//            incomePercent = category.share,
-//            expensePercent = category.share
-//        )
-//    }
-    categoryReports = mockCategoryReports
-)
+): ReportUiData {
+    val monthlyReport = this.monthly.first()
+
+    return ReportUiData(
+        totalReport = TotalReport(
+            balance = this.totalBalance,
+            income = this.totalIncome,
+            expense = this.totalExpense
+        ),
+        monthlyReport = MonthlyReport(
+            income = monthlyReport.income,
+            expense = monthlyReport.expense,
+            incomePercent = monthlyReport.incomeShareOfPeriod.toInt(),
+            expensePercent = monthlyReport.expenseShareOfPeriod.toInt()
+        ),
+        memberReports = monthlyReport.members.map { member ->
+            MemberReport(
+                name = member.nickname,
+                income = member.income,
+                expense = member.expense,
+                incomePercent = member.incomeShare.toInt(),
+                expensePercent = member.expenseShare.toInt()
+            )
+        },
+        categoryReports = monthlyReport.categories.map { category ->
+            CategoryReport(
+                name = category.name,
+                income = category.income,
+                expense = category.expense,
+                incomePercent = category.incomeShare.toInt(),
+                expensePercent = category.expenseShare.toInt()
+            )
+        }
+    )
+}
