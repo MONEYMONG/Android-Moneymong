@@ -6,6 +6,7 @@ import com.moneymong.moneymong.report.model.CategoryReport
 import com.moneymong.moneymong.report.model.MemberReport
 import com.moneymong.moneymong.report.model.MonthlyReport
 import com.moneymong.moneymong.report.model.TotalReport
+import java.math.BigDecimal
 import java.time.YearMonth
 
 data class ReportUiState(
@@ -77,4 +78,7 @@ internal fun LedgerReportResponse.toUiData(
     )
 }
 
-private fun Double.toPercentInt(): Int = (this * 100).toInt()
+private fun Double.toPercentInt(): Int =
+    BigDecimal.valueOf(this)
+        .multiply(BigDecimal.valueOf(100))
+        .toInt()
