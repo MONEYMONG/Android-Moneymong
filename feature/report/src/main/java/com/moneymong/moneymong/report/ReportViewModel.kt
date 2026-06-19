@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.moneymong.moneymong.domain.usecase.ledger.FetchLedgerReportUseCase
 import com.moneymong.moneymong.report.navigation.ReportArgs
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -26,6 +27,8 @@ class ReportViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(ReportUiState())
     val uiState: StateFlow<ReportUiState> = _uiState.asStateFlow()
 
+    private var fetchReportJob: Job? = null
+
     init {
         fetchReport()
     }
@@ -37,6 +40,9 @@ class ReportViewModel @Inject constructor(
     private fun fetchReport(
         yearMonth: YearMonth
     ) {
+        fetchReportJob?.cancel()
+        fetchReportJob = null
+
         val cachedReport = reportCache.get(yearMonth)
 
         if (cachedReport != null) {
@@ -52,7 +58,7 @@ class ReportViewModel @Inject constructor(
 
         val halfYearRange = yearMonth.toReportHalfYearRange()
 
-        viewModelScope.launch {
+        fetchReportJob = viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true, errorMessage = null) }
 
             fetchLedgerReportUseCase(
