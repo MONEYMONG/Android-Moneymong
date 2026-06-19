@@ -29,7 +29,7 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import com.moneymong.moneymong.design_system.component.tab.MDSTabRow
-import com.moneymong.moneymong.design_system.theme.Blue01
+import com.moneymong.moneymong.design_system.theme.Blue03
 import com.moneymong.moneymong.design_system.theme.Blue04
 import com.moneymong.moneymong.design_system.theme.Body3
 import com.moneymong.moneymong.design_system.theme.Caption
@@ -106,7 +106,7 @@ private fun CategoryReportContent(
             horizontalArrangement = Arrangement.SpaceEvenly,
             verticalAlignment = Alignment.Bottom
         ) {
-            val stickColors = listOf(Blue04, Blue01, SkyBlue01)
+            val stickColors = listOf(Blue04, Blue03, SkyBlue01)
 
             categoryReportItems.take(3).forEachIndexed { idx, categoryReportItem ->
                 CategoryReportStick(
