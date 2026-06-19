@@ -77,7 +77,7 @@ private fun MemberItem(
                     .background(color = SkyBlue01, shape = CircleShape)
                     .padding(4.dp)
                     .size(32.dp),
-                painter = painterResource(MDSR.drawable.img_auditor),
+                painter = painterResource(MDSR.drawable.img_profile),
                 contentDescription = "멤버 아이콘",
                 tint = Color.Unspecified
             )
