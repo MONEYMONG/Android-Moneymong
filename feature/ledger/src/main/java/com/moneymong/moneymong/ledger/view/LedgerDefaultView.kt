@@ -35,6 +35,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
@@ -161,25 +162,18 @@ internal fun LedgerDefaultView(
                 endDate = endDate,
                 onClickPeriod = onClickPeriod,
             )
-            Row(
+            LedgerDefaultActionRow(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                MDSChip(
-                    tabs = chips.map { it.name },
-                    selectedTabIndex = selectedTabIndex,
-                    onChangeSelectedTabIndex = {
-                        selectedTabIndex = it
-                        onChangeTransactionType(chips[it])
-                    }
-                )
-                ReportEntry(
-                    navigateReport = navigateReport
-                )
-            }
+                chips = chips,
+                selectedTabIndex = selectedTabIndex,
+                onChangeSelectedTabIndex = {
+                    selectedTabIndex = it
+                    onChangeTransactionType(chips[it])
+                },
+                navigateReport = navigateReport
+            )
         }
         if (isLoading) {
             item {
@@ -223,6 +217,65 @@ internal fun LedgerDefaultView(
             addComponent = addFABState,
             onDismiss = onDismissOnboarding
         )
+    }
+}
+
+@Composable
+private fun LedgerDefaultActionRow(
+    modifier: Modifier = Modifier,
+    chips: List<LedgerTransactionType>,
+    selectedTabIndex: Int,
+    onChangeSelectedTabIndex: (Int) -> Unit,
+    navigateReport: () -> Unit
+) {
+    val spacing = 12.dp
+    val spacingPx = with(LocalDensity.current) { spacing.roundToPx() }
+
+    Layout(
+        modifier = modifier,
+        content = {
+            MDSChip(
+                tabs = chips.map { it.name },
+                selectedTabIndex = selectedTabIndex,
+                onChangeSelectedTabIndex = onChangeSelectedTabIndex
+            )
+            ReportEntry(navigateReport = navigateReport)
+        }
+    ) { measurables, constraints ->
+        val childConstraints = constraints.copy(minWidth = 0, minHeight = 0)
+        val chipPlaceable = measurables[0].measure(childConstraints)
+        val reportEntryPlaceable = measurables[1].measure(childConstraints)
+        val stackReportEntry = shouldStackReportEntry(
+            chipsWidth = chipPlaceable.width,
+            reportEntryWidth = reportEntryPlaceable.width,
+            maxWidth = constraints.maxWidth,
+            spacing = spacingPx
+        )
+        val width = constraints.maxWidth
+        val height = if (stackReportEntry) {
+            chipPlaceable.height + spacingPx + reportEntryPlaceable.height
+        } else {
+            maxOf(chipPlaceable.height, reportEntryPlaceable.height)
+        }
+
+        layout(width = width, height = height) {
+            if (stackReportEntry) {
+                chipPlaceable.placeRelative(x = 0, y = 0)
+                reportEntryPlaceable.placeRelative(
+                    x = width - reportEntryPlaceable.width,
+                    y = chipPlaceable.height + spacingPx
+                )
+            } else {
+                chipPlaceable.placeRelative(
+                    x = 0,
+                    y = (height - chipPlaceable.height) / 2
+                )
+                reportEntryPlaceable.placeRelative(
+                    x = width - reportEntryPlaceable.width,
+                    y = (height - reportEntryPlaceable.height) / 2
+                )
+            }
+        }
     }
 }
 
@@ -308,7 +361,16 @@ private fun ReportEntry(
     }
 }
 
-@Preview(showBackground = true)
+internal fun shouldStackReportEntry(
+    chipsWidth: Int,
+    reportEntryWidth: Int,
+    maxWidth: Int,
+    spacing: Int
+): Boolean = chipsWidth + spacing + reportEntryWidth > maxWidth
+
+@Preview(name = "Default", showBackground = true)
+@Preview(name = "Font scale 1.5x", showBackground = true, fontScale = 1.5f)
+@Preview(name = "Font scale 2.0x", showBackground = true, fontScale = 2.0f)
 @Composable
 fun LedgerDefaultPreview() {
     LedgerDefaultView(
@@ -326,7 +388,7 @@ fun LedgerDefaultPreview() {
         onClickTransactionItem = {},
         navigateReport = {},
         addFABState = OnboardingComponentState(),
-        visibleOnboarding = true,
+        visibleOnboarding = false,
         onDismissOnboarding = {}
     )
 }
