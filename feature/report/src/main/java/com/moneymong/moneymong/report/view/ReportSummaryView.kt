@@ -71,10 +71,10 @@ internal fun ReportSummary(
         Spacer(modifier = Modifier.height(12.dp))
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            SummaryItem(amount = income, type = AmountType.INCOME)
-            SummaryItem(amount = expense, type = AmountType.EXPENSE)
+            SummaryItem(modifier = Modifier.weight(1f), amount = income, type = AmountType.INCOME)
+            SummaryItem(modifier = Modifier.weight(1f), amount = expense, type = AmountType.EXPENSE)
         }
     }
 }
