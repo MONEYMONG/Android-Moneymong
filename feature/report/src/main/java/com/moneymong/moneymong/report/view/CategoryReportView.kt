@@ -24,9 +24,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.HorizontalAlignmentLine
+import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.dp
 import com.moneymong.moneymong.design_system.component.tab.MDSTabRow
 import com.moneymong.moneymong.design_system.theme.Blue03
@@ -106,14 +110,19 @@ private fun CategoryReportContent(
             horizontalArrangement = Arrangement.SpaceEvenly,
             verticalAlignment = Alignment.Bottom
         ) {
+            val topCategoryReportItems = categoryReportItems.take(3)
+            val maxPercent = topCategoryReportItems.maxOfOrNull { it.percent } ?: 0
             val stickColors = listOf(Blue04, Blue03, SkyBlue01)
 
-            categoryReportItems.take(3).forEachIndexed { idx, categoryReportItem ->
+            topCategoryReportItems.forEachIndexed { idx, categoryReportItem ->
                 CategoryReportStick(
-                    modifier = Modifier.weight(1f),
+                    modifier = Modifier
+                        .weight(1f)
+                        .alignBy(CategoryReportStickBottomLine),
                     name = categoryReportItem.name,
                     amount = categoryReportItem.amount,
                     percent = categoryReportItem.percent,
+                    maxPercent = maxPercent,
                     color = stickColors[idx]
                 )
             }
@@ -159,6 +168,10 @@ private fun CategoryReportContent(
     }
 }
 
+private val CategoryReportStickBottomLine = HorizontalAlignmentLine { old, new ->
+    minOf(old, new)
+}
+
 
 @Composable
 private fun CategoryReportStick(
@@ -166,29 +179,116 @@ private fun CategoryReportStick(
     name: String,
     amount: Long,
     percent: Int,
+    maxPercent: Int,
     color: Color
 ) {
     val minHeight = 20
     val maxHeight = 174
+    val amountBottomSpacing = 9.dp
+    val labelTopSpacing = 8.dp
     var targetHeight: Float by remember { mutableFloatStateOf(value = 0f) }
     val animatedHeight by animateFloatAsState(targetValue = targetHeight)
 
-    LaunchedEffect(key1 = percent) {
-        targetHeight = minHeight + (maxHeight - minHeight) * (percent.toFloat() / 100)
+    LaunchedEffect(key1 = percent, key2 = maxPercent) {
+        targetHeight = calculateCategoryReportStickHeight(
+            percent = percent,
+            maxPercent = maxPercent,
+            minHeight = minHeight,
+            maxHeight = maxHeight
+        )
     }
 
-    Column(modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally) {
-        Text(text = "${amount.toString().toWonFormat()}원", color = Gray10, style = Heading1)
-        Spacer(modifier = Modifier.height(9.dp))
-        Box(
-            modifier = Modifier
-                .width(44.dp)
-                .height(animatedHeight.dp)
-                .clip(RoundedCornerShape(topStart = 8.dp, topEnd = 8.dp))
-                .background(color = color)
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-        Text(text = name, color = Gray10, style = Body3)
-        Text(text = "${percent}%", color = Gray04, style = Caption)
+    Layout(
+        modifier = modifier,
+        content = {
+            Text(text = "${amount.toString().toWonFormat()}원", color = Gray10, style = Heading1)
+            Box(
+                modifier = Modifier
+                    .width(44.dp)
+                    .height(animatedHeight.dp)
+                    .clip(RoundedCornerShape(topStart = 8.dp, topEnd = 8.dp))
+                    .background(color = color)
+            )
+            Text(text = name, color = Gray10, style = Body3)
+            Text(text = "${percent}%", color = Gray04, style = Caption)
+        }
+    ) { measurables, constraints ->
+        val amountBottomSpacingPx = amountBottomSpacing.roundToPx()
+        val labelTopSpacingPx = labelTopSpacing.roundToPx()
+        val childConstraints = constraints.copy(minWidth = 0, minHeight = 0)
+
+        val amountPlaceable = measurables[0].measure(childConstraints)
+        val stickPlaceable = measurables[1].measure(Constraints())
+        val namePlaceable = measurables[2].measure(childConstraints)
+        val percentPlaceable = measurables[3].measure(childConstraints)
+
+        val width = constraints.maxWidth
+        val stickBottomY = amountPlaceable.height + amountBottomSpacingPx + stickPlaceable.height
+        val height = stickBottomY + labelTopSpacingPx + namePlaceable.height + percentPlaceable.height
+
+        layout(
+            width = width,
+            height = height,
+            alignmentLines = mapOf(CategoryReportStickBottomLine to stickBottomY)
+        ) {
+            amountPlaceable.placeRelative(
+                x = (width - amountPlaceable.width) / 2,
+                y = 0
+            )
+            stickPlaceable.placeRelative(
+                x = (width - stickPlaceable.width) / 2,
+                y = amountPlaceable.height + amountBottomSpacingPx
+            )
+            namePlaceable.placeRelative(
+                x = (width - namePlaceable.width) / 2,
+                y = stickBottomY + labelTopSpacingPx
+            )
+            percentPlaceable.placeRelative(
+                x = (width - percentPlaceable.width) / 2,
+                y = stickBottomY + labelTopSpacingPx + namePlaceable.height
+            )
+        }
     }
+}
+
+internal fun calculateCategoryReportStickHeight(
+    percent: Int,
+    maxPercent: Int,
+    minHeight: Int,
+    maxHeight: Int
+): Float {
+    if (maxPercent <= 0) return minHeight.toFloat()
+
+    val ratio = percent.toFloat() / maxPercent
+    return minHeight + (maxHeight - minHeight) * ratio.coerceIn(0f, 1f)
+}
+
+@Preview(
+    name = "Category Report Stick - Long Name Font 2.0x",
+    showBackground = true,
+    fontScale = 2.0f
+)
+@Composable
+private fun CategoryReportContentLongNamePreview() {
+    CategoryReportContent(
+        month = 6,
+        amountType = AmountType.EXPENSE,
+        categoryReportItems = listOf(
+            CategoryReportItem(
+                name = "엄청나게긴카테고리이름입니다",
+                amount = 12000,
+                percent = 10
+            ),
+            CategoryReportItem(
+                name = "교통비",
+                amount = 240_0000000000000L,
+                percent = 33
+            ),
+            CategoryReportItem(
+                name = "식비",
+                amount = 60_000L,
+                percent = 13
+            )
+        )
+    )
 }
