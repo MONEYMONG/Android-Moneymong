@@ -25,6 +25,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.BottomCenter
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.member.component.MemberCardView
@@ -51,6 +52,7 @@ import com.moneymong.moneymong.design_system.theme.MMHorizontalSpacing
 import com.moneymong.moneymong.design_system.theme.Red03
 import com.moneymong.moneymong.design_system.theme.White
 import com.moneymong.moneymong.model.agency.MyAgencyResponse
+import com.moneymong.moneymong.model.member.AgencyUser
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.compose.collectAsState
 import org.orbitmvi.orbit.compose.collectSideEffect
@@ -424,64 +426,124 @@ fun MemberScreen(
             )
         }
     } else {
-        Column(
+        MemberContent(
+            state = state,
+            snackbarHostState = snackbarHostState,
+            memberMyInfoChanged = viewModel::memberMyInfoChanged,
+            isReInvitationCode = {
+                viewModel.eventEmit(MemberSideEffect.GetReInvitationCode(it))
+            },
+            onCopyChange = viewModel::onCopyClickChanged,
+            deleteAgencyBtnClicked = viewModel::deleteAgencyBtnClicked,
+            onIconClick = viewModel::onVertClickChanged,
+            updateFilteredMemberList = viewModel::updateFilteredMemberList,
+            vertClickedUserIdChanged = viewModel::vertClickedUserIdChanged,
+        )
+    }
+}
+
+@Composable
+private fun MemberContent(
+    state: MemberState,
+    snackbarHostState: SnackbarHostState,
+    memberMyInfoChanged: (Long, Long, String, String) -> Unit,
+    isReInvitationCode: (Long) -> Unit,
+    onCopyChange: (Boolean) -> Unit,
+    deleteAgencyBtnClicked: (Boolean) -> Unit,
+    onIconClick: (Boolean) -> Unit,
+    updateFilteredMemberList: (Long) -> Unit,
+    vertClickedUserIdChanged: (Long) -> Unit,
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(White)
+            .padding(horizontal = MMHorizontalSpacing)
+    ) {
+        Text(
+            modifier = Modifier.padding(top = 24.dp, bottom = 8.dp),
+            text = "나",
+            style = Body3,
+            color = Gray07
+        )
+        MemberCardView(
+            modifier = Modifier,
+            agencyId = state.agencyId,
+            memberList = state.memberList,
+            memberMyInfoId = state.memberMyInfoId,
+            memberMyInfo = state.memberMyInfo,
+            memberMyInfoChanged = memberMyInfoChanged,
+            invitationCode = state.invitationCode,
+            isReInvitationCode = isReInvitationCode,
+            onCopyChange = onCopyChange,
+            deleteAgencyBtnClicked = deleteAgencyBtnClicked,
+        )
+
+        MemberListView(
+            modifier = Modifier.padding(top = 24.dp),
+            memberMyInfo = state.memberMyInfo,
+            filteredMemberList = state.filteredMemberList,
+            onIconClick = onIconClick,
+            updateFilteredMemberList = updateFilteredMemberList,
+            vertClickedUserIdChanged = vertClickedUserIdChanged,
+        )
+
+        Box(
             modifier = Modifier
-                .fillMaxSize()
-                .background(White)
-                .padding(horizontal = MMHorizontalSpacing)
+                .fillMaxWidth()
+                .weight(1f)
         ) {
-            Text(
-                modifier = Modifier.padding(top = 24.dp, bottom = 8.dp),
-                text = "나",
-                style = Body3,
-                color = Gray07
-            )
-            MemberCardView(
-                modifier = Modifier,
-                agencyId = state.agencyId,
-                memberList = state.memberList,
-                memberMyInfoId = state.memberMyInfoId,
-                memberMyInfo = state.memberMyInfo,
-                memberMyInfoChanged = { id, userId, nickname, agencyUserRole ->
-                    viewModel.memberMyInfoChanged(
-                        id,
-                        userId,
-                        nickname,
-                        agencyUserRole
-                    )
-                },
-                invitationCode = state.invitationCode,
-                isReInvitationCode = { viewModel.eventEmit(MemberSideEffect.GetReInvitationCode(it)) },
-                onCopyChange = { onCopyClick -> viewModel.onCopyClickChanged(onCopyClick) },
-                deleteAgencyBtnClicked = { onClick ->  viewModel.deleteAgencyBtnClicked(onClick)}
-
-            )
-
-            MemberListView(
-                modifier = Modifier.padding(top = 24.dp),
-                memberMyInfo = state.memberMyInfo,
-                filteredMemberList = state.filteredMemberList,
-                onIconClick = { vertClick -> viewModel.onVertClickChanged(vertClick) },
-                updateFilteredMemberList = { memberMyInfoId ->
-                    viewModel.updateFilteredMemberList(
-                        memberMyInfoId
-                    )
-                },
-                vertClickedUserIdChanged = { userId -> viewModel.vertClickedUserIdChanged(userId) },
-            )
-
-            Box(
+            MDSSnackbarHost(
+                hostState = snackbarHostState,
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f)
-            ) {
-                MDSSnackbarHost(
-                    hostState = snackbarHostState,
-                    modifier = Modifier
-                        .align(BottomCenter)
-                        .padding(bottom = 12.dp)
-                )
-            }
+                    .align(BottomCenter)
+                    .padding(bottom = 12.dp)
+            )
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun MemberScreenPreview() {
+    val currentMember = AgencyUser(
+        id = 1L,
+        userId = 1L,
+        nickname = "머니몽",
+        agencyUserRole = "STAFF",
+    )
+    val members = listOf(
+        currentMember,
+        AgencyUser(
+            id = 2L,
+            userId = 2L,
+            nickname = "김몽이",
+            agencyUserRole = "MEMBER",
+        ),
+        AgencyUser(
+            id = 3L,
+            userId = 3L,
+            nickname = "이몽이",
+            agencyUserRole = "MEMBER",
+        ),
+    )
+
+    MemberContent(
+        state = MemberState(
+            invitationCode = "MONEY123",
+            memberList = members,
+            memberMyInfoId = currentMember.userId,
+            memberMyInfo = currentMember,
+            filteredMemberList = members.drop(1),
+            agencyId = 1,
+        ),
+        snackbarHostState = remember { SnackbarHostState() },
+        memberMyInfoChanged = { _, _, _, _ -> },
+        isReInvitationCode = {},
+        onCopyChange = {},
+        deleteAgencyBtnClicked = {},
+        onIconClick = {},
+        updateFilteredMemberList = {},
+        vertClickedUserIdChanged = {},
+    )
 }
