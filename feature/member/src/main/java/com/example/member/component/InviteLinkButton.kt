@@ -109,7 +109,7 @@ fun InviteLinkButton(
 
         Spacer(modifier = Modifier.width(8.dp))
         Text(
-            text = "초대링크 복사하기",
+            text = "초대링크 공유하기",
             style = Body4,
             color = White
         )

@@ -36,6 +36,7 @@ import com.example.member.component.InviteLinkButton
 import com.example.member.component.MemberCardView
 import com.example.member.component.MemberDialogView
 import com.example.member.component.MemberListView
+import com.example.member.share.InviteLinkShareLauncher
 import com.moneymong.moneymong.design_system.R
 import com.moneymong.moneymong.design_system.component.bottomSheet.MDSBottomSheet
 import com.moneymong.moneymong.design_system.component.button.MDSButton
@@ -490,7 +491,12 @@ private fun MemberContent(
 
         InviteLinkButton(
             modifier = Modifier.fillMaxWidth(),
-            onClick = { Toast.makeText(context, "안녕하신교~!", Toast.LENGTH_SHORT).show() }
+            onClick = {
+                InviteLinkShareLauncher.launch(
+                    context = context,
+                    invitationCode = state.invitationCode,
+                )
+            }
         )
         Spacer(modifier = Modifier.height(20.dp))
 
