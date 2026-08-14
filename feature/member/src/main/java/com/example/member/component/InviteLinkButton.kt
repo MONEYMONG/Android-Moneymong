@@ -62,7 +62,7 @@ internal fun calculateInviteLinkGradientOffsets(
 @Composable
 fun InviteLinkButton(
     modifier: Modifier = Modifier,
-    onClick: () -> Unit = {}
+    onClick: () -> Unit
 ) {
     Row(
         modifier = modifier
