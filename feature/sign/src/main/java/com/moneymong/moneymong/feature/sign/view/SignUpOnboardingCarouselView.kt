@@ -100,7 +100,7 @@ fun SignUpOnboardingCarouselItem(
         Image(
             modifier = Modifier
                 .fillMaxWidth(),
-            contentScale = ContentScale.FillWidth,
+            contentScale = ContentScale.Fit,
             painter = painterResource(id = carouselData.imageRes),
             contentDescription = null
         )
