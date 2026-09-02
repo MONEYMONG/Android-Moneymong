@@ -8,6 +8,10 @@ plugins {
 
 android {
     namespace = "com.example.member"
+
+    buildFeatures {
+        buildConfig = true
+    }
 }
 
 dependencies {

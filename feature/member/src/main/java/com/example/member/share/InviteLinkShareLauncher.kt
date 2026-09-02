@@ -8,10 +8,7 @@ internal object InviteLinkShareLauncher {
         context: Context,
         invitationCode: String,
     ) {
-        val shareData = InviteLinkShareData.from(
-            invitationCode = invitationCode,
-            appPackageName = context.packageName,
-        ) ?: return
+        val shareData = InviteLinkShareData.from(invitationCode)
 
         val sendIntent = Intent(Intent.ACTION_SEND).apply {
             type = "text/plain"
