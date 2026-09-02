@@ -29,35 +29,10 @@ import com.moneymong.moneymong.design_system.theme.Body4
 import com.moneymong.moneymong.design_system.theme.Caption
 import com.moneymong.moneymong.design_system.theme.White
 import com.moneymong.moneymong.ui.noRippleClickable
-import kotlin.math.tan
 
-private const val FIGMA_BUTTON_WIDTH = 343f
-private const val FIGMA_GRADIENT_START_X = 91f
-private const val FIGMA_GRADIENT_END_X = 307f
-private const val COMPOSE_GRADIENT_ANGLE_DEGREES = 9.0
 
 private val InviteLinkGradientStartColor = Color(0xFF4F83FD)
 private val InviteLinkGradientEndColor = Color(0xFF7F5FFF)
-
-internal fun calculateInviteLinkGradientOffsets(
-    width: Float,
-    height: Float,
-): Pair<Offset, Offset> {
-    val startX = width * FIGMA_GRADIENT_START_X / FIGMA_BUTTON_WIDTH
-    val endX = width * FIGMA_GRADIENT_END_X / FIGMA_BUTTON_WIDTH
-    val gradientHeight = (endX - startX) * tan(
-        Math.toRadians(COMPOSE_GRADIENT_ANGLE_DEGREES)
-    ).toFloat()
-    val centerY = height / 2f
-
-    return Offset(
-        x = startX,
-        y = centerY - gradientHeight / 2f,
-    ) to Offset(
-        x = endX,
-        y = centerY + gradientHeight / 2f,
-    )
-}
 
 @Composable
 fun InviteLinkButton(
@@ -68,21 +43,26 @@ fun InviteLinkButton(
         modifier = modifier
             .clip(shape = RoundedCornerShape(10.dp))
             .drawWithCache {
-                val (start, end) = calculateInviteLinkGradientOffsets(
-                    width = size.width,
-                    height = size.height,
+                val start = Offset(
+                    x = size.width * (182f / 343f),
+                    y = size.height * (5f / 46f),
                 )
-                val gradient = Brush.linearGradient(
-                    colors = listOf(
-                        InviteLinkGradientStartColor,
-                        InviteLinkGradientEndColor,
-                    ),
+
+                val end = Offset(
+                    x = size.width * (185f / 343f),
+                    y = size.height * (34f / 46f),
+                )
+                val brush = Brush.linearGradient(
                     start = start,
                     end = end,
+                    colors = listOf(
+                        InviteLinkGradientStartColor,
+                        InviteLinkGradientEndColor
+                    )
                 )
 
                 onDrawBehind {
-                    drawRect(brush = gradient)
+                    drawRect(brush = brush)
                 }
             }
             .border(
