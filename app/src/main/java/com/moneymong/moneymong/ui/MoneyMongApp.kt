@@ -6,7 +6,16 @@ import com.moneymong.moneymong.home.HomeScreen
 @Composable
 fun MoneyMongApp(
     expired: Boolean,
-    onChangeExpired: (Boolean) -> Unit
+    onChangeExpired: (Boolean) -> Unit,
+    inviteCode: String?,
+    inviteJoinFinished: Boolean,
+    joinAgency: (inviteCode: String) -> Unit,
 ) {
-    HomeScreen(expired = expired, onChangeExpired = onChangeExpired)
+    HomeScreen(
+        expired = expired,
+        onChangeExpired = onChangeExpired,
+        inviteCode = inviteCode,
+        inviteJoinFinished = inviteJoinFinished,
+        joinAgency = joinAgency
+    )
 }

@@ -4,7 +4,6 @@ import android.content.Intent
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
@@ -88,28 +87,33 @@ class MainActivity : ComponentActivity() {
                         )
                     }
 
+                    if (state.inviteJoinErrorMessage.isNotEmpty()) {
+                        ErrorDialog(
+                            message = state.inviteJoinErrorMessage,
+                            onConfirm = viewModel::onInviteJoinErrorConfirmed,
+                        )
+                    }
+
                     MoneyMongApp(
                         expired = expired,
-                        onChangeExpired = { expired = false }
+                        onChangeExpired = { expired = false },
+                        inviteCode = state.pendingInviteCode,
+                        inviteJoinFinished = state.inviteJoinFinished,
+                        joinAgency = viewModel::joinByInviteCode
                     )
                 }
             }
         }
 
-        handleInviteIntent(intent = intent)
+        if (savedInstanceState == null) {
+            handleInviteIntent(intent)
+        }
     }
 
 
     private fun handleInviteIntent(intent: Intent) {
-        val code = InviteDeepLinkParser.parse(intent.data)
+        val code = InviteDeepLinkParser.parse(intent.data) ?: return
 
-        Log.d("InviteDeepLink", "data=${intent.data}, code=$code")
-    }
-
-    override fun onNewIntent(intent: Intent) {
-        super.onNewIntent(intent)
-        setIntent(intent)
-
-        handleInviteIntent(intent)
+        viewModel.onInviteCodeReceived(code)
     }
 }

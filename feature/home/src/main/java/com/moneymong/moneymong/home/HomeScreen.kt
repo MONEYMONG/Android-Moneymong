@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.layout.windowInsetsTopHeight
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -69,7 +70,10 @@ import com.moneymong.moneymong.ui.pxToDp
 @Composable
 fun HomeScreen(
     expired: Boolean,
-    onChangeExpired: (Boolean) -> Unit
+    onChangeExpired: (Boolean) -> Unit,
+    inviteCode: String?,
+    inviteJoinFinished: Boolean,
+    joinAgency: (inviteCode: String) -> Unit
 ) {
     val homeNavigator = rememberHomeNavigator()
     val homeNavController = homeNavigator.navHostController
@@ -94,6 +98,19 @@ fun HomeScreen(
             }
         )
     }
+
+    // 인증이 끝난 지점에서만 호출한다 (스플래시의 토큰 확인 통과 / 로그인 완료).
+    // 초대 코드 딥링크로 들어왔으면 소속 가입을 하고, 없으면 원래 가려던 곳으로 보낸다.
+    val joinInvitedAgencyOrElse: (() -> Unit) -> Unit = { goToDefault ->
+        if (inviteCode != null) joinAgency(inviteCode) else goToDefault()
+    }
+
+    LaunchedEffect(inviteJoinFinished) {
+        if (inviteJoinFinished) {
+            homeNavController.navigateLedger()
+        }
+    }
+
 
     Scaffold(
         bottomBar = {
@@ -122,15 +139,15 @@ fun HomeScreen(
                 exitTransition = { ExitTransition.None }
             ) {
                 splashScreen(
-                    navigateToLedger = homeNavController::navigateLedger,
+                    navigateToLedger = { joinInvitedAgencyOrElse { homeNavController.navigateLedger() } },
                     navigateToLogin = homeNavController::navigateLogin
                 )
 
                 // sign
                 loginScreen(
-                    navigateToLedger = homeNavController::navigateLedger,
+                    navigateToLedger = { joinInvitedAgencyOrElse { homeNavController.navigateLedger() } },
                     navigateToAgencyRegister = {
-                        homeNavController.navigateAgencyRegister(visibleInviteCode = true)
+                        joinInvitedAgencyOrElse { homeNavController.navigateAgencyRegister(visibleInviteCode = true) }
                     }
                 )
 
