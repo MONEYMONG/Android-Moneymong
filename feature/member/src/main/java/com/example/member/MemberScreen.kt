@@ -495,6 +495,7 @@ private fun MemberContent(
                 InviteLinkShareLauncher.launch(
                     context = context,
                     invitationCode = state.invitationCode,
+                    agencyId = state.agencyId
                 )
             }
         )

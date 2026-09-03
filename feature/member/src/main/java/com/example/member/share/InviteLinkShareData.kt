@@ -12,8 +12,8 @@ internal data class InviteLinkShareData(
             if (BuildConfig.DEBUG) "https://dev.moneymong.site" else "https://prod.moneymong.site"
         private const val INVITE_LINK_PATH = "/invite"
 
-        fun from(invitationCode: String): InviteLinkShareData {
-            val inviteUrl = "$baseUrl$INVITE_LINK_PATH?code=$invitationCode"
+        fun from(invitationCode: String, agencyId: Int): InviteLinkShareData {
+            val inviteUrl = "$baseUrl$INVITE_LINK_PATH?code=$invitationCode&agencyId=$agencyId"
 
             return InviteLinkShareData(
                 subject = "머니몽 장부 초대",

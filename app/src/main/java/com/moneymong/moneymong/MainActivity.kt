@@ -97,7 +97,7 @@ class MainActivity : ComponentActivity() {
                     MoneyMongApp(
                         expired = expired,
                         onChangeExpired = { expired = false },
-                        inviteCode = state.pendingInviteCode,
+                        inviteCode = state.pendingInvite?.code,
                         inviteJoinFinished = state.inviteJoinFinished,
                         joinAgency = viewModel::joinByInviteCode
                     )
