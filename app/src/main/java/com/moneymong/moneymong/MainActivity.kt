@@ -2,9 +2,9 @@ package com.moneymong.moneymong
 
 import android.content.Intent
 import android.graphics.Color
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
@@ -17,12 +17,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
+import androidx.core.net.toUri
 import androidx.lifecycle.compose.LifecycleStartEffect
 import com.moneymong.moneymong.analytics.AnalyticsTracker
 import com.moneymong.moneymong.analytics.LocalAnalyticsTracker
 import com.moneymong.moneymong.design_system.error.ErrorDialog
 import com.moneymong.moneymong.design_system.theme.MMTheme
 import com.moneymong.moneymong.domain.repository.token.TokenRepository
+import com.moneymong.moneymong.invite.InviteDeepLinkParser
 import com.moneymong.moneymong.ui.MoneyMongApp
 import dagger.hilt.android.AndroidEntryPoint
 import org.orbitmvi.orbit.compose.collectAsState
@@ -78,7 +80,7 @@ class MainActivity : ComponentActivity() {
                                 val playStoreUrl =
                                     "https://play.google.com/store/apps/details?id=${BuildConfig.APPLICATION_ID}"
                                 val intent = Intent(Intent.ACTION_VIEW).apply {
-                                    data = Uri.parse(playStoreUrl)
+                                    data = playStoreUrl.toUri()
                                     setPackage("com.android.vending")
                                 }
                                 context.startActivity(intent)
@@ -93,5 +95,21 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+
+        handleInviteIntent(intent = intent)
+    }
+
+
+    private fun handleInviteIntent(intent: Intent) {
+        val code = InviteDeepLinkParser.parse(intent.data)
+
+        Log.d("InviteDeepLink", "data=${intent.data}, code=$code")
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+
+        handleInviteIntent(intent)
     }
 }
