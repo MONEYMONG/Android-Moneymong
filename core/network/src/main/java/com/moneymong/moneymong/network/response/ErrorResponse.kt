@@ -1,9 +1,11 @@
 package com.moneymong.moneymong.network.response
 
 import com.google.gson.Gson
+import com.google.gson.annotations.SerializedName
 
 data class ErrorResponse(
     val status: Int,
+    @SerializedName("code") val errorCode: String?,
     val message: String
 )
 

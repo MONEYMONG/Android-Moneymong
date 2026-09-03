@@ -1,6 +1,8 @@
 package com.moneymong.moneymong
 
+import android.util.Log
 import com.moneymong.moneymong.android.BaseViewModel
+import com.moneymong.moneymong.common.error.HttpError
 import com.moneymong.moneymong.domain.usecase.agency.AgencyJoinUseCase
 import com.moneymong.moneymong.domain.usecase.agency.SaveAgencyIdUseCase
 import com.moneymong.moneymong.domain.usecase.version.CheckVersionUpdateUseCase
@@ -11,8 +13,6 @@ import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.reduce
 import javax.inject.Inject
 
-
-private const val ALREADY_JOINED_MESSAGE = "이미 가입된 유저입니다."
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
@@ -35,7 +35,12 @@ class MainViewModel @Inject constructor(
                 if (response.certified) saveAgencyIdUseCase(response.agencyId)
                 reduce { state.copy(pendingInvite = null, inviteJoinFinished = true) }
             }.onFailure { e ->
-                val alreadyJoined = e.message == ALREADY_JOINED_MESSAGE
+                val alreadyJoined =
+                    (e as? HttpError.BadRequestError)?.errorCode == ALREADY_JOINED_ERROR_CODE
+                Log.d(
+                    "heejik",
+                    "joinByInviteCode: alreadyJoined = $alreadyJoined, linkedAgencyId = $linkedAgencyId, (e as? HttpError.BadRequestError)?.errorCode = ${(e as? HttpError.BadRequestError)?.errorCode}"
+                )
                 if (alreadyJoined && linkedAgencyId != null) {
                     saveAgencyIdUseCase(linkedAgencyId)
                 }
@@ -57,5 +62,9 @@ class MainViewModel @Inject constructor(
 
     fun onInviteCodeReceived(invite: InviteDeepLink) = intent {
         reduce { state.copy(pendingInvite = invite) }
+    }
+
+    private companion object {
+        private const val ALREADY_JOINED_ERROR_CODE = "AGENCY-USER-004"
     }
 }

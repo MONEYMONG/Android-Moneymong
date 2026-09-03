@@ -52,6 +52,7 @@ private class ResultCall<T>(
                     val errorResponse = fromJsonToErrorResponse(errorBody)
                     val httpError = getErrorByStatusCode(
                         statusCode = errorResponse.status,
+                        errorCode = errorResponse.errorCode,
                         message = errorResponse.message
                     )
                     Result.failure(httpError)

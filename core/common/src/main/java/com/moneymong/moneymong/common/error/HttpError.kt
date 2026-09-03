@@ -5,7 +5,7 @@ sealed class HttpError : MoneyMongError() {
     /**
      * 400 Bad Request
      */
-    data class BadRequestError(override val message: String) : HttpError()
+    data class BadRequestError(val errorCode: String?, override val message: String) : HttpError()
 
     /**
      * 401 Unauthorized
@@ -28,9 +28,9 @@ sealed class HttpError : MoneyMongError() {
     data class InternalServerError(override val message: String) : HttpError()
 }
 
-fun getErrorByStatusCode(statusCode: Int, message: String): MoneyMongError {
+fun getErrorByStatusCode(statusCode: Int, errorCode: String?, message: String): MoneyMongError {
     return when (statusCode) {
-        400 -> HttpError.BadRequestError(message = message)
+        400 -> HttpError.BadRequestError(errorCode = errorCode, message = message)
         401 -> HttpError.UnauthorizedError(message = message)
         403 -> HttpError.ForbiddenError(message = message)
         404 -> HttpError.NotFoundError(message = message)
