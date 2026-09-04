@@ -1,7 +1,6 @@
 package com.example.member
 
 import BottomSheetType
-import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -85,6 +84,7 @@ fun MemberScreen(
 
     LaunchedEffect(agencyId) {
         viewModel.updateAgencyId(agencyId)
+        viewModel.resetInvitationCode()
         viewModel.eventEmit(MemberSideEffect.GetInvitationCode(agencyId.toLong()))
         viewModel.eventEmit(MemberSideEffect.GetMemberLists(agencyId.toLong()))
         viewModel.eventEmit(MemberSideEffect.GetMyInfo)
@@ -385,52 +385,6 @@ fun MemberScreen(
                 viewModel.eventEmit(MemberSideEffect.GetMyInfo)
             }
         )
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(White)
-                .padding(horizontal = MMHorizontalSpacing)
-        ) {
-            Text(
-                modifier = Modifier.padding(top = 24.dp, bottom = 8.dp),
-                text = "나",
-                style = Body3,
-                color = Gray07
-            )
-            MemberCardView(
-                modifier = Modifier,
-                agencyId = state.agencyId,
-                memberList = state.memberList,
-                memberMyInfoId = state.memberMyInfoId,
-                memberMyInfo = state.memberMyInfo,
-                memberMyInfoChanged = { id, userId, nickname, agencyUserRole ->
-                    viewModel.memberMyInfoChanged(
-                        id,
-                        userId,
-                        nickname,
-                        agencyUserRole
-                    )
-                },
-                invitationCode = state.invitationCode,
-                isReInvitationCode = { viewModel.eventEmit(MemberSideEffect.GetReInvitationCode(it)) }, //TODO
-                onCopyChange = { onCopyClick -> viewModel.onCopyClickChanged(onCopyClick) },
-                deleteAgencyBtnClicked = { onClick -> viewModel.deleteAgencyBtnClicked(onClick) }
-
-            )
-
-            MemberListView(
-                modifier = Modifier.padding(top = 24.dp),
-                memberMyInfo = state.memberMyInfo,
-                filteredMemberList = state.filteredMemberList,
-                onIconClick = { vertClick -> viewModel.onVertClickChanged(vertClick) },
-                updateFilteredMemberList = { memberMyInfoId ->
-                    viewModel.updateFilteredMemberList(
-                        memberMyInfoId
-                    )
-                },
-                vertClickedUserIdChanged = { userId -> viewModel.vertClickedUserIdChanged(userId) },
-            )
-        }
     } else {
         MemberContent(
             state = state,
@@ -487,18 +441,20 @@ private fun MemberContent(
 
         val context = LocalContext.current
 
-        Spacer(modifier = Modifier.height(16.dp))
+        if (state.memberMyInfo.agencyUserRole == "STAFF" && state.invitationCode.isNotEmpty()) {
+            Spacer(modifier = Modifier.height(16.dp))
 
-        InviteLinkButton(
-            modifier = Modifier.fillMaxWidth(),
-            onClick = {
-                InviteLinkShareLauncher.launch(
-                    context = context,
-                    invitationCode = state.invitationCode,
-                    agencyId = state.agencyId
-                )
-            }
-        )
+            InviteLinkButton(
+                modifier = Modifier.fillMaxWidth(),
+                onClick = {
+                    InviteLinkShareLauncher.launch(
+                        context = context,
+                        invitationCode = state.invitationCode,
+                        agencyId = state.agencyId
+                    )
+                }
+            )
+        }
         Spacer(modifier = Modifier.height(20.dp))
 
         MemberListView(

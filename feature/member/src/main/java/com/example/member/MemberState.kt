@@ -27,7 +27,6 @@ data class MemberState(
     val errorMessage : String = "",
     val visiblePopUpError : Boolean = false,
     val errorPopUpMessage : String = "",
-    val inviteCodeError : Boolean = false,
     val isUserAuthor: String = "",
     val agencyId: Int = 0,
     val isBlockedUser : Boolean = false,

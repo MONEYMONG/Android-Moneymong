@@ -47,6 +47,12 @@ class MemberViewModel @Inject constructor(
         reduce { state.copy(agencyId = agencyId) }
     }
 
+    fun resetInvitationCode() = intent {
+        reduce {
+            state.copy(invitationCode = "")
+        }
+    }
+
     fun onVertClickChanged(vertClick: Boolean) = intent {
         reduce {
             state.copy(
@@ -158,19 +164,11 @@ class MemberViewModel @Inject constructor(
         memberInvitationCodeUseCase.invoke(agencyId)
             .onSuccess {
                 reduce {
-                    state.copy(
-                        invitationCode = it.code
-                    )
+                    state.copy(invitationCode = it.code)
                 }
-                Log.d("invitationCode", state.invitationCode)
-
             }.onFailure {
                 reduce{
-                    state.copy(
-                        visibleError = true,
-                        errorMessage = it.message.toString(),
-                        inviteCodeError = true
-                    )
+                    state.copy(invitationCode = "")
                 }
             }
     }
