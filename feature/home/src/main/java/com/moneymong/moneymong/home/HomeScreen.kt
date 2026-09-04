@@ -73,7 +73,7 @@ fun HomeScreen(
     onChangeExpired: (Boolean) -> Unit,
     inviteCode: String?,
     inviteJoinFinished: Boolean,
-    joinAgency: (inviteCode: String) -> Unit
+    joinAgency: () -> Unit
 ) {
     val homeNavigator = rememberHomeNavigator()
     val homeNavController = homeNavigator.navHostController
@@ -100,9 +100,9 @@ fun HomeScreen(
     }
 
     // 인증이 끝난 지점에서만 호출한다 (스플래시의 토큰 확인 통과 / 로그인 완료).
-    // 초대 코드 딥링크로 들어왔으면 소속 가입을 하고, 없으면 원래 가려던 곳으로 보낸다.
+    // 초대 코드 딥링크로 들어왔으면 소속 가입을 한 뒤 장부로 보내고(아래 LaunchedEffect로), 없으면 원래 가려던 곳으로 보낸다.
     val joinInvitedAgencyOrElse: (() -> Unit) -> Unit = { goToDefault ->
-        if (inviteCode != null) joinAgency(inviteCode) else goToDefault()
+        if (inviteCode != null) joinAgency() else goToDefault()
     }
 
     LaunchedEffect(inviteJoinFinished) {

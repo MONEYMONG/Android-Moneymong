@@ -1,6 +1,5 @@
 package com.moneymong.moneymong
 
-import android.util.Log
 import com.moneymong.moneymong.android.BaseViewModel
 import com.moneymong.moneymong.common.error.HttpError
 import com.moneymong.moneymong.domain.usecase.agency.AgencyJoinUseCase
@@ -27,23 +26,19 @@ class MainViewModel @Inject constructor(
             .onFailure { reduce { state.copy(shouldUpdate = it.message?.contains("업데이트") == true) } }
     }
 
-    fun joinByInviteCode(code: String) = intent {
-        val linkedAgencyId = state.pendingInvite?.agencyId
+    fun joinByInviteCode() = intent {
+        val invite = state.pendingInvite ?: return@intent
+        val inviteAgencyId = invite.agencyId
+        val inviteCode = invite.code
 
-        agencyJoinUseCase(AgencyJoinRequest(code))
+        agencyJoinUseCase(AgencyJoinRequest(invitationCode = inviteCode))
             .onSuccess { response ->
                 if (response.certified) saveAgencyIdUseCase(response.agencyId)
                 reduce { state.copy(pendingInvite = null, inviteJoinFinished = true) }
             }.onFailure { e ->
                 val alreadyJoined =
                     (e as? HttpError.BadRequestError)?.errorCode == ALREADY_JOINED_ERROR_CODE
-                Log.d(
-                    "heejik",
-                    "joinByInviteCode: alreadyJoined = $alreadyJoined, linkedAgencyId = $linkedAgencyId, (e as? HttpError.BadRequestError)?.errorCode = ${(e as? HttpError.BadRequestError)?.errorCode}"
-                )
-                if (alreadyJoined && linkedAgencyId != null) {
-                    saveAgencyIdUseCase(linkedAgencyId)
-                }
+                if (alreadyJoined) { saveAgencyIdUseCase(inviteAgencyId) }
 
                 reduce {
                     state.copy(

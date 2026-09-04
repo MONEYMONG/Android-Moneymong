@@ -9,7 +9,7 @@ fun MoneyMongApp(
     onChangeExpired: (Boolean) -> Unit,
     inviteCode: String?,
     inviteJoinFinished: Boolean,
-    joinAgency: (inviteCode: String) -> Unit,
+    joinAgency: () -> Unit,
 ) {
     HomeScreen(
         expired = expired,
