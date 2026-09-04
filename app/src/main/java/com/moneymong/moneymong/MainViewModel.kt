@@ -56,7 +56,7 @@ class MainViewModel @Inject constructor(
     }
 
     fun onInviteCodeReceived(invite: InviteDeepLink) = intent {
-        reduce { state.copy(pendingInvite = invite) }
+        reduce { state.copy(pendingInvite = invite, inviteJoinFinished = false) }
     }
 
     private companion object {

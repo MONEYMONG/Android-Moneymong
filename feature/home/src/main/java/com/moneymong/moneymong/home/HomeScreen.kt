@@ -42,6 +42,7 @@ import com.moneymong.moneymong.feature.mymong.navigation.myMongNavGraph
 import com.moneymong.moneymong.feature.mymong.navigation.navigatePrivacyPolicy
 import com.moneymong.moneymong.feature.mymong.navigation.navigateTermsOfUse
 import com.moneymong.moneymong.feature.mymong.navigation.navigateWithdrawal
+import com.moneymong.moneymong.feature.sign.navigation.loginRoute
 import com.moneymong.moneymong.feature.sign.navigation.loginScreen
 import com.moneymong.moneymong.feature.sign.navigation.navigateLogin
 import com.moneymong.moneymong.feature.sign.navigation.navigateSignUpUniversity
@@ -110,6 +111,15 @@ fun HomeScreen(
             homeNavController.navigateLedger()
         }
     }
+
+    val currentRoute = homeNavigator.currentRoute
+    val signFlowRoutes = setOf(splashRoute, loginRoute)
+
+    LaunchedEffect(key1 = inviteCode) {
+        if (inviteCode != null && currentRoute != null && currentRoute !in signFlowRoutes)
+            joinAgency()
+    }
+
 
 
     Scaffold(

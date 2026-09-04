@@ -110,6 +110,11 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        handleInviteIntent(intent)
+    }
 
     private fun handleInviteIntent(intent: Intent) {
         val code = InviteDeepLinkParser.parse(intent.data) ?: return
