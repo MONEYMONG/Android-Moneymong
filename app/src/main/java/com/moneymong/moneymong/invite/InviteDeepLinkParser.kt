@@ -1,11 +1,12 @@
 package com.moneymong.moneymong.invite
 
 import android.net.Uri
+import com.moneymong.moneymong.BuildConfig
 
 
 internal object InviteDeepLinkParser {
 
-    private const val INVITE_LINK_HOST = "dev.moneymong.site"
+    private const val INVITE_LINK_HOST = BuildConfig.INVITE_LINK_HOST
     private const val QUERY_CODE = "code"
     private const val QUERY_AGENCY_ID = "agencyId"
 

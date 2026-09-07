@@ -56,7 +56,7 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    android:host="dev.moneymong.site"
+                    android:host="${inviteLinkHost}"
                     android:path="/invite"
                     android:scheme="https" />
             </intent-filter>

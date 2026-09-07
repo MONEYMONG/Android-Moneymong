@@ -8,12 +8,11 @@ internal data class InviteLinkShareData(
     val message: String,
 ) {
     companion object {
-        private val baseUrl =
-            if (BuildConfig.DEBUG) "https://dev.moneymong.site" else "https://prod.moneymong.site"
+        private const val BASE_URL = "https://${BuildConfig.INVITE_LINK_HOST}"
         private const val INVITE_LINK_PATH = "/invite"
 
         fun from(invitationCode: String, agencyId: Int): InviteLinkShareData {
-            val inviteUrl = "$baseUrl$INVITE_LINK_PATH?code=$invitationCode&agencyId=$agencyId"
+            val inviteUrl = "$BASE_URL$INVITE_LINK_PATH?code=$invitationCode&agencyId=$agencyId"
 
             return InviteLinkShareData(
                 subject = "머니몽 장부 초대",
