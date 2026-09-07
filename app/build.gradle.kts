@@ -5,8 +5,8 @@ plugins {
     alias(libs.plugins.moneymong.android.application.flavors)
     alias(libs.plugins.moneymong.android.application.firebase)
     alias(libs.plugins.moneymong.android.hilt)
+    alias(libs.plugins.moneymong.android.environment)
     alias(libs.plugins.secretsGradlePlugin)
-
 }
 
 android {
@@ -24,10 +24,6 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
-    }
-
-    buildFeatures {
-        buildConfig = true
     }
 
     buildTypes {

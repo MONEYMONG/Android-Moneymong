@@ -58,6 +58,10 @@ gradlePlugin {
             id = "moneymong.android.application.flavors"
             implementationClass = "AndroidApplicationFlavorsConventionPlugin"
         }
+        register("androidEnvironment") {
+            id = "moneymong.android.environment"
+            implementationClass = "AndroidEnvironmentConventionPlugin"
+        }
         register("jvmLibrary") {
             id = "moneymong.jvm.library"
             implementationClass = "JvmLibraryConventionPlugin"

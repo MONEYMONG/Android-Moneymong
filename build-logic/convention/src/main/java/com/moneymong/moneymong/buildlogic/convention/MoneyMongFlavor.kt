@@ -11,9 +11,24 @@ enum class FlavorDimension {
 }
 
 @Suppress("EnumEntryName")
-enum class MoneyMongFlavor(val dimension: FlavorDimension, val applicationIdSuffix: String) {
-    tb(FlavorDimension.deploy, applicationIdSuffix = ".tb"),
-    live(FlavorDimension.deploy, applicationIdSuffix = ".live")
+enum class MoneyMongFlavor(
+    val dimension: FlavorDimension,
+    val applicationIdSuffix: String,
+    val apiBaseUrl: String,
+    val inviteLinkHost: String
+) {
+    tb(
+        dimension = FlavorDimension.deploy,
+        applicationIdSuffix = ".tb",
+        apiBaseUrl = "https://dev.moneymong.site/",
+        inviteLinkHost = "dev.moneymong.site"
+    ),
+    live(
+        dimension = FlavorDimension.deploy,
+        applicationIdSuffix = ".live",
+        apiBaseUrl = "https://prod.moneymong.site/",
+        inviteLinkHost = "prod.moneymong.site"
+    )
 }
 
 fun configureFlavors(
@@ -41,5 +56,28 @@ fun configureFlavors(
                 }
             }
         }
+    }
+}
+
+fun configureEnvironment(
+    commonExtension: CommonExtension<*, *, *, *, *, *>
+) {
+    commonExtension.buildFeatures.buildConfig = true
+    commonExtension.productFlavors.configureEach {
+        val environment = MoneyMongFlavor.valueOf(name)
+
+        buildConfigField(
+            "String",
+            "MONEYMONG_BASE_URL",
+            "\"${environment.apiBaseUrl}\"",
+        )
+
+        buildConfigField(
+            "String",
+            "INVITE_LINK_HOST",
+            "\"${environment.inviteLinkHost}\"",
+        )
+
+        manifestPlaceholders["inviteLinkHost"] = environment.inviteLinkHost
     }
 }

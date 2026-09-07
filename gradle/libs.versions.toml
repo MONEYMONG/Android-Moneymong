@@ -125,5 +125,6 @@ moneymong-android-feature = { id = "moneymong.android.feature", version = "unspe
 moneymong-android-hilt = { id = "moneymong.android.hilt", version = "unspecified" }
 moneymong-android-library = { id = "moneymong.android.library", version = "unspecified" }
 moneymong-android-library-compose = { id = "moneymong.android.library.compose", version = "unspecified" }
+moneymong-android-environment = { id = "moneymong.android.environment", version = "unspecified" }
 moneymong-jvm-library = { id = "moneymong.jvm.library", version = "unspecified" }
 

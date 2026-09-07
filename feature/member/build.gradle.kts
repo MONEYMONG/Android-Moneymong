@@ -3,15 +3,11 @@ plugins {
     alias(libs.plugins.moneymong.android.library.compose)
     alias(libs.plugins.moneymong.android.feature)
     alias(libs.plugins.moneymong.android.hilt)
-
+    alias(libs.plugins.moneymong.android.environment)
 }
 
 android {
     namespace = "com.example.member"
-
-    buildFeatures {
-        buildConfig = true
-    }
 }
 
 dependencies {

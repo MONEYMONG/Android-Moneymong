@@ -2,25 +2,12 @@
 plugins {
     alias(libs.plugins.moneymong.android.library)
     alias(libs.plugins.moneymong.android.hilt)
+    alias(libs.plugins.moneymong.android.environment)
     alias(libs.plugins.secretsGradlePlugin)
-
 }
 
 android {
     namespace = "com.moneymong.moneymong.network"
-
-    buildTypes {
-        debug {
-            buildConfigField("String", "MONEYMONG_BASE_URL", "\"https://dev.moneymong.site/\"")
-        }
-        release {
-            buildConfigField("String", "MONEYMONG_BASE_URL", "\"https://prod.moneymong.site/\"")
-        }
-    }
-
-    buildFeatures {
-        buildConfig = true
-    }
 }
 
 dependencies {
