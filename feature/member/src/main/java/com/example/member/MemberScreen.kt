@@ -68,6 +68,7 @@ import org.orbitmvi.orbit.compose.collectSideEffect
 fun MemberScreen(
     viewModel: MemberViewModel = hiltViewModel(),
     agencyId: Int,
+    agencyName: String,
     agencyList: List<MyAgencyResponse>,
     onClickItem: (agencyId: Int) -> Unit,
     changeAgencyList: (changeAgencyList: List<MyAgencyResponse>) -> Unit
@@ -388,6 +389,7 @@ fun MemberScreen(
     } else {
         MemberContent(
             state = state,
+            agencyName = agencyName,
             snackbarHostState = snackbarHostState,
             memberMyInfoChanged = viewModel::memberMyInfoChanged,
             isReInvitationCode = {
@@ -405,6 +407,7 @@ fun MemberScreen(
 @Composable
 private fun MemberContent(
     state: MemberState,
+    agencyName: String,
     snackbarHostState: SnackbarHostState,
     memberMyInfoChanged: (Long, Long, String, String) -> Unit,
     isReInvitationCode: (Long) -> Unit,
@@ -450,7 +453,8 @@ private fun MemberContent(
                     InviteLinkShareLauncher.launch(
                         context = context,
                         invitationCode = state.invitationCode,
-                        agencyId = state.agencyId
+                        agencyId = state.agencyId,
+                        agencyName = agencyName,
                     )
                 }
             )
@@ -514,6 +518,7 @@ private fun MemberScreenPreview() {
             filteredMemberList = members.drop(1),
             agencyId = 1,
         ),
+        agencyName = "머니몽 동아리",
         snackbarHostState = remember { SnackbarHostState() },
         memberMyInfoChanged = { _, _, _, _ -> },
         isReInvitationCode = {},

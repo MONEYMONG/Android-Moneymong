@@ -280,6 +280,7 @@ fun LedgerScreen(
                         Box(modifier = modifier.fillMaxSize()) {
                             MemberScreen(
                                 agencyId = state.agencyId,
+                                agencyName = state.currentAgency?.name ?: "장부",
                                 agencyList = state.agencyList,
                                 onClickItem = {
                                     viewModel.eventEmit(
